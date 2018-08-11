@@ -12,7 +12,11 @@
 bounty-effect:
     enabled: true
     material: CHEST
-  
+
+# Time players have to wait to do /bounty twice.
+# In seconds.
+bounty-set-restriction: 120
+
 # All items that are dropped when claiming a bounty.
 physical-rewards:
     enabled: false

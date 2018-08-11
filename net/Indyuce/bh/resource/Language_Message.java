@@ -54,7 +54,7 @@ public enum Language_Message {
 	BOUNTY_EXPIRED("The bounty on &f%target% &ehas expired."),
 	WRONG_REWARD("Reward must be between &f%min% &cand &f%max%&c!"),
 	NOT_ENOUGH_MONEY("You don't have enough money."),
-	BOUNTY_SET_RESTRICTION("You must wait &f%time% &cseconds between each bounty."),
+	BOUNTY_SET_RESTRICTION("You must wait %left% more second%s% before creating a bounty."),
 	TARGET_SET("Target set."),
 	TARGET_REMOVED("Target removed."),
 	BOUGHT_COMPASS("You Succesfully bought a &ftracking compass&e."),

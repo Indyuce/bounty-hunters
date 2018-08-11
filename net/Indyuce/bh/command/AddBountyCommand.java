@@ -78,11 +78,12 @@ public class AddBountyCommand implements CommandExecutor {
 		// set restriction
 		if (sender instanceof Player) {
 			Player p = (Player) sender;
-			int restriction = Main.plugin.getConfig().getInt("bounty-set-restriction") * 1000;
+			long restriction = Main.plugin.getConfig().getInt("bounty-set-restriction") * 1000;
 			long last = Main.plugin.lastBounty.containsKey(p.getUniqueId()) ? Main.plugin.lastBounty.get(p.getUniqueId()) : 0;
+			long left = last + restriction - System.currentTimeMillis();
 
-			if (last + restriction > System.currentTimeMillis()) {
-				sender.sendMessage(ChatColor.RED + Utils.msg("bounty-set-restriction").replace("%time%", "" + restriction / 1000));
+			if (left > 0) {
+				sender.sendMessage(ChatColor.RED + Utils.msg("bounty-set-restriction").replace("%left%", "" + left / 1000).replace("%s%", left / 1000 >= 2 ? "s" : ""));
 				return true;
 			}
 		}

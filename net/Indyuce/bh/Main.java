@@ -34,8 +34,6 @@ import net.Indyuce.bh.util.VersionUtils;
 import net.milkbowl.vault.economy.Economy;
 
 public class Main extends JavaPlugin {
-
-	// test push
 	
 	// external
 	public static Main plugin;
