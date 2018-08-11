@@ -7,39 +7,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.bh.Main;
-
 @SuppressWarnings("deprecation")
 public class VersionUtils implements Listener {
 	public static String version;
+	public static String[] splitVersion;
 
-	public static Main plugin;
-
-	public VersionUtils(Main ins) {
-		plugin = ins;
-	}
-
-	public static boolean isBelow(String arg1) {
-		switch (arg1) {
-		case "v1_8":
-			return version.startsWith("v1_8");
-		case "v1_9":
-			return version.startsWith("v1_8") || version.startsWith("v1_9");
-		case "v1_10":
-			return version.startsWith("v1_8") || version.startsWith("v1_9") || version.startsWith("v1_10");
-		case "v1_11":
-			return version.startsWith("v1_8") || version.startsWith("v1_9") || version.startsWith("v1_10") || version.startsWith("v1_11");
-		case "v1_12":
-			return version.startsWith("v1_8") || version.startsWith("v1_9") || version.startsWith("v1_10") || version.startsWith("v1_11") || version.startsWith("v1_12");
-		}
-		return false;
-	}
-
-	public static ItemStack[] getStatEquipment(Player p) {
-		if (version.startsWith("v1_8")) {
-			return new ItemStack[] { p.getInventory().getItemInHand(), p.getInventory().getHelmet(), p.getInventory().getChestplate(), p.getInventory().getLeggings(), p.getInventory().getBoots() };
-		}
-		return new ItemStack[] { p.getInventory().getItemInMainHand(), p.getInventory().getItemInOffHand(), p.getInventory().getHelmet(), p.getInventory().getChestplate(), p.getInventory().getLeggings(), p.getInventory().getBoots() };
+	// returns true if below OR equal
+	public static boolean isBelow(int... ver) {
+		return Integer.parseInt(splitVersion[0].replace("v", "")) <= ver[0] && Integer.parseInt(splitVersion[1]) <= ver[1];
 	}
 
 	public static ItemStack getMainItem(Player p) {

@@ -76,6 +76,7 @@ public class Main extends JavaPlugin {
 		// version compatibility
 		try {
 			VersionUtils.version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+			VersionUtils.splitVersion = VersionUtils.version.split("\\_");
 			Bukkit.getConsoleSender().sendMessage("[BountyHunters] " + ChatColor.DARK_GRAY + "Detected Server Version: " + VersionUtils.version);
 
 			// no reflection nms
