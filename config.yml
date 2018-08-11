@@ -1,0 +1,83 @@
+# --------------------------------------------------------------
+#
+#
+# Thanks for using BountyHunters ;)
+# Join my Discord here for fast support! https://discordapp.com/invite/7Pc8ZHh
+#
+#
+# --------------------------------------------------------------
+
+# Enables/disables the item effect when a bounty is claimed.
+# PS: items can't be picked up.
+bounty-effect:
+    enabled: true
+    material: CHEST
+  
+# All items that are dropped when claiming a bounty.
+physical-rewards:
+    enabled: false
+    list:
+        GOLD_NUGGET: 10
+        INK_SACK: 4 1
+
+# Auto-bounty will automaticaly create bounties on people who
+# kill illegaly kill players (i.e killing someone with no bounty).
+auto-bounty:
+    enabled: false
+    reward: 100
+    chance: 100
+  
+# Round distance displayed on the tracking compass.
+round-distance: false
+
+# Drops the player head when claming a bounty.
+drop-head:
+    enabled: false
+    chance: 100
+
+# Plays a sound & sends a message when someone is targeting you.
+# Warning: can be abused (spam).
+new-hunter-alert: true
+
+# Displays player skulls
+# Can sometimes not work because of minecraft servers (too many requests).
+display-player-skulls: true
+
+# The tracking compass allows people to know where the people with a bounty on are.
+# Required a /reload to take effect.
+# The cooldown determines how often you can target a player in the menu (can fix spam from the hunter alert).
+compass:
+    enabled: true
+    price: 1000
+    target-cooldown: 240
+
+# Min and max bounty rewards.
+# Set max to 0 to remove the max restriction.
+min-reward: 0
+max-reward: 0
+
+# Tax taken when creating a bounty (to fight abuse).
+# In % of the money reward. Must be between 0 and 100.
+tax: 15
+
+# Enables the display of death quotes when claiming a bounty.
+display-death-quote-on-title: false
+
+# Worlds in which the bounty system is completely disabled.
+world-blacklist:
+- INSERT_WORLD_HERE
+  
+# Enables leveling rewards.
+enable-quotes-levels-titles: true
+
+# You can claim the bounties you create.
+# Warning: can be abused.
+own-bounty-claiming: true
+
+# Displays particles around targeted players (requires /reload to take effect).
+target-particles:
+    enabled: true
+    permission: ""
+
+# Formatted numbers (1B instead of 1,000,000,000).
+formatted-numbers: true
