@@ -44,6 +44,10 @@ public class PlayerData {
 		return new PlayerData(uuid, playerName);
 	}
 
+	public String getPlayerName() {
+		return playerName;
+	}
+
 	public UUID getUuid() {
 		return uuid;
 	}
@@ -107,7 +111,10 @@ public class PlayerData {
 
 		String title = getString("current-title").equals("") ? ChatColor.RED + Utils.msg("no-title") : Utils.applySpecialChars(getString("current-title"));
 		for (int j = 0; j < profileLore.size(); j++)
-			profileLore.set(j, profileLore.get(j).replace("%claimed-bounties%", "" + getInt("claimed-bounties")).replace("%successful-bounties%", "" + getInt("successful-bounties")).replace("%current-title%", title).replace("%level%", "" + getInt("level")));
+			profileLore.set(j, profileLore.get(j).replace("%claimed-bounties%", "" + getInt("claimed-bounties"))
+					.replace("%successful-bounties%", "" + getInt("successful-bounties"))
+					.replace("%current-title%", title)
+					.replace("%level%", "" + getInt("level")));
 
 		profileMeta.setLore(profileLore);
 		profile.setItemMeta(profileMeta);
