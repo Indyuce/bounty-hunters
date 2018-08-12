@@ -1,8 +1,8 @@
 name: BountyHunters
-version: 2.0
+version: 2.0.1
 main: net.Indyuce.bh.Main
 author: Indyuce
-softdepend: [Vault]
+depend: [Vault]
 commands:
     bounties:
         description: See all the active bounties.
