@@ -45,7 +45,7 @@ public class BountyClaim implements Listener {
 							continue;
 
 						Player p = Bukkit.getPlayer(bounty.getTarget().getUniqueId());
-						for (OfflinePlayer hunter : bounty.getHuntingPlayers()) {
+						for (OfflinePlayer hunter : bounty.getHuntingPlayers())
 							if (hunter.isOnline())
 								if (permBool || ((Player) hunter).hasPermission(permNode))
 									new BukkitRunnable() {
@@ -61,7 +61,6 @@ public class BountyClaim implements Listener {
 												Eff.REDSTONE.display(0, 0, 0, 0, 1, loc.clone().add(Math.cos(j) * .8, 0, Math.sin(j) * .8), (Player) hunter);
 										}
 									}.runTaskTimer(Main.plugin, 0, 7);
-						}
 					}
 				}
 			}.runTaskTimer(Main.plugin, 0, 100);
@@ -70,11 +69,7 @@ public class BountyClaim implements Listener {
 	@EventHandler
 	public void a(PlayerDeathEvent e) {
 		Player p = e.getEntity();
-		if (p.getKiller() == null)
-			return;
-		if (!(p.getKiller() instanceof Player))
-			return;
-		if (p == p.getKiller())
+		if (p.getKiller() == null || !(p.getKiller() instanceof Player) || p == p.getKiller())
 			return;
 
 		// world blacklist

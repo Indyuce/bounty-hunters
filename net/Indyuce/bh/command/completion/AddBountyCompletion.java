@@ -18,10 +18,11 @@ public class AddBountyCompletion implements TabCompleter {
 			for (Player t : Bukkit.getOnlinePlayers())
 				list.add(t.getName());
 
-		if (!args[args.length - 1].isEmpty()) {
+		String lastArg = args[args.length - 1];
+		if (!lastArg.isEmpty()) {
 			List<String> newList = new ArrayList<String>();
 			for (String s : list)
-				if (s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
+				if (s.toLowerCase().startsWith(lastArg.toLowerCase()))
 					newList.add(s);
 			list = newList;
 		}

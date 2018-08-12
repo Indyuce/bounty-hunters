@@ -21,7 +21,7 @@ public class Utils {
 	}
 
 	public static String applySpecialChars(String s) {
-		return s.replace("%star%", SpecialChar.star).replace("%square%", SpecialChar.square);
+		return ChatColor.translateAlternateColorCodes('&', s.replace("%star%", SpecialChar.star).replace("%square%", SpecialChar.square));
 	}
 
 	public static String format(double n) {

@@ -16,14 +16,10 @@ public enum Language_Message {
 	NO_TITLE("&cNo Title"),
 	NO_PLAYER("&c- No Player -"),
 
+	// gui
 	GUI_NAME("&nBounties (%page%/%max-page%)"),
-	CHAT_BAR("&e&m-----------------------------------------------------"),
-
-	// leaderboard
 	LEADERBOARD_GUI_NAME("&nHunter Leaderboard"),
-	LEADERBOARD_GUI_COMPLETED_BOUNTIES("This player claimed &f%bounties% &7bounties."),
-	LEADERBOARD_GUI_TITLE("--[ &c%title% &7]--"),
-	LEADERBOARD_GUI_LEVEL("This player is level &f%level%&7."),
+	CHAT_BAR("&e&m-----------------------------------------------------"),
 
 	// bounty creation
 	BOUNTY_CREATED("You succesfully set a bounty on &f%target%&e."),
@@ -60,17 +56,20 @@ public enum Language_Message {
 	BOUGHT_COMPASS("You Succesfully bought a &ftracking compass&e."),
 	TAX_EXPLAIN("&f%percent%&e% of the reward (&f$%price%&e) were taken as tax."),
 	PLAYER_MUST_BE_CONNECTED("The player must be connected in order to be tracked."),
+
+	// level up
 	LEVEL_UP("&lWell done!&e You're level &f%level% &enow!"),
 	LEVEL_UP_2("Claim &f%bounties% &emore bounties to level up again!"),
 	LEVEL_UP_REWARDS("Put your cursor over this message to see your rewards!"),
 	LEVEL_UP_REWARD("- &f"),
+
 	CLICK_SELECT("Click to select."),
 	SUCCESSFULLY_SELECTED("You successfully selected &f%item%&e."),
 	UNLOCKED_TITLES("Unlocked titles:"),
 	UNLOCKED_QUOTES("Unlocked quotes:"),
 	TRACKING_COMPASS_RESET("Compass reset."),
 	ADDING_MONEY_TO_BOUNTY("Please type in the amount you want to add to the bounty."),
-	CONSOLE("console"),;
+	CONSOLE("console");
 
 	public Object value;
 
