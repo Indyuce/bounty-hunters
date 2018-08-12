@@ -14,9 +14,10 @@ public enum CustomItem {
 	PREVIOUS_PAGE(new ItemStack(Material.ARROW), "Previous"),
 	PLAYER_HEAD(new ItemStack(Material.SKULL_ITEM, 1, (short) 3), "%name%"),
 	GUI_PLAYER_HEAD(new ItemStack(Material.SKULL_ITEM, 1, (short) 3), "%name%", "&8&m--------------------------------", "%bounty-creator%", "%bounty-reward%", "%bounty-hunters%", "", "%bounty-instruction%", "%compass-instruction%", "&8&m--------------------------------"),
-	PROFILE(new ItemStack(Material.SKULL_ITEM, 1, (short) 3), "%name%", "&8&m--------------------------------", "Bounties you claimed: &f%claimed-bounties%", "Successful bounties: &f%successful-bounties%", "Level: &f%level%", "Current Title: &f%current-title%", "", "Type /bounties titles to manage your title.", "Type /bounties quotes to manage your quote.", "&8&m--------------------------------"),
+	LB_PLAYER_DATA(new ItemStack(Material.SKULL_ITEM, 1, (short) 3), "[%rank%] %name%", "&8&m-----------------------------", "Current Title: &f%title%", "Level: &f%level%", "Claimed Bounties: &f%bounties%", "&8&m-----------------------------"),
+	PROFILE(new ItemStack(Material.SKULL_ITEM, 1, (short) 3), "%name%", "&8&m--------------------------------", "Claimed Bounties: &f%claimed-bounties%", "Successful Bounties: &f%successful-bounties%", "Level: &f%level%", "", "Current Title: &f%current-title%", "", "Type /bounties titles to manage your title.", "Type /bounties quotes to manage your quote.", "&8&m--------------------------------"),
 	LVL_ADVANCEMENT(new ItemStack(Material.EMERALD), "[%level%] %name%", "&8&m--------------------------------", "Level: &f%level%", "Level Progress: %lvl-advancement%", "&8&m--------------------------------"),
-	SET_BOUNTY(new ItemStack(Material.BOOK_AND_QUILL), "How to create a bounty?", "Use /addbounty <player> <reward>", "to create a bounty on a player."),
+	SET_BOUNTY(new ItemStack(Material.BOOK_AND_QUILL), "How to create a bounty?", "Use /bounty <player> <reward>", "to create a bounty on a player.", "", "&aHow to increase a bounty?", "Use /bounty <player> <amount>", "to increase a bounty.", "", "&aHow to remove a bounty?", "You can remove a bounty as the", "bounty creator by right clicking", "it in this menu."),
 	BOUNTY_COMPASS(new ItemStack(Material.COMPASS), "Bounty Compass", "Allows you to see at which", "distance your target is."),;
 
 	ItemStack item;
