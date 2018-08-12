@@ -1,5 +1,5 @@
 # bounty-hunters
-Download the resource here: https://www.spigotmc.org/resources/bounty-hunters.4061/
+Download the resource here: https://www.spigotmc.org/resources/bounty-hunters.40610/
 
 Create an issue ticket if you have any question/issue with BountyHunters!
 
