@@ -223,7 +223,7 @@ public class BountyList implements PluginInventory {
 		return maxPage < 1 ? 1 : maxPage;
 	}
 
-	public void insertInLore(List<String> lore, String path, String... add) {
+	private void insertInLore(List<String> lore, String path, String... add) {
 		if (!lore.contains(ChatColor.GRAY + "%" + path + "%"))
 			return;
 

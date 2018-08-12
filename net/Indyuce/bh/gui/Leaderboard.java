@@ -1,7 +1,6 @@
 package net.Indyuce.bh.gui;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,13 +8,11 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -24,6 +21,7 @@ import com.google.common.collect.Ordering;
 
 import net.Indyuce.bh.Main;
 import net.Indyuce.bh.api.PlayerData;
+import net.Indyuce.bh.resource.CustomItem;
 import net.Indyuce.bh.util.Utils;
 
 public class Leaderboard implements PluginInventory {
@@ -72,16 +70,16 @@ public class Leaderboard implements PluginInventory {
 
 			PlayerData playerData = PlayerData.get(Bukkit.getOfflinePlayer(s));
 
-			ItemStack i = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+			ItemStack i = CustomItem.LB_PLAYER_DATA.a();
 			SkullMeta meta = (SkullMeta) i.getItemMeta();
-			meta.addItemFlags(ItemFlag.values());
-			meta.setOwner(s);
-			meta.setDisplayName(ChatColor.GREEN + "[" + (slot + 1) + "] " + s);
-			List<String> lore = new ArrayList<String>();
-			if (!playerData.getString("current-title").equals(""))
-				lore.add(ChatColor.GRAY + Utils.msg("leaderboard-gui-title").replace("%title%", ChatColor.translateAlternateColorCodes('&', Utils.applySpecialChars(playerData.getString("current-title")))));
-			lore.add(ChatColor.GRAY + Utils.msg("leaderboard-gui-completed-bounties").replace("%bounties%", "" + order.get(slot)));
-			lore.add(ChatColor.GRAY + Utils.msg("leaderboard-gui-level").replace("%level%", "" + playerData.getInt("level")));
+			if (Main.plugin.getConfig().getBoolean("display-player-skulls"))
+				meta.setOwner(s);
+			meta.setDisplayName(applyPlaceholders(meta.getDisplayName(), playerData, slot + 1));
+
+			List<String> lore = meta.getLore();
+			for (int j = 0; j < lore.size(); j++)
+				lore.set(j, applyPlaceholders(lore.get(j), playerData, slot + 1));
+
 			meta.setLore(lore);
 			i.setItemMeta(meta);
 
@@ -95,7 +93,8 @@ public class Leaderboard implements PluginInventory {
 		glass.setItemMeta(glassMeta);
 
 		for (int j = 0; j < slots.length; j++)
-			inv.setItem(slots[j], glass);
+			if (inv.getItem(slots[j]) == null)
+				inv.setItem(slots[j], glass);
 
 		return inv;
 	}
@@ -119,5 +118,17 @@ public class Leaderboard implements PluginInventory {
 
 	@Override
 	public void whenClicked(ItemStack i, InventoryAction action, int slot) {
+	}
+
+	private String applyPlaceholders(String s, PlayerData playerData, int rank) {
+		String title = playerData.getString("current-title");
+
+		s = s.replace("%level%", "" + playerData.getInt("level"));
+		s = s.replace("%bounties%", "" + playerData.getInt("claimed-bounties"));
+		s = s.replace("%title%", title.equals("") ? Utils.msg("no-title") : Utils.applySpecialChars(title));
+		s = s.replace("%name%", playerData.getPlayerName());
+		s = s.replace("%rank%", "" + rank);
+
+		return s;
 	}
 }
