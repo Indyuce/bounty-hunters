@@ -109,7 +109,7 @@ public class Main extends JavaPlugin {
 		// config files
 		saveDefaultConfig();
 
-		// name placeholders
+		// level data
 		try {
 			File file = new File(getDataFolder(), "levels.yml");
 			if (!file.exists())
