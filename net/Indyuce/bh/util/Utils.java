@@ -71,12 +71,12 @@ public class Utils {
 		return false;
 	}
 
-	public static String msg(String path) {
-		FileConfiguration messages = ConfigData.getCD(Main.plugin, "/language", "messages");
-		String msg = messages.getString(path);
-		msg = ChatColor.translateAlternateColorCodes('&', msg);
-		return msg;
-	}
+//	public static String msg(String path) {
+//		FileConfiguration messages = ConfigData.getCD(Main.plugin, "/language", "messages");
+//		String msg = messages.getString(path);
+//		msg = ChatColor.translateAlternateColorCodes('&', msg);
+//		return msg;
+//	}
 
 	public static double truncation(double x, int n) {
 		double pow = Math.pow(10.0, n);

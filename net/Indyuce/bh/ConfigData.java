@@ -10,23 +10,20 @@ import org.bukkit.plugin.Plugin;
 
 public class ConfigData {
 	public static void setupCD(Plugin plugin, String path, String name) {
-		File pfile;
-		if (!new File(plugin.getDataFolder() + path).exists()) {
+		if (!new File(plugin.getDataFolder() + path).exists())
 			new File(plugin.getDataFolder() + path).mkdir();
-		}
-		pfile = new File(plugin.getDataFolder() + path, name + ".yml");
-		if (!pfile.exists()) {
+
+		File file = new File(plugin.getDataFolder() + path, name + ".yml");
+		if (!file.exists())
 			try {
-				pfile.createNewFile();
+				file.createNewFile();
 			} catch (IOException e) {
 				Bukkit.getServer().getLogger().severe("§4Could not create " + name + ".yml!");
 			}
-		}
 	}
 
 	public static FileConfiguration getCD(Plugin plugin, String path, String name) {
-		FileConfiguration config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + path, name + ".yml"));
-		return config;
+		return YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + path, name + ".yml"));
 	}
 
 	public static void saveCD(Plugin plugin, FileConfiguration config, String path, String name) {

@@ -27,7 +27,7 @@ import net.Indyuce.bh.listener.MainListener;
 import net.Indyuce.bh.nms.json.Json;
 import net.Indyuce.bh.nms.title.Title;
 import net.Indyuce.bh.resource.CustomItem;
-import net.Indyuce.bh.resource.Language_Message;
+import net.Indyuce.bh.resource.Message;
 import net.Indyuce.bh.resource.QuoteReward;
 import net.Indyuce.bh.resource.TitleReward;
 import net.Indyuce.bh.util.VersionUtils;
@@ -123,7 +123,7 @@ public class Main extends JavaPlugin {
 
 		// messages
 		FileConfiguration messages = ConfigData.getCD(this, "/language", "messages");
-		for (Language_Message pa : Language_Message.values()) {
+		for (Message pa : Message.values()) {
 			String path = pa.name().toLowerCase().replace("_", "-");
 			if (!messages.contains(path))
 				messages.set(path, pa.value);

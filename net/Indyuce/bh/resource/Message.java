@@ -1,6 +1,6 @@
 package net.Indyuce.bh.resource;
 
-public enum Language_Message {
+public enum Message {
 	SET_BY("Set by &f%creator%&7."),
 	SET_BY_YOURSELF("You set this bounty."),
 	REWARD_IS("The reward is &f$%reward%&7."),
@@ -73,7 +73,9 @@ public enum Language_Message {
 
 	public Object value;
 
-	private Language_Message(Object value) {
+	private Message(Object value) {
 		this.value = value;
 	}
+	
+	
 }
