@@ -116,6 +116,7 @@ public class BountyList implements PluginInventory {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public void whenClicked(ItemStack i, InventoryAction action, int slot) {
 
 		// next page
@@ -193,7 +194,7 @@ public class BountyList implements PluginInventory {
 		if (action == InventoryAction.PICKUP_HALF)
 			if (slot < 35 && i.getType() == Material.SKULL_ITEM) {
 				String format = ChatColor.stripColor(i.getItemMeta().getDisplayName());
-				Player t = Bukkit.getPlayer(format);
+				OfflinePlayer t = Bukkit.getOfflinePlayer(format);
 				if (t == null)
 					return;
 
