@@ -7,7 +7,8 @@ import org.bukkit.event.HandlerList;
 import net.Indyuce.bh.api.Bounty;
 import net.Indyuce.bh.resource.BountyCause;
 
-// called whenever a bounty is registered by a plugin/created by a player.
+// called whenever a bounty is registered by a plugin or created
+// either by a player or by the auto-bounty feature
 
 public class BountyCreateEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();

@@ -7,7 +7,7 @@ import org.bukkit.event.HandlerList;
 
 import net.Indyuce.bh.api.Bounty;
 
-// called when a player claims a bounty.
+// this event is called whenever a player claims a bounty.
 
 public class BountyClaimEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();

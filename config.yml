@@ -17,15 +17,15 @@ bounty-effect:
 # In seconds.
 bounty-set-restriction: 120
 
-# All items that are dropped when claiming a bounty.
+# Items that are dropped when claiming a bounty.
 physical-rewards:
     enabled: false
     list:
         GOLD_NUGGET: 10
         INK_SACK: 4 1
 
-# Auto-bounty will automaticaly create bounties on people who
-# kill illegaly kill players (i.e killing someone with no bounty).
+# When enabled, it will automaticaly place a bounty
+# onto any player who kills a player with no bounty on him (illegal kill).
 auto-bounty:
     enabled: false
     reward: 100

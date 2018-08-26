@@ -22,6 +22,7 @@ import com.google.common.collect.Ordering;
 import net.Indyuce.bh.Main;
 import net.Indyuce.bh.api.PlayerData;
 import net.Indyuce.bh.resource.CustomItem;
+import net.Indyuce.bh.resource.Message;
 import net.Indyuce.bh.util.Utils;
 
 public class Leaderboard implements PluginInventory {
@@ -53,7 +54,7 @@ public class Leaderboard implements PluginInventory {
 
 		List<Integer> order = Ordering.natural().greatestOf(map.values(), 20);
 
-		Inventory inv = Bukkit.createInventory(this, 54, Utils.msg("leaderboard-gui-name"));
+		Inventory inv = Bukkit.createInventory(this, 54, Message.LEADERBOARD_GUI_NAME.getUpdated());
 		int slot = 0;
 		while (slot < slots.length && slot < order.size()) {
 			String s = getKeyByValue(map, order.get(slot));
@@ -89,7 +90,7 @@ public class Leaderboard implements PluginInventory {
 
 		ItemStack glass = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14);
 		ItemMeta glassMeta = glass.getItemMeta();
-		glassMeta.setDisplayName(Utils.msg("no-player"));
+		glassMeta.setDisplayName(Message.NO_PLAYER.getUpdated());
 		glass.setItemMeta(glassMeta);
 
 		for (int j = 0; j < slots.length; j++)
@@ -125,7 +126,7 @@ public class Leaderboard implements PluginInventory {
 
 		s = s.replace("%level%", "" + playerData.getInt("level"));
 		s = s.replace("%bounties%", "" + playerData.getInt("claimed-bounties"));
-		s = s.replace("%title%", title.equals("") ? Utils.msg("no-title") : Utils.applySpecialChars(title));
+		s = s.replace("%title%", title.equals("") ? Message.NO_TITLE.getUpdated() : Utils.applySpecialChars(title));
 		s = s.replace("%name%", playerData.getPlayerName());
 		s = s.replace("%rank%", "" + rank);
 

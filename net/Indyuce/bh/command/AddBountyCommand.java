@@ -14,17 +14,18 @@ import net.Indyuce.bh.api.event.BountyChangeEvent;
 import net.Indyuce.bh.api.event.BountyCreateEvent;
 import net.Indyuce.bh.listener.Alerts;
 import net.Indyuce.bh.resource.BountyCause;
+import net.Indyuce.bh.resource.Message;
 import net.Indyuce.bh.util.Utils;
 
 public class AddBountyCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!sender.hasPermission("bountyhunters.add")) {
-			sender.sendMessage(ChatColor.RED + Utils.msg("not-enough-perms"));
+			Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(sender);
 			return true;
 		}
 		if (args.length < 2) {
-			sender.sendMessage(ChatColor.RED + Utils.msg("command-usage").replace("%command%", "/bounty <player> <reward>"));
+			Message.COMMAND_USAGE.format(ChatColor.RED, "%command%", "/bounty <player> <reward>").send(sender);
 			return true;
 		}
 		if (sender instanceof Player)
@@ -34,22 +35,22 @@ public class AddBountyCommand implements CommandExecutor {
 		// check for player
 		Player t = Bukkit.getPlayer(args[0]);
 		if (t == null) {
-			sender.sendMessage(ChatColor.RED + Utils.msg("error-player").replace("%arg%", args[0]));
+			Message.ERROR_PLAYER.format(ChatColor.RED, "%arg%", args[0]).send(sender);
 			return true;
 		}
 		if (!t.isOnline()) {
-			sender.sendMessage(ChatColor.RED + Utils.msg("error-player").replace("%arg%", args[0]));
+			Message.ERROR_PLAYER.format(ChatColor.RED, "%arg%", args[0]).send(sender);
 			return true;
 		}
 		if (sender instanceof Player)
 			if (t.getName().equals(((Player) sender).getName())) {
-				sender.sendMessage(ChatColor.RED + Utils.msg("cant-set-bounty-on-yourself"));
+				Message.CANT_SET_BOUNTY_ON_YOURSELF.format(ChatColor.RED).send(sender);
 				return true;
 			}
 
 		// permission
 		if (t.hasPermission("bountyhunters.imun") && !sender.hasPermission("bountyhunters.bypass-imun")) {
-			sender.sendMessage(ChatColor.RED + Utils.msg("bounty-imun"));
+			Message.BOUNTY_IMUN.format(ChatColor.RED).send(sender);
 			return true;
 		}
 
@@ -58,7 +59,7 @@ public class AddBountyCommand implements CommandExecutor {
 		try {
 			reward = Double.parseDouble(args[1]);
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.RED + Utils.msg("not-valid-number").replace("%arg%", args[1]));
+			Message.NOT_VALID_NUMBER.format(ChatColor.RED, "%arg%", args[1]).send(sender);
 			return true;
 		}
 		reward = Utils.truncation(reward, 1);
@@ -67,7 +68,7 @@ public class AddBountyCommand implements CommandExecutor {
 		double min = Main.plugin.getConfig().getDouble("min-reward");
 		double max = Main.plugin.getConfig().getDouble("max-reward");
 		if ((reward < min) || (max > 0 && reward > max)) {
-			sender.sendMessage(ChatColor.RED + Utils.msg("wrong-reward").replace("%max%", Utils.format(max)).replace("%min%", Utils.format(min)));
+			Message.WRONG_REWARD.format(ChatColor.RED, "%max%", Utils.format(max), "%min%", Utils.format(min)).send(sender);
 			return true;
 		}
 
@@ -83,7 +84,7 @@ public class AddBountyCommand implements CommandExecutor {
 			long left = last + restriction - System.currentTimeMillis();
 
 			if (left > 0) {
-				sender.sendMessage(ChatColor.RED + Utils.msg("bounty-set-restriction").replace("%left%", "" + left / 1000).replace("%s%", left / 1000 >= 2 ? "s" : ""));
+				Message.BOUNTY_SET_RESTRICTION.format(ChatColor.RED, "%left%", "" + left / 1000, "%s%", left / 1000 >= 2 ? "s" : "").send(sender);
 				return true;
 			}
 		}
@@ -91,7 +92,7 @@ public class AddBountyCommand implements CommandExecutor {
 		// money restriction
 		if (sender instanceof Player)
 			if (!Main.getEconomy().has((Player) sender, reward)) {
-				sender.sendMessage(ChatColor.RED + Utils.msg("not-enough-money"));
+				Message.NOT_ENOUGH_MONEY.format(ChatColor.RED).send(sender);
 				return true;
 			}
 
@@ -118,7 +119,7 @@ public class AddBountyCommand implements CommandExecutor {
 
 			bounty.addToReward(sender instanceof Player ? (Player) sender : null, reward);
 			for (Player ent : Bukkit.getOnlinePlayers())
-				ent.sendMessage(ChatColor.YELLOW + Utils.msg("bounty-change").replace("%player%", t.getName()).replace("%reward%", Utils.format(bounty.getReward())));
+				Message.BOUNTY_CHANGE.format(ChatColor.YELLOW, "%player%", t.getName(), "%reward%", Utils.format(bounty.getReward())).send(ent);
 			return true;
 		}
 
@@ -141,7 +142,7 @@ public class AddBountyCommand implements CommandExecutor {
 		Alerts.newBounty(e);
 
 		if (tax > 0)
-			sender.sendMessage(ChatColor.RED + Utils.msg("tax-explain").replace("%percent%", "" + Main.plugin.getConfig().getDouble("tax")).replace("%price%", Utils.format(tax)));
+			Message.TAX_EXPLAIN.format(ChatColor.RED, "%percent%", "" + Main.plugin.getConfig().getDouble("tax"), "%price%", Utils.format(tax)).send(sender);
 		return true;
 	}
 }

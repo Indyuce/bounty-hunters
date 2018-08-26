@@ -22,6 +22,7 @@ import net.Indyuce.bh.api.BountyManager;
 import net.Indyuce.bh.api.PlayerData;
 import net.Indyuce.bh.listener.Alerts;
 import net.Indyuce.bh.resource.CustomItem;
+import net.Indyuce.bh.resource.Message;
 import net.Indyuce.bh.util.Utils;
 import net.Indyuce.bh.util.VersionUtils;
 
@@ -44,7 +45,7 @@ public class BountyList implements PluginInventory {
 		int[] slots = new int[] { 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34 };
 		int maxPage = getMaxPage();
 
-		Inventory inv = Bukkit.createInventory(this, 54, Utils.msg("gui-name").replace("%page%", "" + page).replace("%max-page%", "" + maxPage));
+		Inventory inv = Bukkit.createInventory(this, 54, Message.GUI_NAME.formatRaw(ChatColor.RESET, "%page%", "" + page, "%max-page%", "" + maxPage));
 		int min = (page - 1) * 21;
 		int max = page * 21;
 
@@ -57,19 +58,19 @@ public class BountyList implements PluginInventory {
 			meta.setDisplayName(meta.getDisplayName().replace("%name%", bounty.getTarget().getName()));
 			List<String> lore = meta.getLore();
 
-			String creatorString = !bounty.hasCreator() ? ChatColor.RED + Utils.msg("thug-player") : (bounty.hasCreator(player) ? ChatColor.GRAY + Utils.msg("set-by-yourself") : ChatColor.GRAY + Utils.msg("set-by").replace("%creator%", bounty.getCreator().getName()));
+			String creatorString = !bounty.hasCreator() ? Message.THUG_PLAYER.formatRaw(ChatColor.RED) : (bounty.hasCreator(player) ? Message.SET_BY_YOURSELF.formatRaw(ChatColor.GRAY) : Message.SET_BY.formatRaw(ChatColor.GRAY, "%creator%", bounty.getCreator().getName()));
 			insertInLore(lore, "bounty-creator", creatorString);
 
-			String rewardString = ChatColor.GRAY + Utils.msg("reward-is").replace("%reward%", Utils.format(bounty.getReward()));
+			String rewardString = Message.REWARD_IS.formatRaw(ChatColor.GRAY, "%reward%", Utils.format(bounty.getReward()));
 			insertInLore(lore, "bounty-reward", rewardString);
 
-			String huntersString = ChatColor.GRAY + Utils.msg("current-hunters").replace("%hunters%", "" + bounty.getHuntingPlayers().size());
+			String huntersString = Message.CURRENT_HUNTERS.formatRaw(ChatColor.GRAY, "%hunters%", "" + bounty.getHuntingPlayers().size());
 			insertInLore(lore, "bounty-hunters", huntersString);
 
-			String statusString = bounty.getTarget().getName().equals(player.getName()) ? ChatColor.RED + Utils.msg("dont-let-them-kill-u") : (!bounty.hasCreator() ? ChatColor.YELLOW + Utils.msg("kill-him-claim-bounty") : (bounty.hasCreator(player) ? ChatColor.YELLOW + Utils.msg("right-click-remove-bounty") : ChatColor.YELLOW + Utils.msg("kill-him-claim-bounty")));
+			String statusString = bounty.getTarget().getName().equals(player.getName()) ? Message.DONT_LET_THEM_KILL_U.formatRaw(ChatColor.RED) : (!bounty.hasCreator() ? Message.KILL_HIM_CLAIM_BOUNTY.formatRaw(ChatColor.YELLOW) : (bounty.hasCreator(player) ? Message.RIGHT_CLICK_REMOVE_BOUNTY.formatRaw(ChatColor.YELLOW) : Message.KILL_HIM_CLAIM_BOUNTY.formatRaw(ChatColor.YELLOW)));
 			insertInLore(lore, "bounty-instruction", statusString);
 
-			String compassString = bounty.isHunting(player) ? ChatColor.RED + Utils.msg("click-untarget") : ChatColor.YELLOW + Utils.msg("click-target");
+			String compassString = bounty.isHunting(player) ? Message.CLICK_UNTARGET.formatRaw(ChatColor.RED) : Message.CLICK_TARGET.formatRaw(ChatColor.YELLOW);
 			if (!Main.plugin.getConfig().getBoolean("compass.enabled") || bounty.hasTarget(player))
 				insertInLore(lore, "compass-instruction");
 			else
@@ -85,7 +86,7 @@ public class BountyList implements PluginInventory {
 		ItemMeta compassMeta = compass.getItemMeta();
 		List<String> compassLore = compassMeta.getLore();
 		compassLore.add("");
-		compassLore.add(ChatColor.YELLOW + Utils.msg("click-buy-compass").replace("%price%", Utils.format(Main.plugin.getConfig().getDouble("compass.price"))));
+		compassLore.add(Message.CLICK_BUY_COMPASS.formatRaw(ChatColor.YELLOW, "%price%", Utils.format(Main.plugin.getConfig().getDouble("compass.price"))));
 		compassMeta.setLore(compassLore);
 		compass.setItemMeta(compassMeta);
 
@@ -130,13 +131,13 @@ public class BountyList implements PluginInventory {
 		// buy bounty compass
 		if (i.getItemMeta().getDisplayName().equals(CustomItem.BOUNTY_COMPASS.a().getItemMeta().getDisplayName())) {
 			if (player.getInventory().firstEmpty() <= -1) {
-				player.sendMessage(ChatColor.RED + Utils.msg("empty-inv-first"));
+				Message.EMPTY_INV_FIRST.format(ChatColor.RED).send(player);
 				return;
 			}
 
 			double price = Main.plugin.getConfig().getDouble("compass.price");
 			if (Main.getEconomy().getBalance(player) < price) {
-				player.sendMessage(ChatColor.RED + Utils.msg("not-enough-money"));
+				Message.NOT_ENOUGH_MONEY.format(ChatColor.RED).send(player);
 				return;
 			}
 
@@ -153,12 +154,12 @@ public class BountyList implements PluginInventory {
 				String format = ChatColor.stripColor(i.getItemMeta().getDisplayName());
 				Player t = Bukkit.getPlayer(format);
 				if (t == null) {
-					player.sendMessage(ChatColor.YELLOW + Utils.msg("player-must-be-connected"));
+					Message.PLAYER_MUST_BE_CONNECTED.format(ChatColor.YELLOW).send(player);
 					return;
 				}
 
 				if (t.hasPermission("bountyhunters.imun") && !player.hasPermission("bountyhunters.bypass-imun")) {
-					player.sendMessage(ChatColor.YELLOW + Utils.msg("track-imun"));
+					player.sendMessage(ChatColor.YELLOW + Message.TRACK_IMUN.getUpdated());
 					return;
 				}
 
@@ -170,7 +171,7 @@ public class BountyList implements PluginInventory {
 					long lastTarget = BountyList.lastTarget.containsKey(player.getUniqueId()) ? BountyList.lastTarget.get(player.getUniqueId()) : 0;
 					long remain = (long) (lastTarget + Main.plugin.getConfig().getDouble("compass.target-cooldown") * 1000 - System.currentTimeMillis()) / 1000;
 					if (remain > 0) {
-						player.sendMessage(ChatColor.RED + Utils.msg("target-cooldown").replace("%remain%", "" + remain).replace("%s%", remain >= 2 ? "s" : ""));
+						Message.TARGET_COOLDOWN.format(ChatColor.RED, "%remain%", "" + remain, "%s%", remain >= 2 ? "s" : "").send(player);
 						return;
 					}
 					BountyList.lastTarget.put(player.getUniqueId(), System.currentTimeMillis());
@@ -178,10 +179,10 @@ public class BountyList implements PluginInventory {
 					bounty.addHunter(player);
 					if (Main.plugin.getConfig().getBoolean("new-hunter-alert"))
 						Alerts.newHunter(t, player);
-					player.sendMessage(ChatColor.YELLOW + Utils.msg("target-set"));
+					Message.TARGET_SET.format(ChatColor.YELLOW).send(player);
 				} else {
 					bounty.removeHunter(player);
-					player.sendMessage(ChatColor.YELLOW + Utils.msg("target-removed"));
+					Message.TARGET_REMOVED.format(ChatColor.YELLOW).send(player);
 					player.setCompassTarget(player.getWorld().getSpawnLocation());
 				}
 

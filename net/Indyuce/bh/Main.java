@@ -1,5 +1,8 @@
 package net.Indyuce.bh;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,13 +31,11 @@ import net.Indyuce.bh.nms.json.Json;
 import net.Indyuce.bh.nms.title.Title;
 import net.Indyuce.bh.resource.CustomItem;
 import net.Indyuce.bh.resource.Message;
-import net.Indyuce.bh.resource.QuoteReward;
-import net.Indyuce.bh.resource.TitleReward;
 import net.Indyuce.bh.util.VersionUtils;
 import net.milkbowl.vault.economy.Economy;
 
 public class Main extends JavaPlugin {
-	
+
 	// external
 	public static Main plugin;
 	private static BountyManager bountyManager;
@@ -108,25 +109,21 @@ public class Main extends JavaPlugin {
 		// config files
 		saveDefaultConfig();
 
-		// level data
-		FileConfiguration levels = ConfigData.getCD(this, "", "levels");
-		if (levels.getKeys(false).isEmpty()) {
-			for (TitleReward title : TitleReward.values())
-				levels.set("reward.title." + title.level, title.title);
-			for (QuoteReward quote : QuoteReward.values())
-				levels.set("reward.quote." + quote.level, quote.quote);
-			levels.set("bounties-needed-to-lvl-up", 5);
-			levels.set("reward.money.base", 50);
-			levels.set("reward.money.per-lvl", 6);
+		// name placeholders
+		try {
+			File file = new File(getDataFolder(), "levels.yml");
+			if (!file.exists())
+				Files.copy(Main.plugin.getResource("net/Indyuce/bh/resource/textfile/levels.yml"), file.getAbsoluteFile().toPath());
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		ConfigData.saveCD(this, levels, "", "levels");
 
 		// messages
 		FileConfiguration messages = ConfigData.getCD(this, "/language", "messages");
 		for (Message pa : Message.values()) {
 			String path = pa.name().toLowerCase().replace("_", "-");
 			if (!messages.contains(path))
-				messages.set(path, pa.value);
+				messages.set(path, pa.getDefault());
 		}
 		ConfigData.saveCD(this, messages, "/language", "messages");
 
@@ -141,6 +138,7 @@ public class Main extends JavaPlugin {
 		}
 		ConfigData.saveCD(this, items, "/language", "items");
 
+		ConfigData.setupCD(this, "", "data");
 		for (Player p : Bukkit.getOnlinePlayers())
 			PlayerData.get(p).setup();
 

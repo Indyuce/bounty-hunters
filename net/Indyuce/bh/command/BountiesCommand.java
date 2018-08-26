@@ -17,6 +17,7 @@ import net.Indyuce.bh.api.PlayerData;
 import net.Indyuce.bh.gui.BountyList;
 import net.Indyuce.bh.gui.Leaderboard;
 import net.Indyuce.bh.resource.CustomItem;
+import net.Indyuce.bh.resource.Message;
 import net.Indyuce.bh.util.Utils;
 import net.Indyuce.bh.util.VersionUtils;
 
@@ -30,7 +31,7 @@ public class BountiesCommand implements CommandExecutor {
 				return true;
 
 			if (!sender.hasPermission("bountyhunters.gui")) {
-				sender.sendMessage(ChatColor.RED + Utils.msg("not-enough-perms"));
+				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(sender);
 				return true;
 			}
 
@@ -41,7 +42,7 @@ public class BountiesCommand implements CommandExecutor {
 		// help
 		if (args[0].equalsIgnoreCase("help")) {
 			if (!sender.hasPermission("bountyhunters.op")) {
-				sender.sendMessage(ChatColor.RED + Utils.msg("not-enough-perms"));
+				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(sender);
 				return true;
 			}
 
@@ -67,7 +68,7 @@ public class BountiesCommand implements CommandExecutor {
 			if (!Main.plugin.checkPl(sender, true))
 				return true;
 			if (!sender.hasPermission("bountyhunters.leaderboard-gui")) {
-				sender.sendMessage(ChatColor.RED + Utils.msg("not-enough-perms"));
+				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(sender);
 				return true;
 			}
 
@@ -81,7 +82,7 @@ public class BountiesCommand implements CommandExecutor {
 
 			Player p = (Player) sender;
 			p.setCompassTarget(p.getBedSpawnLocation() == null ? p.getWorld().getSpawnLocation() : p.getBedSpawnLocation());
-			p.sendMessage(ChatColor.YELLOW + Utils.msg("tracking-compass-reset"));
+			Message.TRACKING_COMPASS_RESET.format(ChatColor.YELLOW).send(p);
 		}
 
 		// choose title
@@ -91,7 +92,7 @@ public class BountiesCommand implements CommandExecutor {
 
 			Player p = (Player) sender;
 			if (!sender.hasPermission("bountyhunters.title-cmd")) {
-				sender.sendMessage(ChatColor.RED + Utils.msg("not-enough-perms"));
+				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(sender);
 				return true;
 			}
 
@@ -110,7 +111,7 @@ public class BountiesCommand implements CommandExecutor {
 			playerData.set("current-title", select);
 			playerData.save();
 			VersionUtils.sound(p, "ENTITY_PLAYER_LEVELUP", 1, 2);
-			p.sendMessage(ChatColor.YELLOW + Utils.msg("successfully-selected").replace("%item%", Utils.applySpecialChars(select)));
+			Message.SUCCESSFULLY_SELECTED.format(ChatColor.YELLOW, "%item%", Utils.applySpecialChars(select)).send(p);
 		}
 
 		// choose quote
@@ -120,7 +121,7 @@ public class BountiesCommand implements CommandExecutor {
 
 			Player p = (Player) sender;
 			if (!p.hasPermission("bountyhunters.quote-cmd")) {
-				p.sendMessage(ChatColor.RED + Utils.msg("not-enough-perms"));
+				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(sender);
 				return true;
 			}
 
@@ -139,7 +140,7 @@ public class BountiesCommand implements CommandExecutor {
 			playerData.set("current-quote", select);
 			playerData.save();
 			VersionUtils.sound(p, "ENTITY_PLAYER_LEVELUP", 1, 2);
-			p.sendMessage(ChatColor.YELLOW + Utils.msg("successfully-selected").replace("%item%", select));
+			Message.SUCCESSFULLY_SELECTED.format(ChatColor.YELLOW, "%item%", Utils.applySpecialChars(select)).send(p);
 		}
 
 		// choose title
@@ -149,12 +150,12 @@ public class BountiesCommand implements CommandExecutor {
 
 			Player p = (Player) sender;
 			if (!p.hasPermission("bountyhunters.title-cmd")) {
-				p.sendMessage(ChatColor.RED + Utils.msg("not-enough-perms"));
+				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(p);
 				return true;
 			}
 
-			p.sendMessage(Utils.msg("chat-bar"));
-			p.sendMessage(ChatColor.YELLOW + Utils.msg("unlocked-titles"));
+			Message.CHAT_BAR.format(ChatColor.YELLOW).send(p);
+			Message.UNLOCKED_TITLES.format(ChatColor.YELLOW).send(p);
 			FileConfiguration levels = ConfigData.getCD(Main.plugin, "", "levels");
 			FileConfiguration config = ConfigData.getCD(Main.plugin, "/userdata", p.getUniqueId().toString());
 
@@ -162,7 +163,7 @@ public class BountiesCommand implements CommandExecutor {
 			for (String s : levels.getConfigurationSection("reward.title").getKeys(false)) {
 				String title = levels.getString("reward.title." + s);
 				if (unlocked.contains(title))
-					Main.json.message((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + Utils.applySpecialChars(title) + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties title " + unlocked.indexOf(title) + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Utils.msg("click-select") + "\",\"color\":\"white\"}]}}}");
+					Main.json.message((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + Utils.applySpecialChars(title) + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties title " + unlocked.indexOf(title) + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getUpdated() + "\",\"color\":\"white\"}]}}}");
 			}
 		}
 
@@ -172,12 +173,12 @@ public class BountiesCommand implements CommandExecutor {
 				return true;
 			Player p = (Player) sender;
 			if (!p.hasPermission("bountyhunters.quote-cmd")) {
-				p.sendMessage(ChatColor.RED + Utils.msg("not-enough-perms"));
+				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(p);
 				return true;
 			}
 
-			p.sendMessage(Utils.msg("chat-bar"));
-			p.sendMessage(ChatColor.YELLOW + Utils.msg("unlocked-quotes"));
+			Message.CHAT_BAR.format(ChatColor.YELLOW).send(p);
+			Message.UNLOCKED_QUOTES.format(ChatColor.YELLOW).send(p);
 			FileConfiguration levels = ConfigData.getCD(Main.plugin, "", "levels");
 			FileConfiguration config = ConfigData.getCD(Main.plugin, "/userdata", p.getUniqueId().toString());
 
@@ -185,14 +186,14 @@ public class BountiesCommand implements CommandExecutor {
 			for (String s : levels.getConfigurationSection("reward.quote").getKeys(false)) {
 				String title = levels.getString("reward.quote." + s);
 				if (unlocked.contains(title))
-					Main.json.message((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + title + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties quote " + unlocked.indexOf(title) + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Utils.msg("click-select") + "\",\"color\":\"white\"}]}}}");
+					Main.json.message((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + title + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties quote " + unlocked.indexOf(title) + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getUpdated() + "\",\"color\":\"white\"}]}}}");
 			}
 		}
 
 		// reload plugin
 		if (args[0].equalsIgnoreCase("reload")) {
 			if (!sender.hasPermission("bountyhunters.op")) {
-				sender.sendMessage(ChatColor.RED + Utils.msg("not-enough-perms"));
+				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(sender);
 				return true;
 			}
 			Main.plugin.reloadConfig();

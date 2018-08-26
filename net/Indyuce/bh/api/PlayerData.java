@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import net.Indyuce.bh.ConfigData;
 import net.Indyuce.bh.Main;
 import net.Indyuce.bh.resource.CustomItem;
+import net.Indyuce.bh.resource.Message;
 import net.Indyuce.bh.resource.SpecialChar;
 import net.Indyuce.bh.util.Utils;
 
@@ -57,7 +59,7 @@ public class PlayerData {
 	}
 
 	public void add(String path, int value) {
-		config.set("claimed-bounties", config.getInt("claimed-bounties") + value);
+		config.set(path, config.getInt(path) + value);
 	}
 
 	public String getString(String path) {
@@ -109,12 +111,9 @@ public class PlayerData {
 		profileMeta.setOwner(playerName);
 		List<String> profileLore = profileMeta.getLore();
 
-		String title = getString("current-title").equals("") ? ChatColor.RED + Utils.msg("no-title") : Utils.applySpecialChars(getString("current-title"));
+		String title = getString("current-title").equals("") ? Message.NO_TITLE.getUpdated() : Utils.applySpecialChars(getString("current-title"));
 		for (int j = 0; j < profileLore.size(); j++)
-			profileLore.set(j, profileLore.get(j).replace("%claimed-bounties%", "" + getInt("claimed-bounties"))
-					.replace("%successful-bounties%", "" + getInt("successful-bounties"))
-					.replace("%current-title%", title)
-					.replace("%level%", "" + getInt("level")));
+			profileLore.set(j, profileLore.get(j).replace("%claimed-bounties%", "" + getInt("claimed-bounties")).replace("%successful-bounties%", "" + getInt("successful-bounties")).replace("%current-title%", title).replace("%level%", "" + getInt("level")));
 
 		profileMeta.setLore(profileLore);
 		profile.setItemMeta(profileMeta);
@@ -128,9 +127,9 @@ public class PlayerData {
 			if (getInt("claimed-bounties") < ntlu || getInt("level") >= j)
 				continue;
 
-			p.sendMessage(Utils.msg("chat-bar"));
-			p.sendMessage(ChatColor.YELLOW + Utils.msg("level-up").replace("%level%", "" + j));
-			p.sendMessage(ChatColor.YELLOW + Utils.msg("level-up-2").replace("%bounties%", "" + levels.getInt("bounties-needed-to-lvl-up")));
+			Message.CHAT_BAR.format(ChatColor.YELLOW).send(p);
+			Message.LEVEL_UP.format(ChatColor.YELLOW, "%level%", "" + j).send(p);
+			Message.LEVEL_UP_2.format(ChatColor.YELLOW, "%bounties%", "" + levels.getInt("bounties-needed-to-lvl-up")).send(p);
 
 			List<String> unlocked = getUnlocked();
 			List<String> rewards = new ArrayList<String>();
@@ -166,16 +165,21 @@ public class PlayerData {
 			double money = levels.getDouble("reward.money.base") + (j * levels.getDouble("reward.money.per-lvl"));
 			String rewardsFormat = "";
 			if (money > 0)
-				rewardsFormat += "\n" + ChatColor.YELLOW + Utils.msg("level-up-reward") + money + ChatColor.YELLOW + " money";
+				rewardsFormat += "\n" + ChatColor.YELLOW + Message.LEVEL_UP_REWARD.getUpdated() + money + ChatColor.YELLOW + " money";
 			for (String s : rewards)
-				rewardsFormat += "\n" + ChatColor.YELLOW + Utils.msg("level-up-reward") + Utils.applySpecialChars(s);
+				rewardsFormat += "\n" + ChatColor.YELLOW + Message.LEVEL_UP_REWARD.getUpdated() + Utils.applySpecialChars(s);
 			rewardsFormat = rewardsFormat.substring(1);
 
-			Main.json.message(p, "{\"text\":\"" + ChatColor.YELLOW + Utils.msg("level-up-rewards") + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + rewardsFormat + "\"}}}");
+			Main.json.message(p, "{\"text\":\"" + ChatColor.YELLOW + Message.LEVEL_UP_REWARDS.getUpdated() + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + rewardsFormat + "\"}}}");
 
 			Main.getEconomy().depositPlayer(p, money);
 			set("level", j);
 			set("unlocked", unlocked);
+			
+			// send commands
+			for (String s : levels.getStringList("reward.commands." + j))
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.replace("%player%", p.getName()));
+			
 			break;
 		}
 	}

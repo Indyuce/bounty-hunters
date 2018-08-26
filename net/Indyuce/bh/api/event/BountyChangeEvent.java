@@ -9,7 +9,7 @@ import net.Indyuce.bh.api.Bounty;
 // this event is called when a bounty reward changes, for instance
 // when a player performs /addbounty <player> <reward> when there's
 // already a bounty on the player, or when the auto bounty system
-// adds to a player's bounty.
+// adds a specific amount to a player's bounty.
 
 public class BountyChangeEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();

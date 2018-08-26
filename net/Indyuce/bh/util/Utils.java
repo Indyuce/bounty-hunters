@@ -4,15 +4,14 @@ import java.text.DecimalFormat;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.bh.ConfigData;
 import net.Indyuce.bh.Main;
 import net.Indyuce.bh.api.Bounty;
 import net.Indyuce.bh.resource.CustomItem;
+import net.Indyuce.bh.resource.Message;
 import net.Indyuce.bh.resource.SpecialChar;
 
 public class Utils {
@@ -52,7 +51,7 @@ public class Utils {
 		if (compassTarget == null)
 			return;
 
-		String format = msg("in-another-world");
+		String format = Message.IN_ANOTHER_WORLD.getUpdated();
 		if (p.getWorld().getName().equals(compassTarget.getWorld().getName())) {
 			format = (Main.plugin.getConfig().getBoolean("round-distance") ? (int) (compassTarget.getLocation().distance(p.getLocation())) : new DecimalFormat("#.###").format(compassTarget.getLocation().distance(p.getLocation()))) + " blocks";
 			p.setCompassTarget(compassTarget.getLocation().clone().add(.5, 0, .5));
@@ -70,13 +69,6 @@ public class Utils {
 					return !lore || i.getItemMeta().getLore() != null;
 		return false;
 	}
-
-//	public static String msg(String path) {
-//		FileConfiguration messages = ConfigData.getCD(Main.plugin, "/language", "messages");
-//		String msg = messages.getString(path);
-//		msg = ChatColor.translateAlternateColorCodes('&', msg);
-//		return msg;
-//	}
 
 	public static double truncation(double x, int n) {
 		double pow = Math.pow(10.0, n);

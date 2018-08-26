@@ -119,8 +119,8 @@ public class BountyClaim implements Listener {
 		OfflinePlayer creator = bounty.getCreator();
 
 		// own bounty claiming option
-		if (creator != null)
-			if (!Main.plugin.getConfig().getBoolean("own-bounty-claiming") && creator.getUniqueId() == t.getUniqueId())
+		if (bounty.hasCreator())
+			if (!Main.plugin.getConfig().getBoolean("own-bounty-claiming") && bounty.hasCreator(t))
 				return;
 
 		// API
@@ -137,6 +137,8 @@ public class BountyClaim implements Listener {
 		// give money
 		Main.getEconomy().depositPlayer(t, bounty.getReward());
 
+		Alerts.claimBounty(p.getKiller(), bounty);
+
 		// add 1 to claimed bounties, update level
 		PlayerData playerData = PlayerData.get(t);
 		playerData.add("claimed-bounties", 1);
@@ -150,8 +152,6 @@ public class BountyClaim implements Listener {
 			playerData1.add("successful-bounties", 1);
 			playerData1.save();
 		}
-
-		Alerts.claimBounty(p.getKiller(), bounty);
 
 		// display death quote
 		if (Main.plugin.getConfig().getBoolean("enable-quotes-levels-titles")) {

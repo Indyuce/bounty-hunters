@@ -1,5 +1,11 @@
 package net.Indyuce.bh.resource;
 
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+
+import net.Indyuce.bh.ConfigData;
+import net.Indyuce.bh.Main;
+
 public enum Message {
 	SET_BY("Set by &f%creator%&7."),
 	SET_BY_YOURSELF("You set this bounty."),
@@ -19,7 +25,7 @@ public enum Message {
 	// gui
 	GUI_NAME("&nBounties (%page%/%max-page%)"),
 	LEADERBOARD_GUI_NAME("&nHunter Leaderboard"),
-	CHAT_BAR("&e&m-----------------------------------------------------"),
+	CHAT_BAR("&m-----------------------------------------------------"),
 
 	// bounty creation
 	BOUNTY_CREATED("You succesfully set a bounty on &f%target%&e."),
@@ -68,14 +74,45 @@ public enum Message {
 	UNLOCKED_TITLES("Unlocked titles:"),
 	UNLOCKED_QUOTES("Unlocked quotes:"),
 	TRACKING_COMPASS_RESET("Compass reset."),
-	ADDING_MONEY_TO_BOUNTY("Please type in the amount you want to add to the bounty."),
 	CONSOLE("console");
 
-	public Object value;
+	private String defaultMessage;
 
-	private Message(Object value) {
-		this.value = value;
+	private Message(String defaultMessage) {
+		this.defaultMessage = defaultMessage;
 	}
-	
-	
+
+	public String getDefault() {
+		return defaultMessage;
+	}
+
+	public String getUpdated() {
+		return ChatColor.translateAlternateColorCodes('&', ConfigData.getCD(Main.plugin, "/language", "messages").getString(name().toLowerCase().replace("_", "-")));
+	}
+
+	// toReplace length must be even
+	public String formatRaw(ChatColor prefix, String... toReplace) {
+		String message = prefix + getUpdated();
+		for (int j = 0; j < toReplace.length; j += 2)
+			message = message.replace(toReplace[j], toReplace[j + 1]);
+		return message;
+	}
+
+	public PlayerMessage format(ChatColor prefix, String... toReplace) {
+		return new PlayerMessage(formatRaw(prefix, toReplace));
+	}
+
+	public class PlayerMessage {
+		private String message;
+
+		public PlayerMessage(String message) {
+			this.message = message;
+		}
+
+		// send if message is not empty
+		public void send(CommandSender p) {
+			if (!ChatColor.stripColor(message).equals(""))
+				p.sendMessage(message);
+		}
+	}
 }
