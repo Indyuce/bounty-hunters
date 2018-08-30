@@ -7,6 +7,11 @@
 #
 # --------------------------------------------------------------
 
+# Notifies players with the 'bountyhunters.update-notify' perm node when
+# they join the server if a new update is available for download.
+# Requires /reload when changed.
+update-notify: true
+
 # Enables/disables the item effect when a bounty is claimed.
 # PS: items can't be picked up.
 bounty-effect:
@@ -24,15 +29,17 @@ physical-rewards:
         GOLD_NUGGET: 10
         INK_SACK: 4 1
 
+# Commands sent when a player claims a bounty.
+# Sent by the console.
+bounty-commands:
+- '/give %player% minecraft:diamond 10'
+
 # When enabled, it will automaticaly place a bounty
 # onto any player who kills a player with no bounty on him (illegal kill).
 auto-bounty:
     enabled: false
     reward: 100
     chance: 100
-  
-# Round distance displayed on the tracking compass.
-round-distance: false
 
 # Drops the player head when claming a bounty.
 drop-head:
@@ -50,10 +57,12 @@ display-player-skulls: true
 # The tracking compass allows people to know where the people with a bounty on are.
 # Required a /reload to take effect.
 # The cooldown determines how often you can target a player in the menu (can fix spam from the hunter alert).
+# The format corresponds to the number displayed on the compass name
 compass:
     enabled: true
     price: 1000
     target-cooldown: 240
+    format: '0.#'
 
 # Min and max bounty rewards.
 # Set max to 0 to remove the max restriction.

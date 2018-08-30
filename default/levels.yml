@@ -1,0 +1,76 @@
+# Rewards given to players when they level up.
+# Names in caps do not matter since they will not be
+# displayed in-game, just make sure they're all different.
+
+# Level max: 50
+
+reward:
+
+    # The player title is displayed in the bounty
+    # leaderboard as well as when the player claims a bounty.
+    # It can also be obtained using a placeholder.
+    title:
+        HEAD_HUNTER:
+            format: Head Hunter
+            unlock: 1
+        HEAD_COLLECTOR:
+            format: Head Collector
+            unlock: 2
+        EXPERIENCED_HUNTER:
+            format: Experienced Hunter
+            unlock: 3
+        GREEDY_HUNTER:
+            format: Greedy Hunter
+            unlock: 4
+        DEAD_OR_ALIVE:
+            format: Dead or Alive
+            unlock: 5
+        BLOODTHIRSTY:
+            format: Bloodthirsty
+            unlock: 6
+        BOUNTY_HUNTER:
+            format: '%star% Bounty Hunter %star%'
+            unlock: 8
+        LEGENDARY_HUNTER:
+            format: '%star% Bounty Hunter %star%'
+            unlock: 15
+        THE_LEGEND:
+            format: '%diamond% The Legend %diamond%'
+            unlock: 25
+            
+    # 'Death quotes' are displayed in the chat
+    # and on the title when a player claims a bounty.
+    # It can also be obtained with a placeholder.
+    quote:
+        MAY_DEATH:
+            format: 'May Death welcome you...'
+            unlock: 3
+        DIAMOND:
+            format: 'You better not steal that diamond again.'
+            unlock: 6
+        TRY_ME:
+            format: 'Try me'
+            unlock: 10
+        GIT_GUD:
+            format: 'Git gud'
+            unlock: 15
+        GET_REKT:
+            format: 'G3t r3kt'
+            unlock: 20
+  
+    # Commands sent when leveling up.
+    commands:
+        '1':
+        - "say %player% reached level 1!"
+        
+    # Currency earned when leveling up.
+    # cash earned = <base> + ( <per-level> * <player level> )
+    money:
+        base: 50
+        per-level: 6
+        
+# Bounties players need to claim to level up.
+# number of bounties needed = <base> + ( <per-level> * <player level> )
+bounties-needed:
+    base: 5
+    per-level: .3

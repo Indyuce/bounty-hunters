@@ -1,6 +1,6 @@
 name: BountyHunters
-version: 2.0.1
-main: net.Indyuce.bh.Main
+version: 2.1
+main: net.Indyuce.bountyhunters.BountyHunters
 author: Indyuce
 depend: [Vault]
 commands:
@@ -10,21 +10,27 @@ commands:
         description: Create a bounty on a player.
         aliases: [bounty, setbounty]
 permissions:
-    bountyhunters.gui:
+    bountyhunters.admin:
         default: op
-    bountyhunters.leaderboard-gui:
+    bountyhunters.list:
+        default: op
+    bountyhunters.leaderboard:
         default: op
     bountyhunters.add:
         default: op
-    bountyhunters.title-cmd:
+    bountyhunters.title:
         default: op
-    bountyhunters.quote-cmd:
+    bountyhunters.quote:
         default: op
     bountyhunters.claim:
         default: op
-    bountyhunters.bypass-imun:
+    bountyhunters.immunity.bypass:
         default: false
-    bountyhunters.imun:
+    bountyhunters.immunity:
         default: false
-    bountyhunters.op:
+    bountyhunters.untargetable:
+        default: false
+    bountyhunters.untargetable.bypass:
+        default: false
+    bountyhunters.update-notify:
         default: op
