@@ -130,21 +130,14 @@ public class Bounty {
 	}
 
 	public static Bounty load(ConfigurationSection section) {
-
-		Bukkit.broadcastMessage("test");
-
 		UUID target = UUID.fromString(section.getName());
 		UUID creator = section.contains("creator") ? UUID.fromString(section.getString("creator")) : null;
 		double reward = section.getDouble("reward");
 
 		Bounty bounty = new Bounty(creator, target, reward);
 
-		for (String s : section.getStringList("hunters")) {
-			Bukkit.broadcastMessage("test = " + s);
-			Bukkit.broadcastMessage("test = " + UUID.fromString(s).toString());
-			Bukkit.broadcastMessage("test = " + Bukkit.getOfflinePlayer(UUID.fromString(s)).getName());
+		for (String s : section.getStringList("hunters"))
 			bounty.addHunter(Bukkit.getOfflinePlayer(UUID.fromString(s)));
-		}
 
 		if (section.contains("up"))
 			for (String s : section.getConfigurationSection("up").getKeys(false))

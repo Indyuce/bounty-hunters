@@ -79,8 +79,8 @@ public class BountyHunters extends JavaPlugin {
 
 	public void onDisable() {
 		for (Player t : Bukkit.getOnlinePlayers())
-			if (t.getInventory() != null)
-				if (t.getInventory().getHolder() instanceof PluginInventory)
+			if (t.getOpenInventory() != null)
+				if (t.getOpenInventory().getTopInventory().getHolder() instanceof PluginInventory)
 					t.closeInventory();
 		
 		for (PlayerData playerData : PlayerData.getPlayerDatas())
@@ -98,8 +98,8 @@ public class BountyHunters extends JavaPlugin {
 				getLogger().log(Level.INFO, "\u001B[32m" + s + "\u001B[37m");
 
 		plugin = this;
-		bountyManager = new BountyManager();
 		huntManager = new HuntManager();
+		bountyManager = new BountyManager();
 		
 		reloadConfigFiles();
 
