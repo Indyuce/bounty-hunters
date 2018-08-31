@@ -53,6 +53,7 @@ public class BountiesCommand implements CommandExecutor {
 			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounties titles" + ChatColor.WHITE + " lists available titles.");
 			sender.sendMessage("");
 			sender.sendMessage(ChatColor.GRAY + "" + ChatColor.BOLD + "Admin");
+			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounties help" + ChatColor.WHITE + " shows the help page.");
 			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounties reload" + ChatColor.WHITE + " reloads the config file.");
 			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounties remove <player>" + ChatColor.WHITE + " removes a bounty.");
 			return true;

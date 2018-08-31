@@ -19,7 +19,6 @@ public class BountiesCompletion implements TabCompleter {
 		List<String> list = new ArrayList<String>();
 
 		if (args.length == 1) {
-			list.add("leaderboard");
 			list.add("titles");
 			list.add("quotes");
 			if (p.hasPermission("bountyhunters.admin")) {
