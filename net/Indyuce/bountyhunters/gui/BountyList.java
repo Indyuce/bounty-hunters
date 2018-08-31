@@ -20,13 +20,13 @@ import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.BountyManager;
 import net.Indyuce.bountyhunters.api.CustomItem;
+import net.Indyuce.bountyhunters.api.ItemTag;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.PlayerData;
 import net.Indyuce.bountyhunters.api.event.HunterTargetEvent;
 import net.Indyuce.bountyhunters.listener.Alerts;
-import net.Indyuce.bountyhunters.nms.nbttag.ItemTag;
 import net.Indyuce.bountyhunters.util.Utils;
-import net.Indyuce.bountyhunters.util.VersionUtils;
+import net.Indyuce.bountyhunters.version.VersionSound;
 
 public class BountyList implements PluginInventory {
 	private static HashMap<UUID, Long> lastTarget = new HashMap<UUID, Long>();
@@ -80,7 +80,7 @@ public class BountyList implements PluginInventory {
 			meta.setLore(lore);
 			i.setItemMeta(meta);
 
-			i = BountyHunters.nbttags.add(i, new ItemTag("playerUuid", bounty.getTarget().getUniqueId().toString()));
+			i = BountyHunters.getNMS().addTag(i, new ItemTag("playerUuid", bounty.getTarget().getUniqueId().toString()));
 
 			inv.setItem(slots[j - min], i);
 		}
@@ -143,7 +143,7 @@ public class BountyList implements PluginInventory {
 			}
 
 			BountyHunters.getEconomy().withdrawPlayer(player, price);
-			VersionUtils.sound(player, "ENTITY_PLAYER_LEVELUP", 1, 2);
+			player.playSound(player.getLocation(), VersionSound.ENTITY_PLAYER_LEVELUP.getSound(), 1, 2);
 			player.getInventory().addItem(CustomItem.BOUNTY_COMPASS.a());
 			return;
 		}
@@ -152,7 +152,7 @@ public class BountyList implements PluginInventory {
 		BountyManager bountyManager = BountyHunters.getBountyManager();
 		if (action == InventoryAction.PICKUP_ALL && BountyHunters.plugin.getConfig().getBoolean("compass.enabled"))
 			if (slot < 35 && i.getType() == Material.SKULL_ITEM && !i.getItemMeta().getDisplayName().equals(CustomItem.PLAYER_HEAD.a().getItemMeta().getDisplayName().replace("%name%", player.getName()))) {
-				String tag = BountyHunters.nbttags.getStringTag(i, "playerUuid");
+				String tag = BountyHunters.getNMS().getStringTag(i, "playerUuid");
 				if (tag == null || tag.equals(""))
 					return;
 
@@ -184,7 +184,7 @@ public class BountyList implements PluginInventory {
 						Message.TARGET_COOLDOWN.format(ChatColor.RED, "%remain%", "" + remain, "%s%", remain >= 2 ? "s" : "").send(player);
 						return;
 					}
-					
+
 					BountyList.lastTarget.put(player.getUniqueId(), System.currentTimeMillis());
 
 					// remove older hunter
@@ -203,7 +203,7 @@ public class BountyList implements PluginInventory {
 		// remove bounty
 		if (action == InventoryAction.PICKUP_HALF)
 			if (slot < 35 && i.getType() == Material.SKULL_ITEM) {
-				String tag = BountyHunters.nbttags.getStringTag(i, "playerUuid");
+				String tag = BountyHunters.getNMS().getStringTag(i, "playerUuid");
 				if (tag == null || tag.equals(""))
 					return;
 

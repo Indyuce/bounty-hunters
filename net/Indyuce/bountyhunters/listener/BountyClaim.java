@@ -159,7 +159,7 @@ public class BountyClaim implements Listener {
 				for (Player t2 : Bukkit.getOnlinePlayers()) {
 					t2.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + t.getName() + "> " + deathQuote);
 					if (bool)
-						BountyHunters.title.title(t2, ChatColor.GOLD + "" + ChatColor.BOLD + t.getName().toUpperCase(), ChatColor.ITALIC + deathQuote, 10, 60, 10);
+						BountyHunters.getNMS().sendTitle(t2, ChatColor.GOLD + "" + ChatColor.BOLD + t.getName().toUpperCase(), ChatColor.ITALIC + deathQuote, 10, 60, 10);
 				}
 			}
 		}

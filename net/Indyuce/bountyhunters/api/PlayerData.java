@@ -74,70 +74,18 @@ public class PlayerData {
 		return config.getInt("claimed-bounties");
 	}
 
+	public List<String> getUnlocked() {
+		return unlocked;
+	}
+
 	public String getQuote() {
 		String format = BountyHunters.getLevelsConfigFile().getString("reward.quote." + config.getString("current-quote") + ".format");
 		return SpecialChar.apply(format == null ? "" : format);
 	}
 
-	public boolean hasQuote() {
-		return !getQuote().equals("");
-	}
-
 	public String getTitle() {
 		String format = BountyHunters.getLevelsConfigFile().getString("reward.title." + config.getString("current-title") + ".format");
 		return SpecialChar.apply(format == null ? "" : format);
-	}
-
-	public boolean hasTitle() {
-		return !getTitle().equals("");
-	}
-
-	public void setLevel(int value) {
-		config.set("level", value);
-	}
-
-	public void addLevels(int value) {
-		setLevel(getLevel() + value);
-	}
-
-	public void setSuccessfulBounties(int value) {
-		config.set("successful-bounties", value);
-	}
-
-	public void addSuccessfulBounties(int value) {
-		setSuccessfulBounties(getSuccessfulBounties() + value);
-	}
-
-	public void setClaimedBounties(int value) {
-		config.set("claimed-bounties", value);
-	}
-
-	public void addClaimedBounties(int value) {
-		setClaimedBounties(getClaimedBounties() + value);
-	}
-
-	public void setCurrentQuote(String value) {
-		config.set("current-quote", value);
-	}
-
-	public void setCurrentTitle(String value) {
-		config.set("current-title", value);
-	}
-
-	public void setUnlocked(List<String> value) {
-		config.set("unlocked", value);
-	}
-
-	public List<String> getUnlocked() {
-		return unlocked;
-	}
-
-	public boolean hasUnlocked(String path) {
-		return unlocked.contains(path);
-	}
-
-	public void addUnlocked(String value) {
-		unlocked.add(value);
 	}
 
 	public double getValueDependingOnLevel(ConfigurationSection section, int level) {
@@ -147,11 +95,6 @@ public class PlayerData {
 	public int getBountiesNeededToLevelUp() {
 		int bountiesNeeded = BountyHunters.getLevelsConfigFile().getInt("bounties-per-level");
 		return bountiesNeeded - (getClaimedBounties() % bountiesNeeded);
-	}
-
-	@Override
-	public boolean equals(Object object) {
-		return object instanceof PlayerData ? ((PlayerData) object).getUUID().equals(getUUID()) : false;
 	}
 
 	public String getLevelProgressBar() {
@@ -176,6 +119,58 @@ public class PlayerData {
 		profileMeta.setLore(profileLore);
 		profile.setItemMeta(profileMeta);
 		return profile;
+	}
+
+	public boolean hasQuote() {
+		return !getQuote().equals("");
+	}
+
+	public boolean hasTitle() {
+		return !getTitle().equals("");
+	}
+
+	public boolean hasUnlocked(String path) {
+		return unlocked.contains(path);
+	}
+
+	public void setLevel(int value) {
+		config.set("level", value);
+	}
+
+	public void setSuccessfulBounties(int value) {
+		config.set("successful-bounties", value);
+	}
+
+	public void setCurrentQuote(String value) {
+		config.set("current-quote", value);
+	}
+
+	public void setCurrentTitle(String value) {
+		config.set("current-title", value);
+	}
+
+	public void setClaimedBounties(int value) {
+		config.set("claimed-bounties", value);
+	}
+
+	public void setUnlocked(List<String> value) {
+		config.set("unlocked", value);
+	}
+
+	public void addLevels(int value) {
+		setLevel(getLevel() + value);
+	}
+
+	public void addSuccessfulBounties(int value) {
+		setSuccessfulBounties(getSuccessfulBounties() + value);
+	}
+
+	public void addClaimedBounties(int value) {
+		setClaimedBounties(getClaimedBounties() + value);
+	}
+
+	public void addUnlocked(String value) {
+		unlocked.add(value);
 	}
 
 	public void checkForLevelUp(Player player) {
@@ -225,11 +220,16 @@ public class PlayerData {
 		String jsonList = money > 0 ? "\n" + Message.LEVEL_UP_REWARD.formatRaw(ChatColor.YELLOW, "%reward%", "$" + money) : "";
 		for (String s : chatDisplay)
 			jsonList += "\n" + Message.LEVEL_UP_REWARD.formatRaw(ChatColor.YELLOW, "%reward%", SpecialChar.apply(s));
-		BountyHunters.json.message(player, "{\"text\":\"" + ChatColor.YELLOW + Message.LEVEL_UP_REWARDS.getUpdated() + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1) + "\"}}}");
+		BountyHunters.getNMS().sendJson(player, "{\"text\":\"" + ChatColor.YELLOW + Message.LEVEL_UP_REWARDS.getUpdated() + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1) + "\"}}}");
 
 		setLevel(nextLevel);
 		setUnlocked(unlocked);
 		return true;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		return object instanceof PlayerData ? ((PlayerData) object).getUUID().equals(getUUID()) : false;
 	}
 
 	public void saveFile() {

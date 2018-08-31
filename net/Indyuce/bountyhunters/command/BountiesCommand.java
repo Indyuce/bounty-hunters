@@ -15,7 +15,7 @@ import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.PlayerData;
 import net.Indyuce.bountyhunters.api.SpecialChar;
 import net.Indyuce.bountyhunters.gui.BountyList;
-import net.Indyuce.bountyhunters.util.VersionUtils;
+import net.Indyuce.bountyhunters.version.VersionSound;
 
 public class BountiesCommand implements CommandExecutor {
 	@Override
@@ -23,8 +23,10 @@ public class BountiesCommand implements CommandExecutor {
 
 		// open bounties menu
 		if (args.length < 1) {
-			if (!BountyHunters.plugin.checkPl(sender, true))
+			if (!(sender instanceof Player)) {
+				sender.sendMessage(ChatColor.RED + "This command is for players only.");
 				return true;
+			}
 
 			if (!sender.hasPermission("bountyhunters.list")) {
 				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(sender);
@@ -56,6 +58,13 @@ public class BountiesCommand implements CommandExecutor {
 			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounties help" + ChatColor.WHITE + " shows the help page.");
 			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounties reload" + ChatColor.WHITE + " reloads the config file.");
 			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounties remove <player>" + ChatColor.WHITE + " removes a bounty.");
+
+			Player p = (Player) sender;
+
+			p.playSound(p.getLocation(), VersionSound.ENTITY_ENDERMAN_HURT.getSound(), 1, 1);
+			p.playSound(p.getLocation(), VersionSound.ENTITY_PLAYER_LEVELUP.getSound(), 1, 1);
+			p.playSound(p.getLocation(), VersionSound.ENTITY_VILLAGER_NO.getSound(), 1, 1);
+			p.getInventory().addItem(CustomItem.GUI_PLAYER_HEAD.a());
 			return true;
 		}
 
@@ -87,8 +96,10 @@ public class BountiesCommand implements CommandExecutor {
 
 		// choose title
 		if (args[0].equalsIgnoreCase("title")) {
-			if (!BountyHunters.plugin.checkPl(sender, true))
+			if (!(sender instanceof Player)) {
+				sender.sendMessage(ChatColor.RED + "This command is for players only.");
 				return true;
+			}
 
 			Player p = (Player) sender;
 			if (!sender.hasPermission("bountyhunters.title")) {
@@ -108,14 +119,16 @@ public class BountiesCommand implements CommandExecutor {
 				return true;
 
 			playerData.setCurrentTitle(args[1]);
-			VersionUtils.sound(p, "ENTITY_PLAYER_LEVELUP", 1, 2);
+			p.playSound(p.getLocation(), VersionSound.ENTITY_PLAYER_LEVELUP.getSound(), 1, 2);
 			Message.SUCCESSFULLY_SELECTED.format(ChatColor.YELLOW, "%item%", playerData.getTitle()).send(p);
 		}
 
 		// choose quote
 		if (args[0].equalsIgnoreCase("quote")) {
-			if (!BountyHunters.plugin.checkPl(sender, true))
+			if (!(sender instanceof Player)) {
+				sender.sendMessage(ChatColor.RED + "This command is for players only.");
 				return true;
+			}
 
 			Player p = (Player) sender;
 			if (!p.hasPermission("bountyhunters.quote")) {
@@ -135,14 +148,16 @@ public class BountiesCommand implements CommandExecutor {
 				return true;
 
 			playerData.setCurrentQuote(args[1]);
-			VersionUtils.sound(p, "ENTITY_PLAYER_LEVELUP", 1, 2);
+			p.playSound(p.getLocation(), VersionSound.ENTITY_PLAYER_LEVELUP.getSound(), 1, 2);
 			Message.SUCCESSFULLY_SELECTED.format(ChatColor.YELLOW, "%item%", playerData.getQuote()).send(p);
 		}
 
 		// choose title
 		if (args[0].equalsIgnoreCase("titles")) {
-			if (!BountyHunters.plugin.checkPl(sender, true))
+			if (!(sender instanceof Player)) {
+				sender.sendMessage(ChatColor.RED + "This command is for players only.");
 				return true;
+			}
 
 			Player p = (Player) sender;
 			if (!p.hasPermission("bountyhunters.title")) {
@@ -158,14 +173,17 @@ public class BountiesCommand implements CommandExecutor {
 			for (String s : levels.getConfigurationSection("reward.title").getKeys(false)) {
 				String title = levels.getString("reward.title." + s + ".format");
 				if (playerData.hasUnlocked(s))
-					BountyHunters.json.message((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + SpecialChar.apply(title) + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties title " + s + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getUpdated() + "\",\"color\":\"white\"}]}}}");
+					BountyHunters.getNMS().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + SpecialChar.apply(title) + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties title " + s + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getUpdated() + "\",\"color\":\"white\"}]}}}");
 			}
 		}
 
 		// quotes list
 		if (args[0].equalsIgnoreCase("quotes")) {
-			if (!BountyHunters.plugin.checkPl(sender, true))
+			if (!(sender instanceof Player)) {
+				sender.sendMessage(ChatColor.RED + "This command is for players only.");
 				return true;
+			}
+
 			Player p = (Player) sender;
 			if (!p.hasPermission("bountyhunters.quote")) {
 				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(p);
@@ -180,7 +198,7 @@ public class BountiesCommand implements CommandExecutor {
 			for (String s : levels.getConfigurationSection("reward.quote").getKeys(false)) {
 				String quote = levels.getString("reward.quote." + s + ".format");
 				if (playerData.hasUnlocked(s))
-					BountyHunters.json.message((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + quote + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties quote " + s + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getUpdated() + "\",\"color\":\"white\"}]}}}");
+					BountyHunters.getNMS().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + quote + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties quote " + s + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getUpdated() + "\",\"color\":\"white\"}]}}}");
 			}
 		}
 

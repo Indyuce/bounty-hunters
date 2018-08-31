@@ -3,13 +3,9 @@ package net.Indyuce.bountyhunters;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -31,18 +27,17 @@ import net.Indyuce.bountyhunters.gui.PluginInventory;
 import net.Indyuce.bountyhunters.listener.BountyClaim;
 import net.Indyuce.bountyhunters.listener.MainListener;
 import net.Indyuce.bountyhunters.listener.UpdateNotify;
-import net.Indyuce.bountyhunters.nms.json.Json;
-import net.Indyuce.bountyhunters.nms.nbttag.NBTTags;
-import net.Indyuce.bountyhunters.nms.title.Title;
-import net.Indyuce.bountyhunters.util.VersionUtils;
+import net.Indyuce.bountyhunters.version.PluginVersion;
 import net.Indyuce.bountyhunters.version.SpigotPlugin;
+import net.Indyuce.bountyhunters.version.nms.NMSHandler;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
 public class BountyHunters extends JavaPlugin {
 
-	// plugins
+	// plugin
 	public static BountyHunters plugin;
+	private static PluginVersion version;
 
 	// systems
 	private static BountyManager bountyManager;
@@ -51,51 +46,10 @@ public class BountyHunters extends JavaPlugin {
 	private static Permission permission;
 
 	// no reflection nms
-	public static Title title;
-	public static Json json;
-	public static NBTTags nbttags;
+	public static NMSHandler nms;
 
 	// cached config files
 	private static FileConfiguration levels;
-
-	public HashMap<UUID, Long> lastBounty = new HashMap<UUID, Long>();
-
-	public static Economy getEconomy() {
-		return economy;
-	}
-
-	public static Permission getPermission() {
-		return permission;
-	}
-
-	public static BountyManager getBountyManager() {
-		return bountyManager;
-	}
-
-	public static HuntManager getHuntManager() {
-		return huntManager;
-	}
-
-	public static FileConfiguration getLevelsConfigFile() {
-		return levels;
-	}
-
-	public void reloadConfigFiles() {
-		levels = ConfigData.getCD(BountyHunters.plugin, "", "levels");
-	}
-
-	public void onDisable() {
-		bountyManager.saveBounties();
-
-		for (PlayerData playerData : PlayerData.getPlayerDatas())
-			playerData.saveFile();
-
-		for (Player t : Bukkit.getOnlinePlayers())
-			if (t.getOpenInventory() != null)
-				if (t.getOpenInventory().getTopInventory().getHolder() instanceof PluginInventory)
-					t.closeInventory();
-
-	}
 
 	public void onEnable() {
 
@@ -122,16 +76,14 @@ public class BountyHunters extends JavaPlugin {
 			Bukkit.getServer().getPluginManager().registerEvents(new UpdateNotify(), this);
 
 		try {
-			VersionUtils.version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-			VersionUtils.splitVersion = VersionUtils.version.split("\\_");
-			getLogger().log(Level.INFO, "Detected Server Version: " + VersionUtils.version);
+			version = new PluginVersion(Bukkit.getServer().getClass());
+			getLogger().log(Level.INFO, "Detected Server Version: " + version.toString());
 
 			// no reflection nms, each class
 			// corresponds to a server version
-			title = (Title) Class.forName("net.Indyuce.bountyhunters.nms.title.Title_" + VersionUtils.version.substring(1)).newInstance();
-			json = (Json) Class.forName("net.Indyuce.bountyhunters.nms.json.Json_" + VersionUtils.version.substring(1)).newInstance();
-			nbttags = (NBTTags) Class.forName("net.Indyuce.bountyhunters.nms.nbttag.NBTTags_" + VersionUtils.version.substring(1)).newInstance();
+			nms = (NMSHandler) Class.forName("net.Indyuce.bountyhunters.version.nms.NMSHandler_" + version.toString().substring(1)).newInstance();
 		} catch (Exception e) {
+			e.printStackTrace();
 			getLogger().log(Level.SEVERE, "Your server version is not compatible.");
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
@@ -202,10 +154,47 @@ public class BountyHunters extends JavaPlugin {
 		getCommand("bounties").setTabCompleter(new BountiesCompletion());
 	}
 
-	public boolean checkPl(CommandSender sender, boolean msg) {
-		boolean b = sender instanceof Player;
-		if (!b && msg)
-			sender.sendMessage(ChatColor.RED + "This command is for players only.");
-		return b;
+	public void onDisable() {
+		bountyManager.saveBounties();
+
+		for (PlayerData playerData : PlayerData.getPlayerDatas())
+			playerData.saveFile();
+
+		for (Player t : Bukkit.getOnlinePlayers())
+			if (t.getOpenInventory() != null)
+				if (t.getOpenInventory().getTopInventory().getHolder() instanceof PluginInventory)
+					t.closeInventory();
+	}
+
+	public static NMSHandler getNMS() {
+		return nms;
+	}
+
+	public static Economy getEconomy() {
+		return economy;
+	}
+
+	public static Permission getPermission() {
+		return permission;
+	}
+
+	public static BountyManager getBountyManager() {
+		return bountyManager;
+	}
+
+	public static HuntManager getHuntManager() {
+		return huntManager;
+	}
+
+	public static FileConfiguration getLevelsConfigFile() {
+		return levels;
+	}
+
+	public static PluginVersion getVersion() {
+		return version;
+	}
+
+	public void reloadConfigFiles() {
+		levels = ConfigData.getCD(BountyHunters.plugin, "", "levels");
 	}
 }

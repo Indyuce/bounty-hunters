@@ -40,7 +40,7 @@ public class SpigotPlugin {
 		try {
 			URLConnection con = checkURL.openConnection();
 			this.newVersion = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
-			return new PluginVersion(newVersion).higherThan(new PluginVersion(plugin.getDescription().getVersion()));
+			return !newVersion.equals(plugin.getDescription().getVersion());
 		} catch (IOException e) {
 			return false;
 		}

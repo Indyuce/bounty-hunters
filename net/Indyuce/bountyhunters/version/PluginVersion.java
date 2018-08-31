@@ -1,24 +1,29 @@
 package net.Indyuce.bountyhunters.version;
 
 public class PluginVersion {
-	private String[] version;
+	public String version;
+	public int[] integers;
 
-	public PluginVersion(String version) {
-		this.version = version.replaceAll("[^0-9\\.]", "").split("\\.");
+	public PluginVersion(Class<?> clazz) {
+		this.version = clazz.getPackage().getName().replace(".", ",").split(",")[3];
+		String[] split = version.substring(1).split("\\_");
+		this.integers = new int[] { Integer.parseInt(split[0]), Integer.parseInt(split[1]) };
 	}
 
-	public int getLength() {
-		return version.length;
+	public boolean isBelowOrEqual(int... version) {
+		return version[0] > integers[0] ? true : version[1] >= integers[1];
 	}
 
-	public Integer numberAt(int index) {
-		return index < version.length ? Integer.parseInt(version[index]) : 0;
+	public boolean isStrictlyHigher(int... version) {
+		return version[0] < integers[0] ? true : version[1] < integers[1];
 	}
 
-	public boolean higherThan(PluginVersion version) {
-		for (int j = 0; j < Math.max(getLength(), version.getLength()); j++)
-			if (numberAt(j) != version.numberAt(j))
-				return numberAt(j) > version.numberAt(j);
-		return false;
+	public int[] toNumbers() {
+		return integers;
+	}
+
+	@Override
+	public String toString() {
+		return version;
 	}
 }

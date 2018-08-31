@@ -1,5 +1,9 @@
 package net.Indyuce.bountyhunters.command;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -18,6 +22,8 @@ import net.Indyuce.bountyhunters.listener.Alerts;
 import net.Indyuce.bountyhunters.util.Utils;
 
 public class AddBountyCommand implements CommandExecutor {
+	public Map<UUID, Long> lastBounty = new HashMap<UUID, Long>();
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!sender.hasPermission("bountyhunters.add")) {
@@ -80,7 +86,7 @@ public class AddBountyCommand implements CommandExecutor {
 		if (sender instanceof Player) {
 			Player p = (Player) sender;
 			long restriction = BountyHunters.plugin.getConfig().getInt("bounty-set-restriction") * 1000;
-			long last = BountyHunters.plugin.lastBounty.containsKey(p.getUniqueId()) ? BountyHunters.plugin.lastBounty.get(p.getUniqueId()) : 0;
+			long last = lastBounty.containsKey(p.getUniqueId()) ? lastBounty.get(p.getUniqueId()) : 0;
 			long left = last + restriction - System.currentTimeMillis();
 
 			if (left > 0) {
@@ -114,7 +120,7 @@ public class AddBountyCommand implements CommandExecutor {
 			// set last bounty value
 			if (sender instanceof Player) {
 				BountyHunters.getEconomy().withdrawPlayer((Player) sender, reward + tax);
-				BountyHunters.plugin.lastBounty.put(((Player) sender).getUniqueId(), System.currentTimeMillis());
+				lastBounty.put(((Player) sender).getUniqueId(), System.currentTimeMillis());
 			}
 
 			bounty.addToReward(sender instanceof Player ? (Player) sender : null, reward);
@@ -135,7 +141,7 @@ public class AddBountyCommand implements CommandExecutor {
 		// set last bounty value
 		if (sender instanceof Player) {
 			BountyHunters.getEconomy().withdrawPlayer((Player) sender, reward + tax);
-			BountyHunters.plugin.lastBounty.put(((Player) sender).getUniqueId(), System.currentTimeMillis());
+			lastBounty.put(((Player) sender).getUniqueId(), System.currentTimeMillis());
 		}
 		
 		bounty.register();
