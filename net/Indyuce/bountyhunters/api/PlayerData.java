@@ -18,6 +18,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.ConfigData;
+import net.Indyuce.bountyhunters.api.event.HunterLevelUpEvent;
 
 public class PlayerData {
 	private static Map<UUID, PlayerData> map = new HashMap<UUID, PlayerData>();
@@ -188,6 +189,9 @@ public class PlayerData {
 		int neededBounties = nextLevel * levels.getInt("bounties-per-level");
 		if (getClaimedBounties() < neededBounties)
 			return false;
+
+		HunterLevelUpEvent event = new HunterLevelUpEvent(player);
+		Bukkit.getPluginManager().callEvent(event);
 
 		Message.CHAT_BAR.format(ChatColor.YELLOW).send(player);
 		Message.LEVEL_UP.format(ChatColor.YELLOW, "%level%", "" + nextLevel).send(player);

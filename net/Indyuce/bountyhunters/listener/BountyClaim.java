@@ -210,8 +210,7 @@ public class BountyClaim implements Listener {
 			for (String s : BountyHunters.plugin.getConfig().getConfigurationSection("physical-rewards.list").getKeys(false)) {
 				try {
 					String[] split = BountyHunters.plugin.getConfig().getString("physical-rewards.list." + s).split(Pattern.quote(" "));
-					ItemStack i = new ItemStack(Material.valueOf(s.toUpperCase().replace("-", "_").replace(" ", "_")), (int) Double.parseDouble(split[0]), (split.length > 1 ? (short) Double.parseDouble(split[1]) : (short) 0));
-					p.getWorld().dropItem(p.getLocation(), i);
+					p.getWorld().dropItem(p.getLocation(), new ItemStack(Material.valueOf(s.toUpperCase().replace("-", "_").replace(" ", "_")), Integer.parseInt(split[0]), (split.length > 1 ? (short) Integer.parseInt(split[1]) : (short) 0)));
 				} catch (Exception e) {
 					Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Bounty Hunters] Wrong item format: " + s + ":" + BountyHunters.plugin.getConfig().getString("physical-rewards.list." + s));
 				}

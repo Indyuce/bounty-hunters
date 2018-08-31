@@ -46,10 +46,6 @@ drop-head:
     enabled: false
     chance: 100
 
-# Plays a sound & sends a message when someone is targeting you.
-# Warning: can be abused (spam).
-new-hunter-alert: true
-
 # Displays player skulls
 # Can sometimes not work because of minecraft servers (too many requests).
 display-player-skulls: true

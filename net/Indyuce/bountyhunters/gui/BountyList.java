@@ -22,6 +22,7 @@ import net.Indyuce.bountyhunters.api.BountyManager;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.PlayerData;
+import net.Indyuce.bountyhunters.api.event.HunterTargetEvent;
 import net.Indyuce.bountyhunters.listener.Alerts;
 import net.Indyuce.bountyhunters.nms.nbttag.ItemTag;
 import net.Indyuce.bountyhunters.util.Utils;
@@ -155,16 +156,7 @@ public class BountyList implements PluginInventory {
 				if (tag == null || tag.equals(""))
 					return;
 
-				Player t = Bukkit.getPlayer(UUID.fromString(tag));
-				if (t == null) {
-					Message.PLAYER_MUST_BE_CONNECTED.format(ChatColor.YELLOW).send(player);
-					return;
-				}
-
-				if (t.hasPermission("bountyhunters.untrackable") && !player.hasPermission("bountyhunters.untrackable.bypass")) {
-					Message.TRACK_IMUN.format(ChatColor.YELLOW).send(player);
-					return;
-				}
+				OfflinePlayer t = Bukkit.getOfflinePlayer(UUID.fromString(tag));
 
 				Bounty bounty = bountyManager.getBounty(t);
 
@@ -173,9 +165,17 @@ public class BountyList implements PluginInventory {
 					Message.TARGET_REMOVED.format(ChatColor.YELLOW).send(player);
 				} else {
 
-					// remove older hunter
-					if (BountyHunters.getHuntManager().isHunting(player))
-						BountyHunters.getHuntManager().getTargetBounty(player).removeHunter(player);
+					// permission check
+					if (BountyHunters.getPermission().playerHas(null, t, "bountyhunters.untargetable") && !player.hasPermission("bountyhunters.untargetable.bypass")) {
+						Message.TRACK_IMUN.format(ChatColor.YELLOW).send(player);
+						return;
+					}
+
+					// event check
+					HunterTargetEvent event = new HunterTargetEvent(player, t);
+					Bukkit.getPluginManager().callEvent(event);
+					if (event.isCancelled())
+						return;
 
 					// check for target cooldown
 					long lastTarget = BountyList.lastTarget.containsKey(player.getUniqueId()) ? BountyList.lastTarget.get(player.getUniqueId()) : 0;
@@ -184,11 +184,16 @@ public class BountyList implements PluginInventory {
 						Message.TARGET_COOLDOWN.format(ChatColor.RED, "%remain%", "" + remain, "%s%", remain >= 2 ? "s" : "").send(player);
 						return;
 					}
+					
 					BountyList.lastTarget.put(player.getUniqueId(), System.currentTimeMillis());
 
+					// remove older hunter
+					if (BountyHunters.getHuntManager().isHunting(player))
+						BountyHunters.getHuntManager().getTargetBounty(player).removeHunter(player);
+
 					bounty.addHunter(player);
-					if (BountyHunters.plugin.getConfig().getBoolean("new-hunter-alert"))
-						Alerts.newHunter(t, player);
+					if (t.isOnline())
+						Alerts.newHunter(t.getPlayer(), player);
 					Message.TARGET_SET.format(ChatColor.YELLOW).send(player);
 				}
 

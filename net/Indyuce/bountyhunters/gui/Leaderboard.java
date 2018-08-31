@@ -36,7 +36,7 @@ public class Leaderboard implements PluginInventory {
 		HashMap<PlayerData, Integer> map = new HashMap<PlayerData, Integer>();
 		int[] slots = new int[] { 13, 21, 22, 23, 29, 30, 31, 32, 33, 37, 38, 39, 40, 41, 42, 43 };
 
-		File f = new File(BountyHunters.plugin.getDataFolder(), "userdata");
+		File f = new File(BountyHunters.plugin.getDataFolder() + "/userdata");
 		for (File f1 : f.listFiles()) {
 			UUID uuid;
 			try {

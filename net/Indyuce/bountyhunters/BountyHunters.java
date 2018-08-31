@@ -37,6 +37,7 @@ import net.Indyuce.bountyhunters.nms.title.Title;
 import net.Indyuce.bountyhunters.util.VersionUtils;
 import net.Indyuce.bountyhunters.version.SpigotPlugin;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 
 public class BountyHunters extends JavaPlugin {
 
@@ -47,6 +48,7 @@ public class BountyHunters extends JavaPlugin {
 	private static BountyManager bountyManager;
 	private static HuntManager huntManager;
 	private static Economy economy;
+	private static Permission permission;
 
 	// no reflection nms
 	public static Title title;
@@ -60,6 +62,10 @@ public class BountyHunters extends JavaPlugin {
 
 	public static Economy getEconomy() {
 		return economy;
+	}
+
+	public static Permission getPermission() {
+		return permission;
 	}
 
 	public static BountyManager getBountyManager() {
@@ -83,7 +89,7 @@ public class BountyHunters extends JavaPlugin {
 
 		for (PlayerData playerData : PlayerData.getPlayerDatas())
 			playerData.saveFile();
-		
+
 		for (Player t : Bukkit.getOnlinePlayers())
 			if (t.getOpenInventory() != null)
 				if (t.getOpenInventory().getTopInventory().getHolder() instanceof PluginInventory)
@@ -139,9 +145,11 @@ public class BountyHunters extends JavaPlugin {
 
 		// vault compatibility
 		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
-		if (economyProvider != null)
+		RegisteredServiceProvider<Permission> permProvider = getServer().getServicesManager().getRegistration(Permission.class);
+		if (economyProvider != null && permProvider != null) {
 			economy = economyProvider.getProvider();
-		else {
+			permission = permProvider.getProvider();
+		} else {
 			getLogger().log(Level.SEVERE, "Couldn't load Vault. Disabling...");
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
@@ -172,6 +180,10 @@ public class BountyHunters extends JavaPlugin {
 			i.update(items);
 		}
 		ConfigData.saveCD(this, items, "/language", "items");
+
+		File userdataFolder = new File(getDataFolder() + "/userdata");
+		if (!userdataFolder.exists())
+			userdataFolder.mkdir();
 
 		ConfigData.setupCD(this, "", "data");
 		for (Player p : Bukkit.getOnlinePlayers())
