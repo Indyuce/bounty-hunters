@@ -8,6 +8,6 @@ public class SpecialChar {
 	public static final String diamond = "♦";
 
 	public static String apply(String s) {
-		return ChatColor.translateAlternateColorCodes('&', s.replace("%star%", star).replace("%diamond%", square));
+		return ChatColor.translateAlternateColorCodes('&', s.replace("%star%", star).replace("%diamond%", diamond));
 	}
 }

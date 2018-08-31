@@ -124,6 +124,7 @@ public class Leaderboard implements PluginInventory {
 
 		s = s.replace("%level%", "" + playerData.getLevel());
 		s = s.replace("%bounties%", "" + playerData.getClaimedBounties());
+		s = s.replace("%successful-bounties%", "" + playerData.getSuccessfulBounties());
 		s = s.replace("%title%", title);
 		s = s.replace("%name%", playerData.getPlayerName());
 		s = s.replace("%rank%", "" + rank);

@@ -22,6 +22,7 @@ import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.PlayerData;
 import net.Indyuce.bountyhunters.command.AddBountyCommand;
 import net.Indyuce.bountyhunters.command.BountiesCommand;
+import net.Indyuce.bountyhunters.command.HuntersCommand;
 import net.Indyuce.bountyhunters.command.completion.AddBountyCompletion;
 import net.Indyuce.bountyhunters.command.completion.BountiesCompletion;
 import net.Indyuce.bountyhunters.comp.BountyHuntersPlaceholders;
@@ -183,6 +184,7 @@ public class BountyHunters extends JavaPlugin {
 		// commands
 		getCommand("addbounty").setExecutor(new AddBountyCommand());
 		getCommand("bounties").setExecutor(new BountiesCommand());
+		getCommand("hunters").setExecutor(new HuntersCommand());
 
 		getCommand("addbounty").setTabCompleter(new AddBountyCompletion());
 		getCommand("bounties").setTabCompleter(new BountiesCompletion());

@@ -96,8 +96,6 @@ public class BountyList implements PluginInventory {
 		inv.setItem(18, CustomItem.PREVIOUS_PAGE.a());
 
 		PlayerData playerData = PlayerData.get(player);
-		if (BountyHunters.plugin.getConfig().getBoolean("enable-quotes-levels-titles"))
-			inv.setItem(45, playerData.getLevelAdvancementItem());
 		inv.setItem(47, playerData.getProfileItem());
 		inv.setItem(49, CustomItem.SET_BOUNTY.a());
 

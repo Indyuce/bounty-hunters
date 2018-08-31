@@ -36,7 +36,7 @@ public class BountyHuntersPlaceholders extends PlaceholderExpansion {
 		case "title":
 			return playerData.getTitle();
 		case "progress":
-			return playerData.getLevelAdvancementBar();
+			return playerData.getLevelProgressBar();
 		case "before_level_up":
 			return "" + playerData.getBountiesNeededToLevelUp();
 		}

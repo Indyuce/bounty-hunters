@@ -70,7 +70,4 @@ reward:
         per-level: 6
         
 # Bounties players need to claim to level up.
-# number of bounties needed = <base> + ( <per-level> * <player level> )
-bounties-needed:
-    base: 5
-    per-level: .3
+bounties-per-level: 5

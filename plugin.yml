@@ -4,15 +4,18 @@ main: net.Indyuce.bountyhunters.BountyHunters
 author: Indyuce
 depend: [Vault]
 commands:
-    bounties:
-        description: See all the active bounties.
     addbounty:
         description: Create a bounty on a player.
         aliases: [bounty, setbounty]
+    bounties:
+        description: See all the active bounties.
+    hunters:
+        description: Opens the hunter leaderboard.
+        aliases: [hunterleaderboard,hunterlb]
 permissions:
-    bountyhunters.admin:
-        default: op
     bountyhunters.list:
+        default: op
+    bountyhunters.admin:
         default: op
     bountyhunters.leaderboard:
         default: op

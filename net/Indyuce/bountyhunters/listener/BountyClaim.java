@@ -8,7 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -118,7 +117,6 @@ public class BountyClaim implements Listener {
 			return;
 
 		Bounty bounty = bountyManager.getBounty(p);
-		OfflinePlayer creator = bounty.getCreator();
 
 		// own bounty claiming option
 		if (bounty.hasCreator())
@@ -145,11 +143,11 @@ public class BountyClaim implements Listener {
 		PlayerData playerData = PlayerData.get(t);
 		playerData.addClaimedBounties(1);
 		if (BountyHunters.plugin.getConfig().getBoolean("enable-quotes-levels-titles"))
-			playerData.updateLevel(t);
+			playerData.checkForLevelUp(t);
 
 		// add 1 to successful bounties
-		if (creator != null) {
-			PlayerData playerData1 = PlayerData.get(creator);
+		if (bounty.hasCreator()) {
+			PlayerData playerData1 = PlayerData.get(bounty.getCreator());
 			playerData1.addSuccessfulBounties(1);
 		}
 

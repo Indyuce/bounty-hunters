@@ -15,12 +15,11 @@ import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.PlayerData;
 import net.Indyuce.bountyhunters.api.SpecialChar;
 import net.Indyuce.bountyhunters.gui.BountyList;
-import net.Indyuce.bountyhunters.gui.Leaderboard;
 import net.Indyuce.bountyhunters.util.VersionUtils;
 
 public class BountiesCommand implements CommandExecutor {
 	@Override
-	public boolean onCommand(CommandSender sender, Command arg1, String commandLabel, String[] args) {
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
 		// open bounties menu
 		if (args.length < 1) {
@@ -48,8 +47,8 @@ public class BountiesCommand implements CommandExecutor {
 			sender.sendMessage(ChatColor.GRAY + "" + ChatColor.BOLD + "Player Commands");
 			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounty <player> <reward>" + ChatColor.WHITE + " sets a bounty on a player.");
 			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounties" + ChatColor.WHITE + " shows current bounties.");
+			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/hunters" + ChatColor.WHITE + " opens the hunter leaderboard.");
 			sender.sendMessage("");
-			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounties leaderboard" + ChatColor.WHITE + " opens the hunter leaderboard.");
 			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounties quotes" + ChatColor.WHITE + " lists available quotes.");
 			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounties titles" + ChatColor.WHITE + " lists available titles.");
 			sender.sendMessage("");
@@ -57,18 +56,6 @@ public class BountiesCommand implements CommandExecutor {
 			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounties reload" + ChatColor.WHITE + " reloads the config file.");
 			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounties remove <player>" + ChatColor.WHITE + " removes a bounty.");
 			return true;
-		}
-
-		// leaderboard
-		if (args[0].equalsIgnoreCase("leaderboard") || args[0].equalsIgnoreCase("lb")) {
-			if (!BountyHunters.plugin.checkPl(sender, true))
-				return true;
-			if (!sender.hasPermission("bountyhunters.leaderboard")) {
-				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(sender);
-				return true;
-			}
-
-			new Leaderboard((Player) sender).open();
 		}
 
 		// remove bounty

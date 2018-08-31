@@ -34,7 +34,7 @@ public class Alerts {
 		double reward = e.getBounty().getReward();
 
 		String toOnline = e.getCause() == BountyCause.PLAYER ? Message.NEW_BOUNTY_ON_PLAYER.formatRaw(ChatColor.YELLOW, "%creator%", b.getCreator().getName(), "%target%", b.getTarget().getName(), "%reward%", Utils.format(reward)) : (e.getCause() == BountyCause.AUTO_BOUNTY ? Message.NEW_BOUNTY_ON_PLAYER_ILLEGAL.formatRaw(ChatColor.YELLOW, "%target%", b.getTarget().getName(), "%reward%", Utils.format(reward)) : Message.NEW_BOUNTY_ON_PLAYER_UNDEFINED.formatRaw(ChatColor.YELLOW, "%target%", b.getTarget().getName(), "%reward%", Utils.format(reward)));
-		String toTarget = e.getCause() == BountyCause.PLAYER ? Message.NEW_BOUNTY_ON_YOU.formatRaw(ChatColor.RED, "%creator%", b.getCreator().getName()) : (e.getCause() == BountyCause.AUTO_BOUNTY ? Message.NEW_BOUNTY_ON_YOU_ILLEGAL.formatRaw(ChatColor.RED) : Message.NEW_BOUNTY_ON_YOU_UNDEFINED.formatRaw(ChatColor.RED));
+		String toTarget = e.getCause() == BountyCause.PLAYER ? Message.NEW_BOUNTY_ON_YOU.formatRaw(ChatColor.RED, "%creator%", b.getCreator().getName(), "%reward%", Utils.format(b.getReward())) : (e.getCause() == BountyCause.AUTO_BOUNTY ? Message.NEW_BOUNTY_ON_YOU_ILLEGAL.formatRaw(ChatColor.RED, "%reward%", Utils.format(b.getReward())) : Message.NEW_BOUNTY_ON_YOU_UNDEFINED.formatRaw(ChatColor.RED, "%reward%", Utils.format(b.getReward())));
 
 		for (Player t : Bukkit.getOnlinePlayers()) {
 			if (b.hasTarget(t)) {

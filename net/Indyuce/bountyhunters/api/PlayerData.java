@@ -14,7 +14,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import net.Indyuce.bountyhunters.BountyHunters;
@@ -145,8 +144,8 @@ public class PlayerData {
 	}
 
 	public int getBountiesNeededToLevelUp() {
-		int levelUp = (int) getValueDependingOnLevel(BountyHunters.getLevelsConfigFile().getConfigurationSection("bounties-needed"), getLevel());
-		return levelUp - (getClaimedBounties() % levelUp);
+		int bountiesNeeded = BountyHunters.getLevelsConfigFile().getInt("bounties-per-level");
+		return bountiesNeeded - (getClaimedBounties() % bountiesNeeded);
 	}
 
 	@Override
@@ -154,91 +153,79 @@ public class PlayerData {
 		return object instanceof PlayerData ? ((PlayerData) object).getUUID().equals(getUUID()) : false;
 	}
 
-	public String getLevelAdvancementBar() {
+	public String getLevelProgressBar() {
 		String lvlAdvancement = "";
-		int bountiesNeeded = (int) getValueDependingOnLevel(BountyHunters.getLevelsConfigFile().getConfigurationSection("bounties-needed"), getLevel());
+		int bountiesNeeded = BountyHunters.getLevelsConfigFile().getInt("bounties-per-level");
 		for (int j = 0; j < bountiesNeeded; j++)
 			lvlAdvancement += (getClaimedBounties() % bountiesNeeded > j ? ChatColor.GREEN : ChatColor.WHITE) + SpecialChar.square;
 		return lvlAdvancement;
 	}
 
-	public ItemStack getLevelAdvancementItem() {
-		ItemStack item = CustomItem.LVL_ADVANCEMENT.a().clone();
-		ItemMeta itemMeta = item.getItemMeta();
-		itemMeta.setDisplayName(itemMeta.getDisplayName().replace("%name%", playerName).replace("%level%", "" + getLevel()));
-
-		List<String> itemLore = itemMeta.getLore();
-		for (int j = 0; j < itemLore.size(); j++) {
-			String s = itemLore.get(j);
-			s = s.replace("%level%", "" + getLevel()).replace("%lvl-advancement%", getLevelAdvancementBar());
-			itemLore.set(j, s);
-		}
-		itemMeta.setLore(itemLore);
-		item.setItemMeta(itemMeta);
-		return item;
-	}
-
 	public ItemStack getProfileItem() {
 		ItemStack profile = CustomItem.PROFILE.a().clone();
 		SkullMeta profileMeta = (SkullMeta) profile.getItemMeta();
-		profileMeta.setDisplayName(profileMeta.getDisplayName().replace("%name%", playerName));
+		profileMeta.setDisplayName(profileMeta.getDisplayName().replace("%name%", playerName).replace("%level%", "" + getLevel()));
 		profileMeta.setOwner(playerName);
 		List<String> profileLore = profileMeta.getLore();
 
 		String title = hasTitle() ? getTitle() : Message.NO_TITLE.getUpdated();
 		for (int j = 0; j < profileLore.size(); j++)
-			profileLore.set(j, profileLore.get(j).replace("%claimed-bounties%", "" + getClaimedBounties()).replace("%successful-bounties%", "" + getSuccessfulBounties()).replace("%current-title%", title).replace("%level%", "" + getLevel()));
+			profileLore.set(j, profileLore.get(j).replace("%lvl-progress%", getLevelProgressBar()).replace("%claimed-bounties%", "" + getClaimedBounties()).replace("%successful-bounties%", "" + getSuccessfulBounties()).replace("%current-title%", title).replace("%level%", "" + getLevel()));
 
 		profileMeta.setLore(profileLore);
 		profile.setItemMeta(profileMeta);
 		return profile;
 	}
 
-	public void updateLevel(Player player) {
+	public void checkForLevelUp(Player player) {
 		FileConfiguration levels = BountyHunters.getLevelsConfigFile();
-		for (int j = 50; j > 0; j--) {
-			int bountiesNeeded = (int) getValueDependingOnLevel(levels.getConfigurationSection("bounties-needed"), j);
-			if (getClaimedBounties() < bountiesNeeded || getLevel() >= j)
-				continue;
-
-			Message.CHAT_BAR.format(ChatColor.YELLOW).send(player);
-			Message.LEVEL_UP.format(ChatColor.YELLOW, "%level%", "" + j).send(player);
-			Message.LEVEL_UP_2.format(ChatColor.YELLOW, "%bounties%", "" + levels.getInt("bounties-per-level")).send(player);
-
-			List<String> chatDisplay = new ArrayList<String>();
-
-			// titles
-			for (String titleId : levels.getConfigurationSection("reward.title").getKeys(false))
-				if (j >= levels.getInt("reward.title." + titleId + ".unlock") && !unlocked.contains(titleId)) {
-					addUnlocked(titleId);
-					chatDisplay.add(levels.getString("reward.title." + titleId + ".format"));
-				}
-
-			// death quotes
-			for (String quoteId : levels.getConfigurationSection("reward.quote").getKeys(false))
-				if (j >= levels.getInt("reward.quote." + quoteId + ".unlock") && !unlocked.contains(quoteId)) {
-					addUnlocked(quoteId);
-					chatDisplay.add(levels.getString("reward.quote." + quoteId + ".format"));
-				}
-
-			// send commands
-			for (String s : levels.getStringList("reward.commands." + j))
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.replace("%player%", player.getName()));
-
-			// money
-			double money = levels.getDouble("reward.money.base") + (j * levels.getDouble("reward.money.per-level"));
-			BountyHunters.getEconomy().depositPlayer(player, money);
-
-			// send json list
-			String jsonList = money > 0 ? "\n" + Message.LEVEL_UP_REWARD.formatRaw(ChatColor.YELLOW, "%reward%", "$" + money) : "";
-			for (String s : chatDisplay)
-				jsonList += "\n" + Message.LEVEL_UP_REWARD.formatRaw(ChatColor.YELLOW, "%reward%", SpecialChar.apply(s));
-			BountyHunters.json.message(player, "{\"text\":\"" + ChatColor.YELLOW + Message.LEVEL_UP_REWARDS.getUpdated() + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1) + "\"}}}");
-
-			setLevel(j);
-			setUnlocked(unlocked);
-			break;
+		while (levelUp(levels, player)) {
 		}
+	}
+
+	private boolean levelUp(FileConfiguration levels, Player player) {
+		int nextLevel = getLevel() + 1;
+		int neededBounties = nextLevel * levels.getInt("bounties-per-level");
+		if (getClaimedBounties() < neededBounties)
+			return false;
+
+		Message.CHAT_BAR.format(ChatColor.YELLOW).send(player);
+		Message.LEVEL_UP.format(ChatColor.YELLOW, "%level%", "" + nextLevel).send(player);
+		Message.LEVEL_UP_2.format(ChatColor.YELLOW, "%bounties%", "" + levels.getInt("bounties-per-level")).send(player);
+
+		List<String> chatDisplay = new ArrayList<String>();
+
+		// titles
+		for (String titleId : levels.getConfigurationSection("reward.title").getKeys(false))
+			if (nextLevel >= levels.getInt("reward.title." + titleId + ".unlock") && !unlocked.contains(titleId)) {
+				addUnlocked(titleId);
+				chatDisplay.add(levels.getString("reward.title." + titleId + ".format"));
+			}
+
+		// death quotes
+		for (String quoteId : levels.getConfigurationSection("reward.quote").getKeys(false))
+			if (nextLevel >= levels.getInt("reward.quote." + quoteId + ".unlock") && !unlocked.contains(quoteId)) {
+				addUnlocked(quoteId);
+				chatDisplay.add(levels.getString("reward.quote." + quoteId + ".format"));
+			}
+
+		// send commands
+		for (String s : levels.getStringList("reward.commands." + nextLevel))
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.replace("%player%", player.getName()));
+
+		// money
+		double money = levels.getDouble("reward.money.base") + (nextLevel * levels.getDouble("reward.money.per-level"));
+		BountyHunters.getEconomy().depositPlayer(player, money);
+
+		// send json list
+		String jsonList = money > 0 ? "\n" + Message.LEVEL_UP_REWARD.formatRaw(ChatColor.YELLOW, "%reward%", "$" + money) : "";
+		for (String s : chatDisplay)
+			jsonList += "\n" + Message.LEVEL_UP_REWARD.formatRaw(ChatColor.YELLOW, "%reward%", SpecialChar.apply(s));
+		BountyHunters.json.message(player, "{\"text\":\"" + ChatColor.YELLOW + Message.LEVEL_UP_REWARDS.getUpdated() + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1) + "\"}}}");
+
+		setLevel(nextLevel);
+		setUnlocked(unlocked);
+		return true;
 	}
 
 	public void saveFile() {

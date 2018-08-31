@@ -30,9 +30,9 @@ public enum Message {
 	// bounty creation
 	BOUNTY_CREATED("You succesfully set a bounty on &f%target%&e."),
 	BOUNTY_EXPLAIN("The first to kill this player will receive &f$%reward%&e."),
-	NEW_BOUNTY_ON_YOU("&f%creator% &ejust set a bounty on you!"),
-	NEW_BOUNTY_ON_YOU_ILLEGAL("You killed a man illegally! A bounty was set on you!"),
-	NEW_BOUNTY_ON_YOU_UNDEFINED("Someone just set a bounty on you!"),
+	NEW_BOUNTY_ON_YOU("&f%creator% &ejust set a $%reward% bounty on you!"),
+	NEW_BOUNTY_ON_YOU_ILLEGAL("You killed a man illegally! A $%reward% bounty was set on you!"),
+	NEW_BOUNTY_ON_YOU_UNDEFINED("Someone just set a $%reward% bounty on you!"),
 	NEW_BOUNTY_ON_PLAYER("&f%creator% &eset a bounty on &f%target%&e! Kill him to get &f$%reward%&e!"),
 	NEW_BOUNTY_ON_PLAYER_ILLEGAL("&f%target%&e killed a player illegally: a bounty was set on him! Kill him to get &f$%reward%&e!"),
 	NEW_BOUNTY_ON_PLAYER_UNDEFINED("Someone set a bounty on &f%target%&e! Kill him to get &f$%reward%&e!"),
