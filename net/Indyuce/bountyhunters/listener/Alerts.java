@@ -22,10 +22,10 @@ public class Alerts {
 		// message to server
 		PlayerData playerData = PlayerData.get(p);
 		String title = playerData.hasTitle() ? ChatColor.LIGHT_PURPLE + "[" + playerData.getTitle() + ChatColor.LIGHT_PURPLE + "] " : "";
-		for (Player t1 : Bukkit.getOnlinePlayers()) {
-			VersionUtils.sound(t1, "ENTITY_PLAYER_LEVELUP", 1, 2);
-			if (t1 != p)
-				Message.BOUNTY_CLAIMED.format(ChatColor.YELLOW, "%reward%", Utils.format(bounty.getReward()), "%killer%", title + p.getName(), "%target%", bounty.getTarget().getName()).send(t1);
+		for (Player t : Bukkit.getOnlinePlayers()) {
+			VersionUtils.sound(t, "ENTITY_PLAYER_LEVELUP", 1, 2);
+			if (t != p)
+				Message.BOUNTY_CLAIMED.format(ChatColor.YELLOW, "%reward%", Utils.format(bounty.getReward()), "%killer%", title + p.getName(), "%target%", bounty.getTarget().getName()).send(t);
 		}
 	}
 
@@ -58,7 +58,7 @@ public class Alerts {
 
 	public static void newHunter(Player t, Player h) {
 		Message.NEW_HUNTER_ALERT.format(ChatColor.RED, "%hunter%", h.getName()).send(t);
-		VersionUtils.sound(t.getLocation(), "ENTITY_ENDERMEN_HURT", 1, 1);
+		VersionUtils.sound(t.getLocation(), "ENTITY_ENDERMEN_HURT", 1, 0);
 	}
 
 	public static void bountyExpired(Bounty bounty) {
@@ -72,7 +72,9 @@ public class Alerts {
 		Bounty b = e.getBounty();
 		for (Player p : Bukkit.getOnlinePlayers())
 			Message.BOUNTY_CHANGE.format(ChatColor.YELLOW, "%player%", b.getTarget().getName(), "%reward%", Utils.format(b.getReward())).send(p);
-		if (b.getTarget().isOnline())
-			VersionUtils.sound((Player) b.getTarget(), "ENTITY_ENDERMEN_HURT", 1, 1);
+		if (b.getTarget().isOnline()) {
+			Player t = b.getTarget().getPlayer();
+			VersionUtils.sound(t, "ENTITY_ENDERMEN_HURT", 1, 0);
+		}
 	}
 }
