@@ -122,7 +122,7 @@ public class Bounty {
 		List<String> hunterList = new ArrayList<String>();
 		for (UUID hunter : hunters)
 			hunterList.add(hunter.toString());
-		config.set(target.toString() + ".hunters", hunterList);
+		config.set(target.toString() + ".hunters", hunters);
 
 		config.createSection(target.toString() + ".up");
 		for (UUID p : up.keySet())

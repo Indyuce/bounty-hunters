@@ -132,6 +132,10 @@ public class PlayerData {
 		return unlocked;
 	}
 
+	public boolean hasUnlocked(String path) {
+		return unlocked.contains(path);
+	}
+
 	public void addUnlocked(String value) {
 		unlocked.add(value);
 	}
@@ -140,15 +144,19 @@ public class PlayerData {
 		return section.getDouble("base") + section.getDouble("per-level") * level;
 	}
 
+	public int getBountiesNeededToLevelUp() {
+		int levelUp = (int) getValueDependingOnLevel(BountyHunters.getLevelsConfigFile().getConfigurationSection("bounties-needed"), getLevel());
+		return levelUp - (getClaimedBounties() % levelUp);
+	}
+
 	@Override
 	public boolean equals(Object object) {
 		return object instanceof PlayerData ? ((PlayerData) object).getUUID().equals(getUUID()) : false;
 	}
 
 	public String getLevelAdvancementBar() {
-		FileConfiguration levels = ConfigData.getCD(BountyHunters.plugin, "", "levels");
 		String lvlAdvancement = "";
-		int bountiesNeeded = (int) getValueDependingOnLevel(levels.getConfigurationSection("bounties-needed"), getLevel());
+		int bountiesNeeded = (int) getValueDependingOnLevel(BountyHunters.getLevelsConfigFile().getConfigurationSection("bounties-needed"), getLevel());
 		for (int j = 0; j < bountiesNeeded; j++)
 			lvlAdvancement += (getClaimedBounties() % bountiesNeeded > j ? ChatColor.GREEN : ChatColor.WHITE) + SpecialChar.square;
 		return lvlAdvancement;
@@ -187,7 +195,7 @@ public class PlayerData {
 	}
 
 	public void updateLevel(Player player) {
-		FileConfiguration levels = ConfigData.getCD(BountyHunters.plugin, "", "levels");
+		FileConfiguration levels = BountyHunters.getLevelsConfigFile();
 		for (int j = 50; j > 0; j--) {
 			int bountiesNeeded = (int) getValueDependingOnLevel(levels.getConfigurationSection("bounties-needed"), j);
 			if (getClaimedBounties() < bountiesNeeded || getLevel() >= j)

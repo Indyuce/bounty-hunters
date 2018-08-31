@@ -3,8 +3,6 @@ package net.Indyuce.bountyhunters.comp;
 import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import net.Indyuce.bountyhunters.BountyHunters;
-import net.Indyuce.bountyhunters.ConfigData;
 import net.Indyuce.bountyhunters.api.PlayerData;
 
 public class BountyHuntersPlaceholders extends PlaceholderExpansion {
@@ -40,9 +38,7 @@ public class BountyHuntersPlaceholders extends PlaceholderExpansion {
 		case "progress":
 			return playerData.getLevelAdvancementBar();
 		case "before_level_up":
-			int levelUp = ConfigData.getCD(BountyHunters.plugin, "", "levels").getInt("bounties-per-level");
-			int claimedBounties = playerData.getClaimedBounties();
-			return "" + (levelUp - (claimedBounties % levelUp));
+			return "" + playerData.getBountiesNeededToLevelUp();
 		}
 		return null;
 	}

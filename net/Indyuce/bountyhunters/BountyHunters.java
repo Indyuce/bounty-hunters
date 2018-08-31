@@ -51,7 +51,7 @@ public class BountyHunters extends JavaPlugin {
 	public static Title title;
 	public static Json json;
 	public static NBTTags nbttags;
-	
+
 	// cached config files
 	private static FileConfiguration levels;
 
@@ -72,21 +72,22 @@ public class BountyHunters extends JavaPlugin {
 	public static FileConfiguration getLevelsConfigFile() {
 		return levels;
 	}
-	
+
 	public void reloadConfigFiles() {
 		levels = ConfigData.getCD(BountyHunters.plugin, "", "levels");
 	}
 
 	public void onDisable() {
+		bountyManager.saveBounties();
+
+		for (PlayerData playerData : PlayerData.getPlayerDatas())
+			playerData.saveFile();
+		
 		for (Player t : Bukkit.getOnlinePlayers())
 			if (t.getOpenInventory() != null)
 				if (t.getOpenInventory().getTopInventory().getHolder() instanceof PluginInventory)
 					t.closeInventory();
-		
-		for (PlayerData playerData : PlayerData.getPlayerDatas())
-			playerData.saveFile();
 
-		bountyManager.saveBounties();
 	}
 
 	public void onEnable() {
@@ -97,11 +98,11 @@ public class BountyHunters extends JavaPlugin {
 			for (String s : spigotPlugin.getOutOfDateMessage())
 				getLogger().log(Level.INFO, "\u001B[32m" + s + "\u001B[37m");
 
+		// load first the plugin, then hunters and
+		// last bounties (bounties need hunters setup)
 		plugin = this;
 		huntManager = new HuntManager();
 		bountyManager = new BountyManager();
-		
-		reloadConfigFiles();
 
 		// listeners
 		Bukkit.getServer().getPluginManager().registerEvents(new BountyClaim(), this);
@@ -113,14 +114,13 @@ public class BountyHunters extends JavaPlugin {
 		if (getConfig().getBoolean("update-notify"))
 			Bukkit.getServer().getPluginManager().registerEvents(new UpdateNotify(), this);
 
-		// version compatibility
 		try {
 			VersionUtils.version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
 			VersionUtils.splitVersion = VersionUtils.version.split("\\_");
 			getLogger().log(Level.INFO, "Detected Server Version: " + VersionUtils.version);
 
-			// no reflection nms
-			// each class corresponds to a server version
+			// no reflection nms, each class
+			// corresponds to a server version
 			title = (Title) Class.forName("net.Indyuce.bountyhunters.nms.title.Title_" + VersionUtils.version.substring(1)).newInstance();
 			json = (Json) Class.forName("net.Indyuce.bountyhunters.nms.json.Json_" + VersionUtils.version.substring(1)).newInstance();
 			nbttags = (NBTTags) Class.forName("net.Indyuce.bountyhunters.nms.nbttag.NBTTags_" + VersionUtils.version.substring(1)).newInstance();
@@ -175,6 +175,10 @@ public class BountyHunters extends JavaPlugin {
 		ConfigData.setupCD(this, "", "data");
 		for (Player p : Bukkit.getOnlinePlayers())
 			PlayerData.setup(p);
+
+		// after levels.yml was loaded only
+		// else it can't load the file
+		reloadConfigFiles();
 
 		// commands
 		getCommand("addbounty").setExecutor(new AddBountyCommand());
