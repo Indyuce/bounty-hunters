@@ -5,7 +5,7 @@ author: Indyuce
 depend: [Vault]
 commands:
     addbounty:
-        description: Create a bounty on a player.
+        description: Set a bounty on a player.
         aliases: [bounty, setbounty]
     bounties:
         description: See all the active bounties.
