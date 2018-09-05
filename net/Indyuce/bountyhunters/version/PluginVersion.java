@@ -18,6 +18,10 @@ public class PluginVersion {
 		return version[0] < integers[0] ? true : version[1] < integers[1];
 	}
 
+	public int getRevisionNumber() {
+		return Integer.parseInt(version.split("\\_")[2].replaceAll("[^0-9]", ""));
+	}
+
 	public int[] toNumbers() {
 		return integers;
 	}
