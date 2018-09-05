@@ -1038,6 +1038,13 @@ public enum Eff {
 				throw new IllegalArgumentException("The material is not a block");
 			}
 		}
+
+		public BlockData(Material material) {
+			super(material, (byte) 0);
+			if (!material.isBlock()) {
+				throw new IllegalArgumentException("The material is not a block");
+			}
+		}
 	}
 
 	/**

@@ -68,4 +68,5 @@ public class NMSHandler_1_8_R1 implements NMSHandler {
 		((CraftPlayer) player).getHandle().playerConnection.sendPacket(p2);
 		((CraftPlayer) player).getHandle().playerConnection.sendPacket(p3);
 	}
+
 }
