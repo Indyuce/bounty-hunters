@@ -20,13 +20,13 @@ import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.BountyManager;
 import net.Indyuce.bountyhunters.api.CustomItem;
-import net.Indyuce.bountyhunters.api.ItemTag;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.PlayerData;
 import net.Indyuce.bountyhunters.api.event.HunterTargetEvent;
 import net.Indyuce.bountyhunters.listener.Alerts;
 import net.Indyuce.bountyhunters.util.Utils;
 import net.Indyuce.bountyhunters.version.VersionSound;
+import net.Indyuce.bountyhunters.version.nms.ItemTag;
 
 public class BountyList implements PluginInventory {
 	private static HashMap<UUID, Long> lastTarget = new HashMap<UUID, Long>();

@@ -3,8 +3,6 @@ package net.Indyuce.bountyhunters.version.nms;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.bountyhunters.api.ItemTag;
-
 public interface NMSHandler {
 	public ItemStack addTag(ItemStack i, ItemTag... tags);
 

@@ -6,7 +6,6 @@ import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.bountyhunters.api.ItemTag;
 import net.minecraft.server.v1_8_R2.IChatBaseComponent;
 import net.minecraft.server.v1_8_R2.IChatBaseComponent.ChatSerializer;
 import net.minecraft.server.v1_8_R2.NBTTagCompound;

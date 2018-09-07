@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.api;
+package net.Indyuce.bountyhunters.version.nms;
 
 public class ItemTag {
 	private String path;

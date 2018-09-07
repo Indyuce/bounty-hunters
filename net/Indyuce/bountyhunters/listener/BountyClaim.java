@@ -167,17 +167,17 @@ public class BountyClaim implements Listener {
 		bounty.unregister();
 	}
 
-	private void dropOptions(Random random, Player p) {
+	private void dropOptions(Random random, Player player) {
 
 		// drop head
 		if (BountyHunters.plugin.getConfig().getBoolean("drop-head.enabled") && random.nextDouble() <= BountyHunters.plugin.getConfig().getDouble("drop-head.chance") / 100) {
 			ItemStack head = CustomItem.PLAYER_HEAD.a().clone();
 			SkullMeta headMeta = (SkullMeta) head.getItemMeta();
-			headMeta.setDisplayName(headMeta.getDisplayName().replace("%name%", p.getName()));
-			headMeta.setOwner(p.getName());
+			headMeta.setDisplayName(headMeta.getDisplayName().replace("%name%", player.getName()));
+			headMeta.setOwner(player.getName());
 			head.setItemMeta(headMeta);
 
-			p.getWorld().dropItemNaturally(p.getLocation(), head);
+			player.getWorld().dropItemNaturally(player.getLocation(), head);
 		}
 
 		// effect
@@ -192,10 +192,10 @@ public class BountyClaim implements Listener {
 			for (int j = 0; j < 8; j++) {
 				ItemStack stack = new ItemStack(m);
 				ItemMeta stack_meta = stack.getItemMeta();
-				stack_meta.setDisplayName("BOUNTYHUNTERS:chest " + p.getUniqueId().toString() + " " + j);
+				stack_meta.setDisplayName("BOUNTYHUNTERS:chest " + player.getUniqueId().toString() + " " + j);
 				stack.setItemMeta(stack_meta);
 
-				Item item = p.getWorld().dropItemNaturally(p.getLocation(), stack);
+				Item item = player.getWorld().dropItemNaturally(player.getLocation(), stack);
 				item.setMetadata("BOUNTYHUNTERS:no_pickup", new FixedMetadataValue(BountyHunters.plugin, true));
 				Bukkit.getScheduler().scheduleSyncDelayedTask(BountyHunters.plugin, new Runnable() {
 					public void run() {
@@ -210,10 +210,14 @@ public class BountyClaim implements Listener {
 			for (String s : BountyHunters.plugin.getConfig().getConfigurationSection("physical-rewards.list").getKeys(false)) {
 				try {
 					String[] split = BountyHunters.plugin.getConfig().getString("physical-rewards.list." + s).split(Pattern.quote(" "));
-					p.getWorld().dropItem(p.getLocation(), new ItemStack(Material.valueOf(s.toUpperCase().replace("-", "_").replace(" ", "_")), Integer.parseInt(split[0]), (split.length > 1 ? (short) Integer.parseInt(split[1]) : (short) 0)));
+					player.getWorld().dropItem(player.getLocation(), new ItemStack(Material.valueOf(s.toUpperCase().replace("-", "_").replace(" ", "_")), Integer.parseInt(split[0]), (split.length > 1 ? (short) Integer.parseInt(split[1]) : (short) 0)));
 				} catch (Exception e) {
 					Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Bounty Hunters] Wrong item format: " + s + ":" + BountyHunters.plugin.getConfig().getString("physical-rewards.list." + s));
 				}
 			}
+
+		// commands
+		for (String command : BountyHunters.plugin.getConfig().getStringList("bounty-commands"))
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", player.getName()));
 	}
 }
