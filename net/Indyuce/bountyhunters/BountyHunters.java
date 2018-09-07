@@ -83,7 +83,7 @@ public class BountyHunters extends JavaPlugin {
 			// corresponds to a server version
 			nms = (NMSHandler) Class.forName("net.Indyuce.bountyhunters.version.nms.NMSHandler_" + version.toString().substring(1)).newInstance();
 		} catch (Exception e) {
-			getLogger().log(Level.SEVERE, "Your server version is not compatible");
+			getLogger().log(Level.SEVERE, "Your server version is not compatible.");
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}

@@ -8,7 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,6 +20,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.bountyhunters.BountyHunters;
+import net.Indyuce.bountyhunters.Eff;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.BountyCause;
 import net.Indyuce.bountyhunters.api.BountyManager;
@@ -58,7 +58,7 @@ public class BountyClaim implements Listener {
 												cancel();
 
 											for (double j = 0; j < Math.PI * 2; j += Math.PI / 16)
-												hunter.spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(j) * .8, 0, Math.sin(j) * .8), 0);
+												Eff.REDSTONE.display(0, 0, 0, 0, 1, loc.clone().add(Math.cos(j) * .8, 0, Math.sin(j) * .8), hunter);
 										}
 									}.runTaskTimer(BountyHunters.plugin, 0, 7);
 						}
