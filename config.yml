@@ -31,8 +31,11 @@ physical-rewards:
 
 # Commands sent when a player claims a bounty.
 # Sent by the console.
-bounty-commands:
-- '/give %player% minecraft:diamond 10'
+# Use %target% to get the target and %player%
+# to get the player who claimed the bounty.
+bounty-commands: []
+# - '/give %player% minecraft:diamond 10'
+# - '/jail %target% 100'
 
 # When enabled, it will automaticaly place a bounty
 # onto any player who kills a player with no bounty on him (illegal kill).

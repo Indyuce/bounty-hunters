@@ -132,7 +132,7 @@ public class BountyClaim implements Listener {
 		// physical drops
 		// bounty effects
 		// drop player head
-		dropOptions(random, p);
+		dropOptions(random, p, t);
 
 		// give money
 		BountyHunters.getEconomy().depositPlayer(t, bounty.getReward());
@@ -167,7 +167,7 @@ public class BountyClaim implements Listener {
 		bounty.unregister();
 	}
 
-	private void dropOptions(Random random, Player player) {
+	private void dropOptions(Random random, Player player, Player killer) {
 
 		// drop head
 		if (BountyHunters.plugin.getConfig().getBoolean("drop-head.enabled") && random.nextDouble() <= BountyHunters.plugin.getConfig().getDouble("drop-head.chance") / 100) {
@@ -218,6 +218,6 @@ public class BountyClaim implements Listener {
 
 		// commands
 		for (String command : BountyHunters.plugin.getConfig().getStringList("bounty-commands"))
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", player.getName()));
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%target%", player.getName()).replace("%player%", killer.getName()));
 	}
 }
