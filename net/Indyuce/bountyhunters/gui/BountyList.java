@@ -238,8 +238,7 @@ public class BountyList implements PluginInventory {
 	}
 
 	public int getMaxPage() {
-		int maxPage = (int) Math.ceil(((double) BountyHunters.getBountyManager().getBounties().size()) / 21d);
-		return maxPage < 1 ? 1 : maxPage;
+		return Math.max(1, (int) Math.ceil(((double) BountyHunters.getBountyManager().getBounties().size()) / 21d));
 	}
 
 	private void insertInLore(List<String> lore, String path, String... add) {
