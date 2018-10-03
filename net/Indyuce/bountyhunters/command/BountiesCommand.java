@@ -58,13 +58,6 @@ public class BountiesCommand implements CommandExecutor {
 			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounties help" + ChatColor.WHITE + " shows the help page.");
 			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounties reload" + ChatColor.WHITE + " reloads the config file.");
 			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounties remove <player>" + ChatColor.WHITE + " removes a bounty.");
-
-			Player p = (Player) sender;
-
-			p.playSound(p.getLocation(), VersionSound.ENTITY_ENDERMAN_HURT.getSound(), 1, 1);
-			p.playSound(p.getLocation(), VersionSound.ENTITY_PLAYER_LEVELUP.getSound(), 1, 1);
-			p.playSound(p.getLocation(), VersionSound.ENTITY_VILLAGER_NO.getSound(), 1, 1);
-			p.getInventory().addItem(CustomItem.GUI_PLAYER_HEAD.a());
 			return true;
 		}
 

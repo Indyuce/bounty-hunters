@@ -1,5 +1,5 @@
 name: BountyHunters
-version: 2.1.3
+version: 2.1.4
 main: net.Indyuce.bountyhunters.BountyHunters
 author: Indyuce
 depend: [Vault]
