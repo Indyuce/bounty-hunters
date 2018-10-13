@@ -16,7 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.bountyhunters.BountyHunters;
-import net.Indyuce.bountyhunters.util.Utils;
+import net.Indyuce.bountyhunters.BountyUtils;
 
 // hunters are not saved when the server shuts down
 public class HuntManager {
@@ -84,7 +84,7 @@ public class HuntManager {
 
 		@SuppressWarnings("deprecation")
 		ItemStack i = p.getInventory().getItemInHand();
-		if (Utils.isPluginItem(i, true) ? i.getItemMeta().getLore().equals(CustomItem.BOUNTY_COMPASS.a().getItemMeta().getLore()) : false) {
+		if (BountyUtils.isPluginItem(i, true) ? i.getItemMeta().getLore().equals(CustomItem.BOUNTY_COMPASS.a().getItemMeta().getLore()) : false) {
 			ItemMeta meta = i.getItemMeta();
 			meta.setDisplayName(Message.COMPASS_FORMAT.formatRaw("%format%", format));
 			i.setItemMeta(meta);

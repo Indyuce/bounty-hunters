@@ -1,12 +1,10 @@
-package net.Indyuce.bountyhunters.util;
+package net.Indyuce.bountyhunters;
 
 import java.text.DecimalFormat;
 
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.bountyhunters.BountyHunters;
-
-public class Utils {
+public class BountyUtils {
 	public static String format(double n) {
 		if (!BountyHunters.plugin.getConfig().getBoolean("formatted-numbers"))
 			return "" + n;

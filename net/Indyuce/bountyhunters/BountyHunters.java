@@ -38,6 +38,7 @@ public class BountyHunters extends JavaPlugin {
 	// plugin
 	public static BountyHunters plugin;
 	private static PluginVersion version;
+	private static SpigotPlugin spigotPlugin;
 
 	// systems
 	private static BountyManager bountyManager;
@@ -54,7 +55,7 @@ public class BountyHunters extends JavaPlugin {
 	public void onEnable() {
 
 		// check for latest version
-		SpigotPlugin spigotPlugin = new SpigotPlugin(this, 40610);
+		spigotPlugin = new SpigotPlugin(this, 40610);
 		if (spigotPlugin.isOutOfDate())
 			for (String s : spigotPlugin.getOutOfDateMessage())
 				getLogger().log(Level.INFO, "\u001B[32m" + s + "\u001B[37m");
@@ -191,6 +192,10 @@ public class BountyHunters extends JavaPlugin {
 
 	public static PluginVersion getVersion() {
 		return version;
+	}
+
+	public static SpigotPlugin getSpigotPlugin() {
+		return spigotPlugin;
 	}
 
 	public void reloadConfigFiles() {

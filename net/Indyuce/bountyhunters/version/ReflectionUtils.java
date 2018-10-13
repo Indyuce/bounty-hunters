@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.util;
+package net.Indyuce.bountyhunters.version;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

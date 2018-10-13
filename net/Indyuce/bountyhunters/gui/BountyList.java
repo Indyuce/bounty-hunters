@@ -17,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import net.Indyuce.bountyhunters.BountyHunters;
+import net.Indyuce.bountyhunters.BountyUtils;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.BountyManager;
 import net.Indyuce.bountyhunters.api.CustomItem;
@@ -24,7 +25,6 @@ import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.PlayerData;
 import net.Indyuce.bountyhunters.api.event.HunterTargetEvent;
 import net.Indyuce.bountyhunters.listener.Alerts;
-import net.Indyuce.bountyhunters.util.Utils;
 import net.Indyuce.bountyhunters.version.VersionSound;
 import net.Indyuce.bountyhunters.version.nms.ItemTag;
 
@@ -62,7 +62,7 @@ public class BountyList implements PluginInventory {
 			String creatorString = !bounty.hasCreator() ? Message.THUG_PLAYER.formatRaw(ChatColor.RED) : (bounty.hasCreator(player) ? Message.SET_BY_YOURSELF.formatRaw(ChatColor.GRAY) : Message.SET_BY.formatRaw(ChatColor.GRAY, "%creator%", bounty.getCreator().getName()));
 			insertInLore(lore, "bounty-creator", creatorString);
 
-			String rewardString = Message.REWARD_IS.formatRaw(ChatColor.GRAY, "%reward%", Utils.format(bounty.getReward()));
+			String rewardString = Message.REWARD_IS.formatRaw(ChatColor.GRAY, "%reward%", BountyUtils.format(bounty.getReward()));
 			insertInLore(lore, "bounty-reward", rewardString);
 
 			String huntersString = Message.CURRENT_HUNTERS.formatRaw(ChatColor.GRAY, "%hunters%", "" + bounty.getHunters().size());
@@ -89,7 +89,7 @@ public class BountyList implements PluginInventory {
 		ItemMeta compassMeta = compass.getItemMeta();
 		List<String> compassLore = compassMeta.getLore();
 		compassLore.add("");
-		compassLore.add(Message.CLICK_BUY_COMPASS.formatRaw(ChatColor.YELLOW, "%price%", Utils.format(BountyHunters.plugin.getConfig().getDouble("compass.price"))));
+		compassLore.add(Message.CLICK_BUY_COMPASS.formatRaw(ChatColor.YELLOW, "%price%", BountyUtils.format(BountyHunters.plugin.getConfig().getDouble("compass.price"))));
 		compassMeta.setLore(compassLore);
 		compass.setItemMeta(compassMeta);
 

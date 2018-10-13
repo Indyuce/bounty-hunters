@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.Indyuce.bountyhunters.BountyHunters;
+import net.Indyuce.bountyhunters.BountyUtils;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.BountyCause;
 import net.Indyuce.bountyhunters.api.BountyManager;
@@ -19,7 +20,6 @@ import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.event.BountyChangeEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 import net.Indyuce.bountyhunters.listener.Alerts;
-import net.Indyuce.bountyhunters.util.Utils;
 
 public class AddBountyCommand implements CommandExecutor {
 	public Map<UUID, Long> lastBounty = new HashMap<UUID, Long>();
@@ -68,19 +68,19 @@ public class AddBountyCommand implements CommandExecutor {
 			Message.NOT_VALID_NUMBER.format(ChatColor.RED, "%arg%", args[1]).send(sender);
 			return true;
 		}
-		reward = Utils.truncation(reward, 1);
+		reward = BountyUtils.truncation(reward, 1);
 
 		// min/max check
 		double min = BountyHunters.plugin.getConfig().getDouble("min-reward");
 		double max = BountyHunters.plugin.getConfig().getDouble("max-reward");
 		if ((reward < min) || (max > 0 && reward > max)) {
-			Message.WRONG_REWARD.format(ChatColor.RED, "%max%", Utils.format(max), "%min%", Utils.format(min)).send(sender);
+			Message.WRONG_REWARD.format(ChatColor.RED, "%max%", BountyUtils.format(max), "%min%", BountyUtils.format(min)).send(sender);
 			return true;
 		}
 
 		// tax calculation
 		double tax = reward * BountyHunters.plugin.getConfig().getDouble("tax") / 100;
-		tax = Utils.truncation(tax, 1);
+		tax = BountyUtils.truncation(tax, 1);
 
 		// set restriction
 		if (sender instanceof Player) {
@@ -125,7 +125,7 @@ public class AddBountyCommand implements CommandExecutor {
 
 			bounty.addToReward(sender instanceof Player ? (Player) sender : null, reward);
 			for (Player ent : Bukkit.getOnlinePlayers())
-				Message.BOUNTY_CHANGE.format(ChatColor.YELLOW, "%player%", t.getName(), "%reward%", Utils.format(bounty.getReward())).send(ent);
+				Message.BOUNTY_CHANGE.format(ChatColor.YELLOW, "%player%", t.getName(), "%reward%", BountyUtils.format(bounty.getReward())).send(ent);
 			return true;
 		}
 
@@ -148,7 +148,7 @@ public class AddBountyCommand implements CommandExecutor {
 		Alerts.newBounty(e);
 
 		if (tax > 0)
-			Message.TAX_EXPLAIN.format(ChatColor.RED, "%percent%", "" + BountyHunters.plugin.getConfig().getDouble("tax"), "%price%", Utils.format(tax)).send(sender);
+			Message.TAX_EXPLAIN.format(ChatColor.RED, "%percent%", "" + BountyHunters.plugin.getConfig().getDouble("tax"), "%price%", BountyUtils.format(tax)).send(sender);
 		return true;
 	}
 }
