@@ -22,8 +22,9 @@ import net.Indyuce.bountyhunters.command.HuntersCommand;
 import net.Indyuce.bountyhunters.command.completion.AddBountyCompletion;
 import net.Indyuce.bountyhunters.command.completion.BountiesCompletion;
 import net.Indyuce.bountyhunters.comp.BountyHuntersPlaceholders;
-import net.Indyuce.bountyhunters.gui.GuiListener;
+import net.Indyuce.bountyhunters.comp.Metrics;
 import net.Indyuce.bountyhunters.gui.PluginInventory;
+import net.Indyuce.bountyhunters.gui.listener.GuiListener;
 import net.Indyuce.bountyhunters.listener.BountyClaim;
 import net.Indyuce.bountyhunters.listener.MainListener;
 import net.Indyuce.bountyhunters.listener.UpdateNotify;
@@ -88,6 +89,8 @@ public class BountyHunters extends JavaPlugin {
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
+
+		new Metrics(this);
 
 		// placeholderpi compatibility
 		if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
