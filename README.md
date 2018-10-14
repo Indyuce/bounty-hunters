@@ -1,2 +1,2 @@
 # bounty-hunters
-https://www.spigotmc.org/resources/bounty-hunters.40610/
+https://www.spigotmc.org/resources/40610/
