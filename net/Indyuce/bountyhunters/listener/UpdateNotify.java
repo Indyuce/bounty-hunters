@@ -10,13 +10,11 @@ import net.Indyuce.bountyhunters.BountyHunters;
 
 public class UpdateNotify implements Listener {
 	@EventHandler
-	public void a(PlayerJoinEvent e) {
-		Player p = e.getPlayer();
-		if (!p.hasPermission("bountyhunters.notify-update"))
-			return;
-
-		if (BountyHunters.getSpigotPlugin().isOutOfDate())
-			for (String s : BountyHunters.getSpigotPlugin().getOutOfDateMessage())
-				p.sendMessage(ChatColor.GREEN + "(BountyHunters) " + s);
+	public void a(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+		if (player.hasPermission("bountyhunters.notify-update"))
+			if (BountyHunters.getSpigotPlugin().isOutOfDate())
+				for (String s : BountyHunters.getSpigotPlugin().getOutOfDateMessage())
+					player.sendMessage(ChatColor.GREEN + "(BountyHunters) " + s);
 	}
 }

@@ -10,10 +10,13 @@ import org.bukkit.entity.Player;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.ConfigData;
+import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.PlayerData;
 import net.Indyuce.bountyhunters.api.SpecialChar;
+import net.Indyuce.bountyhunters.api.event.BountyExpireEvent;
+import net.Indyuce.bountyhunters.api.event.BountyExpireEvent.BountyExpireCause;
 import net.Indyuce.bountyhunters.gui.BountyList;
 import net.Indyuce.bountyhunters.version.VersionSound;
 
@@ -84,7 +87,13 @@ public class BountiesCommand implements CommandExecutor {
 				return true;
 			}
 
-			BountyHunters.getBountyManager().getBounty(player).unregister();
+			Bounty bounty = BountyHunters.getBountyManager().getBounty(player);
+			BountyExpireEvent bountyEvent = new BountyExpireEvent(bounty, BountyExpireCause.ADMIN);
+			Bukkit.getPluginManager().callEvent(bountyEvent);
+			if (bountyEvent.isCancelled())
+				return true;
+
+			bounty.unregister();
 		}
 
 		// choose title

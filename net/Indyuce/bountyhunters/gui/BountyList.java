@@ -23,8 +23,9 @@ import net.Indyuce.bountyhunters.api.BountyManager;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.PlayerData;
+import net.Indyuce.bountyhunters.api.event.BountyExpireEvent;
+import net.Indyuce.bountyhunters.api.event.BountyExpireEvent.BountyExpireCause;
 import net.Indyuce.bountyhunters.api.event.HunterTargetEvent;
-import net.Indyuce.bountyhunters.listener.Alerts;
 import net.Indyuce.bountyhunters.version.VersionSound;
 import net.Indyuce.bountyhunters.version.nms.ItemTag;
 
@@ -172,9 +173,9 @@ public class BountyList implements PluginInventory {
 					}
 
 					// event check
-					HunterTargetEvent event = new HunterTargetEvent(player, t);
-					Bukkit.getPluginManager().callEvent(event);
-					if (event.isCancelled())
+					HunterTargetEvent hunterEvent = new HunterTargetEvent(player, t);
+					Bukkit.getPluginManager().callEvent(hunterEvent);
+					if (hunterEvent.isCancelled())
 						return;
 
 					// check for target cooldown
@@ -193,7 +194,7 @@ public class BountyList implements PluginInventory {
 
 					bounty.addHunter(player);
 					if (t.isOnline())
-						Alerts.newHunter(t.getPlayer(), player);
+						hunterEvent.sendAllert(t.getPlayer());
 					Message.TARGET_SET.format(ChatColor.YELLOW).send(player);
 				}
 
@@ -219,6 +220,9 @@ public class BountyList implements PluginInventory {
 				if (!bounty.hasCreator(player))
 					return;
 
+				BountyExpireEvent bountyEvent = new BountyExpireEvent(bounty, BountyExpireCause.CREATOR);
+				Bukkit.getPluginManager().callEvent(bountyEvent);
+
 				double cashback = bounty.getReward();
 
 				// gives the players the money back if upped the bounty
@@ -230,7 +234,7 @@ public class BountyList implements PluginInventory {
 				}
 
 				BountyHunters.getEconomy().depositPlayer(player, cashback);
-				Alerts.bountyExpired(bounty);
+				bountyEvent.sendAllert();
 				bounty.unregister();
 
 				new BountyList(player, page).open();

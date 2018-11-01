@@ -39,6 +39,8 @@ public class BountyHuntersPlaceholders extends PlaceholderExpansion {
 			return playerData.getLevelProgressBar();
 		case "before_level_up":
 			return "" + playerData.getBountiesNeededToLevelUp();
+		// case "target_distance":
+		// return "" + playerData.getBountiesNeededToLevelUp();
 		}
 		return null;
 	}

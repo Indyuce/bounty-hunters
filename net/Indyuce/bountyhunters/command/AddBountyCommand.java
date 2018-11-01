@@ -14,16 +14,16 @@ import org.bukkit.entity.Player;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.BountyUtils;
 import net.Indyuce.bountyhunters.api.Bounty;
-import net.Indyuce.bountyhunters.api.BountyCause;
 import net.Indyuce.bountyhunters.api.BountyManager;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.event.BountyChangeEvent;
+import net.Indyuce.bountyhunters.api.event.BountyChangeEvent.BountyChangeCause;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
-import net.Indyuce.bountyhunters.listener.Alerts;
+import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
 
 public class AddBountyCommand implements CommandExecutor {
 	public Map<UUID, Long> lastBounty = new HashMap<UUID, Long>();
-	
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!sender.hasPermission("bountyhunters.add")) {
@@ -111,9 +111,9 @@ public class AddBountyCommand implements CommandExecutor {
 
 			// API
 			Bounty bounty = bountyManager.getBounty(t);
-			BountyChangeEvent e = new BountyChangeEvent(bounty);
-			Bukkit.getPluginManager().callEvent(e);
-			if (e.isCancelled())
+			BountyChangeEvent bountyEvent = new BountyChangeEvent(bounty, BountyChangeCause.PLAYER);
+			Bukkit.getPluginManager().callEvent(bountyEvent);
+			if (bountyEvent.isCancelled())
 				return true;
 
 			// remove balance
@@ -131,10 +131,10 @@ public class AddBountyCommand implements CommandExecutor {
 
 		// API
 		Bounty bounty = new Bounty(sender instanceof Player ? (Player) sender : null, t, reward);
-		BountyCreateEvent e = new BountyCreateEvent(bounty, sender instanceof Player ? BountyCause.PLAYER : BountyCause.CONSOLE);
-		Bukkit.getPluginManager().callEvent(e);
-		reward = e.getBounty().getReward();
-		if (e.isCancelled())
+		BountyCreateEvent bountyEvent = new BountyCreateEvent(bounty, sender instanceof Player ? BountyCause.PLAYER : BountyCause.CONSOLE);
+		Bukkit.getPluginManager().callEvent(bountyEvent);
+		reward = bountyEvent.getBounty().getReward();
+		if (bountyEvent.isCancelled())
 			return true;
 
 		// remove balance
@@ -143,9 +143,9 @@ public class AddBountyCommand implements CommandExecutor {
 			BountyHunters.getEconomy().withdrawPlayer((Player) sender, reward + tax);
 			lastBounty.put(((Player) sender).getUniqueId(), System.currentTimeMillis());
 		}
-		
+
 		bounty.register();
-		Alerts.newBounty(e);
+		bountyEvent.sendAllert();
 
 		if (tax > 0)
 			Message.TAX_EXPLAIN.format(ChatColor.RED, "%percent%", "" + BountyHunters.plugin.getConfig().getDouble("tax"), "%price%", BountyUtils.format(tax)).send(sender);

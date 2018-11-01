@@ -26,7 +26,6 @@ import net.Indyuce.bountyhunters.comp.Metrics;
 import net.Indyuce.bountyhunters.gui.PluginInventory;
 import net.Indyuce.bountyhunters.gui.listener.GuiListener;
 import net.Indyuce.bountyhunters.listener.BountyClaim;
-import net.Indyuce.bountyhunters.listener.MainListener;
 import net.Indyuce.bountyhunters.listener.UpdateNotify;
 import net.Indyuce.bountyhunters.version.PluginVersion;
 import net.Indyuce.bountyhunters.version.SpigotPlugin;
@@ -48,7 +47,7 @@ public class BountyHunters extends JavaPlugin {
 	private static Permission permission;
 
 	// no reflection nms
-	public static NMSHandler nms;
+	private static NMSHandler nms;
 
 	// cached config files
 	private static FileConfiguration levels;
@@ -69,7 +68,6 @@ public class BountyHunters extends JavaPlugin {
 
 		// listeners
 		Bukkit.getServer().getPluginManager().registerEvents(new BountyClaim(), this);
-		Bukkit.getServer().getPluginManager().registerEvents(new MainListener(), this);
 		Bukkit.getServer().getPluginManager().registerEvents(new GuiListener(), this);
 
 		saveDefaultConfig();

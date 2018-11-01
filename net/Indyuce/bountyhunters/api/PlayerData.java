@@ -185,7 +185,7 @@ public class PlayerData {
 		if (getClaimedBounties() < neededBounties)
 			return false;
 
-		HunterLevelUpEvent event = new HunterLevelUpEvent(player);
+		HunterLevelUpEvent event = new HunterLevelUpEvent(player, nextLevel);
 		Bukkit.getPluginManager().callEvent(event);
 
 		Message.CHAT_BAR.format(ChatColor.YELLOW).send(player);

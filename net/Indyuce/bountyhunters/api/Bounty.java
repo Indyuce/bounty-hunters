@@ -14,6 +14,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
+import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
 
 public class Bounty {
 	private double reward;

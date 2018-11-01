@@ -37,8 +37,8 @@ bounty-commands: []
 # - '/give %player% minecraft:diamond 10'
 # - '/jail %target% 100'
 
-# When enabled, it will automaticaly place a bounty
-# onto any player who kills a player with no bounty on him (illegal kill).
+# When enabled, it will automaticaly place a bounty onto any
+# player who kills a player with no bounty on him (illegal kill).
 auto-bounty:
     enabled: false
     reward: 100
@@ -56,7 +56,7 @@ display-player-skulls: true
 # The tracking compass allows people to know where the people with a bounty on are.
 # Required a /reload to take effect.
 # The cooldown determines how often you can target a player in the menu (can fix spam from the hunter alert).
-# The format corresponds to the number displayed on the compass name
+# The format corresponds to the number displayed on the compass name (see DecimalFormat (Java) on Google).
 compass:
     enabled: true
     price: 1000
@@ -74,13 +74,13 @@ tax: 15
 
 # Enables the display of death quotes when claiming a bounty.
 display-death-quote-on-title: false
+  
+# Enables leveling rewards.
+enable-quotes-levels-titles: true
 
 # Worlds in which the bounty system is completely disabled.
 world-blacklist:
 - INSERT_WORLD_HERE
-  
-# Enables leveling rewards.
-enable-quotes-levels-titles: true
 
 # You can claim the bounties you create.
 # Warning: can be abused.
@@ -89,7 +89,7 @@ own-bounty-claiming: true
 # Displays particles around targeted players (requires /reload to take effect).
 target-particles:
     enabled: true
-    permission: ""
+    permission: ''
 
-# Formatted numbers (1B instead of 1,000,000,000).
+# Displayed formatted numbers (1,345B instead of 1,345,416,416).
 formatted-numbers: true

@@ -13,6 +13,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryPickupItemEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -22,12 +25,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.ParticleEffect;
 import net.Indyuce.bountyhunters.api.Bounty;
-import net.Indyuce.bountyhunters.api.BountyCause;
 import net.Indyuce.bountyhunters.api.BountyManager;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.PlayerData;
+import net.Indyuce.bountyhunters.api.event.BountyChangeEvent;
+import net.Indyuce.bountyhunters.api.event.BountyChangeEvent.BountyChangeCause;
 import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
+import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
 
 public class BountyClaim implements Listener {
 	public BountyClaim() {
@@ -89,26 +94,26 @@ public class BountyClaim implements Listener {
 					Bounty bounty = new Bounty(null, t, BountyHunters.plugin.getConfig().getDouble("auto-bounty.reward"));
 
 					// check API event
-					BountyCreateEvent e1 = new BountyCreateEvent(bounty, BountyCause.AUTO_BOUNTY);
-					Bukkit.getPluginManager().callEvent(e1);
-					if (e1.isCancelled())
+					BountyCreateEvent bountyEvent = new BountyCreateEvent(bounty, BountyCause.AUTO_BOUNTY);
+					Bukkit.getPluginManager().callEvent(bountyEvent);
+					if (bountyEvent.isCancelled())
 						return;
 
 					bounty.register();
-					Alerts.newBounty(e1);
+					bountyEvent.sendAllert();
 					return;
 				}
 
 				Bounty bounty = bountyManager.getBounty(t);
 
 				// check API event
-				BountyCreateEvent e1 = new BountyCreateEvent(bounty, BountyCause.AUTO_BOUNTY);
-				Bukkit.getPluginManager().callEvent(e1);
-				if (e1.isCancelled())
+				BountyChangeEvent bountyEvent = new BountyChangeEvent(bounty, BountyChangeCause.AUTO_BOUNTY);
+				Bukkit.getPluginManager().callEvent(bountyEvent);
+				if (bountyEvent.isCancelled())
 					return;
 
 				bounty.setReward(bounty.getReward() + BountyHunters.plugin.getConfig().getDouble("auto-bounty.reward"));
-				Alerts.bountyChange(e1);
+				bountyEvent.sendAllert();
 			}
 			return;
 		}
@@ -133,11 +138,10 @@ public class BountyClaim implements Listener {
 		// bounty effects
 		// drop player head
 		dropOptions(random, p, t);
+		bountyEvent.sendAllert();
 
 		// give money
 		BountyHunters.getEconomy().depositPlayer(t, bounty.getReward());
-
-		Alerts.claimBounty(p.getKiller(), bounty);
 
 		// add 1 to claimed bounties, update level
 		PlayerData playerData = PlayerData.get(t);
@@ -219,5 +223,24 @@ public class BountyClaim implements Listener {
 		// commands
 		for (String command : BountyHunters.plugin.getConfig().getStringList("bounty-commands"))
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%target%", player.getName()).replace("%player%", killer.getName()));
+	}
+
+	@EventHandler
+	public void a(PlayerPickupItemEvent event) {
+		Item item = event.getItem();
+		if (item.hasMetadata("BOUNTYHUNTERS:no_pickup"))
+			event.setCancelled(true);
+	}
+
+	@EventHandler
+	public void b(InventoryPickupItemEvent event) {
+		Item item = event.getItem();
+		if (item.hasMetadata("BOUNTYHUNTERS:no_pickup"))
+			event.setCancelled(true);
+	}
+
+	@EventHandler
+	public void c(PlayerJoinEvent event) {
+		PlayerData.setup(event.getPlayer());
 	}
 }
