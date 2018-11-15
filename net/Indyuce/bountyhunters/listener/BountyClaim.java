@@ -25,6 +25,7 @@ import net.Indyuce.bountyhunters.api.event.BountyChangeEvent.BountyChangeCause;
 import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
+import net.Indyuce.bountyhunters.gui.Leaderboard;
 import net.Indyuce.bountyhunters.manager.BountyManager;
 
 public class BountyClaim implements Listener {
@@ -162,12 +163,13 @@ public class BountyClaim implements Listener {
 
 		/*
 		 * adds 1 to the claimer's claimed bounties stat and checks for a level
-		 * up
+		 * up ; also checks if the player can join the hunter leaderboard
 		 */
 		PlayerData playerData = PlayerData.get(killer);
 		playerData.addClaimedBounties(1);
 		if (BountyHunters.plugin.getConfig().getBoolean("enable-quotes-levels-titles"))
 			playerData.checkForLevelUp(killer);
+		Leaderboard.updateCachedLeaderboard(killer.getUniqueId(), playerData.getClaimedBounties());
 
 		/*
 		 * adds 1 to the bounty creator's successful-bounties stat

@@ -2,6 +2,7 @@ package net.Indyuce.bountyhunters;
 
 import java.text.DecimalFormat;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public class BountyUtils {
@@ -18,16 +19,16 @@ public class BountyUtils {
 		return new DecimalFormat("0.#").format(n);
 	}
 
-	public static boolean isPluginItem(ItemStack i, boolean lore) {
-		if (i != null)
-			if (i.getItemMeta() != null)
-				if (i.getItemMeta().getDisplayName() != null)
-					return !lore || i.getItemMeta().getLore() != null;
+	public static boolean isPluginItem(ItemStack item, boolean lore) {
+		if (item != null && item.getType() != Material.AIR)
+			if (item.getItemMeta() != null)
+				if (item.getItemMeta().getDisplayName() != null)
+					return !lore || item.getItemMeta().getLore() != null;
 		return false;
 	}
 
 	public static double truncation(double x, int n) {
-		double pow = Math.pow(10.0, n);
+		double pow = Math.pow(10., n);
 		return Math.floor(x * pow) / pow;
 	}
 }

@@ -18,11 +18,13 @@ import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
 
 public class Bounty {
 	private double reward;
-	private UUID creator;
-	private UUID target;
+	private UUID creator, target;
 	private List<UUID> hunters = new ArrayList<UUID>();
 	private Map<UUID, Double> up = new HashMap<UUID, Double>();
 
+	/*
+	 * creator is nullable since auto-bounties do not have any creator
+	 */
 	public Bounty(OfflinePlayer creator, OfflinePlayer target, double reward) {
 		this(creator == null ? null : creator.getUniqueId(), target.getUniqueId(), reward);
 	}
@@ -58,7 +60,7 @@ public class Bounty {
 	}
 
 	public void addToReward(OfflinePlayer player, double value) {
-		this.reward += value;
+		reward += value;
 		if (player != null)
 			setBountyIncrease(player, value);
 	}

@@ -121,4 +121,46 @@ public class Leaderboard implements PluginInventory {
 
 		return s;
 	}
+
+	public static void updateCachedLeaderboard(UUID uuid, int bounties) {
+		/*
+		 * if the leaderboard already contains that player, just add one to the
+		 * bounties counter
+		 * 
+		 */
+		if (BountyHunters.getCachedLeaderboard().getKeys(false).contains(uuid.toString())) {
+			BountyHunters.getCachedLeaderboard().set(uuid.toString(), bounties);
+			return;
+		}
+
+		/*
+		 * if there is still not at least 16 players in the cached leaderboard,
+		 * just add it to the keys and that's all
+		 */
+		if (BountyHunters.getCachedLeaderboard().getKeys(false).size() < 16) {
+			BountyHunters.getCachedLeaderboard().set(uuid.toString(), bounties);
+			return;
+		}
+
+		/*
+		 * if there is more than 16 players in the leaderboard, the plugin will
+		 * have to remove the player that has the least bounties and will
+		 * replace it by the newer one IF the newer one has more bounties
+		 */
+		String leastKey = "";
+		int leastBounties = Integer.MAX_VALUE;
+
+		for (String key : BountyHunters.getCachedLeaderboard().getKeys(false)) {
+			int playerBounties = BountyHunters.getCachedLeaderboard().getInt(key);
+			if (playerBounties < leastBounties) {
+				leastBounties = playerBounties;
+				leastKey = key;
+			}
+		}
+
+		if (bounties >= leastBounties) {
+			BountyHunters.getCachedLeaderboard().set(leastKey, null);
+			BountyHunters.getCachedLeaderboard().set(uuid.toString(), bounties);
+		}
+	}
 }
