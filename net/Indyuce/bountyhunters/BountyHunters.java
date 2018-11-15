@@ -15,6 +15,7 @@ import net.Indyuce.bountyhunters.api.BountyManager;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.HuntManager;
 import net.Indyuce.bountyhunters.api.Message;
+import net.Indyuce.bountyhunters.api.ParticlesRunnable;
 import net.Indyuce.bountyhunters.api.PlayerData;
 import net.Indyuce.bountyhunters.command.AddBountyCommand;
 import net.Indyuce.bountyhunters.command.BountiesCommand;
@@ -34,23 +35,19 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
 public class BountyHunters extends JavaPlugin {
-
-	// plugin
 	public static BountyHunters plugin;
 	private static PluginVersion version;
 	private static SpigotPlugin spigotPlugin;
-
-	// systems
-	private static BountyManager bountyManager;
-	private static HuntManager huntManager;
-	private static Economy economy;
-	private static Permission permission;
-
-	// no reflection nms
 	private static NMSHandler nms;
 
-	// cached config files
+	private static BountyManager bountyManager;
+	private static HuntManager huntManager;
+
+	private static Permission permission;
+	private static Economy economy;
+
 	private static FileConfiguration levels;
+	private static FileConfiguration leaderboard;
 
 	public void onEnable() {
 
@@ -139,8 +136,11 @@ public class BountyHunters extends JavaPlugin {
 			userdataFolder.mkdir();
 
 		ConfigData.setupCD(this, "", "data");
-		for (Player p : Bukkit.getOnlinePlayers())
-			PlayerData.setup(p);
+		leaderboard = ConfigData.getCD(this, "/cache", "leaderboard");
+
+		// target particles
+		if (BountyHunters.plugin.getConfig().getBoolean("target-particles.enabled"))
+			new ParticlesRunnable().runTaskTimer(BountyHunters.plugin, 0, 100);
 
 		// after levels.yml was loaded only
 		// else it can't load the file
@@ -158,8 +158,10 @@ public class BountyHunters extends JavaPlugin {
 	public void onDisable() {
 		bountyManager.saveBounties();
 
-		for (PlayerData playerData : PlayerData.getPlayerDatas())
+		for (PlayerData playerData : PlayerData.getLoaded())
 			playerData.saveFile();
+
+		ConfigData.saveCD(this, leaderboard, "/cache", "leaderboard");
 
 		for (Player t : Bukkit.getOnlinePlayers())
 			if (t.getOpenInventory() != null)
@@ -197,6 +199,10 @@ public class BountyHunters extends JavaPlugin {
 
 	public static SpigotPlugin getSpigotPlugin() {
 		return spigotPlugin;
+	}
+
+	public static FileConfiguration getCachedLeaderboard() {
+		return leaderboard;
 	}
 
 	public void reloadConfigFiles() {

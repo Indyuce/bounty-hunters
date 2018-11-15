@@ -1,33 +1,25 @@
 package net.Indyuce.bountyhunters.listener;
 
 import java.util.Random;
-import java.util.UUID;
-import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.bountyhunters.BountyHunters;
-import net.Indyuce.bountyhunters.ParticleEffect;
 import net.Indyuce.bountyhunters.api.Bounty;
+import net.Indyuce.bountyhunters.api.BountyEffect;
 import net.Indyuce.bountyhunters.api.BountyManager;
-import net.Indyuce.bountyhunters.api.CustomItem;
+import net.Indyuce.bountyhunters.api.PhysicalRewards;
 import net.Indyuce.bountyhunters.api.PlayerData;
+import net.Indyuce.bountyhunters.api.PlayerHead;
 import net.Indyuce.bountyhunters.api.event.BountyChangeEvent;
 import net.Indyuce.bountyhunters.api.event.BountyChangeEvent.BountyChangeCause;
 import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
@@ -35,65 +27,35 @@ import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
 
 public class BountyClaim implements Listener {
-	public BountyClaim() {
-
-		// target particles
-		if (BountyHunters.plugin.getConfig().getBoolean("target-particles.enabled"))
-			new BukkitRunnable() {
-				final String permNode = BountyHunters.plugin.getConfig().getString("target-particles.permission");
-				final boolean permBool = permNode.equals("");
-
-				public void run() {
-					for (Bounty bounty : BountyHunters.getBountyManager().getBounties()) {
-						if (!bounty.getTarget().isOnline())
-							continue;
-
-						Player p = Bukkit.getPlayer(bounty.getTarget().getUniqueId());
-						for (UUID hunterUuid : bounty.getHunters()) {
-							Player hunter = Bukkit.getPlayer(hunterUuid);
-							if (hunter != null)
-								if (permBool || hunter.hasPermission(permNode))
-									new BukkitRunnable() {
-										int ti = 0;
-										Location loc = p.getLocation().clone().add(0, .1, 0);
-
-										public void run() {
-											ti++;
-											if (ti > 2)
-												cancel();
-
-											for (double j = 0; j < Math.PI * 2; j += Math.PI / 16)
-												ParticleEffect.REDSTONE.display(0, 0, 0, 0, 1, loc.clone().add(Math.cos(j) * .8, 0, Math.sin(j) * .8), hunter);
-										}
-									}.runTaskTimer(BountyHunters.plugin, 0, 7);
-						}
-					}
-				}
-			}.runTaskTimer(BountyHunters.plugin, 0, 100);
-	}
-
 	@EventHandler
-	public void a(PlayerDeathEvent e) {
-		Player p = e.getEntity();
-		if (p.getKiller() == null || !(p.getKiller() instanceof Player) || p == p.getKiller())
+	public void a(PlayerDeathEvent event) {
+		Player player = event.getEntity();
+		if (player.getKiller() == null || !(player.getKiller() instanceof Player) || player == player.getKiller())
 			return;
 
-		// world blacklist
-		if (BountyHunters.plugin.getConfig().getStringList("world-blacklist").contains(p.getWorld().getName()))
+		/*
+		 * check if the player world is in the world blacklist (the plugin is
+		 * totally disabled in these worlds)
+		 */
+		if (BountyHunters.plugin.getConfig().getStringList("world-blacklist").contains(player.getWorld().getName()))
 			return;
 
 		Random random = new Random();
 		BountyManager bountyManager = BountyHunters.getBountyManager();
-		Player t = p.getKiller();
+		Player killer = player.getKiller();
 
-		// auto bounty
-		if (!bountyManager.hasBounty(p)) {
+		/*
+		 * auto bounty: killing a player on whom there was no bounty makes the
+		 * kill illegal. When a kill is illegal, the killer has a chance to have
+		 * a bounty drop onto him
+		 */
+		if (!bountyManager.hasBounty(player)) {
 			if (BountyHunters.plugin.getConfig().getBoolean("auto-bounty.enabled") && random.nextDouble() <= BountyHunters.plugin.getConfig().getDouble("auto-bounty.chance") / 100) {
-				// create a new bounty
-				if (!bountyManager.hasBounty(t)) {
-					Bounty bounty = new Bounty(null, t, BountyHunters.plugin.getConfig().getDouble("auto-bounty.reward"));
 
-					// check API event
+				// create a new bounty
+				if (!bountyManager.hasBounty(killer)) {
+					Bounty bounty = new Bounty(null, killer, BountyHunters.plugin.getConfig().getDouble("auto-bounty.reward"));
+
 					BountyCreateEvent bountyEvent = new BountyCreateEvent(bounty, BountyCause.AUTO_BOUNTY);
 					Bukkit.getPluginManager().callEvent(bountyEvent);
 					if (bountyEvent.isCancelled())
@@ -104,9 +66,9 @@ public class BountyClaim implements Listener {
 					return;
 				}
 
-				Bounty bounty = bountyManager.getBounty(t);
+				// increase the existing bounty amount
+				Bounty bounty = bountyManager.getBounty(killer);
 
-				// check API event
 				BountyChangeEvent bountyEvent = new BountyChangeEvent(bounty, BountyChangeCause.AUTO_BOUNTY);
 				Bukkit.getPluginManager().callEvent(bountyEvent);
 				if (bountyEvent.isCancelled())
@@ -118,129 +80,108 @@ public class BountyClaim implements Listener {
 			return;
 		}
 
-		if (!t.hasPermission("bountyhunters.claim"))
+		if (!killer.hasPermission("bountyhunters.claim"))
 			return;
 
-		Bounty bounty = bountyManager.getBounty(p);
+		Bounty bounty = bountyManager.getBounty(player);
 
-		// own bounty claiming option
+		/*
+		 * prevents the player from claiming the bounty if he is the bounty
+		 * creator & if the corresponding option is disabled
+		 */
 		if (bounty.hasCreator())
-			if (!BountyHunters.plugin.getConfig().getBoolean("own-bounty-claiming") && bounty.hasCreator(t))
+			if (!BountyHunters.plugin.getConfig().getBoolean("own-bounty-claiming") && bounty.hasCreator(killer))
 				return;
 
-		// API
-		BountyClaimEvent bountyEvent = new BountyClaimEvent(bounty, t);
+		/*
+		 * create an event instance, call it and check if it is cancelled. if it
+		 * is not cancelled, send the corresponding allert
+		 */
+		BountyClaimEvent bountyEvent = new BountyClaimEvent(bounty, killer);
 		Bukkit.getPluginManager().callEvent(bountyEvent);
 		if (bountyEvent.isCancelled())
 			return;
-
-		// physical drops
-		// bounty effects
-		// drop player head
-		dropOptions(random, p, t);
 		bountyEvent.sendAllert();
 
-		// give money
-		BountyHunters.getEconomy().depositPlayer(t, bounty.getReward());
+		/*
+		 * drops items at the target's location, best look with CHEST, REDSTONE
+		 * or GOLD_NUGGET. these items can't be picked up and only act as
+		 * cosmetics
+		 */
+		if (BountyHunters.plugin.getConfig().getBoolean("bounty-effect.enabled"))
+			new BountyEffect(BountyHunters.plugin.getConfig().getConfigurationSection("bounty-effect")).play(player.getLocation());
 
-		// add 1 to claimed bounties, update level
-		PlayerData playerData = PlayerData.get(t);
+		/*
+		 * read physical rewards from the config file and drop them at the
+		 * target's location. error messages are displayed if the items can't be
+		 * read TODO add support for external plugin items?
+		 */
+		if (BountyHunters.plugin.getConfig().getBoolean("physical-rewards.enabled"))
+			for (ItemStack drop : new PhysicalRewards(BountyHunters.plugin.getConfig().getConfigurationSection("physical-rewards.list")).readItems())
+				player.getWorld().dropItem(player.getLocation(), drop);
+
+		// commands
+		for (String command : BountyHunters.plugin.getConfig().getStringList("bounty-commands"))
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%target%", player.getName()).replace("%player%", killer.getName()));
+
+		/*
+		 * drops the killed player's head
+		 */
+		if (BountyHunters.plugin.getConfig().getBoolean("drop-head.enabled") && random.nextDouble() <= BountyHunters.plugin.getConfig().getDouble("drop-head.chance") / 100)
+			player.getWorld().dropItem(player.getLocation(), new PlayerHead(player));
+
+		/*
+		 * give the money to the player who claimed the bounty
+		 */
+		BountyHunters.getEconomy().depositPlayer(killer, bounty.getReward());
+
+		/*
+		 * adds 1 to the claimer's claimed bounties stat and checks for a level
+		 * up
+		 */
+		PlayerData playerData = PlayerData.get(killer);
 		playerData.addClaimedBounties(1);
 		if (BountyHunters.plugin.getConfig().getBoolean("enable-quotes-levels-titles"))
-			playerData.checkForLevelUp(t);
+			playerData.checkForLevelUp(killer);
 
-		// add 1 to successful bounties
+		/*
+		 * adds 1 to the bounty creator's successful-bounties stat
+		 */
 		if (bounty.hasCreator()) {
 			PlayerData playerData1 = PlayerData.get(bounty.getCreator());
 			playerData1.addSuccessfulBounties(1);
 		}
 
-		// display death quote
+		/*
+		 * displays the claimer's death title
+		 */
 		if (BountyHunters.plugin.getConfig().getBoolean("enable-quotes-levels-titles")) {
 			String deathQuote = playerData.getQuote();
 			if (!deathQuote.equals("")) {
 				boolean bool = BountyHunters.plugin.getConfig().getBoolean("display-death-quote-on-title");
 				for (Player t2 : Bukkit.getOnlinePlayers()) {
-					t2.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + t.getName() + "> " + deathQuote);
+					t2.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + killer.getName() + "> " + deathQuote);
 					if (bool)
-						BountyHunters.getNMS().sendTitle(t2, ChatColor.GOLD + "" + ChatColor.BOLD + t.getName().toUpperCase(), ChatColor.ITALIC + deathQuote, 10, 60, 10);
+						BountyHunters.getNMS().sendTitle(t2, ChatColor.GOLD + "" + ChatColor.BOLD + killer.getName().toUpperCase(), ChatColor.ITALIC + deathQuote, 10, 60, 10);
 				}
 			}
 		}
 
+		// finally, unregister the bounty
 		bounty.unregister();
 	}
 
-	private void dropOptions(Random random, Player player, Player killer) {
-
-		// drop head
-		if (BountyHunters.plugin.getConfig().getBoolean("drop-head.enabled") && random.nextDouble() <= BountyHunters.plugin.getConfig().getDouble("drop-head.chance") / 100) {
-			ItemStack head = CustomItem.PLAYER_HEAD.a().clone();
-			SkullMeta headMeta = (SkullMeta) head.getItemMeta();
-			headMeta.setDisplayName(headMeta.getDisplayName().replace("%name%", player.getName()));
-			headMeta.setOwner(player.getName());
-			head.setItemMeta(headMeta);
-
-			player.getWorld().dropItemNaturally(player.getLocation(), head);
-		}
-
-		// effect
-		if (BountyHunters.plugin.getConfig().getBoolean("bounty-effect.enabled")) {
-			String format = BountyHunters.plugin.getConfig().getString("bounty-effect.material").toUpperCase().replace("-", "_").replace(" ", "_");
-			Material m = null;
-			try {
-				m = Material.valueOf(format);
-			} catch (Exception e) {
-				Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Bounty Hunters] No such material found: " + format + ".");
-			}
-			for (int j = 0; j < 8; j++) {
-				ItemStack stack = new ItemStack(m);
-				ItemMeta stack_meta = stack.getItemMeta();
-				stack_meta.setDisplayName("BOUNTYHUNTERS:chest " + player.getUniqueId().toString() + " " + j);
-				stack.setItemMeta(stack_meta);
-
-				Item item = player.getWorld().dropItemNaturally(player.getLocation(), stack);
-				item.setMetadata("BOUNTYHUNTERS:no_pickup", new FixedMetadataValue(BountyHunters.plugin, true));
-				Bukkit.getScheduler().scheduleSyncDelayedTask(BountyHunters.plugin, new Runnable() {
-					public void run() {
-						item.remove();
-					}
-				}, 40 + new Random().nextInt(30));
-			}
-		}
-
-		// physical rewards
-		if (BountyHunters.plugin.getConfig().getBoolean("physical-rewards.enabled"))
-			for (String s : BountyHunters.plugin.getConfig().getConfigurationSection("physical-rewards.list").getKeys(false)) {
-				try {
-					String[] split = BountyHunters.plugin.getConfig().getString("physical-rewards.list." + s).split(Pattern.quote(" "));
-					player.getWorld().dropItem(player.getLocation(), new ItemStack(Material.valueOf(s.toUpperCase().replace("-", "_").replace(" ", "_")), Integer.parseInt(split[0]), (split.length > 1 ? (short) Integer.parseInt(split[1]) : (short) 0)));
-				} catch (Exception e) {
-					Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Bounty Hunters] Wrong item format: " + s + ":" + BountyHunters.plugin.getConfig().getString("physical-rewards.list." + s));
-				}
-			}
-
-		// commands
-		for (String command : BountyHunters.plugin.getConfig().getStringList("bounty-commands"))
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%target%", player.getName()).replace("%player%", killer.getName()));
-	}
-
 	@EventHandler
-	public void a(PlayerPickupItemEvent event) {
+	public void b(PlayerPickupItemEvent event) {
 		Item item = event.getItem();
 		if (item.hasMetadata("BOUNTYHUNTERS:no_pickup"))
 			event.setCancelled(true);
 	}
 
 	@EventHandler
-	public void b(InventoryPickupItemEvent event) {
+	public void c(InventoryPickupItemEvent event) {
 		Item item = event.getItem();
 		if (item.hasMetadata("BOUNTYHUNTERS:no_pickup"))
 			event.setCancelled(true);
-	}
-
-	@EventHandler
-	public void c(PlayerJoinEvent event) {
-		PlayerData.setup(event.getPlayer());
 	}
 }

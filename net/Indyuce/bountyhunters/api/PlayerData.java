@@ -27,7 +27,14 @@ public class PlayerData {
 	private String playerName;
 	private FileConfiguration config;
 
+	// caches the list of unlocked stuff
 	private List<String> unlocked;
+
+	// next time the player is able to create a bounty.
+	private long nextBounty = 0;
+
+	// last time the player created a bounty
+	private long lastBounty = 0;
 
 	private PlayerData(OfflinePlayer player) {
 		this.uuid = player.getUniqueId();
@@ -41,21 +48,26 @@ public class PlayerData {
 		this.unlocked = config.getStringList("unlocked");
 	}
 
-	public static Collection<PlayerData> getPlayerDatas() {
+	public static Collection<PlayerData> getLoaded() {
 		return map.values();
 	}
 
 	public static PlayerData get(OfflinePlayer player) {
+		if (!map.containsKey(player.getUniqueId()))
+			map.put(player.getUniqueId(), new PlayerData(player));
 		return map.get(player.getUniqueId());
 	}
 
-	public static void setup(OfflinePlayer player) {
-		if (!map.containsKey(player.getUniqueId()))
-			map.put(player.getUniqueId(), new PlayerData(player));
+	public static boolean isLoaded(UUID uuid) {
+		return map.containsKey(uuid);
 	}
 
 	public String getPlayerName() {
 		return playerName;
+	}
+
+	public long getLastBounty() {
+		return lastBounty;
 	}
 
 	public UUID getUUID() {
@@ -80,12 +92,12 @@ public class PlayerData {
 
 	public String getQuote() {
 		String format = BountyHunters.getLevelsConfigFile().getString("reward.quote." + config.getString("current-quote") + ".format");
-		return SpecialChar.apply(format == null ? "" : format);
+		return AltChar.apply(format == null ? "" : format);
 	}
 
 	public String getTitle() {
 		String format = BountyHunters.getLevelsConfigFile().getString("reward.title." + config.getString("current-title") + ".format");
-		return SpecialChar.apply(format == null ? "" : format);
+		return AltChar.apply(format == null ? "" : format);
 	}
 
 	public double getValueDependingOnLevel(ConfigurationSection section, int level) {
@@ -101,7 +113,7 @@ public class PlayerData {
 		String lvlAdvancement = "";
 		int bountiesNeeded = BountyHunters.getLevelsConfigFile().getInt("bounties-per-level");
 		for (int j = 0; j < bountiesNeeded; j++)
-			lvlAdvancement += (getClaimedBounties() % bountiesNeeded > j ? ChatColor.GREEN : ChatColor.WHITE) + SpecialChar.square;
+			lvlAdvancement += (getClaimedBounties() % bountiesNeeded > j ? ChatColor.GREEN : ChatColor.WHITE) + AltChar.square;
 		return lvlAdvancement;
 	}
 
@@ -119,6 +131,15 @@ public class PlayerData {
 		profileMeta.setLore(profileLore);
 		profile.setItemMeta(profileMeta);
 		return profile;
+	}
+
+	public boolean canCreateBounty() {
+		return System.currentTimeMillis() > nextBounty;
+	}
+
+	public void applyBountyCooldown(double cooldown) {
+		nextBounty = (long) (System.currentTimeMillis() + 1000 * cooldown);
+		lastBounty = System.currentTimeMillis();
 	}
 
 	public boolean hasQuote() {
@@ -219,7 +240,7 @@ public class PlayerData {
 		// send json list
 		String jsonList = money > 0 ? "\n" + Message.LEVEL_UP_REWARD.formatRaw(ChatColor.YELLOW, "%reward%", "$" + money) : "";
 		for (String s : chatDisplay)
-			jsonList += "\n" + Message.LEVEL_UP_REWARD.formatRaw(ChatColor.YELLOW, "%reward%", SpecialChar.apply(s));
+			jsonList += "\n" + Message.LEVEL_UP_REWARD.formatRaw(ChatColor.YELLOW, "%reward%", AltChar.apply(s));
 		BountyHunters.getNMS().sendJson(player, "{\"text\":\"" + ChatColor.YELLOW + Message.LEVEL_UP_REWARDS.getUpdated() + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1) + "\"}}}");
 
 		setLevel(nextLevel);

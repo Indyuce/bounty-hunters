@@ -1,7 +1,8 @@
 package net.Indyuce.bountyhunters.gui;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -9,15 +10,12 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-
-import com.google.common.collect.Ordering;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.CustomItem;
@@ -27,63 +25,52 @@ import net.Indyuce.bountyhunters.api.PlayerData;
 public class Leaderboard implements PluginInventory {
 	private Player player;
 
+	private static final int[] slots = { 13, 21, 22, 23, 29, 30, 31, 32, 33, 37, 38, 39, 40, 41, 42, 43 };
+
 	public Leaderboard(Player player) {
 		this.player = player;
 	}
 
 	@Override
 	public Inventory getInventory() {
-		HashMap<PlayerData, Integer> map = new HashMap<PlayerData, Integer>();
-		int[] slots = new int[] { 13, 21, 22, 23, 29, 30, 31, 32, 33, 37, 38, 39, 40, 41, 42, 43 };
 
-		File f = new File(BountyHunters.plugin.getDataFolder() + "/userdata");
-		for (File f1 : f.listFiles()) {
-			UUID uuid;
-			try {
-				uuid = UUID.fromString(f1.getName().replace(".yml", ""));
-			} catch (Exception e) {
-				continue;
-			}
-
-			OfflinePlayer t = Bukkit.getOfflinePlayer(uuid);
-			if (t != null) {
-				PlayerData playerData = PlayerData.get(t);
-				map.put(playerData, playerData.getClaimedBounties());
-			}
+		/*
+		 * instead of calculating each player data to check what players has the
+		 * most claimed bounties, players will the highest bounties are cached
+		 * in a config file (cache/leaderboard.yml) and the 20 best can be
+		 * accessed directly using that file.
+		 */
+		Map<PlayerData, Integer> hunters = new HashMap<PlayerData, Integer>();
+		for (String key : BountyHunters.getCachedLeaderboard().getKeys(false)) {
+			PlayerData data = PlayerData.get(Bukkit.getOfflinePlayer(UUID.fromString(key)));
+			hunters.put(data, data.getClaimedBounties());
 		}
 
-		List<Integer> order = Ordering.natural().greatestOf(map.values(), 20);
+		/*
+		 * sort players depending on kills
+		 */
+		hunters = sortByBounties(hunters);
 
 		Inventory inv = Bukkit.createInventory(this, 54, Message.LEADERBOARD_GUI_NAME.getUpdated());
+
 		int slot = 0;
-		while (slot < slots.length && slot < order.size()) {
-			PlayerData playerData = getKeyByValue(map, order.get(slot));
-			if (playerData == null) {
-				slot++;
-				continue;
-			}
+		for (Entry<PlayerData, Integer> entry : hunters.entrySet()) {
+			if (slot > slots.length)
+				break;
 
-			map.remove(playerData);
-			if (order.get(slot) <= 0) {
-				slot++;
-				continue;
-			}
-
-			ItemStack i = CustomItem.LB_PLAYER_DATA.a();
-			SkullMeta meta = (SkullMeta) i.getItemMeta();
+			PlayerData data = entry.getKey();
+			ItemStack skull = CustomItem.LB_PLAYER_DATA.a();
+			SkullMeta meta = (SkullMeta) skull.getItemMeta();
 			if (BountyHunters.plugin.getConfig().getBoolean("display-player-skulls"))
-				meta.setOwner(playerData.getPlayerName());
-			meta.setDisplayName(applyPlaceholders(meta.getDisplayName(), playerData, slot + 1));
-
+				meta.setOwner(data.getPlayerName());
+			meta.setDisplayName(applyPlaceholders(meta.getDisplayName(), data, slot + 1));
 			List<String> lore = meta.getLore();
 			for (int j = 0; j < lore.size(); j++)
-				lore.set(j, applyPlaceholders(lore.get(j), playerData, slot + 1));
-
+				lore.set(j, applyPlaceholders(lore.get(j), data, slot + 1));
 			meta.setLore(lore);
-			i.setItemMeta(meta);
+			skull.setItemMeta(meta);
 
-			inv.setItem(slots[slot], i);
-			slot++;
+			inv.setItem(slots[slot++], skull);
 		}
 
 		ItemStack glass = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14);
@@ -91,9 +78,8 @@ public class Leaderboard implements PluginInventory {
 		glassMeta.setDisplayName(Message.NO_PLAYER.getUpdated());
 		glass.setItemMeta(glassMeta);
 
-		for (int j = 0; j < slots.length; j++)
-			if (inv.getItem(slots[j]) == null)
-				inv.setItem(slots[j], glass);
+		while (slot < slots.length)
+			inv.setItem(slots[slot++], glass);
 
 		return inv;
 	}
@@ -108,15 +94,19 @@ public class Leaderboard implements PluginInventory {
 		return player;
 	}
 
-	public static <T, E> T getKeyByValue(Map<T, E> map, E value) {
-		for (Entry<T, E> entry : map.entrySet())
-			if (value.equals(entry.getValue()))
-				return entry.getKey();
-		return null;
+	private LinkedHashMap<PlayerData, Integer> sortByBounties(Map<PlayerData, Integer> map) {
+		List<Entry<PlayerData, Integer>> list = new ArrayList<>(map.entrySet());
+		list.sort(Entry.comparingByValue());
+
+		LinkedHashMap<PlayerData, Integer> result = new LinkedHashMap<PlayerData, Integer>();
+		for (Entry<PlayerData, Integer> entry : list)
+			result.put(entry.getKey(), entry.getValue());
+
+		return result;
 	}
 
 	@Override
-	public void whenClicked(ItemStack i, InventoryAction action, int slot) {
+	public void whenClicked(ItemStack item, InventoryAction action, int slot) {
 	}
 
 	private String applyPlaceholders(String s, PlayerData playerData, int rank) {

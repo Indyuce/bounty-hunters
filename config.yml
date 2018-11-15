@@ -12,8 +12,9 @@
 # Requires /reload when changed.
 update-notify: true
 
-# Enables/disables the item effect when a bounty is claimed.
-# PS: items can't be picked up.
+# When enabled, some items that can't be picked up will
+# drop from the target's body (can be any material).
+# Looks cool with CHEST, GOLD_NUGGET, REDSTONE...
 bounty-effect:
     enabled: true
     material: CHEST
@@ -29,13 +30,15 @@ physical-rewards:
         GOLD_NUGGET: 10
         INK_SACK: 4 1
 
-# Commands sent when a player claims a bounty.
-# Sent by the console.
-# Use %target% to get the target and %player%
-# to get the player who claimed the bounty.
-bounty-commands: []
-# - '/give %player% minecraft:diamond 10'
-# - '/jail %target% 100'
+# Commands sent by the console when a player claims a bounty.
+# %target% returns the target's name and %player% the claimer's name.
+# 'claim' corresponds to when a player claims a bounty normally.
+# 'auto-bounty' 
+bounty-commands:
+    claim: []
+#   - '/give %player% minecraft:diamond 10'
+    auto-bounty: []
+#   - '/jail %target% 100'
 
 # When enabled, it will automaticaly place a bounty onto any
 # player who kills a player with no bounty on him (illegal kill).

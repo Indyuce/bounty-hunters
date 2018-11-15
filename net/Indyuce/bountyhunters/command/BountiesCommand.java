@@ -14,7 +14,7 @@ import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.PlayerData;
-import net.Indyuce.bountyhunters.api.SpecialChar;
+import net.Indyuce.bountyhunters.api.AltChar;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent.BountyExpireCause;
 import net.Indyuce.bountyhunters.gui.BountyList;
@@ -175,7 +175,7 @@ public class BountiesCommand implements CommandExecutor {
 			for (String s : levels.getConfigurationSection("reward.title").getKeys(false)) {
 				String title = levels.getString("reward.title." + s + ".format");
 				if (playerData.hasUnlocked(s))
-					BountyHunters.getNMS().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + SpecialChar.apply(title) + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties title " + s + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getUpdated() + "\",\"color\":\"white\"}]}}}");
+					BountyHunters.getNMS().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + AltChar.apply(title) + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties title " + s + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getUpdated() + "\",\"color\":\"white\"}]}}}");
 			}
 		}
 

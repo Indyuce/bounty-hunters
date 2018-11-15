@@ -11,3 +11,5 @@
 /BountyCreateEvent$BountyCreationCause.class
 /BountyCreateEvent$BountyCreateCause.class
 /BountyCreateEvent$BountyCause.class
+/BountyEvent$BountyExpireCause.class
+/BountyEvent.class

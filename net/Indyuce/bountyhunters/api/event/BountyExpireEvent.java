@@ -3,23 +3,13 @@ package net.Indyuce.bountyhunters.api.event;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.version.VersionSound;
 
-// called when the bounty creator cancels the bounty
-// in the bounty menu by clicking the item or when an
-// admin removes the bounty using an admin command
-
-public class BountyExpireEvent extends Event implements Cancellable {
-	private static final HandlerList handlers = new HandlerList();
-	private Bounty bounty;
+public class BountyExpireEvent extends BountyEvent {
 	private BountyExpireCause cause;
-	private boolean cancelled = false;
 
 	/*
 	 * this event is called when the bounty creator cancels the bounty in the
@@ -27,40 +17,18 @@ public class BountyExpireEvent extends Event implements Cancellable {
 	 * removes the bounty using an admin command
 	 */
 	public BountyExpireEvent(Bounty bounty, BountyExpireCause cause) {
-		this.bounty = bounty;
+		super(bounty);
 		this.cause = cause;
-	}
-
-	@Override
-	public boolean isCancelled() {
-		return cancelled;
-	}
-
-	@Override
-	public void setCancelled(boolean bool) {
-		cancelled = bool;
-	}
-
-	public Bounty getBounty() {
-		return bounty;
 	}
 
 	public BountyExpireCause getCause() {
 		return cause;
 	}
 
-	public HandlerList getHandlers() {
-		return handlers;
-	}
-
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
-
 	public void sendAllert() {
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			player.playSound(player.getLocation(), VersionSound.ENTITY_VILLAGER_NO.getSound(), 1, 2);
-			Message.BOUNTY_EXPIRED.format(ChatColor.YELLOW, "%target%", bounty.getTarget().getName()).send(player);
+			Message.BOUNTY_EXPIRED.format(ChatColor.YELLOW, "%target%", getBounty().getTarget().getName()).send(player);
 		}
 	}
 
