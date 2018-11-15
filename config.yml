@@ -23,6 +23,12 @@ bounty-effect:
 # In seconds.
 bounty-set-restriction: 120
 
+# When toggled on, claiming a bounty or killing a
+# player illegaly will not longer display a death message.
+disable-death-message:
+    auto-bounty: true
+    bounty-claim: true
+
 # Items that are dropped when claiming a bounty.
 physical-rewards:
     enabled: false
@@ -31,14 +37,26 @@ physical-rewards:
         INK_SACK: 4 1
 
 # Commands sent by the console when a player claims a bounty.
+#
 # %target% returns the target's name and %player% the claimer's name.
+# Commands support PlaceholderAPI placeholders.
+#
 # 'claim' corresponds to when a player claims a bounty normally.
-# 'auto-bounty' 
+# 'auto-bounty' corresponds to when a bounty is claimed illegaly.
+#
+# 'killer' are commands sent for the player who claimed the bounty.
+# 'target' are commands sent for the bounty target.
 bounty-commands:
-    claim: []
-#   - '/give %player% minecraft:diamond 10'
-    auto-bounty: []
-#   - '/jail %target% 100'
+    claim:
+        killer: []
+#       - '/give %killer% minecraft:diamond 10'
+        target: []
+#       - '/say %target% Someone claimed your bounty.'
+    auto-bounty:
+        killer: []
+#       - '/jail %killer% 100'
+        target: []
+#       - '/say %target% You killed a man illegaly, watch out!'
 
 # When enabled, it will automaticaly place a bounty onto any
 # player who kills a player with no bounty on him (illegal kill).
@@ -58,6 +76,7 @@ display-player-skulls: true
 
 # The tracking compass allows people to know where the people with a bounty on are.
 # Required a /reload to take effect.
+#
 # The cooldown determines how often you can target a player in the menu (can fix spam from the hunter alert).
 # The format corresponds to the number displayed on the compass name (see DecimalFormat (Java) on Google).
 compass:

@@ -11,9 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.Indyuce.bountyhunters.api.BountyManager;
 import net.Indyuce.bountyhunters.api.CustomItem;
-import net.Indyuce.bountyhunters.api.HuntManager;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.ParticlesRunnable;
 import net.Indyuce.bountyhunters.api.PlayerData;
@@ -24,10 +22,15 @@ import net.Indyuce.bountyhunters.command.completion.AddBountyCompletion;
 import net.Indyuce.bountyhunters.command.completion.BountiesCompletion;
 import net.Indyuce.bountyhunters.comp.BountyHuntersPlaceholders;
 import net.Indyuce.bountyhunters.comp.Metrics;
+import net.Indyuce.bountyhunters.comp.placeholder.DefaultParser;
+import net.Indyuce.bountyhunters.comp.placeholder.PlaceholderAPIParser;
+import net.Indyuce.bountyhunters.comp.placeholder.PlaceholderParser;
 import net.Indyuce.bountyhunters.gui.PluginInventory;
 import net.Indyuce.bountyhunters.gui.listener.GuiListener;
 import net.Indyuce.bountyhunters.listener.BountyClaim;
 import net.Indyuce.bountyhunters.listener.UpdateNotify;
+import net.Indyuce.bountyhunters.manager.BountyManager;
+import net.Indyuce.bountyhunters.manager.HuntManager;
 import net.Indyuce.bountyhunters.version.PluginVersion;
 import net.Indyuce.bountyhunters.version.SpigotPlugin;
 import net.Indyuce.bountyhunters.version.nms.NMSHandler;
@@ -39,6 +42,7 @@ public class BountyHunters extends JavaPlugin {
 	private static PluginVersion version;
 	private static SpigotPlugin spigotPlugin;
 	private static NMSHandler nms;
+	private static PlaceholderParser placeholderParser;
 
 	private static BountyManager bountyManager;
 	private static HuntManager huntManager;
@@ -87,7 +91,8 @@ public class BountyHunters extends JavaPlugin {
 
 		new Metrics(this);
 
-		// placeholderpi compatibility
+		// placeholders compatibility
+		placeholderParser = getServer().getPluginManager().getPlugin("PlaceholderAPI") != null ? new PlaceholderAPIParser() : new DefaultParser();
 		if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			new BountyHuntersPlaceholders().register();
 			getLogger().log(Level.INFO, "Hooked onto PlaceholderAPI");
@@ -203,6 +208,10 @@ public class BountyHunters extends JavaPlugin {
 
 	public static FileConfiguration getCachedLeaderboard() {
 		return leaderboard;
+	}
+
+	public static PlaceholderParser getPlaceholderParser() {
+		return placeholderParser;
 	}
 
 	public void reloadConfigFiles() {

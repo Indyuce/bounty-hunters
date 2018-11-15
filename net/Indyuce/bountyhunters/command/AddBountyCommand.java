@@ -14,12 +14,12 @@ import org.bukkit.entity.Player;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.BountyUtils;
 import net.Indyuce.bountyhunters.api.Bounty;
-import net.Indyuce.bountyhunters.api.BountyManager;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.event.BountyChangeEvent;
 import net.Indyuce.bountyhunters.api.event.BountyChangeEvent.BountyChangeCause;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
+import net.Indyuce.bountyhunters.manager.BountyManager;
 
 public class AddBountyCommand implements CommandExecutor {
 	public Map<UUID, Long> lastBounty = new HashMap<UUID, Long>();

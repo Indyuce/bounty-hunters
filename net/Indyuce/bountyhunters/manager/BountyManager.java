@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.api;
+package net.Indyuce.bountyhunters.manager;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.ConfigData;
+import net.Indyuce.bountyhunters.api.Bounty;
 
 public class BountyManager {
 	private Map<UUID, Bounty> bounties = new HashMap<UUID, Bounty>();

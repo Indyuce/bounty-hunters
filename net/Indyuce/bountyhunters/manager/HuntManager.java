@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.api;
+package net.Indyuce.bountyhunters.manager;
 
 import java.text.DecimalFormat;
 import java.util.Collection;
@@ -17,6 +17,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.BountyUtils;
+import net.Indyuce.bountyhunters.api.Bounty;
+import net.Indyuce.bountyhunters.api.CustomItem;
+import net.Indyuce.bountyhunters.api.Message;
 
 // hunters are not saved when the server shuts down
 public class HuntManager {
