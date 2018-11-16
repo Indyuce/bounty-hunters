@@ -61,6 +61,19 @@ public class BountyHunters extends JavaPlugin {
 			for (String s : spigotPlugin.getOutOfDateMessage())
 				getLogger().log(Level.INFO, "\u001B[32m" + s + "\u001B[37m");
 
+		try {
+			version = new PluginVersion(Bukkit.getServer().getClass());
+			getLogger().log(Level.INFO, "Detected Server Version: " + version.toString());
+
+			// no reflection nms, each class
+			// corresponds to a server version
+			nms = (NMSHandler) Class.forName("net.Indyuce.bountyhunters.version.nms.NMSHandler_" + version.toString().substring(1)).newInstance();
+		} catch (Exception e) {
+			getLogger().log(Level.SEVERE, "Your server version is not compatible.");
+			Bukkit.getPluginManager().disablePlugin(this);
+			return;
+		}
+
 		// load first the plugin, then hunters and
 		// last bounties (bounties need hunters setup)
 		plugin = this;
@@ -75,19 +88,6 @@ public class BountyHunters extends JavaPlugin {
 
 		if (getConfig().getBoolean("update-notify"))
 			Bukkit.getServer().getPluginManager().registerEvents(new UpdateNotify(), this);
-
-		try {
-			version = new PluginVersion(Bukkit.getServer().getClass());
-			getLogger().log(Level.INFO, "Detected Server Version: " + version.toString());
-
-			// no reflection nms, each class
-			// corresponds to a server version
-			nms = (NMSHandler) Class.forName("net.Indyuce.bountyhunters.version.nms.NMSHandler_" + version.toString().substring(1)).newInstance();
-		} catch (Exception e) {
-			getLogger().log(Level.SEVERE, "Your server version is not compatible.");
-			Bukkit.getPluginManager().disablePlugin(this);
-			return;
-		}
 
 		new Metrics(this);
 
@@ -145,7 +145,7 @@ public class BountyHunters extends JavaPlugin {
 
 		// target particles
 		if (BountyHunters.plugin.getConfig().getBoolean("target-particles.enabled"))
-			new ParticlesRunnable().runTaskTimer(BountyHunters.plugin, 0, 100);
+			new ParticlesRunnable().runTaskTimer(BountyHunters.plugin, 100, 100);
 
 		// after levels.yml was loaded only
 		// else it can't load the file
