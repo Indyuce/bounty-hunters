@@ -30,7 +30,7 @@ public enum Message {
 	// bounty creation
 	BOUNTY_CREATED("You succesfully set a bounty on &6%target%&e."),
 	BOUNTY_EXPLAIN("The first to kill this player will receive &6$%reward%&e."),
-	NEW_BOUNTY_ON_YOU("&6%creator% &ejust set a $%reward% bounty on you!"),
+	NEW_BOUNTY_ON_YOU("&6%creator% &ejust set a &6$%reward%&e bounty on you!"),
 	NEW_BOUNTY_ON_YOU_ILLEGAL("You killed a man illegally! A $%reward% bounty was set on you!"),
 	NEW_BOUNTY_ON_YOU_UNDEFINED("Someone just set a $%reward% bounty on you!"),
 	NEW_BOUNTY_ON_PLAYER("&6%creator% &eset a bounty on &6%target%&e! Kill him to get &6$%reward%&e!"),
@@ -40,10 +40,10 @@ public enum Message {
 
 	// bounty claim
 	BOUNTY_CLAIMED("&6%killer% &eclaimed &6%target%&e's bounty: &6$%reward%&e!"),
-	BOUNTY_CLAIMED_BY_YOU("You succesfully claimed &6%target%&e's bounty: &6$%reward%&e!"),
+	BOUNTY_CLAIMED_BY_YOU("You successfully claimed &6%target%&e's bounty: &6$%reward%&e!"),
 
 	ERROR_PLAYER("Couldn't find the player called %arg%."),
-	NOT_VALID_NUMBER("&6%arg% &cis not a valid number."),
+	NOT_VALID_NUMBER("%arg% is not a valid number."),
 	NEW_HUNTER_ALERT("%hunter% now targets you."),
 	EMPTY_INV_FIRST("Please empty your inventory first."),
 	NOT_ENOUGH_PERMS("You don't have enough permissions."),
@@ -53,7 +53,7 @@ public enum Message {
 	TARGET_COOLDOWN("Please wait another %remain% second%s% to target a player."),
 	CANT_SET_BOUNTY_ON_YOURSELF("You can't set a bounty on yourself!"),
 	BOUNTY_EXPIRED("The bounty on &6%target% &ehas expired."),
-	WRONG_REWARD("Reward must be between &6%min% &cand &6%max%&c!"),
+	WRONG_REWARD("Reward must be between %min% and %max%!"),
 	NOT_ENOUGH_MONEY("You don't have enough money."),
 	BOUNTY_SET_RESTRICTION("You must wait %left% more second%s% before creating a bounty."),
 	TARGET_SET("Target set."),
