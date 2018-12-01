@@ -39,23 +39,23 @@ public class AddBountyCommand implements CommandExecutor {
 				return true;
 
 		// check for player
-		Player t = Bukkit.getPlayer(args[0]);
-		if (t == null) {
+		Player target = Bukkit.getPlayer(args[0]);
+		if (target == null) {
 			Message.ERROR_PLAYER.format(ChatColor.RED, "%arg%", args[0]).send(sender);
 			return true;
 		}
-		if (!t.isOnline()) {
+		if (!target.isOnline()) {
 			Message.ERROR_PLAYER.format(ChatColor.RED, "%arg%", args[0]).send(sender);
 			return true;
 		}
 		if (sender instanceof Player)
-			if (t.getName().equals(((Player) sender).getName())) {
+			if (target.getName().equals(((Player) sender).getName())) {
 				Message.CANT_SET_BOUNTY_ON_YOURSELF.format(ChatColor.RED).send(sender);
 				return true;
 			}
 
 		// permission
-		if (t.hasPermission("bountyhunters.immunity") && !sender.hasPermission("bountyhunters.immunity.bypass")) {
+		if (target.hasPermission("bountyhunters.immunity") && !sender.hasPermission("bountyhunters.immunity.bypass")) {
 			Message.BOUNTY_IMUN.format(ChatColor.RED).send(sender);
 			return true;
 		}
@@ -73,8 +73,12 @@ public class AddBountyCommand implements CommandExecutor {
 		// min/max check
 		double min = BountyHunters.plugin.getConfig().getDouble("min-reward");
 		double max = BountyHunters.plugin.getConfig().getDouble("max-reward");
-		if ((reward < min) || (max > 0 && reward > max)) {
-			Message.WRONG_REWARD.format(ChatColor.RED, "%max%", BountyUtils.format(max), "%min%", BountyUtils.format(min)).send(sender);
+		if (reward < min) {
+			Message.REWARD_MUST_BE_HIGHER.format(ChatColor.RED, "%min%", BountyUtils.format(min)).send(sender);
+			return true;
+		}
+		if (max > 0 && reward > max) {
+			Message.REWARD_MUST_BE_LOWER.format(ChatColor.RED, "%max%", BountyUtils.format(max)).send(sender);
 			return true;
 		}
 
@@ -84,9 +88,9 @@ public class AddBountyCommand implements CommandExecutor {
 
 		// set restriction
 		if (sender instanceof Player) {
-			Player p = (Player) sender;
+			Player player = (Player) sender;
 			long restriction = BountyHunters.plugin.getConfig().getInt("bounty-set-restriction") * 1000;
-			long last = lastBounty.containsKey(p.getUniqueId()) ? lastBounty.get(p.getUniqueId()) : 0;
+			long last = lastBounty.containsKey(player.getUniqueId()) ? lastBounty.get(player.getUniqueId()) : 0;
 			long left = last + restriction - System.currentTimeMillis();
 
 			if (left > 0) {
@@ -107,10 +111,10 @@ public class AddBountyCommand implements CommandExecutor {
 		reward -= tax;
 
 		// add to existing bounty
-		if (bountyManager.hasBounty(t)) {
+		if (bountyManager.hasBounty(target)) {
 
 			// API
-			Bounty bounty = bountyManager.getBounty(t);
+			Bounty bounty = bountyManager.getBounty(target);
 			BountyChangeEvent bountyEvent = new BountyChangeEvent(bounty, BountyChangeCause.PLAYER);
 			Bukkit.getPluginManager().callEvent(bountyEvent);
 			if (bountyEvent.isCancelled())
@@ -125,12 +129,12 @@ public class AddBountyCommand implements CommandExecutor {
 
 			bounty.addToReward(sender instanceof Player ? (Player) sender : null, reward);
 			for (Player ent : Bukkit.getOnlinePlayers())
-				Message.BOUNTY_CHANGE.format(ChatColor.YELLOW, "%player%", t.getName(), "%reward%", BountyUtils.format(bounty.getReward())).send(ent);
+				Message.BOUNTY_CHANGE.format(ChatColor.YELLOW, "%player%", target.getName(), "%reward%", BountyUtils.format(bounty.getReward())).send(ent);
 			return true;
 		}
 
 		// API
-		Bounty bounty = new Bounty(sender instanceof Player ? (Player) sender : null, t, reward);
+		Bounty bounty = new Bounty(sender instanceof Player ? (Player) sender : null, target, reward);
 		BountyCreateEvent bountyEvent = new BountyCreateEvent(bounty, sender instanceof Player ? BountyCause.PLAYER : BountyCause.CONSOLE);
 		Bukkit.getPluginManager().callEvent(bountyEvent);
 		reward = bountyEvent.getBounty().getReward();
