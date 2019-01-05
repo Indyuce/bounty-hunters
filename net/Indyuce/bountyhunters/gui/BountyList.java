@@ -235,7 +235,7 @@ public class BountyList implements PluginInventory {
 
 				BountyHunters.getEconomy().depositPlayer(player, cashback);
 				bountyEvent.sendAllert();
-				bounty.unregister();
+				BountyHunters.getBountyManager().unregisterBounty(bounty);
 
 				new BountyList(player, page).open();
 			}

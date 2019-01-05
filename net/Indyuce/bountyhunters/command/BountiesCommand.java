@@ -10,11 +10,11 @@ import org.bukkit.entity.Player;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.ConfigData;
+import net.Indyuce.bountyhunters.api.AltChar;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.PlayerData;
-import net.Indyuce.bountyhunters.api.AltChar;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent.BountyExpireCause;
 import net.Indyuce.bountyhunters.gui.BountyList;
@@ -93,7 +93,7 @@ public class BountiesCommand implements CommandExecutor {
 			if (bountyEvent.isCancelled())
 				return true;
 
-			bounty.unregister();
+			BountyHunters.getBountyManager().unregisterBounty(bounty);
 		}
 
 		// choose title

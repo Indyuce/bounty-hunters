@@ -13,14 +13,12 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import net.Indyuce.bountyhunters.BountyHunters;
-import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
-import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
 
 public class Bounty {
 	private double reward;
 	private UUID creator, target;
-	private List<UUID> hunters = new ArrayList<UUID>();
-	private Map<UUID, Double> up = new HashMap<UUID, Double>();
+	private List<UUID> hunters = new ArrayList<>();
+	private Map<UUID, Double> up = new HashMap<>();
 
 	/*
 	 * creator is nullable since auto-bounties do not have any creator
@@ -105,17 +103,6 @@ public class Bounty {
 		if (hasHunter(player))
 			BountyHunters.getHuntManager().stopHunting(player);
 		hunters.remove(player.getUniqueId());
-	}
-
-	public void register() {
-		BountyHunters.getBountyManager().registerBounty(this);
-		Bukkit.getPluginManager().callEvent(new BountyCreateEvent(this, BountyCause.PLUGIN));
-	}
-
-	public void unregister() {
-		BountyHunters.getBountyManager().unregisterBounty(this);
-		for (UUID hunter : hunters)
-			BountyHunters.getHuntManager().stopHunting(Bukkit.getOfflinePlayer(hunter));
 	}
 
 	public void save(FileConfiguration config) {

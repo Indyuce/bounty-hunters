@@ -77,7 +77,7 @@ public class BountyClaim implements Listener {
 					if (bountyEvent.isCancelled())
 						return;
 
-					bounty.register();
+					BountyHunters.getBountyManager().registerBounty(bounty);
 					bountyEvent.sendAllert();
 					return;
 				}
@@ -195,7 +195,7 @@ public class BountyClaim implements Listener {
 		}
 
 		// finally, unregister the bounty
-		bounty.unregister();
+		BountyHunters.getBountyManager().unregisterBounty(bounty);
 	}
 
 	@EventHandler

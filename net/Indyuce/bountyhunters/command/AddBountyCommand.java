@@ -148,7 +148,7 @@ public class AddBountyCommand implements CommandExecutor {
 			lastBounty.put(((Player) sender).getUniqueId(), System.currentTimeMillis());
 		}
 
-		bounty.register();
+		BountyHunters.getBountyManager().registerBounty(bounty);
 		bountyEvent.sendAllert();
 
 		if (tax > 0)

@@ -5,15 +5,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.ConfigData;
 import net.Indyuce.bountyhunters.api.Bounty;
+import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
+import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
 
 public class BountyManager {
-	private Map<UUID, Bounty> bounties = new HashMap<UUID, Bounty>();
+	private Map<UUID, Bounty> bounties = new HashMap<>();
 
 	public BountyManager() {
 
@@ -38,9 +41,12 @@ public class BountyManager {
 
 	public void unregisterBounty(Bounty bounty) {
 		bounties.remove(bounty.getTarget().getUniqueId());
+		for (UUID hunter : bounty.getHunters())
+			BountyHunters.getHuntManager().stopHunting(Bukkit.getOfflinePlayer(hunter));
 	}
 
 	public void registerBounty(Bounty bounty) {
+		Bukkit.getPluginManager().callEvent(new BountyCreateEvent(bounty, BountyCause.PLUGIN));
 		bounties.put(bounty.getTarget().getUniqueId(), bounty);
 	}
 

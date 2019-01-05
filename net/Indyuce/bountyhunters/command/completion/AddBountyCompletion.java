@@ -2,6 +2,7 @@ package net.Indyuce.bountyhunters.command.completion;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -12,21 +13,12 @@ import org.bukkit.entity.Player;
 public class AddBountyCompletion implements TabCompleter {
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 
 		if (args.length == 1)
-			for (Player t : Bukkit.getOnlinePlayers())
-				list.add(t.getName());
+			for (Player online : Bukkit.getOnlinePlayers())
+				list.add(online.getName());
 
-		String lastArg = args[args.length - 1];
-		if (!lastArg.isEmpty()) {
-			List<String> newList = new ArrayList<String>();
-			for (String s : list)
-				if (s.toLowerCase().startsWith(lastArg.toLowerCase()))
-					newList.add(s);
-			list = newList;
-		}
-
-		return list;
+		return args[args.length - 1].isEmpty() ? list : list.stream().filter(string -> string.toLowerCase().startsWith(args[args.length - 1].toLowerCase())).collect(Collectors.toList());
 	}
 }
