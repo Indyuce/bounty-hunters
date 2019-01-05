@@ -28,7 +28,6 @@ import net.Indyuce.bountyhunters.comp.placeholder.PlaceholderParser;
 import net.Indyuce.bountyhunters.gui.PluginInventory;
 import net.Indyuce.bountyhunters.gui.listener.GuiListener;
 import net.Indyuce.bountyhunters.listener.BountyClaim;
-import net.Indyuce.bountyhunters.listener.UpdateNotify;
 import net.Indyuce.bountyhunters.manager.BountyManager;
 import net.Indyuce.bountyhunters.manager.HuntManager;
 import net.Indyuce.bountyhunters.version.PluginVersion;
@@ -40,7 +39,6 @@ import net.milkbowl.vault.permission.Permission;
 public class BountyHunters extends JavaPlugin {
 	public static BountyHunters plugin;
 	private static PluginVersion version;
-	private static SpigotPlugin spigotPlugin;
 	private static NMSHandler nms;
 	private static PlaceholderParser placeholderParser;
 
@@ -54,12 +52,7 @@ public class BountyHunters extends JavaPlugin {
 	private static FileConfiguration leaderboard;
 
 	public void onEnable() {
-
-		// check for latest version
-		spigotPlugin = new SpigotPlugin(this, 40610);
-		if (spigotPlugin.isOutOfDate())
-			for (String s : spigotPlugin.getOutOfDateMessage())
-				getLogger().log(Level.INFO, "\u001B[32m" + s + "\u001B[37m");
+		new SpigotPlugin(40610, this).checkForUpdate();
 
 		try {
 			version = new PluginVersion(Bukkit.getServer().getClass());
@@ -85,9 +78,6 @@ public class BountyHunters extends JavaPlugin {
 		Bukkit.getServer().getPluginManager().registerEvents(new GuiListener(), this);
 
 		saveDefaultConfig();
-
-		if (getConfig().getBoolean("update-notify"))
-			Bukkit.getServer().getPluginManager().registerEvents(new UpdateNotify(), this);
 
 		new Metrics(this);
 
@@ -200,10 +190,6 @@ public class BountyHunters extends JavaPlugin {
 
 	public static PluginVersion getVersion() {
 		return version;
-	}
-
-	public static SpigotPlugin getSpigotPlugin() {
-		return spigotPlugin;
 	}
 
 	public static FileConfiguration getCachedLeaderboard() {

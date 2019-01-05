@@ -56,7 +56,7 @@ public class PhysicalRewards {
 		}
 
 		short durability = 0;
-		if (split.length > 0)
+		if (split.length > 1)
 			try {
 				durability = (short) (int) Integer.valueOf(split[1]);
 			} catch (Exception e) {
