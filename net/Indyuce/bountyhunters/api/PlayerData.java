@@ -21,7 +21,7 @@ import net.Indyuce.bountyhunters.ConfigData;
 import net.Indyuce.bountyhunters.api.event.HunterLevelUpEvent;
 
 public class PlayerData {
-	private static Map<UUID, PlayerData> map = new HashMap<UUID, PlayerData>();
+	private static Map<UUID, PlayerData> map = new HashMap<>();
 
 	private UUID uuid;
 	private String playerName;
