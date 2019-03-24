@@ -30,9 +30,6 @@ public class PlayerData {
 	// caches the list of unlocked stuff
 	private List<String> unlocked;
 
-	// next time the player is able to create a bounty.
-	private long nextBounty = 0;
-
 	// last time the player created a bounty
 	private long lastBounty = 0;
 
@@ -133,12 +130,7 @@ public class PlayerData {
 		return profile;
 	}
 
-	public boolean canCreateBounty() {
-		return System.currentTimeMillis() > nextBounty;
-	}
-
-	public void applyBountyCooldown(double cooldown) {
-		nextBounty = (long) (System.currentTimeMillis() + 1000 * cooldown);
+	public void setLastBounty() {
 		lastBounty = System.currentTimeMillis();
 	}
 

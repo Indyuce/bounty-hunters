@@ -1,11 +1,8 @@
 package net.Indyuce.bountyhunters.command;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,6 +12,7 @@ import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.BountyUtils;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.Message;
+import net.Indyuce.bountyhunters.api.PlayerData;
 import net.Indyuce.bountyhunters.api.event.BountyChangeEvent;
 import net.Indyuce.bountyhunters.api.event.BountyChangeEvent.BountyChangeCause;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
@@ -22,8 +20,6 @@ import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
 import net.Indyuce.bountyhunters.manager.BountyManager;
 
 public class AddBountyCommand implements CommandExecutor {
-	public Map<UUID, Long> lastBounty = new HashMap<UUID, Long>();
-
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!sender.hasPermission("bountyhunters.add")) {
@@ -90,11 +86,10 @@ public class AddBountyCommand implements CommandExecutor {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			long restriction = BountyHunters.plugin.getConfig().getInt("bounty-set-restriction") * 1000;
-			long last = lastBounty.containsKey(player.getUniqueId()) ? lastBounty.get(player.getUniqueId()) : 0;
-			long left = last + restriction - System.currentTimeMillis();
+			long left = PlayerData.get(player).getLastBounty() + restriction - System.currentTimeMillis();
 
 			if (left > 0) {
-				Message.BOUNTY_SET_RESTRICTION.format(ChatColor.RED, "%left%", "" + left / 1000, "%s%", left / 1000 >= 2 ? "s" : "").send(sender);
+				Message.BOUNTY_SET_RESTRICTION.format(ChatColor.RED, "%left%", "" + left / 1000, "%s%", left / 1000 > 1 ? "s" : "").send(sender);
 				return true;
 			}
 		}
@@ -124,7 +119,7 @@ public class AddBountyCommand implements CommandExecutor {
 			// set last bounty value
 			if (sender instanceof Player) {
 				BountyHunters.getEconomy().withdrawPlayer((Player) sender, reward + tax);
-				lastBounty.put(((Player) sender).getUniqueId(), System.currentTimeMillis());
+				PlayerData.get((OfflinePlayer) sender).setLastBounty();
 			}
 
 			bounty.addToReward(sender instanceof Player ? (Player) sender : null, reward);
@@ -145,7 +140,7 @@ public class AddBountyCommand implements CommandExecutor {
 		// set last bounty value
 		if (sender instanceof Player) {
 			BountyHunters.getEconomy().withdrawPlayer((Player) sender, reward + tax);
-			lastBounty.put(((Player) sender).getUniqueId(), System.currentTimeMillis());
+			PlayerData.get((OfflinePlayer) sender).setLastBounty();
 		}
 
 		BountyHunters.getBountyManager().registerBounty(bounty);
