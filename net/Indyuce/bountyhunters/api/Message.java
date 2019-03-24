@@ -28,7 +28,7 @@ public enum Message {
 	CHAT_BAR("&m-----------------------------------------------------"),
 
 	// bounty creation
-	BOUNTY_CREATED("You succesfully set a bounty on &6%target%&e."),
+	BOUNTY_CREATED("You succesfully set a bounty on &6%player%&e."),
 	BOUNTY_EXPLAIN("The first to kill this player will receive &6$%reward%&e."),
 	NEW_BOUNTY_ON_YOU("&6%creator% &ejust set a &6$%reward%&e bounty on you!"),
 	NEW_BOUNTY_ON_YOU_ILLEGAL("You killed a man illegally! A $%reward% bounty was set on you!"),
