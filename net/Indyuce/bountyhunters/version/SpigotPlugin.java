@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -33,7 +35,7 @@ public class SpigotPlugin {
 	public void checkForUpdate() {
 		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 			try {
-				HttpsURLConnection connection = (HttpsURLConnection) new URL(getResourceUrl()).openConnection();
+				HttpsURLConnection connection = (HttpsURLConnection) new URL("https://api.spigotmc.org/legacy/update.php?resource=" + id).openConnection();
 				connection.setRequestMethod("GET");
 				version = new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine();
 			} catch (IOException e) {
@@ -45,7 +47,7 @@ public class SpigotPlugin {
 			if (version.equals(plugin.getDescription().getVersion()))
 				return;
 
-			plugin.getLogger().log(Level.INFO, "A new update is available: " + version + " (you are running " + plugin.getDescription().getVersion() + ")");
+			plugin.getLogger().log(Level.INFO, "A new build is available: " + version + " (you are running " + plugin.getDescription().getVersion() + ")");
 			plugin.getLogger().log(Level.INFO, "Download it here: " + getResourceUrl());
 
 			/*
@@ -58,13 +60,17 @@ public class SpigotPlugin {
 					public void onPlayerJoin(PlayerJoinEvent event) {
 						Player player = event.getPlayer();
 						if (player.hasPermission(plugin.getName().toLowerCase() + ".update-notify"))
-							player.sendMessage(ChatColor.GREEN + "A new update is available for " + plugin.getName() + ": " + version + " (you are running " + plugin.getDescription().getVersion() + "). Download it here: " + getResourceUrl());
+							getOutOfDateMessage().forEach(msg -> player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg)));
 					}
 				}, plugin));
 		});
 	}
 
+	private List<String> getOutOfDateMessage() {
+		return Arrays.asList("&8--------------------------------------------", "&a" + plugin.getName() + " " + version + " is available!", "&a" + getResourceUrl(), "&7&oYou can disable this notification in the config file.", "&8--------------------------------------------");
+	}
+
 	public String getResourceUrl() {
-		return "https://api.spigotmc.org/legacy/update.php?resource=" + id;
+		return "https://www.spigotmc.org/resources/" + id + "/";
 	}
 }
