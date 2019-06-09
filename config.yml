@@ -1,9 +1,6 @@
 # --------------------------------------------------------------
 #
-#
-# Thanks for using BountyHunters ;)
-# Join my Discord here for fast support! https://discordapp.com/invite/7Pc8ZHh
-#
+# Thanks for using BountyHunters!
 #
 # --------------------------------------------------------------
 
@@ -34,7 +31,7 @@ physical-rewards:
     enabled: false
     list:
         GOLD_NUGGET: 10
-        INK_SACK: 4 1
+        REDSTONE: 2
 
 # Commands sent by the console when a player claims a bounty.
 #
@@ -115,3 +112,11 @@ target-particles:
 
 # Displayed formatted numbers (1,345B instead of 1,345,416,416).
 formatted-numbers: true
+
+# Enable/disable built-in plugin compatibility.
+# Make sure you reload/restart your server afting changing any of these values.
+plugin-compatibility:
+
+    # Can only be enabled when Towny is installed.
+    # When enabled, players within the same town can't claim each other's bounties.
+    towny-bounty-friendly-fire: true
