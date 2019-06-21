@@ -30,6 +30,7 @@ import net.Indyuce.bountyhunters.comp.placeholder.PlaceholderParser;
 import net.Indyuce.bountyhunters.gui.PluginInventory;
 import net.Indyuce.bountyhunters.gui.listener.GuiListener;
 import net.Indyuce.bountyhunters.listener.BountyClaim;
+import net.Indyuce.bountyhunters.listener.PlayerListener;
 import net.Indyuce.bountyhunters.manager.BountyManager;
 import net.Indyuce.bountyhunters.manager.HuntManager;
 import net.Indyuce.bountyhunters.version.PluginVersion;
@@ -77,6 +78,7 @@ public class BountyHunters extends JavaPlugin {
 		// listeners
 		Bukkit.getServer().getPluginManager().registerEvents(new BountyClaim(), this);
 		Bukkit.getServer().getPluginManager().registerEvents(new GuiListener(), this);
+		Bukkit.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 
 		saveDefaultConfig();
 
@@ -137,6 +139,11 @@ public class BountyHunters extends JavaPlugin {
 
 		new ConfigFile("data").setup();
 		leaderboard = new ConfigFile("/cache", "leaderboard").getConfig();
+
+		/*
+		 * load player data from all online players in case of /reload
+		 */
+		Bukkit.getOnlinePlayers().forEach(player -> PlayerData.load(player));
 
 		// target particles
 		if (BountyHunters.plugin.getConfig().getBoolean("target-particles.enabled"))

@@ -1,7 +1,6 @@
 package net.Indyuce.bountyhunters.gui;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,15 +28,11 @@ import net.Indyuce.bountyhunters.manager.BountyManager;
 import net.Indyuce.bountyhunters.version.VersionSound;
 import net.Indyuce.bountyhunters.version.nms.ItemTag;
 
-public class BountyList implements PluginInventory {
-	private static HashMap<UUID, Long> lastTarget = new HashMap<UUID, Long>();
+public class BountyList extends PluginInventory {
+	private int page = 1;
 
-	private Player player;
-	private int page;
-
-	public BountyList(Player player, int page) {
-		this.player = player;
-		this.page = page;
+	public BountyList(Player player) {
+		super(player);
 	}
 
 	@Override
@@ -108,30 +103,24 @@ public class BountyList implements PluginInventory {
 	}
 
 	@Override
-	public int getPage() {
-		return page;
-	}
-
-	@Override
-	public Player getPlayer() {
-		return player;
-	}
-
-	@Override
-	public void whenClicked(ItemStack i, InventoryAction action, int slot) {
+	public void whenClicked(ItemStack item, InventoryAction action, int slot) {
 
 		// next page
-		if (i.getItemMeta().getDisplayName().equals(CustomItem.NEXT_PAGE.a().getItemMeta().getDisplayName()))
-			if (page < getMaxPage())
-				new BountyList(player, page + 1).open();
+		if (item.getItemMeta().getDisplayName().equals(CustomItem.NEXT_PAGE.a().getItemMeta().getDisplayName()))
+			if (page < getMaxPage()) {
+				page++;
+				open();
+			}
 
 		// prev page
-		if (i.getItemMeta().getDisplayName().equals(CustomItem.PREVIOUS_PAGE.a().getItemMeta().getDisplayName()))
-			if (page > 1)
-				new BountyList(player, page - 1).open();
+		if (item.getItemMeta().getDisplayName().equals(CustomItem.PREVIOUS_PAGE.a().getItemMeta().getDisplayName()))
+			if (page > 1) {
+				page--;
+				open();
+			}
 
 		// buy bounty compass
-		if (i.getItemMeta().getDisplayName().equals(CustomItem.BOUNTY_COMPASS.a().getItemMeta().getDisplayName())) {
+		if (item.getItemMeta().getDisplayName().equals(CustomItem.BOUNTY_COMPASS.a().getItemMeta().getDisplayName())) {
 			if (player.getInventory().firstEmpty() <= -1) {
 				Message.EMPTY_INV_FIRST.format(ChatColor.RED).send(player);
 				return;
@@ -152,8 +141,8 @@ public class BountyList implements PluginInventory {
 		// target someone
 		BountyManager bountyManager = BountyHunters.getBountyManager();
 		if (action == InventoryAction.PICKUP_ALL && BountyHunters.plugin.getConfig().getBoolean("compass.enabled"))
-			if (slot < 35 && i.getType() == Material.PLAYER_HEAD && !i.getItemMeta().getDisplayName().equals(CustomItem.PLAYER_HEAD.a().getItemMeta().getDisplayName().replace("%name%", player.getName()))) {
-				String tag = BountyHunters.getNMS().getStringTag(i, "playerUuid");
+			if (slot < 35 && item.getType() == Material.PLAYER_HEAD && !item.getItemMeta().getDisplayName().equals(CustomItem.PLAYER_HEAD.a().getItemMeta().getDisplayName().replace("%name%", player.getName()))) {
+				String tag = BountyHunters.getNMS().getStringTag(item, "playerUuid");
 				if (tag == null || tag.equals(""))
 					return;
 
@@ -179,14 +168,14 @@ public class BountyList implements PluginInventory {
 						return;
 
 					// check for target cooldown
-					long lastTarget = BountyList.lastTarget.containsKey(player.getUniqueId()) ? BountyList.lastTarget.get(player.getUniqueId()) : 0;
-					long remain = (long) (lastTarget + BountyHunters.plugin.getConfig().getDouble("compass.target-cooldown") * 1000 - System.currentTimeMillis()) / 1000;
+					PlayerData playerData = PlayerData.get(player);
+					long remain = (long) (playerData.getLastTarget() + BountyHunters.plugin.getConfig().getDouble("compass.target-cooldown") * 1000 - System.currentTimeMillis()) / 1000;
 					if (remain > 0) {
 						Message.TARGET_COOLDOWN.format(ChatColor.RED, "%remain%", "" + remain, "%s%", remain >= 2 ? "s" : "").send(player);
 						return;
 					}
 
-					BountyList.lastTarget.put(player.getUniqueId(), System.currentTimeMillis());
+					playerData.setLastTarget();
 
 					// remove older hunter
 					if (BountyHunters.getHuntManager().isHunting(player))
@@ -198,13 +187,13 @@ public class BountyList implements PluginInventory {
 					Message.TARGET_SET.format(ChatColor.YELLOW).send(player);
 				}
 
-				new BountyList(player, page).open();
+				open();
 			}
 
 		// remove bounty
 		if (action == InventoryAction.PICKUP_HALF)
-			if (slot < 35 && i.getType() == Material.PLAYER_HEAD) {
-				String tag = BountyHunters.getNMS().getStringTag(i, "playerUuid");
+			if (slot < 35 && item.getType() == Material.PLAYER_HEAD) {
+				String tag = BountyHunters.getNMS().getStringTag(item, "playerUuid");
 				if (tag == null || tag.equals(""))
 					return;
 
@@ -237,7 +226,7 @@ public class BountyList implements PluginInventory {
 				bountyEvent.sendAllert();
 				BountyHunters.getBountyManager().unregisterBounty(bounty);
 
-				new BountyList(player, page).open();
+				open();
 			}
 	}
 

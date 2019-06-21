@@ -50,7 +50,7 @@ public enum CustomItem {
 		meta.setDisplayName(ChatColor.GREEN + ChatColor.translateAlternateColorCodes('&', name));
 		meta.addItemFlags(ItemFlag.values());
 		if (lore != null) {
-			ArrayList<String> lore = new ArrayList<String>();
+			ArrayList<String> lore = new ArrayList<>();
 			for (String s : this.lore)
 				lore.add(ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', s));
 			meta.setLore(lore);

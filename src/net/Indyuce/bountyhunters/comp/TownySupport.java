@@ -17,6 +17,10 @@ public class TownySupport implements Listener {
 			if (resident.hasTown() && resident.getTown().hasResident(event.getBounty().getCreator().getName()))
 				event.setCancelled(true);
 		} catch (NotRegisteredException e) {
+			/*
+			 * player who's claiming the bounty has no town, therefore there is
+			 * no towny restriction.
+			 */
 		}
 	}
 }

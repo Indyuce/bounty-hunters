@@ -22,13 +22,11 @@ import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.PlayerData;
 
-public class Leaderboard implements PluginInventory {
-	private Player player;
-
+public class Leaderboard extends PluginInventory {
 	private static final int[] slots = { 13, 21, 22, 23, 29, 30, 31, 32, 33, 37, 38, 39, 40, 41, 42, 43 };
 
 	public Leaderboard(Player player) {
-		this.player = player;
+		super(player);
 	}
 
 	@Override
@@ -62,7 +60,7 @@ public class Leaderboard implements PluginInventory {
 			ItemStack skull = CustomItem.LB_PLAYER_DATA.a();
 			SkullMeta meta = (SkullMeta) skull.getItemMeta();
 			if (BountyHunters.plugin.getConfig().getBoolean("display-player-skulls"))
-				meta.setOwningPlayer(Bukkit.getOfflinePlayer(data.getUUID()));
+				meta.setOwningPlayer(Bukkit.getOfflinePlayer(data.getUniqueId()));
 			meta.setDisplayName(applyPlaceholders(meta.getDisplayName(), data, slot + 1));
 			List<String> lore = meta.getLore();
 			for (int j = 0; j < lore.size(); j++)
@@ -82,16 +80,6 @@ public class Leaderboard implements PluginInventory {
 			inv.setItem(slots[slot++], glass);
 
 		return inv;
-	}
-
-	@Override
-	public int getPage() {
-		return 0;
-	}
-
-	@Override
-	public Player getPlayer() {
-		return player;
 	}
 
 	private LinkedHashMap<PlayerData, Integer> sortByBounties(Map<PlayerData, Integer> map) {
@@ -116,7 +104,7 @@ public class Leaderboard implements PluginInventory {
 		s = s.replace("%bounties%", "" + playerData.getClaimedBounties());
 		s = s.replace("%successful-bounties%", "" + playerData.getSuccessfulBounties());
 		s = s.replace("%title%", title);
-		s = s.replace("%name%", playerData.getPlayerName());
+		s = s.replace("%name%", playerData.getOfflinePlayer().getName());
 		s = s.replace("%rank%", "" + rank);
 
 		return s;

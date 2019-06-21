@@ -5,14 +5,20 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
-public interface PluginInventory extends InventoryHolder {
-	public int getPage();
+public abstract class PluginInventory implements InventoryHolder {
+	protected Player player;
 
-	public Player getPlayer();
+	public PluginInventory(Player player) {
+		this.player = player;
+	}
 
-	public void whenClicked(ItemStack i, InventoryAction action, int slot);
+	public Player getPlayer() {
+		return player;
+	}
 
-	public default void open() {
+	public void open() {
 		getPlayer().openInventory(getInventory());
 	}
+
+	public abstract void whenClicked(ItemStack item, InventoryAction action, int slot);
 }

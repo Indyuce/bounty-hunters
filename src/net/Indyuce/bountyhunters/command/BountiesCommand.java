@@ -36,7 +36,7 @@ public class BountiesCommand implements CommandExecutor {
 				return true;
 			}
 
-			new BountyList((Player) sender, 1).open();
+			new BountyList((Player) sender).open();
 			return true;
 		}
 

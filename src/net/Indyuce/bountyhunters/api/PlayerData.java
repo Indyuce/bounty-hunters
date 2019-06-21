@@ -22,20 +22,18 @@ import net.Indyuce.bountyhunters.api.event.HunterLevelUpEvent;
 public class PlayerData {
 	private static Map<UUID, PlayerData> map = new HashMap<>();
 
-	private UUID uuid;
-	private String playerName;
-	private ConfigFile config;
+	private final OfflinePlayer offline;
+	private final ConfigFile config;
 
 	// caches the list of unlocked stuff
 	private List<String> unlocked;
 
 	// last time the player created a bounty
-	private long lastBounty = 0;
+	private long lastBounty, lastTarget;
 
 	private PlayerData(OfflinePlayer player) {
-		this.uuid = player.getUniqueId();
-		this.playerName = player.getName();
-		this.config = new ConfigFile("/userdata", uuid.toString());
+		this.offline = player;
+		this.config = new ConfigFile("/userdata", offline.getUniqueId().toString());
 
 		for (Value value : Value.values())
 			if (!config.getConfig().contains(value.getPath()))
@@ -49,25 +47,41 @@ public class PlayerData {
 	}
 
 	public static PlayerData get(OfflinePlayer player) {
+		return map.get(player.getUniqueId());
+	}
+
+	public static void load(OfflinePlayer player) {
 		if (!map.containsKey(player.getUniqueId()))
 			map.put(player.getUniqueId(), new PlayerData(player));
-		return map.get(player.getUniqueId());
 	}
 
 	public static boolean isLoaded(UUID uuid) {
 		return map.containsKey(uuid);
 	}
 
-	public String getPlayerName() {
-		return playerName;
+	public OfflinePlayer getOfflinePlayer() {
+		return offline;
+	}
+
+	/*
+	 * CAREFUL! this method does NOT save any of the player data. you MUST save
+	 * the player data using saveFile() before unloading the player data from
+	 * the map!
+	 */
+	public void unload() {
+		map.remove(offline.getUniqueId());
 	}
 
 	public long getLastBounty() {
 		return lastBounty;
 	}
 
-	public UUID getUUID() {
-		return uuid;
+	public long getLastTarget() {
+		return lastTarget;
+	}
+
+	public UUID getUniqueId() {
+		return offline.getUniqueId();
 	}
 
 	public int getLevel() {
@@ -116,8 +130,8 @@ public class PlayerData {
 	public ItemStack getProfileItem() {
 		ItemStack profile = CustomItem.PROFILE.a().clone();
 		SkullMeta profileMeta = (SkullMeta) profile.getItemMeta();
-		profileMeta.setDisplayName(profileMeta.getDisplayName().replace("%name%", playerName).replace("%level%", "" + getLevel()));
-		profileMeta.setOwningPlayer(Bukkit.getOfflinePlayer(uuid));
+		profileMeta.setDisplayName(profileMeta.getDisplayName().replace("%name%", offline.getName()).replace("%level%", "" + getLevel()));
+		profileMeta.setOwningPlayer(Bukkit.getOfflinePlayer(offline.getUniqueId()));
 		List<String> profileLore = profileMeta.getLore();
 
 		String title = hasTitle() ? getTitle() : Message.NO_TITLE.getUpdated();
@@ -131,6 +145,10 @@ public class PlayerData {
 
 	public void setLastBounty() {
 		lastBounty = System.currentTimeMillis();
+	}
+
+	public void setLastTarget() {
+		lastTarget = System.currentTimeMillis();
 	}
 
 	public boolean hasQuote() {
@@ -241,7 +259,7 @@ public class PlayerData {
 
 	@Override
 	public boolean equals(Object object) {
-		return object instanceof PlayerData ? ((PlayerData) object).getUUID().equals(getUUID()) : false;
+		return object != null && object instanceof PlayerData && ((PlayerData) object).getUniqueId().equals(getUniqueId());
 	}
 
 	public void saveFile() {
