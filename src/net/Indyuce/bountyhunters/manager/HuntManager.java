@@ -23,8 +23,8 @@ import net.Indyuce.bountyhunters.api.Message;
 
 // hunters are not saved when the server shuts down
 public class HuntManager {
-	private Map<UUID, UUID> hunting = new HashMap<UUID, UUID>();
-	private Set<UUID> compassTimeout = new HashSet<UUID>();
+	private Map<UUID, UUID> hunting = new HashMap<>();
+	private Set<UUID> compassTimeout = new HashSet<>();
 
 	public HuntManager() {
 		if (BountyHunters.plugin.getConfig().getBoolean("compass.enabled"))

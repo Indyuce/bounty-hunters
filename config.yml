@@ -101,7 +101,8 @@ enable-quotes-levels-titles: true
 world-blacklist:
 - INSERT_WORLD_HERE
 
-# You can claim the bounties you create.
+# You can claim the bounties you create. This also lets
+# people target players using a bounty THEY created.
 # Warning: can be abused.
 own-bounty-claiming: true
 

@@ -49,6 +49,7 @@ public enum Message {
 	COMMAND_USAGE("Usage: %command%"),
 	BOUNTY_IMUN("You can't set a bounty on this player."),
 	TRACK_IMUN("You can't track this player."),
+	CANT_TRACK_CREATOR("You created this bounty, you can't target him."),
 	TARGET_COOLDOWN("Please wait another %remain% second%s% to target a player."),
 	CANT_SET_BOUNTY_ON_YOURSELF("You can't set a bounty on yourself!"),
 	BOUNTY_EXPIRED("The bounty on &6%target% &ehas expired."),

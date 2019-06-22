@@ -139,16 +139,14 @@ public class BountyList extends PluginInventory {
 		}
 
 		// target someone
-		BountyManager bountyManager = BountyHunters.getBountyManager();
 		if (action == InventoryAction.PICKUP_ALL && BountyHunters.plugin.getConfig().getBoolean("compass.enabled"))
-			if (slot < 35 && item.getType() == Material.PLAYER_HEAD && !item.getItemMeta().getDisplayName().equals(CustomItem.PLAYER_HEAD.a().getItemMeta().getDisplayName().replace("%name%", player.getName()))) {
+			if (slot < 35 && item.getType() == Material.PLAYER_HEAD) {
 				String tag = BountyHunters.getNMS().getStringTag(item, "playerUuid");
 				if (tag == null || tag.equals(""))
 					return;
 
-				OfflinePlayer t = Bukkit.getOfflinePlayer(UUID.fromString(tag));
-
-				Bounty bounty = bountyManager.getBounty(t);
+				OfflinePlayer target = Bukkit.getOfflinePlayer(UUID.fromString(tag));
+				Bounty bounty = BountyHunters.getBountyManager().getBounty(target);
 
 				if (bounty.hasHunter(player)) {
 					bounty.removeHunter(player);
@@ -156,13 +154,26 @@ public class BountyList extends PluginInventory {
 				} else {
 
 					// permission check
-					if (BountyHunters.getPermission().playerHas(null, t, "bountyhunters.untargetable") && !player.hasPermission("bountyhunters.untargetable.bypass")) {
-						Message.TRACK_IMUN.format(ChatColor.YELLOW).send(player);
+					if (BountyHunters.getPermission().playerHas(null, target, "bountyhunters.untargetable") && !player.hasPermission("bountyhunters.untargetable.bypass")) {
+						Message.TRACK_IMUN.format(ChatColor.RED).send(player);
 						return;
 					}
 
+					/*
+					 * check the player who wants to hunt the bounty target has
+					 * not created the bounty.
+					 */
+					if (bounty.hasCreator(player) && !BountyHunters.plugin.getConfig().getBoolean("own-bounty-claiming")) {
+						Message.CANT_TRACK_CREATOR.format(ChatColor.RED).send(player);
+						return;
+					}
+
+					// player can't track himself
+					if (bounty.hasTarget(player))
+						return;
+
 					// event check
-					HunterTargetEvent hunterEvent = new HunterTargetEvent(player, t);
+					HunterTargetEvent hunterEvent = new HunterTargetEvent(player, target);
 					Bukkit.getPluginManager().callEvent(hunterEvent);
 					if (hunterEvent.isCancelled())
 						return;
@@ -182,8 +193,8 @@ public class BountyList extends PluginInventory {
 						BountyHunters.getHuntManager().getTargetBounty(player).removeHunter(player);
 
 					bounty.addHunter(player);
-					if (t.isOnline())
-						hunterEvent.sendAllert(t.getPlayer());
+					if (target.isOnline())
+						hunterEvent.sendAllert(target.getPlayer());
 					Message.TARGET_SET.format(ChatColor.YELLOW).send(player);
 				}
 
@@ -202,7 +213,7 @@ public class BountyList extends PluginInventory {
 					return;
 
 				// check for creator
-				Bounty bounty = bountyManager.getBounty(t);
+				Bounty bounty = BountyHunters.getBountyManager().getBounty(t);
 				if (!bounty.hasCreator())
 					return;
 
