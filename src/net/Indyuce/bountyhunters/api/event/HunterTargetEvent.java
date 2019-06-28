@@ -2,19 +2,20 @@ package net.Indyuce.bountyhunters.api.event;
 
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import net.Indyuce.bountyhunters.api.Message;
-import net.Indyuce.bountyhunters.version.VersionSound;
 
 public class HunterTargetEvent extends Event implements Cancellable {
-	private static final HandlerList handlers = new HandlerList();
 	private Player player;
 	private OfflinePlayer target;
 	private boolean cancelled = false;
+
+	private static final HandlerList handlers = new HandlerList();
 
 	/*
 	 * this event is called when a bounty reward changes, for instance when a
@@ -43,16 +44,16 @@ public class HunterTargetEvent extends Event implements Cancellable {
 		return target;
 	}
 
+	public void sendAllert(Player target) {
+		Message.NEW_HUNTER_ALERT.format(ChatColor.RED, "%hunter%", player.getName()).send(target);
+		target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_HURT, 1, 0);
+	}
+
 	public HandlerList getHandlers() {
 		return handlers;
 	}
 
 	public static HandlerList getHandlerList() {
 		return handlers;
-	}
-
-	public void sendAllert(Player target) {
-		Message.NEW_HUNTER_ALERT.format(ChatColor.RED, "%hunter%", player.getName()).send(target);
-		target.playSound(target.getLocation(), VersionSound.ENTITY_ENDERMAN_HURT.getSound(), 1, 0);
 	}
 }

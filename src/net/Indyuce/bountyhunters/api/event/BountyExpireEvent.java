@@ -2,14 +2,17 @@ package net.Indyuce.bountyhunters.api.event;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.Message;
-import net.Indyuce.bountyhunters.version.VersionSound;
 
 public class BountyExpireEvent extends BountyEvent {
 	private BountyExpireCause cause;
+	
+	private static final HandlerList handlers = new HandlerList();
 
 	/*
 	 * this event is called when the bounty creator cancels the bounty in the
@@ -27,9 +30,17 @@ public class BountyExpireEvent extends BountyEvent {
 
 	public void sendAllert() {
 		for (Player player : Bukkit.getOnlinePlayers()) {
-			player.playSound(player.getLocation(), VersionSound.ENTITY_VILLAGER_NO.getSound(), 1, 2);
+			player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
 			Message.BOUNTY_EXPIRED.format(ChatColor.YELLOW, "%target%", getBounty().getTarget().getName()).send(player);
 		}
+	}
+
+	public HandlerList getHandlers() {
+		return handlers;
+	}
+
+	public static HandlerList getHandlerList() {
+		return handlers;
 	}
 
 	public enum BountyExpireCause {

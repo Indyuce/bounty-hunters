@@ -10,14 +10,12 @@ import net.Indyuce.bountyhunters.gui.PluginInventory;
 
 public class GuiListener implements Listener {
 	@EventHandler
-	public void a(InventoryClickEvent e) {
-		ItemStack i = e.getCurrentItem();
-		if (e.getInventory().getHolder() instanceof PluginInventory) {
-			e.setCancelled(true);
-			if (e.getClickedInventory() != e.getInventory() || !BountyUtils.isPluginItem(i, false))
-				return;
-
-			((PluginInventory) e.getInventory().getHolder()).whenClicked(i, e.getAction(), e.getSlot());
+	public void a(InventoryClickEvent event) {
+		ItemStack item = event.getCurrentItem();
+		if (event.getInventory().getHolder() instanceof PluginInventory) {
+			event.setCancelled(true);
+			if (event.getClickedInventory().equals(event.getInventory()) || BountyUtils.isPluginItem(item, false))
+				((PluginInventory) event.getInventory().getHolder()).whenClicked(item, event.getAction(), event.getSlot());
 		}
 	}
 }

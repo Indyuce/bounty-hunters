@@ -9,7 +9,7 @@ public class PlayerHead extends ItemStack {
 	public PlayerHead(OfflinePlayer player) {
 		super(Material.PLAYER_HEAD);
 
-		SkullMeta headMeta = (SkullMeta) CustomItem.PLAYER_HEAD.a().getItemMeta();
+		SkullMeta headMeta = (SkullMeta) CustomItem.PLAYER_HEAD.toItemStack().getItemMeta();
 		headMeta.setDisplayName(headMeta.getDisplayName().replace("%name%", player.getName()));
 		headMeta.setOwningPlayer(player);
 		setItemMeta(headMeta);

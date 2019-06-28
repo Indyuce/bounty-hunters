@@ -5,9 +5,10 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 public class HunterLevelUpEvent extends Event {
-	private static final HandlerList handlers = new HandlerList();
 	private Player player;
 	private int newLevel;
+
+	private static final HandlerList handlers = new HandlerList();
 
 	/*
 	 * this event is called when a player levels up (cannot be cancelled)

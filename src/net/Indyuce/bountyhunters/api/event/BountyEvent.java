@@ -2,12 +2,10 @@ package net.Indyuce.bountyhunters.api.event;
 
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
 import net.Indyuce.bountyhunters.api.Bounty;
 
 public abstract class BountyEvent extends Event implements Cancellable {
-	private static final HandlerList handlers = new HandlerList();
 	private Bounty bounty;
 	private boolean cancelled = false;
 
@@ -32,13 +30,5 @@ public abstract class BountyEvent extends Event implements Cancellable {
 
 	public Bounty getBounty() {
 		return bounty;
-	}
-
-	public HandlerList getHandlers() {
-		return handlers;
-	}
-
-	public static HandlerList getHandlerList() {
-		return handlers;
 	}
 }

@@ -6,15 +6,19 @@ import java.nio.file.Files;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.Indyuce.bountyhunters.api.ConfigFile;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.Message;
-import net.Indyuce.bountyhunters.api.ParticlesRunnable;
 import net.Indyuce.bountyhunters.api.PlayerData;
 import net.Indyuce.bountyhunters.command.AddBountyCommand;
 import net.Indyuce.bountyhunters.command.BountiesCommand;
@@ -30,6 +34,7 @@ import net.Indyuce.bountyhunters.comp.placeholder.PlaceholderParser;
 import net.Indyuce.bountyhunters.gui.PluginInventory;
 import net.Indyuce.bountyhunters.gui.listener.GuiListener;
 import net.Indyuce.bountyhunters.listener.BountyClaim;
+import net.Indyuce.bountyhunters.listener.HuntListener;
 import net.Indyuce.bountyhunters.listener.PlayerListener;
 import net.Indyuce.bountyhunters.manager.BountyManager;
 import net.Indyuce.bountyhunters.manager.HuntManager;
@@ -75,12 +80,25 @@ public class BountyHunters extends JavaPlugin {
 		huntManager = new HuntManager();
 		bountyManager = new BountyManager();
 
+		saveDefaultConfig();
+
 		// listeners
 		Bukkit.getServer().getPluginManager().registerEvents(new BountyClaim(), this);
 		Bukkit.getServer().getPluginManager().registerEvents(new GuiListener(), this);
 		Bukkit.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+		Bukkit.getServer().getPluginManager().registerEvents(new HuntListener(), this);
 
-		saveDefaultConfig();
+		if (getConfig().getBoolean("target-login-message.enabled"))
+			Bukkit.getServer().getPluginManager().registerEvents(new Listener() {
+				private final String message = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("target-login-message.format"));
+
+				@EventHandler(priority = EventPriority.HIGH)
+				public void a(PlayerJoinEvent event) {
+					Player player = event.getPlayer();
+					if (bountyManager.hasBounty(player))
+						event.setJoinMessage(message.replace("%player%", player.getName()).replace("%bounty%", BountyUtils.format(bountyManager.getBounty(player).getReward())));
+				}
+			}, this);
 
 		new Metrics(this);
 
@@ -145,12 +163,10 @@ public class BountyHunters extends JavaPlugin {
 		 */
 		Bukkit.getOnlinePlayers().forEach(player -> PlayerData.load(player));
 
-		// target particles
-		if (BountyHunters.plugin.getConfig().getBoolean("target-particles.enabled"))
-			new ParticlesRunnable().runTaskTimer(BountyHunters.plugin, 100, 100);
-
-		// after levels.yml was loaded only
-		// else it can't load the file
+		/*
+		 * only reload config files after levels.yml is loaded or else it can't
+		 * load the file
+		 */
 		reloadConfigFiles();
 
 		// commands
@@ -165,13 +181,11 @@ public class BountyHunters extends JavaPlugin {
 	public void onDisable() {
 		bountyManager.saveBounties();
 
-		for (PlayerData playerData : PlayerData.getLoaded())
-			playerData.saveFile();
+		PlayerData.getLoaded().forEach(data -> data.saveFile());
 
-		for (Player t : Bukkit.getOnlinePlayers())
-			if (t.getOpenInventory() != null)
-				if (t.getOpenInventory().getTopInventory().getHolder() instanceof PluginInventory)
-					t.closeInventory();
+		for (Player online : Bukkit.getOnlinePlayers())
+			if (online.getOpenInventory() != null && online.getOpenInventory().getTopInventory().getHolder() instanceof PluginInventory)
+				online.closeInventory();
 	}
 
 	public static NMSHandler getNMS() {

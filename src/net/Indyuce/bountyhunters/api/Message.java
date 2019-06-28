@@ -75,9 +75,8 @@ public enum Message {
 	UNLOCKED_QUOTES("Unlocked quotes:"),
 	TRACKING_COMPASS_RESET("Compass reset."),
 	CONSOLE("console"),
-	COMPASS_IN_ANOTHER_WORLD("In another world"),
-	COMPASS_BLOCKS("%blocks% blocks"),
-	COMPASS_FORMAT("&7&l[ &6&l%format% &7&l]");
+	// COMPASS_IN_ANOTHER_WORLD("In another world"),
+	COMPASS_FORMAT("&7&l[ &6&l%blocks% blocks &7&l]");
 
 	private String defaultMessage;
 

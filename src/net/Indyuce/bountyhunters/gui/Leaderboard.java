@@ -57,7 +57,7 @@ public class Leaderboard extends PluginInventory {
 				break;
 
 			PlayerData data = entry.getKey();
-			ItemStack skull = CustomItem.LB_PLAYER_DATA.a();
+			ItemStack skull = CustomItem.LB_PLAYER_DATA.toItemStack();
 			SkullMeta meta = (SkullMeta) skull.getItemMeta();
 			if (BountyHunters.plugin.getConfig().getBoolean("display-player-skulls"))
 				meta.setOwningPlayer(Bukkit.getOfflinePlayer(data.getUniqueId()));

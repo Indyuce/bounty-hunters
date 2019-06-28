@@ -3,47 +3,38 @@ package net.Indyuce.bountyhunters.manager;
 import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import net.Indyuce.bountyhunters.BountyHunters;
-import net.Indyuce.bountyhunters.BountyUtils;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.Message;
 
-// hunters are not saved when the server shuts down
 public class HuntManager {
-	private Map<UUID, UUID> hunting = new HashMap<>();
-	private Set<UUID> compassTimeout = new HashSet<>();
 
-	public HuntManager() {
-		if (BountyHunters.plugin.getConfig().getBoolean("compass.enabled"))
-			new BukkitRunnable() {
-				public void run() {
-					for (Player p : Bukkit.getOnlinePlayers())
-						if (checkCompass(p)) {
-							compassTimeout.remove(p.getUniqueId());
-							p.setCompassTarget(p.getWorld().getSpawnLocation());
-						}
-				}
-			}.runTaskTimer(BountyHunters.plugin, 0, 10);
-	}
+	/*
+	 * players tracking other bounty targets are not saved when the server
+	 * resets.
+	 */
+	private Map<UUID, HunterData> hunting = new HashMap<>();
 
 	public Set<UUID> getHuntingPlayers() {
 		return hunting.keySet();
 	}
 
-	public Collection<UUID> getHuntedPlayers() {
+	public Collection<HunterData> getHuntedPlayers() {
 		return hunting.values();
 	}
 
@@ -51,12 +42,12 @@ public class HuntManager {
 		return hunting.containsKey(player.getUniqueId());
 	}
 
-	public OfflinePlayer getHunted(OfflinePlayer hunter) {
-		return Bukkit.getOfflinePlayer(hunting.get(hunter.getUniqueId()));
+	public HunterData getData(OfflinePlayer hunter) {
+		return hunting.get(hunter.getUniqueId());
 	}
 
 	public void setHunting(OfflinePlayer hunter, OfflinePlayer hunted) {
-		hunting.put(hunter.getUniqueId(), hunted.getUniqueId());
+		hunting.put(hunter.getUniqueId(), new HunterData(hunted));
 	}
 
 	public void stopHunting(OfflinePlayer hunter) {
@@ -64,34 +55,91 @@ public class HuntManager {
 	}
 
 	public Bounty getTargetBounty(OfflinePlayer hunter) {
-		return BountyHunters.getBountyManager().getBounty(getHunted(hunter));
+		return BountyHunters.getBountyManager().getBounty(getData(hunter).getHunted());
 	}
 
-	// returns true to reset the compass location
-	// (!!) compass location can be abused
-	private boolean checkCompass(Player p) {
-		if (!isHunting(p))
-			return compassTimeout.contains(p.getUniqueId());
+	public class HunterData {
+		private final OfflinePlayer tracked;
 
-		compassTimeout.add(p.getUniqueId());
-		OfflinePlayer offlineTarget = getHunted(p);
-		if (!offlineTarget.isOnline())
-			return true;
+		private BukkitRunnable particles;
+		private Player player;
 
-		Player target = (Player) offlineTarget;
-		String format = Message.COMPASS_IN_ANOTHER_WORLD.getUpdated();
-		if (p.getWorld().getName().equals(target.getWorld().getName())) {
-			format = Message.COMPASS_BLOCKS.formatRaw("%blocks%", new DecimalFormat(BountyHunters.plugin.getConfig().getString("compass.format")).format(target.getLocation().distance(p.getLocation())));
-			p.setCompassTarget(target.getLocation().clone().add(.5, 0, .5));
+		private ItemStack compass;
+
+		public HunterData(OfflinePlayer tracked) {
+			this.tracked = tracked;
 		}
 
-		@SuppressWarnings("deprecation")
-		ItemStack i = p.getInventory().getItemInHand();
-		if (BountyUtils.isPluginItem(i, true) ? i.getItemMeta().getLore().equals(CustomItem.BOUNTY_COMPASS.a().getItemMeta().getLore()) : false) {
-			ItemMeta meta = i.getItemMeta();
-			meta.setDisplayName(Message.COMPASS_FORMAT.formatRaw("%format%", format));
-			i.setItemMeta(meta);
+		public void showParticles(Player player) {
+			hideParticles();
+			this.player = player;
+
+			(particles = new BukkitRunnable() {
+				int ti = 0;
+				boolean circle = BountyHunters.plugin.getConfig().getBoolean("player-tracking.target-particles");
+				DecimalFormat format = new DecimalFormat(BountyHunters.plugin.getConfig().getString("player-tracking.format"));
+
+				public void run() {
+
+					/*
+					 * cancel runnable if any of the conditions is missing.
+					 */
+					if (!check()) {
+						hideParticles();
+						return;
+					}
+
+					// update compass display name based on distance
+					ItemMeta meta = compass.getItemMeta();
+					meta.setDisplayName(Message.COMPASS_FORMAT.formatRaw("%blocks%", format.format(tracked.getPlayer().getLocation().distance(player.getLocation()))));
+					compass.setItemMeta(meta);
+
+					// draw vector
+					Location src = player.getLocation().add(0, 1.3, 0).add(player.getEyeLocation().getDirection().setY(0).normalize());
+					Vector vec = tracked.getPlayer().getLocation().subtract(src.clone().add(0, -1.3, 0)).toVector().normalize().multiply(.2);
+					for (int j = 0; j < 9; j++)
+						player.spawnParticle(Particle.REDSTONE, src.add(vec), 1, new Particle.DustOptions(Color.RED, 1));
+
+					// draw circle around target
+					if (circle && (ti = (ti + 1) % 20) < 3) {
+						Location loc = tracked.getPlayer().getLocation();
+						for (double j = 0; j < Math.PI * 2; j += Math.PI / 16)
+							player.spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(j) * .8, .15, Math.sin(j) * .8), 0, new Particle.DustOptions(Color.RED, 1));
+					}
+				}
+			}).runTaskTimer(BountyHunters.plugin, 0, 6);
 		}
-		return false;
+
+		public boolean isCompassActive() {
+			return particles != null;
+		}
+
+		private boolean check() {
+			if (player == null || tracked == null || !player.isOnline() || !tracked.isOnline() || !tracked.getPlayer().getWorld().equals(player.getWorld()))
+				return false;
+
+			if (CustomItem.BOUNTY_COMPASS.loreMatches(player.getInventory().getItemInMainHand())) {
+				compass = player.getInventory().getItemInMainHand();
+				return true;
+			}
+
+			if (CustomItem.BOUNTY_COMPASS.loreMatches(player.getInventory().getItemInOffHand())) {
+				compass = player.getInventory().getItemInOffHand();
+				return true;
+			}
+
+			return false;
+		}
+
+		public void hideParticles() {
+			if (particles != null) {
+				particles.cancel();
+				particles = null;
+			}
+		}
+
+		public OfflinePlayer getHunted() {
+			return tracked;
+		}
 	}
 }

@@ -20,12 +20,12 @@ public class BountyUtils {
 		return digit1.format(n);
 	}
 
-	public static boolean isPluginItem(ItemStack i, boolean lore) {
-		if (i != null)
-			if (i.getItemMeta() != null)
-				if (i.getItemMeta().getDisplayName() != null)
-					return !lore || i.getItemMeta().getLore() != null;
-		return false;
+	/*
+	 * checks if an item either has a display name, or both a display name and
+	 * lore.
+	 */
+	public static boolean isPluginItem(ItemStack item, boolean lore) {
+		return item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName() && (!lore || item.getItemMeta().getLore() != null);
 	}
 
 	public static double truncation(double x, int n) {

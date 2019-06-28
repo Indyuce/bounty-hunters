@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.Inventory;
@@ -24,22 +25,23 @@ import net.Indyuce.bountyhunters.api.PlayerData;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent.BountyExpireCause;
 import net.Indyuce.bountyhunters.api.event.HunterTargetEvent;
-import net.Indyuce.bountyhunters.manager.BountyManager;
-import net.Indyuce.bountyhunters.version.VersionSound;
 import net.Indyuce.bountyhunters.version.nms.ItemTag;
 
 public class BountyList extends PluginInventory {
 	private int page = 1;
+	private PlayerData data;
+
+	private static final int[] slots = { 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34 };
 
 	public BountyList(Player player) {
 		super(player);
+		data = PlayerData.get(player);
+
 	}
 
 	@Override
 	public Inventory getInventory() {
-		BountyManager bountyManager = BountyHunters.getBountyManager();
-		List<Bounty> bounties = new ArrayList<Bounty>(bountyManager.getBounties());
-		int[] slots = new int[] { 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34 };
+		List<Bounty> bounties = new ArrayList<>(BountyHunters.getBountyManager().getBounties());
 		int maxPage = getMaxPage();
 
 		Inventory inv = Bukkit.createInventory(this, 54, Message.GUI_NAME.formatRaw("%page%", "" + page, "%max-page%", "" + maxPage));
@@ -48,8 +50,8 @@ public class BountyList extends PluginInventory {
 
 		for (int j = min; j < max && j < bounties.size(); j++) {
 			Bounty bounty = bounties.get(j);
-			ItemStack i = CustomItem.GUI_PLAYER_HEAD.a();
-			SkullMeta meta = (SkullMeta) i.getItemMeta();
+			ItemStack item = CustomItem.GUI_PLAYER_HEAD.toItemStack();
+			SkullMeta meta = (SkullMeta) item.getItemMeta();
 			if (BountyHunters.plugin.getConfig().getBoolean("display-player-skulls"))
 				meta.setOwningPlayer(bounty.getTarget());
 			meta.setDisplayName(meta.getDisplayName().replace("%name%", bounty.getTarget().getName()));
@@ -74,30 +76,28 @@ public class BountyList extends PluginInventory {
 				insertInLore(lore, "compass-instruction", compassString);
 
 			meta.setLore(lore);
-			i.setItemMeta(meta);
+			item.setItemMeta(meta);
 
-			i = BountyHunters.getNMS().addTag(i, new ItemTag("playerUuid", bounty.getTarget().getUniqueId().toString()));
-
-			inv.setItem(slots[j - min], i);
+			inv.setItem(slots[j - min], BountyHunters.getNMS().addTag(item, new ItemTag("playerUuid", bounty.getTarget().getUniqueId().toString())));
 		}
 
-		ItemStack compass = CustomItem.BOUNTY_COMPASS.a().clone();
-		ItemMeta compassMeta = compass.getItemMeta();
-		List<String> compassLore = compassMeta.getLore();
-		compassLore.add("");
-		compassLore.add(Message.CLICK_BUY_COMPASS.formatRaw(ChatColor.YELLOW, "%price%", BountyUtils.format(BountyHunters.plugin.getConfig().getDouble("compass.price"))));
-		compassMeta.setLore(compassLore);
-		compass.setItemMeta(compassMeta);
+		if (BountyHunters.plugin.getConfig().getBoolean("player-tracking.enabled")) {
+			ItemStack compass = CustomItem.BOUNTY_COMPASS.toItemStack().clone();
+			ItemMeta compassMeta = compass.getItemMeta();
+			List<String> compassLore = compassMeta.getLore();
+			compassLore.add("");
+			compassLore.add(Message.CLICK_BUY_COMPASS.formatRaw(ChatColor.YELLOW, "%price%", BountyUtils.format(BountyHunters.plugin.getConfig().getDouble("player-tracking.price"))));
+			compassMeta.setLore(compassLore);
+			compass.setItemMeta(compassMeta);
 
-		inv.setItem(26, CustomItem.NEXT_PAGE.a());
-		inv.setItem(18, CustomItem.PREVIOUS_PAGE.a());
-
-		PlayerData playerData = PlayerData.get(player);
-		inv.setItem(47, playerData.getProfileItem());
-		inv.setItem(49, CustomItem.SET_BOUNTY.a());
-
-		if (BountyHunters.plugin.getConfig().getBoolean("compass.enabled"))
 			inv.setItem(51, compass);
+		}
+
+		inv.setItem(26, CustomItem.NEXT_PAGE.toItemStack());
+		inv.setItem(18, CustomItem.PREVIOUS_PAGE.toItemStack());
+
+		inv.setItem(47, data.getProfileItem());
+		inv.setItem(49, CustomItem.SET_BOUNTY.toItemStack());
 
 		return inv;
 	}
@@ -106,40 +106,45 @@ public class BountyList extends PluginInventory {
 	public void whenClicked(ItemStack item, InventoryAction action, int slot) {
 
 		// next page
-		if (item.getItemMeta().getDisplayName().equals(CustomItem.NEXT_PAGE.a().getItemMeta().getDisplayName()))
+		if (item.getItemMeta().getDisplayName().equals(CustomItem.NEXT_PAGE.toItemStack().getItemMeta().getDisplayName()))
 			if (page < getMaxPage()) {
 				page++;
 				open();
 			}
 
 		// prev page
-		if (item.getItemMeta().getDisplayName().equals(CustomItem.PREVIOUS_PAGE.a().getItemMeta().getDisplayName()))
+		if (item.getItemMeta().getDisplayName().equals(CustomItem.PREVIOUS_PAGE.toItemStack().getItemMeta().getDisplayName()))
 			if (page > 1) {
 				page--;
 				open();
 			}
 
 		// buy bounty compass
-		if (item.getItemMeta().getDisplayName().equals(CustomItem.BOUNTY_COMPASS.a().getItemMeta().getDisplayName())) {
+		if (item.getItemMeta().getDisplayName().equals(CustomItem.BOUNTY_COMPASS.toItemStack().getItemMeta().getDisplayName())) {
 			if (player.getInventory().firstEmpty() <= -1) {
 				Message.EMPTY_INV_FIRST.format(ChatColor.RED).send(player);
 				return;
 			}
 
-			double price = BountyHunters.plugin.getConfig().getDouble("compass.price");
+			if (!player.hasPermission(BountyHunters.plugin.getConfig().getString("player-tracking.permission"))) {
+				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(player);
+				return;
+			}
+
+			double price = BountyHunters.plugin.getConfig().getDouble("player-tracking.price");
 			if (BountyHunters.getEconomy().getBalance(player) < price) {
 				Message.NOT_ENOUGH_MONEY.format(ChatColor.RED).send(player);
 				return;
 			}
 
 			BountyHunters.getEconomy().withdrawPlayer(player, price);
-			player.playSound(player.getLocation(), VersionSound.ENTITY_PLAYER_LEVELUP.getSound(), 1, 2);
-			player.getInventory().addItem(CustomItem.BOUNTY_COMPASS.a());
+			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
+			player.getInventory().addItem(CustomItem.BOUNTY_COMPASS.toItemStack());
 			return;
 		}
 
 		// target someone
-		if (action == InventoryAction.PICKUP_ALL && BountyHunters.plugin.getConfig().getBoolean("compass.enabled"))
+		if (action == InventoryAction.PICKUP_ALL && BountyHunters.plugin.getConfig().getBoolean("player-tracking.enabled"))
 			if (slot < 35 && item.getType() == Material.PLAYER_HEAD) {
 				String tag = BountyHunters.getNMS().getStringTag(item, "playerUuid");
 				if (tag == null || tag.equals(""))
@@ -172,25 +177,20 @@ public class BountyList extends PluginInventory {
 					if (bounty.hasTarget(player))
 						return;
 
+					// check for target cooldown
+					long remain = (long) (data.getLastTarget() + BountyHunters.plugin.getConfig().getDouble("player-tracking.cooldown") * 1000 - System.currentTimeMillis()) / 1000;
+					if (remain > 0) {
+						Message.TARGET_COOLDOWN.format(ChatColor.RED, "%remain%", "" + remain, "%s%", remain >= 2 ? "s" : "").send(player);
+						return;
+					}
+
 					// event check
 					HunterTargetEvent hunterEvent = new HunterTargetEvent(player, target);
 					Bukkit.getPluginManager().callEvent(hunterEvent);
 					if (hunterEvent.isCancelled())
 						return;
 
-					// check for target cooldown
-					PlayerData playerData = PlayerData.get(player);
-					long remain = (long) (playerData.getLastTarget() + BountyHunters.plugin.getConfig().getDouble("compass.target-cooldown") * 1000 - System.currentTimeMillis()) / 1000;
-					if (remain > 0) {
-						Message.TARGET_COOLDOWN.format(ChatColor.RED, "%remain%", "" + remain, "%s%", remain >= 2 ? "s" : "").send(player);
-						return;
-					}
-
-					playerData.setLastTarget();
-
-					// remove older hunter
-					if (BountyHunters.getHuntManager().isHunting(player))
-						BountyHunters.getHuntManager().getTargetBounty(player).removeHunter(player);
+					data.setLastTarget();
 
 					bounty.addHunter(player);
 					if (target.isOnline())

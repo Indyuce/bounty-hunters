@@ -4,20 +4,15 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryPickupItemEvent;
-import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.BountyCommands;
 import net.Indyuce.bountyhunters.api.BountyEffect;
-import net.Indyuce.bountyhunters.api.PhysicalRewards;
 import net.Indyuce.bountyhunters.api.PlayerData;
 import net.Indyuce.bountyhunters.api.PlayerHead;
 import net.Indyuce.bountyhunters.api.event.BountyChangeEvent;
@@ -29,6 +24,8 @@ import net.Indyuce.bountyhunters.gui.Leaderboard;
 import net.Indyuce.bountyhunters.manager.BountyManager;
 
 public class BountyClaim implements Listener {
+	private static final Random random = new Random();
+
 	@EventHandler
 	public void a(PlayerDeathEvent event) {
 		Player target = event.getEntity();
@@ -42,7 +39,6 @@ public class BountyClaim implements Listener {
 		if (BountyHunters.plugin.getConfig().getStringList("world-blacklist").contains(target.getWorld().getName()))
 			return;
 
-		Random random = new Random();
 		BountyManager bountyManager = BountyHunters.getBountyManager();
 		Player killer = target.getKiller();
 
@@ -136,15 +132,6 @@ public class BountyClaim implements Listener {
 			new BountyEffect(BountyHunters.plugin.getConfig().getConfigurationSection("bounty-effect")).play(target.getLocation());
 
 		/*
-		 * read physical rewards from the config file and drop them at the
-		 * target's location. error messages are displayed if the items can't be
-		 * read TODO add support for external plugin items?
-		 */
-		if (BountyHunters.plugin.getConfig().getBoolean("physical-rewards.enabled"))
-			for (ItemStack drop : new PhysicalRewards(BountyHunters.plugin.getConfig().getConfigurationSection("physical-rewards.list")).readItems())
-				target.getWorld().dropItem(target.getLocation(), drop);
-
-		/*
 		 * send bounty commands TODO improve command tables
 		 */
 		new BountyCommands("claim.target", target, killer).send(target);
@@ -196,19 +183,5 @@ public class BountyClaim implements Listener {
 
 		// finally, unregister the bounty
 		BountyHunters.getBountyManager().unregisterBounty(bounty);
-	}
-
-	@EventHandler
-	public void b(EntityPickupItemEvent event) {
-		Item item = event.getItem();
-		if (item.hasMetadata("BOUNTYHUNTERS:no_pickup"))
-			event.setCancelled(true);
-	}
-
-	@EventHandler
-	public void c(InventoryPickupItemEvent event) {
-		Item item = event.getItem();
-		if (item.hasMetadata("BOUNTYHUNTERS:no_pickup"))
-			event.setCancelled(true);
 	}
 }

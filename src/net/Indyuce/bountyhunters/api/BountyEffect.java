@@ -10,7 +10,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.bountyhunters.BountyHunters;
@@ -40,7 +39,7 @@ public class BountyEffect {
 			stack.setItemMeta(stackMeta);
 
 			Item item = loc.getWorld().dropItemNaturally(loc, stack);
-			item.setMetadata("BOUNTYHUNTERS:no_pickup", new FixedMetadataValue(BountyHunters.plugin, true));
+			item.setPickupDelay(100000000);
 			new BukkitRunnable() {
 				public void run() {
 					item.remove();

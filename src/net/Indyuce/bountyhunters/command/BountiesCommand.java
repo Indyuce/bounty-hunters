@@ -2,6 +2,7 @@ package net.Indyuce.bountyhunters.command;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,7 +19,6 @@ import net.Indyuce.bountyhunters.api.PlayerData;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent.BountyExpireCause;
 import net.Indyuce.bountyhunters.gui.BountyList;
-import net.Indyuce.bountyhunters.version.VersionSound;
 
 public class BountiesCommand implements CommandExecutor {
 	@Override
@@ -121,7 +121,7 @@ public class BountiesCommand implements CommandExecutor {
 				return true;
 
 			playerData.setCurrentTitle(args[1]);
-			p.playSound(p.getLocation(), VersionSound.ENTITY_PLAYER_LEVELUP.getSound(), 1, 2);
+			p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 			Message.SUCCESSFULLY_SELECTED.format(ChatColor.YELLOW, "%item%", playerData.getTitle()).send(p);
 		}
 
@@ -150,7 +150,7 @@ public class BountiesCommand implements CommandExecutor {
 				return true;
 
 			playerData.setCurrentQuote(args[1]);
-			p.playSound(p.getLocation(), VersionSound.ENTITY_PLAYER_LEVELUP.getSound(), 1, 2);
+			p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 			Message.SUCCESSFULLY_SELECTED.format(ChatColor.YELLOW, "%item%", playerData.getQuote()).send(p);
 		}
 

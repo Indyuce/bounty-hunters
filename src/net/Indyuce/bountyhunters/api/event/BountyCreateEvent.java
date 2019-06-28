@@ -2,15 +2,18 @@ package net.Indyuce.bountyhunters.api.event;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 
 import net.Indyuce.bountyhunters.BountyUtils;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.Message;
-import net.Indyuce.bountyhunters.version.VersionSound;
 
 public class BountyCreateEvent extends BountyEvent {
 	private BountyCause cause;
+	
+	private static final HandlerList handlers = new HandlerList();
 
 	/*
 	 * this event is called whenever a player sets a bounty onto another player,
@@ -34,22 +37,30 @@ public class BountyCreateEvent extends BountyEvent {
 
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			if (getBounty().hasTarget(player)) {
-				player.playSound(player.getLocation(), VersionSound.ENTITY_ENDERMAN_HURT.getSound(), 1, 0);
+				player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_HURT, 1, 0);
 				player.sendMessage(toTarget);
 				continue;
 			}
 
 			if (getBounty().hasCreator(player)) {
-				player.playSound(player.getLocation(), VersionSound.ENTITY_PLAYER_LEVELUP.getSound(), 1, 2);
+				player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 				Message.CHAT_BAR.format(ChatColor.YELLOW).send(player);
 				Message.BOUNTY_CREATED.format(ChatColor.YELLOW, "%target%", getBounty().getTarget().getName()).send(player);
 				Message.BOUNTY_EXPLAIN.format(ChatColor.YELLOW, "%reward%", BountyUtils.format(reward)).send(player);
 				continue;
 			}
 
-			player.playSound(player.getLocation(), VersionSound.ENTITY_PLAYER_LEVELUP.getSound(), 1, 2);
+			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 			player.sendMessage(toOnline);
 		}
+	}
+
+	public HandlerList getHandlers() {
+		return handlers;
+	}
+
+	public static HandlerList getHandlerList() {
+		return handlers;
 	}
 
 	public enum BountyCause {

@@ -45,9 +45,7 @@ public class NMSHandler_Reflection implements NMSHandler {
 
 	@Override
 	public String getStringTag(ItemStack i, String path) {
-		if (i == null)
-			return "";
-		if (i.getType() == Material.AIR)
+		if (i == null || i.getType() == Material.AIR)
 			return "";
 
 		try {

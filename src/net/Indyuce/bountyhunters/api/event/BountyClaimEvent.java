@@ -2,16 +2,19 @@ package net.Indyuce.bountyhunters.api.event;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 
 import net.Indyuce.bountyhunters.BountyUtils;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.PlayerData;
-import net.Indyuce.bountyhunters.version.VersionSound;
 
 public class BountyClaimEvent extends BountyEvent {
 	private Player player;
+	
+	private static final HandlerList handlers = new HandlerList();
 
 	/*
 	 * this event is called whenever a player claims a bounty by killing the
@@ -35,10 +38,18 @@ public class BountyClaimEvent extends BountyEvent {
 		// message to server
 		PlayerData playerData = PlayerData.get(player);
 		String title = playerData.hasTitle() ? ChatColor.LIGHT_PURPLE + "[" + playerData.getTitle() + ChatColor.LIGHT_PURPLE + "] " : "";
-		for (Player t : Bukkit.getOnlinePlayers()) {
-			t.playSound(t.getLocation(), VersionSound.ENTITY_PLAYER_LEVELUP.getSound(), 1, 2);
-			if (t != player)
-				Message.BOUNTY_CLAIMED.format(ChatColor.YELLOW, "%reward%", BountyUtils.format(getBounty().getReward()), "%killer%", title + player.getName(), "%target%", getBounty().getTarget().getName()).send(t);
+		for (Player online : Bukkit.getOnlinePlayers()) {
+			online.playSound(online.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
+			if (online != player)
+				Message.BOUNTY_CLAIMED.format(ChatColor.YELLOW, "%reward%", BountyUtils.format(getBounty().getReward()), "%killer%", title + player.getName(), "%target%", getBounty().getTarget().getName()).send(online);
 		}
+	}
+
+	public HandlerList getHandlers() {
+		return handlers;
+	}
+
+	public static HandlerList getHandlerList() {
+		return handlers;
 	}
 }

@@ -34,21 +34,20 @@ physical-rewards:
         REDSTONE: 2
 
 # Commands sent by the console when a player claims a bounty.
-#
 # %target% returns the target's name and %player% the claimer's name.
-# Commands support PlaceholderAPI placeholders.
-#
-# 'claim' corresponds to when a player claims a bounty normally.
-# 'auto-bounty' corresponds to when a bounty is claimed illegaly.
-#
-# 'killer' are commands sent for the player who claimed the bounty.
-# 'target' are commands sent for the bounty target.
+# Commands support PlaceholderAPI placeholders. 'killer' are commands which
+# placeholders are calculated using the killer player. 'target' are commands
+# which placeholders are calculated using the bounty target player.
 bounty-commands:
+
+    # When a player claims a bounty.
     claim:
         killer: []
 #       - '/give %killer% minecraft:diamond 10'
         target: []
 #       - '/say %target% Someone claimed your bounty.'
+
+    # When a player kills another player illegaly.
     auto-bounty:
         killer: []
 #       - '/jail %killer% 100'
@@ -62,6 +61,12 @@ auto-bounty:
     reward: 100
     chance: 100
 
+# Displays a different login message when a player
+# logs on with a bounty. Requires /reload when changed.
+target-login-message:
+    format: '&e%player% joined the game with a &6$%bounty%&e bounty!'
+    enabled: true
+
 # Drops the player head when claming a bounty.
 drop-head:
     enabled: false
@@ -71,15 +76,29 @@ drop-head:
 # Can sometimes not work because of minecraft servers (too many requests).
 display-player-skulls: true
 
-# The tracking compass allows people to know where the people with a bounty on are.
-# Required a /reload to take effect.
-#
-# The cooldown determines how often you can target a player in the menu (can fix spam from the hunter alert).
-# The format corresponds to the number displayed on the compass name (see DecimalFormat (Java) on Google).
-compass:
+# Player tracking lets player use a tracking compass to hunt
+# down their bounty target. On the one hand, it gives an
+# advantage to the hunters because they can find the player, but
+# it also lets the target know how many players are tracking him.
+player-tracking:
     enabled: true
+    
+    # Permission needed to track a
+    # player and to buy the compass.
+    permission: ''
+    
+    # Also displays particles around the
+    # target when holding the compass.
+    target-particles: true
+    
+    # Price of the tracking compass.
     price: 1000
-    target-cooldown: 240
+    
+    # Cooldowns players need to wait before tracking a player.
+    cooldown: 240
+    
+    # Distance decimal format, see
+    # https://docs.oracle.com/javase/7/docs/api/java/text/DecimalFormat.html
     format: '0.#'
 
 # Min and max bounty rewards.
@@ -105,11 +124,6 @@ world-blacklist:
 # people target players using a bounty THEY created.
 # Warning: can be abused.
 own-bounty-claiming: true
-
-# Displays particles around targeted players (requires /reload to take effect).
-target-particles:
-    enabled: true
-    permission: ''
 
 # Displayed formatted numbers (1,345B instead of 1,345,416,416).
 formatted-numbers: true

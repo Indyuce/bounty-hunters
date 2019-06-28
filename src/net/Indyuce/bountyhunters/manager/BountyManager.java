@@ -1,18 +1,20 @@
 package net.Indyuce.bountyhunters.manager;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashMap;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.ConfigFile;
+import net.Indyuce.bountyhunters.manager.HuntManager.HunterData;
 
 public class BountyManager {
-	private Map<UUID, Bounty> bounties = new HashMap<>();
+	private LinkedHashMap<UUID, Bounty> bounties = new LinkedHashMap<>();
 
 	public BountyManager() {
 
@@ -37,6 +39,13 @@ public class BountyManager {
 
 	public void unregisterBounty(Bounty bounty) {
 		bounties.remove(bounty.getTarget().getUniqueId());
+		bounty.getHunters().forEach(hunter -> {
+			OfflinePlayer player = Bukkit.getOfflinePlayer(hunter);
+			HunterData data = BountyHunters.getHuntManager().getData(player);
+			if (data.isCompassActive())
+				data.hideParticles();
+			BountyHunters.getHuntManager().stopHunting(player);
+		});
 	}
 
 	public void registerBounty(Bounty bounty) {
@@ -52,6 +61,10 @@ public class BountyManager {
 	}
 
 	public Bounty getBounty(OfflinePlayer target) {
-		return bounties.get(target.getUniqueId());
+		return getBounty(target.getUniqueId());
+	}
+
+	public Bounty getBounty(UUID target) {
+		return bounties.get(target);
 	}
 }

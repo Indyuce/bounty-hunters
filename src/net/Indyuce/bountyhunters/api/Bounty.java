@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
@@ -16,20 +17,24 @@ import net.Indyuce.bountyhunters.BountyHunters;
 
 public class Bounty {
 	private double reward;
-	private UUID creator, target;
+	private OfflinePlayer creator, target;
+
 	private List<UUID> hunters = new ArrayList<>();
 	private Map<UUID, Double> up = new HashMap<>();
 
 	/*
 	 * creator is nullable since auto-bounties do not have any creator
 	 */
-	public Bounty(OfflinePlayer creator, OfflinePlayer target, double reward) {
-		this(creator == null ? null : creator.getUniqueId(), target.getUniqueId(), reward);
+	@Deprecated
+	public Bounty(UUID creator, UUID target, double reward) {
+		this(creator == null ? null : Bukkit.getOfflinePlayer(creator), Bukkit.getOfflinePlayer(target), reward);
 	}
 
-	public Bounty(UUID creator, UUID target, double reward) {
-		this.creator = creator;
+	public Bounty(OfflinePlayer creator, OfflinePlayer target, double reward) {
+		Validate.notNull(target);
+
 		this.target = target;
+		this.creator = creator;
 		this.reward = reward;
 	}
 
@@ -47,23 +52,23 @@ public class Bounty {
 	}
 
 	public OfflinePlayer getCreator() {
-		return Bukkit.getOfflinePlayer(creator);
+		return creator;
 	}
 
 	public OfflinePlayer getTarget() {
-		return Bukkit.getOfflinePlayer(target);
-	}
-
-	public boolean hasCreator(OfflinePlayer player) {
-		return creator != null ? creator.equals(player.getUniqueId()) : false;
+		return target;
 	}
 
 	public boolean hasCreator() {
 		return creator != null;
 	}
 
+	public boolean hasCreator(OfflinePlayer player) {
+		return creator != null && creator.equals(player);
+	}
+
 	public boolean hasTarget(OfflinePlayer player) {
-		return target.equals(player.getUniqueId());
+		return target.equals(player);
 	}
 
 	public void addToReward(OfflinePlayer player, double value) {
@@ -89,7 +94,7 @@ public class Bounty {
 	}
 
 	public boolean isAutoBounty() {
-		return creator == null;
+		return !hasCreator();
 	}
 
 	public List<UUID> getHunters() {
@@ -104,7 +109,11 @@ public class Bounty {
 	}
 
 	public void addHunter(OfflinePlayer player) {
-		BountyHunters.getHuntManager().setHunting(player, Bukkit.getOfflinePlayer(target));
+
+		if (BountyHunters.getHuntManager().isHunting(player))
+			BountyHunters.getHuntManager().getTargetBounty(player).removeHunter(player);
+		
+		BountyHunters.getHuntManager().setHunting(player, target);
 		hunters.add(player.getUniqueId());
 	}
 
@@ -115,16 +124,16 @@ public class Bounty {
 	}
 
 	public void save(FileConfiguration config) {
-		config.set(target.toString() + ".reward", reward);
-		config.set(target.toString() + ".creator", hasCreator() ? creator.toString() : null);
+		config.set(target.getUniqueId().toString() + ".reward", reward);
+		config.set(target.getUniqueId().toString() + ".creator", hasCreator() ? creator.getUniqueId().toString() : null);
 
-		List<String> hunterList = new ArrayList<String>();
+		List<String> hunterList = new ArrayList<>();
 		for (UUID hunter : hunters)
 			hunterList.add(hunter.toString());
-		config.set(target.toString() + ".hunters", hunterList);
+		config.set(target.getUniqueId().toString() + ".hunters", hunterList);
 
-		config.createSection(target.toString() + ".up");
-		for (UUID p : up.keySet())
-			config.set(target.toString() + ".up." + p.toString(), up.get(p));
+		config.createSection(target.getUniqueId().toString() + ".up");
+		for (UUID player : up.keySet())
+			config.set(target.getUniqueId().toString() + ".up." + player.toString(), up.get(player));
 	}
 }

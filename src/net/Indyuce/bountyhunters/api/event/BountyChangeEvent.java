@@ -2,15 +2,18 @@ package net.Indyuce.bountyhunters.api.event;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 
 import net.Indyuce.bountyhunters.BountyUtils;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.Message;
-import net.Indyuce.bountyhunters.version.VersionSound;
 
 public class BountyChangeEvent extends BountyEvent {
 	private BountyChangeCause cause;
+	
+	private static final HandlerList handlers = new HandlerList();
 
 	/*
 	 * this event is when a bounty reward changes, either when the auto bounty
@@ -30,9 +33,17 @@ public class BountyChangeEvent extends BountyEvent {
 		for (Player player : Bukkit.getOnlinePlayers())
 			Message.BOUNTY_CHANGE.format(ChatColor.YELLOW, "%player%", getBounty().getTarget().getName(), "%reward%", BountyUtils.format(getBounty().getReward())).send(player);
 		if (getBounty().getTarget().isOnline()) {
-			Player t = getBounty().getTarget().getPlayer();
-			t.playSound(t.getLocation(), VersionSound.ENTITY_ENDERMAN_HURT.getSound(), 1, 0);
+			Player target = getBounty().getTarget().getPlayer();
+			target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_HURT, 1, 0);
 		}
+	}
+
+	public HandlerList getHandlers() {
+		return handlers;
+	}
+
+	public static HandlerList getHandlerList() {
+		return handlers;
 	}
 
 	public enum BountyChangeCause {

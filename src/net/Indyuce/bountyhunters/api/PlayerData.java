@@ -128,7 +128,7 @@ public class PlayerData {
 	}
 
 	public ItemStack getProfileItem() {
-		ItemStack profile = CustomItem.PROFILE.a().clone();
+		ItemStack profile = CustomItem.PROFILE.toItemStack().clone();
 		SkullMeta profileMeta = (SkullMeta) profile.getItemMeta();
 		profileMeta.setDisplayName(profileMeta.getDisplayName().replace("%name%", offline.getName()).replace("%level%", "" + getLevel()));
 		profileMeta.setOwningPlayer(Bukkit.getOfflinePlayer(offline.getUniqueId()));
@@ -205,8 +205,8 @@ public class PlayerData {
 
 	public void checkForLevelUp(Player player) {
 		FileConfiguration levels = BountyHunters.getLevelsConfigFile();
-		while (levelUp(levels, player)) {
-		}
+		while (levelUp(levels, player))
+			;
 	}
 
 	private boolean levelUp(FileConfiguration levels, Player player) {
@@ -222,7 +222,7 @@ public class PlayerData {
 		Message.LEVEL_UP.format(ChatColor.YELLOW, "%level%", "" + nextLevel).send(player);
 		Message.LEVEL_UP_2.format(ChatColor.YELLOW, "%bounties%", "" + levels.getInt("bounties-per-level")).send(player);
 
-		List<String> chatDisplay = new ArrayList<String>();
+		List<String> chatDisplay = new ArrayList<>();
 
 		// titles
 		for (String titleId : levels.getConfigurationSection("reward.title").getKeys(false))
@@ -273,7 +273,7 @@ public class PlayerData {
 		LEVEL(0),
 		CURRENT_TITLE(""),
 		CURRENT_QUOTE(""),
-		UNLOCKED(new ArrayList<String>());
+		UNLOCKED(new ArrayList<>());
 
 		private Object def;
 
