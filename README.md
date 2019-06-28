@@ -6,3 +6,4 @@ Open a ticket or contact me via Spigot DM/Discord if you need anything. Don't he
 * Metrics: https://bstats.org/plugin/bukkit/BountyHunters
 * Wiki: https://github.com/Indyuce/bounty-hunters/wiki
 * Spigot Page: https://www.spigotmc.org/resources/bounty-hunters.40610/
+* Issue Tracker: https://github.com/Indyuce/bounty-hunters/issues
