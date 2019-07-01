@@ -39,7 +39,7 @@ public class Leaderboard extends PluginInventory {
 		 * accessed directly using that file.
 		 */
 		Map<PlayerData, Integer> hunters = new HashMap<>();
-		for (String key : BountyHunters.getCachedLeaderboard().getKeys(false)) {
+		for (String key : BountyHunters.getInstance().getCachedLeaderboard().getKeys(false)) {
 			PlayerData data = PlayerData.get(Bukkit.getOfflinePlayer(UUID.fromString(key)));
 			hunters.put(data, data.getClaimedBounties());
 		}
@@ -59,7 +59,7 @@ public class Leaderboard extends PluginInventory {
 			PlayerData data = entry.getKey();
 			ItemStack skull = CustomItem.LB_PLAYER_DATA.toItemStack();
 			SkullMeta meta = (SkullMeta) skull.getItemMeta();
-			if (BountyHunters.plugin.getConfig().getBoolean("display-player-skulls"))
+			if (BountyHunters.getInstance().getConfig().getBoolean("display-player-skulls"))
 				meta.setOwningPlayer(Bukkit.getOfflinePlayer(data.getUniqueId()));
 			meta.setDisplayName(applyPlaceholders(meta.getDisplayName(), data, slot + 1));
 			List<String> lore = meta.getLore();
@@ -116,8 +116,8 @@ public class Leaderboard extends PluginInventory {
 		 * bounties counter
 		 * 
 		 */
-		if (BountyHunters.getCachedLeaderboard().getKeys(false).contains(uuid.toString())) {
-			BountyHunters.getCachedLeaderboard().set(uuid.toString(), bounties);
+		if (BountyHunters.getInstance().getCachedLeaderboard().getKeys(false).contains(uuid.toString())) {
+			BountyHunters.getInstance().getCachedLeaderboard().set(uuid.toString(), bounties);
 			return;
 		}
 
@@ -125,8 +125,8 @@ public class Leaderboard extends PluginInventory {
 		 * if there is still not at least 16 players in the cached leaderboard,
 		 * just add it to the keys and that's all
 		 */
-		if (BountyHunters.getCachedLeaderboard().getKeys(false).size() < 16) {
-			BountyHunters.getCachedLeaderboard().set(uuid.toString(), bounties);
+		if (BountyHunters.getInstance().getCachedLeaderboard().getKeys(false).size() < 16) {
+			BountyHunters.getInstance().getCachedLeaderboard().set(uuid.toString(), bounties);
 			return;
 		}
 
@@ -138,8 +138,8 @@ public class Leaderboard extends PluginInventory {
 		String leastKey = "";
 		int leastBounties = Integer.MAX_VALUE;
 
-		for (String key : BountyHunters.getCachedLeaderboard().getKeys(false)) {
-			int playerBounties = BountyHunters.getCachedLeaderboard().getInt(key);
+		for (String key : BountyHunters.getInstance().getCachedLeaderboard().getKeys(false)) {
+			int playerBounties = BountyHunters.getInstance().getCachedLeaderboard().getInt(key);
 			if (playerBounties < leastBounties) {
 				leastBounties = playerBounties;
 				leastKey = key;
@@ -147,8 +147,8 @@ public class Leaderboard extends PluginInventory {
 		}
 
 		if (bounties >= leastBounties) {
-			BountyHunters.getCachedLeaderboard().set(leastKey, null);
-			BountyHunters.getCachedLeaderboard().set(uuid.toString(), bounties);
+			BountyHunters.getInstance().getCachedLeaderboard().set(leastKey, null);
+			BountyHunters.getInstance().getCachedLeaderboard().set(uuid.toString(), bounties);
 		}
 	}
 }

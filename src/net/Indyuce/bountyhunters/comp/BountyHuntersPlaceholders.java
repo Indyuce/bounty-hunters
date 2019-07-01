@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.Indyuce.bountyhunters.BountyHunters;
-import net.Indyuce.bountyhunters.BountyUtils;
+import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.PlayerData;
 
 public class BountyHuntersPlaceholders extends PlaceholderExpansion {
@@ -33,7 +33,7 @@ public class BountyHuntersPlaceholders extends PlaceholderExpansion {
 		case "claimed_bounties":
 			return "" + playerData.getClaimedBounties();
 		case "current_bounty":
-			return BountyHunters.getBountyManager().hasBounty(player) ? BountyUtils.format(BountyHunters.getBountyManager().getBounty(player).getReward()) : "0";
+			return BountyHunters.getInstance().getBountyManager().hasBounty(player) ? new NumberFormat().format(BountyHunters.getInstance().getBountyManager().getBounty(player).getReward()) : "0";
 		case "quote":
 			return playerData.getQuote();
 		case "title":

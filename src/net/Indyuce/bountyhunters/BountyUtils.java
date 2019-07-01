@@ -1,23 +1,14 @@
 package net.Indyuce.bountyhunters;
 
-import java.text.DecimalFormat;
-
 import org.bukkit.inventory.ItemStack;
 
+import net.Indyuce.bountyhunters.api.NumberFormat;
+
 public class BountyUtils {
-	private static final DecimalFormat digit1 = new DecimalFormat("0.#"), digit3 = new DecimalFormat("0.###");
 
-	public static String format(double n) {
-		if (!BountyHunters.plugin.getConfig().getBoolean("formatted-numbers"))
-			return "" + n;
-
-		String[] prefixes = new String[] { "M", "B", "Tril", "Quad", "Quin", "Sext", "Sept", "Octi", "Noni", "Deci" };
-		for (int j = 9; j >= 0; j--) {
-			double b = Math.pow(10, 6 + 3 * j);
-			if (n > b)
-				return digit3.format(n / b) + prefixes[j];
-		}
-		return digit1.format(n);
+	@Deprecated
+	public static String format(double d) {
+		return new NumberFormat().format(d);
 	}
 
 	/*

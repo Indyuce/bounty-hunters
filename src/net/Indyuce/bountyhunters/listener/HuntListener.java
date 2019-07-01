@@ -17,17 +17,17 @@ public class HuntListener implements Listener {
 	@EventHandler
 	public void a(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK || !BountyHunters.getHuntManager().isHunting(player) || !CustomItem.BOUNTY_COMPASS.loreMatches(event.getItem()))
+		if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK || !BountyHunters.getInstance().getHuntManager().isHunting(player) || !CustomItem.BOUNTY_COMPASS.loreMatches(event.getItem()))
 			return;
 
-		HunterData data = BountyHunters.getHuntManager().getData(player);
+		HunterData data = BountyHunters.getInstance().getHuntManager().getData(player);
 		Player hunted = data.getHunted().getPlayer();
 		if (!data.getHunted().isOnline() || !hunted.getWorld().equals(player.getWorld())) {
 			player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
 			return;
 		}
 
-		if (!player.hasPermission(BountyHunters.plugin.getConfig().getString("player-tracking.permission"))) {
+		if (!player.hasPermission(BountyHunters.getInstance().getConfig().getString("player-tracking.permission"))) {
 			Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(player);
 			return;
 		}

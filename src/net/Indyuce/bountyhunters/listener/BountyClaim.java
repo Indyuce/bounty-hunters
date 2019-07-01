@@ -20,8 +20,8 @@ import net.Indyuce.bountyhunters.api.event.BountyChangeEvent.BountyChangeCause;
 import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
+import net.Indyuce.bountyhunters.api.event.BountyEvent;
 import net.Indyuce.bountyhunters.gui.Leaderboard;
-import net.Indyuce.bountyhunters.manager.BountyManager;
 
 public class BountyClaim implements Listener {
 	private static final Random random = new Random();
@@ -29,17 +29,16 @@ public class BountyClaim implements Listener {
 	@EventHandler
 	public void a(PlayerDeathEvent event) {
 		Player target = event.getEntity();
-		if (target.getKiller() == null || !(target.getKiller() instanceof Player) || target == target.getKiller())
+		if (target.getKiller() == null || !(target.getKiller() instanceof Player) || target.equals(target.getKiller()))
 			return;
 
 		/*
 		 * check if the player world is in the world blacklist (the plugin is
 		 * totally disabled in these worlds)
 		 */
-		if (BountyHunters.plugin.getConfig().getStringList("world-blacklist").contains(target.getWorld().getName()))
+		if (BountyHunters.getInstance().getConfig().getStringList("world-blacklist").contains(target.getWorld().getName()))
 			return;
 
-		BountyManager bountyManager = BountyHunters.getBountyManager();
 		Player killer = target.getKiller();
 
 		/*
@@ -47,48 +46,41 @@ public class BountyClaim implements Listener {
 		 * kill illegal. When a kill is illegal, the killer has a chance to have
 		 * a bounty drop onto him
 		 */
-		if (!bountyManager.hasBounty(target)) {
-			if (BountyHunters.plugin.getConfig().getBoolean("auto-bounty.enabled") && random.nextDouble() <= BountyHunters.plugin.getConfig().getDouble("auto-bounty.chance") / 100) {
+		if (!BountyHunters.getInstance().getBountyManager().hasBounty(target)) {
+			if (BountyHunters.getInstance().getConfig().getBoolean("auto-bounty.enabled") && random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("auto-bounty.chance") / 100) {
+
+				BountyEvent bountyEvent = BountyHunters.getInstance().getBountyManager().hasBounty(killer) ? new BountyChangeEvent(BountyHunters.getInstance().getBountyManager().getBounty(killer), BountyChangeCause.AUTO_BOUNTY) : new BountyCreateEvent(new Bounty(null, killer, BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward")), BountyCause.AUTO_BOUNTY);
+				Bounty bounty = bountyEvent.getBounty();
+				Bukkit.getPluginManager().callEvent(bountyEvent);
+				if (bountyEvent.isCancelled())
+					return;
 
 				/*
 				 * removes the death message
 				 */
-				if (BountyHunters.plugin.getConfig().getBoolean("disable-death-message.auto-bounty"))
+				if (BountyHunters.getInstance().getConfig().getBoolean("disable-death-message.auto-bounty"))
 					event.setDeathMessage(null);
 
 				/*
 				 * send auto-bounty commands
 				 */
-				new BountyCommands("auto-bounty.target", target, killer).send(target);
-				new BountyCommands("auto-bounty.killer", target, killer).send(killer);
+				new BountyCommands("auto-bounty.target", bounty, killer).send(target);
+				new BountyCommands("auto-bounty.killer", bounty, killer).send(killer);
+				if (bounty.hasCreator())
+					new BountyCommands("auto-bounty.creator", bounty, killer).send(bounty.getCreator());
 
 				/*
 				 * create a new bounty using the auto bounty
 				 */
-				if (!bountyManager.hasBounty(killer)) {
-					Bounty bounty = new Bounty(null, killer, BountyHunters.plugin.getConfig().getDouble("auto-bounty.reward"));
-
-					BountyCreateEvent bountyEvent = new BountyCreateEvent(bounty, BountyCause.AUTO_BOUNTY);
-					Bukkit.getPluginManager().callEvent(bountyEvent);
-					if (bountyEvent.isCancelled())
-						return;
-
-					BountyHunters.getBountyManager().registerBounty(bounty);
-					bountyEvent.sendAllert();
-					return;
-				}
+				if (!BountyHunters.getInstance().getBountyManager().hasBounty(killer))
+					BountyHunters.getInstance().getBountyManager().registerBounty(bounty);
 
 				/*
 				 * increase the existing bounty amount
 				 */
-				Bounty bounty = bountyManager.getBounty(killer);
+				else
+					bounty.setReward(bounty.getReward() + BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward"));
 
-				BountyChangeEvent bountyEvent = new BountyChangeEvent(bounty, BountyChangeCause.AUTO_BOUNTY);
-				Bukkit.getPluginManager().callEvent(bountyEvent);
-				if (bountyEvent.isCancelled())
-					return;
-
-				bounty.setReward(bounty.getReward() + BountyHunters.plugin.getConfig().getDouble("auto-bounty.reward"));
 				bountyEvent.sendAllert();
 			}
 			return;
@@ -97,14 +89,13 @@ public class BountyClaim implements Listener {
 		if (!killer.hasPermission("bountyhunters.claim"))
 			return;
 
-		Bounty bounty = bountyManager.getBounty(target);
-
 		/*
 		 * prevents the player from claiming the bounty if he is the bounty
 		 * creator & if the corresponding option is disabled
 		 */
+		Bounty bounty = BountyHunters.getInstance().getBountyManager().getBounty(target);
 		if (bounty.hasCreator())
-			if (!BountyHunters.plugin.getConfig().getBoolean("own-bounty-claiming") && bounty.hasCreator(killer))
+			if (!BountyHunters.getInstance().getConfig().getBoolean("own-bounty-claiming") && bounty.hasCreator(killer))
 				return;
 
 		/*
@@ -120,7 +111,7 @@ public class BountyClaim implements Listener {
 		/*
 		 * removes the death message
 		 */
-		if (BountyHunters.plugin.getConfig().getBoolean("disable-death-message.bounty-claim"))
+		if (BountyHunters.getInstance().getConfig().getBoolean("disable-death-message.bounty-claim"))
 			event.setDeathMessage(null);
 
 		/*
@@ -128,25 +119,27 @@ public class BountyClaim implements Listener {
 		 * or GOLD_NUGGET. these items can't be picked up and only act as
 		 * cosmetics
 		 */
-		if (BountyHunters.plugin.getConfig().getBoolean("bounty-effect.enabled"))
-			new BountyEffect(BountyHunters.plugin.getConfig().getConfigurationSection("bounty-effect")).play(target.getLocation());
+		if (BountyHunters.getInstance().getConfig().getBoolean("bounty-effect.enabled"))
+			new BountyEffect(BountyHunters.getInstance().getConfig().getConfigurationSection("bounty-effect")).play(target.getLocation());
 
 		/*
 		 * send bounty commands TODO improve command tables
 		 */
-		new BountyCommands("claim.target", target, killer).send(target);
-		new BountyCommands("claim.killer", target, killer).send(killer);
+		new BountyCommands("claim.target", bounty, killer).send(target);
+		new BountyCommands("claim.killer", bounty, killer).send(killer);
+		if (bounty.hasCreator())
+			new BountyCommands("claim.creator", bounty, killer).send(bounty.getCreator());
 
 		/*
 		 * drops the killed player's head
 		 */
-		if (BountyHunters.plugin.getConfig().getBoolean("drop-head.enabled") && random.nextDouble() <= BountyHunters.plugin.getConfig().getDouble("drop-head.chance") / 100)
+		if (BountyHunters.getInstance().getConfig().getBoolean("drop-head.enabled") && random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("drop-head.chance") / 100)
 			target.getWorld().dropItem(target.getLocation(), new PlayerHead(target));
 
 		/*
 		 * give the money to the player who claimed the bounty
 		 */
-		BountyHunters.getEconomy().depositPlayer(killer, bounty.getReward());
+		BountyHunters.getInstance().getEconomy().depositPlayer(killer, bounty.getReward());
 
 		/*
 		 * adds 1 to the claimer's claimed bounties stat and checks for a level
@@ -154,7 +147,7 @@ public class BountyClaim implements Listener {
 		 */
 		PlayerData playerData = PlayerData.get(killer);
 		playerData.addClaimedBounties(1);
-		if (BountyHunters.plugin.getConfig().getBoolean("enable-quotes-levels-titles"))
+		if (BountyHunters.getInstance().getConfig().getBoolean("enable-quotes-levels-titles"))
 			playerData.checkForLevelUp(killer);
 		Leaderboard.updateCachedLeaderboard(killer.getUniqueId(), playerData.getClaimedBounties());
 
@@ -169,19 +162,19 @@ public class BountyClaim implements Listener {
 		/*
 		 * displays the claimer's death title
 		 */
-		if (BountyHunters.plugin.getConfig().getBoolean("enable-quotes-levels-titles")) {
+		if (BountyHunters.getInstance().getConfig().getBoolean("enable-quotes-levels-titles")) {
 			String deathQuote = playerData.getQuote();
 			if (!deathQuote.equals("")) {
-				boolean bool = BountyHunters.plugin.getConfig().getBoolean("display-death-quote-on-title");
-				for (Player t2 : Bukkit.getOnlinePlayers()) {
-					t2.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + killer.getName() + "> " + deathQuote);
+				boolean bool = BountyHunters.getInstance().getConfig().getBoolean("display-death-quote-on-title");
+				for (Player online : Bukkit.getOnlinePlayers()) {
+					online.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + killer.getName() + "> " + deathQuote);
 					if (bool)
-						BountyHunters.getNMS().sendTitle(t2, ChatColor.GOLD + "" + ChatColor.BOLD + killer.getName().toUpperCase(), ChatColor.ITALIC + deathQuote, 10, 60, 10);
+						BountyHunters.getInstance().getNMS().sendTitle(online, ChatColor.GOLD + "" + ChatColor.BOLD + killer.getName().toUpperCase(), ChatColor.ITALIC + deathQuote, 10, 60, 10);
 				}
 			}
 		}
 
 		// finally, unregister the bounty
-		BountyHunters.getBountyManager().unregisterBounty(bounty);
+		BountyHunters.getInstance().getBountyManager().unregisterBounty(bounty);
 	}
 }

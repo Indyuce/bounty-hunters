@@ -97,11 +97,11 @@ public class NMSHandler_Reflection implements NMSHandler {
 	}
 
 	private Class<?> nms(String str) throws ClassNotFoundException {
-		return Class.forName("net.minecraft.server." + BountyHunters.getVersion().toString() + "." + str);
+		return Class.forName("net.minecraft.server." + BountyHunters.getInstance().getVersion().toString() + "." + str);
 	}
 
 	private Class<?> obc(String str) throws ClassNotFoundException {
-		return Class.forName("org.bukkit.craftbukkit." + BountyHunters.getVersion().toString() + "." + str);
+		return Class.forName("org.bukkit.craftbukkit." + BountyHunters.getInstance().getVersion().toString() + "." + str);
 	}
 
 	private Class<?> enumTitleAction() throws SecurityException, ClassNotFoundException {

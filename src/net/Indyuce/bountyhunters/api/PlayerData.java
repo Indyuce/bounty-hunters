@@ -101,12 +101,12 @@ public class PlayerData {
 	}
 
 	public String getQuote() {
-		String format = BountyHunters.getLevelsConfigFile().getString("reward.quote." + config.getConfig().getString("current-quote") + ".format");
+		String format = BountyHunters.getInstance().getLevelsConfigFile().getString("reward.quote." + config.getConfig().getString("current-quote") + ".format");
 		return AltChar.apply(format == null ? "" : format);
 	}
 
 	public String getTitle() {
-		String format = BountyHunters.getLevelsConfigFile().getString("reward.title." + config.getConfig().getString("current-title") + ".format");
+		String format = BountyHunters.getInstance().getLevelsConfigFile().getString("reward.title." + config.getConfig().getString("current-title") + ".format");
 		return AltChar.apply(format == null ? "" : format);
 	}
 
@@ -115,13 +115,13 @@ public class PlayerData {
 	}
 
 	public int getBountiesNeededToLevelUp() {
-		int bountiesNeeded = BountyHunters.getLevelsConfigFile().getInt("bounties-per-level");
+		int bountiesNeeded = BountyHunters.getInstance().getLevelsConfigFile().getInt("bounties-per-level");
 		return bountiesNeeded - (getClaimedBounties() % bountiesNeeded);
 	}
 
 	public String getLevelProgressBar() {
 		String lvlAdvancement = "";
-		int bountiesNeeded = BountyHunters.getLevelsConfigFile().getInt("bounties-per-level");
+		int bountiesNeeded = BountyHunters.getInstance().getLevelsConfigFile().getInt("bounties-per-level");
 		for (int j = 0; j < bountiesNeeded; j++)
 			lvlAdvancement += (getClaimedBounties() % bountiesNeeded > j ? ChatColor.GREEN : ChatColor.WHITE) + AltChar.square;
 		return lvlAdvancement;
@@ -204,7 +204,7 @@ public class PlayerData {
 	}
 
 	public void checkForLevelUp(Player player) {
-		FileConfiguration levels = BountyHunters.getLevelsConfigFile();
+		FileConfiguration levels = BountyHunters.getInstance().getLevelsConfigFile();
 		while (levelUp(levels, player))
 			;
 	}
@@ -244,13 +244,13 @@ public class PlayerData {
 
 		// money
 		double money = levels.getDouble("reward.money.base") + (nextLevel * levels.getDouble("reward.money.per-level"));
-		BountyHunters.getEconomy().depositPlayer(player, money);
+		BountyHunters.getInstance().getEconomy().depositPlayer(player, money);
 
 		// send json list
 		String jsonList = money > 0 ? "\n" + Message.LEVEL_UP_REWARD.formatRaw(ChatColor.YELLOW, "%reward%", "$" + money) : "";
 		for (String s : chatDisplay)
 			jsonList += "\n" + Message.LEVEL_UP_REWARD.formatRaw(ChatColor.YELLOW, "%reward%", AltChar.apply(s));
-		BountyHunters.getNMS().sendJson(player, "{\"text\":\"" + ChatColor.YELLOW + Message.LEVEL_UP_REWARDS.getUpdated() + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1) + "\"}}}");
+		BountyHunters.getInstance().getNMS().sendJson(player, "{\"text\":\"" + ChatColor.YELLOW + Message.LEVEL_UP_REWARDS.getUpdated() + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1) + "\"}}}");
 
 		setLevel(nextLevel);
 		setUnlocked(unlocked);

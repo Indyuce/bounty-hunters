@@ -31,4 +31,6 @@ public abstract class BountyEvent extends Event implements Cancellable {
 	public Bounty getBounty() {
 		return bounty;
 	}
+	
+	public abstract void sendAllert();
 }

@@ -26,18 +26,11 @@ disable-death-message:
     auto-bounty: true
     bounty-claim: true
 
-# Items that are dropped when claiming a bounty.
-physical-rewards:
-    enabled: false
-    list:
-        GOLD_NUGGET: 10
-        REDSTONE: 2
-
 # Commands sent by the console when a player claims a bounty.
-# %target% returns the target's name and %player% the claimer's name.
-# Commands support PlaceholderAPI placeholders. 'killer' are commands which
-# placeholders are calculated using the killer player. 'target' are commands
-# which placeholders are calculated using the bounty target player.
+# %target% returns the target's name and %player% the claimer's
+# name. Commands support PlaceholderAPI placeholders. 
+# 'killer'/'target'/'creator' are the commands which
+# placeholders are calculated using the corresponding players.
 bounty-commands:
 
     # When a player claims a bounty.
@@ -46,6 +39,7 @@ bounty-commands:
 #       - '/give %killer% minecraft:diamond 10'
         target: []
 #       - '/say %target% Someone claimed your bounty.'
+        creator: []
 
     # When a player kills another player illegaly.
     auto-bounty:
@@ -53,6 +47,7 @@ bounty-commands:
 #       - '/jail %killer% 100'
         target: []
 #       - '/say %target% You killed a man illegaly, watch out!'
+        creator: []
 
 # When enabled, it will automaticaly place a bounty onto any
 # player who kills a player with no bounty on him (illegal kill).
@@ -96,10 +91,6 @@ player-tracking:
     
     # Cooldowns players need to wait before tracking a player.
     cooldown: 240
-    
-    # Distance decimal format, see
-    # https://docs.oracle.com/javase/7/docs/api/java/text/DecimalFormat.html
-    format: '0.#'
 
 # Min and max bounty rewards.
 # Set max to 0 to remove the max restriction.

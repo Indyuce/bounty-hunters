@@ -82,18 +82,18 @@ public class BountiesCommand implements CommandExecutor {
 				return true;
 			}
 
-			if (!BountyHunters.getBountyManager().hasBounty(player)) {
+			if (!BountyHunters.getInstance().getBountyManager().hasBounty(player)) {
 				sender.sendMessage(ChatColor.RED + player.getName() + " does not have any bounty on him.");
 				return true;
 			}
 
-			Bounty bounty = BountyHunters.getBountyManager().getBounty(player);
+			Bounty bounty = BountyHunters.getInstance().getBountyManager().getBounty(player);
 			BountyExpireEvent bountyEvent = new BountyExpireEvent(bounty, BountyExpireCause.ADMIN);
 			Bukkit.getPluginManager().callEvent(bountyEvent);
 			if (bountyEvent.isCancelled())
 				return true;
 
-			BountyHunters.getBountyManager().unregisterBounty(bounty);
+			BountyHunters.getInstance().getBountyManager().unregisterBounty(bounty);
 		}
 
 		// choose title
@@ -112,7 +112,7 @@ public class BountiesCommand implements CommandExecutor {
 			if (args.length < 2)
 				return true;
 
-			FileConfiguration levels = BountyHunters.getLevelsConfigFile();
+			FileConfiguration levels = BountyHunters.getInstance().getLevelsConfigFile();
 			if (!levels.getConfigurationSection("reward.title").contains(args[1]))
 				return true;
 
@@ -141,7 +141,7 @@ public class BountiesCommand implements CommandExecutor {
 			if (args.length < 2)
 				return true;
 
-			FileConfiguration levels = BountyHunters.getLevelsConfigFile();
+			FileConfiguration levels = BountyHunters.getInstance().getLevelsConfigFile();
 			if (!levels.getConfigurationSection("reward.quote").contains(args[1]))
 				return true;
 
@@ -171,11 +171,11 @@ public class BountiesCommand implements CommandExecutor {
 			Message.UNLOCKED_TITLES.format(ChatColor.YELLOW).send(p);
 
 			PlayerData playerData = PlayerData.get(p);
-			FileConfiguration levels = BountyHunters.getLevelsConfigFile();
+			FileConfiguration levels = BountyHunters.getInstance().getLevelsConfigFile();
 			for (String s : levels.getConfigurationSection("reward.title").getKeys(false)) {
 				String title = levels.getString("reward.title." + s + ".format");
 				if (playerData.hasUnlocked(s))
-					BountyHunters.getNMS().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + AltChar.apply(title) + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties title " + s + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getUpdated() + "\",\"color\":\"white\"}]}}}");
+					BountyHunters.getInstance().getNMS().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + AltChar.apply(title) + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties title " + s + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getUpdated() + "\",\"color\":\"white\"}]}}}");
 			}
 		}
 
@@ -196,11 +196,11 @@ public class BountiesCommand implements CommandExecutor {
 			Message.UNLOCKED_QUOTES.format(ChatColor.YELLOW).send(p);
 
 			PlayerData playerData = PlayerData.get(p);
-			FileConfiguration levels = BountyHunters.getLevelsConfigFile();
+			FileConfiguration levels = BountyHunters.getInstance().getLevelsConfigFile();
 			for (String s : levels.getConfigurationSection("reward.quote").getKeys(false)) {
 				String quote = levels.getString("reward.quote." + s + ".format");
 				if (playerData.hasUnlocked(s))
-					BountyHunters.getNMS().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + quote + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties quote " + s + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getUpdated() + "\",\"color\":\"white\"}]}}}");
+					BountyHunters.getInstance().getNMS().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + quote + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties quote " + s + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getUpdated() + "\",\"color\":\"white\"}]}}}");
 			}
 		}
 
@@ -211,14 +211,14 @@ public class BountiesCommand implements CommandExecutor {
 				return true;
 			}
 
-			BountyHunters.plugin.reloadConfig();
-			BountyHunters.plugin.reloadConfigFiles();
+			BountyHunters.getInstance().reloadConfig();
+			BountyHunters.getInstance().reloadConfigFiles();
 
 			FileConfiguration items = new ConfigFile("/language", "items").getConfig();
 			for (CustomItem item : CustomItem.values())
 				item.update(items.getConfigurationSection(item.name()));
 
-			sender.sendMessage(ChatColor.YELLOW + BountyHunters.plugin.getName() + " " + BountyHunters.plugin.getDescription().getVersion() + " reloaded.");
+			sender.sendMessage(ChatColor.YELLOW + BountyHunters.getInstance().getName() + " " + BountyHunters.getInstance().getDescription().getVersion() + " reloaded.");
 		}
 
 		return false;

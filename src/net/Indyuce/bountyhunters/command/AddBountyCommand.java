@@ -12,6 +12,7 @@ import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.BountyUtils;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.Message;
+import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.PlayerData;
 import net.Indyuce.bountyhunters.api.event.BountyChangeEvent;
 import net.Indyuce.bountyhunters.api.event.BountyChangeEvent.BountyChangeCause;
@@ -31,7 +32,7 @@ public class AddBountyCommand implements CommandExecutor {
 			return true;
 		}
 		if (sender instanceof Player)
-			if (BountyHunters.plugin.getConfig().getStringList("world-blacklist").contains(((Player) sender).getWorld().getName()))
+			if (BountyHunters.getInstance().getConfig().getStringList("world-blacklist").contains(((Player) sender).getWorld().getName()))
 				return true;
 
 		// check for player
@@ -67,25 +68,25 @@ public class AddBountyCommand implements CommandExecutor {
 		reward = BountyUtils.truncation(reward, 1);
 
 		// min/max check
-		double min = BountyHunters.plugin.getConfig().getDouble("min-reward");
-		double max = BountyHunters.plugin.getConfig().getDouble("max-reward");
+		double min = BountyHunters.getInstance().getConfig().getDouble("min-reward");
+		double max = BountyHunters.getInstance().getConfig().getDouble("max-reward");
 		if (reward < min) {
-			Message.REWARD_MUST_BE_HIGHER.format(ChatColor.RED, "%min%", BountyUtils.format(min)).send(sender);
+			Message.REWARD_MUST_BE_HIGHER.format(ChatColor.RED, "%min%", new NumberFormat().format(min)).send(sender);
 			return true;
 		}
 		if (max > 0 && reward > max) {
-			Message.REWARD_MUST_BE_LOWER.format(ChatColor.RED, "%max%", BountyUtils.format(max)).send(sender);
+			Message.REWARD_MUST_BE_LOWER.format(ChatColor.RED, "%max%", new NumberFormat().format(max)).send(sender);
 			return true;
 		}
 
 		// tax calculation
-		double tax = reward * BountyHunters.plugin.getConfig().getDouble("tax") / 100;
+		double tax = reward * BountyHunters.getInstance().getConfig().getDouble("tax") / 100;
 		tax = BountyUtils.truncation(tax, 1);
 
 		// set restriction
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			long restriction = BountyHunters.plugin.getConfig().getInt("bounty-set-restriction") * 1000;
+			long restriction = BountyHunters.getInstance().getConfig().getInt("bounty-set-restriction") * 1000;
 			long left = PlayerData.get(player).getLastBounty() + restriction - System.currentTimeMillis();
 
 			if (left > 0) {
@@ -96,13 +97,13 @@ public class AddBountyCommand implements CommandExecutor {
 
 		// money restriction
 		if (sender instanceof Player)
-			if (!BountyHunters.getEconomy().has((Player) sender, reward)) {
+			if (!BountyHunters.getInstance().getEconomy().has((Player) sender, reward)) {
 				Message.NOT_ENOUGH_MONEY.format(ChatColor.RED).send(sender);
 				return true;
 			}
 
 		// bounty can be created
-		BountyManager bountyManager = BountyHunters.getBountyManager();
+		BountyManager bountyManager = BountyHunters.getInstance().getBountyManager();
 		reward -= tax;
 
 		// add to existing bounty
@@ -118,13 +119,13 @@ public class AddBountyCommand implements CommandExecutor {
 			// remove balance
 			// set last bounty value
 			if (sender instanceof Player) {
-				BountyHunters.getEconomy().withdrawPlayer((Player) sender, reward + tax);
+				BountyHunters.getInstance().getEconomy().withdrawPlayer((Player) sender, reward + tax);
 				PlayerData.get((OfflinePlayer) sender).setLastBounty();
 			}
 
 			bounty.addToReward(sender instanceof Player ? (Player) sender : null, reward);
 			for (Player ent : Bukkit.getOnlinePlayers())
-				Message.BOUNTY_CHANGE.format(ChatColor.YELLOW, "%player%", target.getName(), "%reward%", BountyUtils.format(bounty.getReward())).send(ent);
+				Message.BOUNTY_CHANGE.format(ChatColor.YELLOW, "%player%", target.getName(), "%reward%", new NumberFormat().format(bounty.getReward())).send(ent);
 			return true;
 		}
 
@@ -139,15 +140,15 @@ public class AddBountyCommand implements CommandExecutor {
 		// remove balance
 		// set last bounty value
 		if (sender instanceof Player) {
-			BountyHunters.getEconomy().withdrawPlayer((Player) sender, reward + tax);
+			BountyHunters.getInstance().getEconomy().withdrawPlayer((Player) sender, reward + tax);
 			PlayerData.get((OfflinePlayer) sender).setLastBounty();
 		}
 
-		BountyHunters.getBountyManager().registerBounty(bounty);
+		BountyHunters.getInstance().getBountyManager().registerBounty(bounty);
 		bountyEvent.sendAllert();
 
 		if (tax > 0)
-			Message.TAX_EXPLAIN.format(ChatColor.RED, "%percent%", "" + BountyHunters.plugin.getConfig().getDouble("tax"), "%price%", BountyUtils.format(tax)).send(sender);
+			Message.TAX_EXPLAIN.format(ChatColor.RED, "%percent%", "" + BountyHunters.getInstance().getConfig().getDouble("tax"), "%price%", new NumberFormat().format(tax)).send(sender);
 		return true;
 	}
 }

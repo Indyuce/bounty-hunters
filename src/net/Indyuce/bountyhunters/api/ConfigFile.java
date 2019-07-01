@@ -17,7 +17,7 @@ public class ConfigFile {
 	private FileConfiguration config;
 
 	public ConfigFile(String name) {
-		this(BountyHunters.plugin, "", name);
+		this(BountyHunters.getInstance(), "", name);
 	}
 
 	public ConfigFile(Plugin plugin, String name) {
@@ -25,7 +25,7 @@ public class ConfigFile {
 	}
 
 	public ConfigFile(String path, String name) {
-		this(BountyHunters.plugin, path, name);
+		this(BountyHunters.getInstance(), path, name);
 	}
 
 	public ConfigFile(Plugin plugin, String path, String name) {

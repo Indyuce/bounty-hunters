@@ -19,6 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.Indyuce.bountyhunters.api.ConfigFile;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.Message;
+import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.PlayerData;
 import net.Indyuce.bountyhunters.command.AddBountyCommand;
 import net.Indyuce.bountyhunters.command.BountiesCommand;
@@ -46,18 +47,20 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
 public class BountyHunters extends JavaPlugin {
-	public static BountyHunters plugin;
-	private static PluginVersion version;
-	private static NMSHandler nms;
-	private static PlaceholderParser placeholderParser;
+	private static BountyHunters plugin;
 
-	private static BountyManager bountyManager;
-	private static HuntManager huntManager;
+	private PluginVersion version;
+	private NMSHandler nms;
+	private PlaceholderParser placeholderParser;
 
-	private static Economy economy;
-	private static Permission permission;
+	private Economy economy;
+	private Permission permission;
 
-	private static FileConfiguration levels, leaderboard, messages;
+	private BountyManager bountyManager;
+	private HuntManager huntManager;
+
+	private FileConfiguration levels, leaderboard, messages;
+	public boolean formattedNumbers;
 
 	public void onEnable() {
 		new SpigotPlugin(40610, this).checkForUpdate();
@@ -96,7 +99,7 @@ public class BountyHunters extends JavaPlugin {
 				public void a(PlayerJoinEvent event) {
 					Player player = event.getPlayer();
 					if (bountyManager.hasBounty(player))
-						event.setJoinMessage(message.replace("%player%", player.getName()).replace("%bounty%", BountyUtils.format(bountyManager.getBounty(player).getReward())));
+						event.setJoinMessage(message.replace("%player%", player.getName()).replace("%bounty%", new NumberFormat().format(bountyManager.getBounty(player).getReward())));
 				}
 			}, this);
 
@@ -188,48 +191,54 @@ public class BountyHunters extends JavaPlugin {
 				online.closeInventory();
 	}
 
-	public static NMSHandler getNMS() {
+	public static BountyHunters getInstance() {
+		return plugin;
+	}
+
+	public NMSHandler getNMS() {
 		return nms;
 	}
 
-	public static Economy getEconomy() {
+	public Economy getEconomy() {
 		return economy;
 	}
 
-	public static Permission getPermission() {
+	public Permission getPermission() {
 		return permission;
 	}
 
-	public static BountyManager getBountyManager() {
+	public BountyManager getBountyManager() {
 		return bountyManager;
 	}
 
-	public static HuntManager getHuntManager() {
+	public HuntManager getHuntManager() {
 		return huntManager;
 	}
 
-	public static FileConfiguration getLevelsConfigFile() {
+	public FileConfiguration getLevelsConfigFile() {
 		return levels;
 	}
 
-	public static PluginVersion getVersion() {
+	public PluginVersion getVersion() {
 		return version;
 	}
 
-	public static FileConfiguration getCachedLeaderboard() {
+	public FileConfiguration getCachedLeaderboard() {
 		return leaderboard;
 	}
 
-	public static FileConfiguration getMessages() {
+	public FileConfiguration getMessages() {
 		return messages;
 	}
 
-	public static PlaceholderParser getPlaceholderParser() {
+	public PlaceholderParser getPlaceholderParser() {
 		return placeholderParser;
 	}
 
 	public void reloadConfigFiles() {
 		levels = new ConfigFile("levels").getConfig();
 		messages = new ConfigFile("/language", "messages").getConfig();
+		
+		formattedNumbers = getConfig().getBoolean("formatted-numbers");
 	}
 }

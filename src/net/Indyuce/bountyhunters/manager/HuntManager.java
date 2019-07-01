@@ -1,6 +1,5 @@
 package net.Indyuce.bountyhunters.manager;
 
-import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +20,7 @@ import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.Message;
+import net.Indyuce.bountyhunters.api.NumberFormat;
 
 public class HuntManager {
 
@@ -55,7 +55,7 @@ public class HuntManager {
 	}
 
 	public Bounty getTargetBounty(OfflinePlayer hunter) {
-		return BountyHunters.getBountyManager().getBounty(getData(hunter).getHunted());
+		return BountyHunters.getInstance().getBountyManager().getBounty(getData(hunter).getHunted());
 	}
 
 	public class HunterData {
@@ -76,8 +76,7 @@ public class HuntManager {
 
 			(particles = new BukkitRunnable() {
 				int ti = 0;
-				boolean circle = BountyHunters.plugin.getConfig().getBoolean("player-tracking.target-particles");
-				DecimalFormat format = new DecimalFormat(BountyHunters.plugin.getConfig().getString("player-tracking.format"));
+				boolean circle = BountyHunters.getInstance().getConfig().getBoolean("player-tracking.target-particles");
 
 				public void run() {
 
@@ -91,7 +90,7 @@ public class HuntManager {
 
 					// update compass display name based on distance
 					ItemMeta meta = compass.getItemMeta();
-					meta.setDisplayName(Message.COMPASS_FORMAT.formatRaw("%blocks%", format.format(tracked.getPlayer().getLocation().distance(player.getLocation()))));
+					meta.setDisplayName(Message.COMPASS_FORMAT.formatRaw("%blocks%", new NumberFormat().thousands().format(tracked.getPlayer().getLocation().distance(player.getLocation()))));
 					compass.setItemMeta(meta);
 
 					// draw vector
@@ -107,7 +106,7 @@ public class HuntManager {
 							player.spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(j) * .8, .15, Math.sin(j) * .8), 0, new Particle.DustOptions(Color.RED, 1));
 					}
 				}
-			}).runTaskTimer(BountyHunters.plugin, 0, 6);
+			}).runTaskTimer(BountyHunters.getInstance(), 0, 6);
 		}
 
 		public boolean isCompassActive() {

@@ -6,9 +6,9 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
-import net.Indyuce.bountyhunters.BountyUtils;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.Message;
+import net.Indyuce.bountyhunters.api.NumberFormat;
 
 public class BountyChangeEvent extends BountyEvent {
 	private BountyChangeCause cause;
@@ -31,7 +31,7 @@ public class BountyChangeEvent extends BountyEvent {
 
 	public void sendAllert() {
 		for (Player player : Bukkit.getOnlinePlayers())
-			Message.BOUNTY_CHANGE.format(ChatColor.YELLOW, "%player%", getBounty().getTarget().getName(), "%reward%", BountyUtils.format(getBounty().getReward())).send(player);
+			Message.BOUNTY_CHANGE.format(ChatColor.YELLOW, "%player%", getBounty().getTarget().getName(), "%reward%", new NumberFormat().format(getBounty().getReward())).send(player);
 		if (getBounty().getTarget().isOnline()) {
 			Player target = getBounty().getTarget().getPlayer();
 			target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_HURT, 1, 0);

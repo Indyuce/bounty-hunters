@@ -110,16 +110,16 @@ public class Bounty {
 
 	public void addHunter(OfflinePlayer player) {
 
-		if (BountyHunters.getHuntManager().isHunting(player))
-			BountyHunters.getHuntManager().getTargetBounty(player).removeHunter(player);
+		if (BountyHunters.getInstance().getHuntManager().isHunting(player))
+			BountyHunters.getInstance().getHuntManager().getTargetBounty(player).removeHunter(player);
 		
-		BountyHunters.getHuntManager().setHunting(player, target);
+		BountyHunters.getInstance().getHuntManager().setHunting(player, target);
 		hunters.add(player.getUniqueId());
 	}
 
 	public void removeHunter(OfflinePlayer player) {
 		if (hasHunter(player))
-			BountyHunters.getHuntManager().stopHunting(player);
+			BountyHunters.getInstance().getHuntManager().stopHunting(player);
 		hunters.remove(player.getUniqueId());
 	}
 

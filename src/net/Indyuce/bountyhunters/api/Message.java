@@ -89,7 +89,7 @@ public enum Message {
 	}
 
 	public String getUpdated() {
-		return ChatColor.translateAlternateColorCodes('&', BountyHunters.getMessages().getString(name().toLowerCase().replace("_", "-")));
+		return ChatColor.translateAlternateColorCodes('&', BountyHunters.getInstance().getMessages().getString(name().toLowerCase().replace("_", "-")));
 	}
 
 	public String formatRaw(ChatColor prefix, String... toReplace) {

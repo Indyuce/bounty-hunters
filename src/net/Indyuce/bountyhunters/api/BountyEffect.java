@@ -24,7 +24,7 @@ public class BountyEffect {
 		try {
 			material = Material.valueOf(format.toUpperCase().replace(" ", "_").replace("-", "_"));
 		} catch (Exception e) {
-			BountyHunters.plugin.getLogger().log(Level.WARNING, "Bounty Effect: " + format + " is not a valid material name.");
+			BountyHunters.getInstance().getLogger().log(Level.WARNING, "Bounty Effect: " + format + " is not a valid material name.");
 		}
 	}
 
@@ -44,7 +44,7 @@ public class BountyEffect {
 				public void run() {
 					item.remove();
 				}
-			}.runTaskLater(BountyHunters.plugin, 30 + random.nextInt(40));
+			}.runTaskLater(BountyHunters.getInstance(), 30 + random.nextInt(40));
 		}
 	}
 }
