@@ -9,7 +9,7 @@ import org.bukkit.event.HandlerList;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.NumberFormat;
-import net.Indyuce.bountyhunters.api.PlayerData;
+import net.Indyuce.bountyhunters.api.player.PlayerData;
 
 public class BountyClaimEvent extends BountyEvent {
 	private Player player;

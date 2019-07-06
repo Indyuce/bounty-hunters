@@ -24,7 +24,7 @@ public enum Message {
 	// gui
 	GUI_NAME("&nBounties (%page%/%max-page%)"),
 	LEADERBOARD_GUI_NAME("&nHunter Leaderboard"),
-	CHAT_BAR("&m-----------------------------------------------------"),
+	CHAT_BAR("-----------------------------------------------------"),
 
 	// bounty creation
 	BOUNTY_CREATED("You succesfully set a bounty on &6%target%&e."),
@@ -66,7 +66,7 @@ public enum Message {
 	// level up
 	LEVEL_UP("&lWell done!&e You're level &6%level% &enow!"),
 	LEVEL_UP_2("Claim &6%bounties% &emore bounties to level up again!"),
-	LEVEL_UP_REWARDS("Put your cursor over this message to see your rewards!"),
+	LEVEL_UP_REWARDS("Hover this message to see your rewards!"),
 	LEVEL_UP_REWARD("- &f%reward%"),
 
 	CLICK_SELECT("Click to select."),

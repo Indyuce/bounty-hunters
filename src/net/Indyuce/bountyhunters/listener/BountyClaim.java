@@ -13,7 +13,6 @@ import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.BountyCommands;
 import net.Indyuce.bountyhunters.api.BountyEffect;
-import net.Indyuce.bountyhunters.api.PlayerData;
 import net.Indyuce.bountyhunters.api.PlayerHead;
 import net.Indyuce.bountyhunters.api.event.BountyChangeEvent;
 import net.Indyuce.bountyhunters.api.event.BountyChangeEvent.BountyChangeCause;
@@ -21,6 +20,8 @@ import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
 import net.Indyuce.bountyhunters.api.event.BountyEvent;
+import net.Indyuce.bountyhunters.api.player.PlayerData;
+import net.Indyuce.bountyhunters.api.player.PlayerDataInterface;
 import net.Indyuce.bountyhunters.gui.Leaderboard;
 
 public class BountyClaim implements Listener {
@@ -147,22 +148,20 @@ public class BountyClaim implements Listener {
 		 */
 		PlayerData playerData = PlayerData.get(killer);
 		playerData.addClaimedBounties(1);
-		if (BountyHunters.getInstance().getConfig().getBoolean("enable-quotes-levels-titles"))
-			playerData.checkForLevelUp(killer);
+		if (BountyHunters.getInstance().getLevelManager().isEnabled())
+			playerData.refreshLevel(killer);
 		Leaderboard.updateCachedLeaderboard(killer.getUniqueId(), playerData.getClaimedBounties());
 
 		/*
 		 * adds 1 to the bounty creator's successful-bounties stat
 		 */
-		if (bounty.hasCreator()) {
-			PlayerData playerData1 = PlayerData.get(bounty.getCreator());
-			playerData1.addSuccessfulBounties(1);
-		}
+		if (bounty.hasCreator())
+			PlayerDataInterface.get(bounty.getCreator()).addSuccessfulBounties(1);
 
 		/*
 		 * displays the claimer's death title
 		 */
-		if (BountyHunters.getInstance().getConfig().getBoolean("enable-quotes-levels-titles")) {
+		if (BountyHunters.getInstance().getLevelManager().isEnabled()) {
 			String deathQuote = playerData.getQuote();
 			if (!deathQuote.equals("")) {
 				boolean bool = BountyHunters.getInstance().getConfig().getBoolean("display-death-quote-on-title");

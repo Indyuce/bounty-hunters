@@ -10,15 +10,16 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import net.Indyuce.bountyhunters.BountyHunters;
-import net.Indyuce.bountyhunters.api.AltChar;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.ConfigFile;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.Message;
-import net.Indyuce.bountyhunters.api.PlayerData;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent.BountyExpireCause;
+import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.gui.BountyList;
+import net.Indyuce.bountyhunters.manager.LevelManager.DeathQuote;
+import net.Indyuce.bountyhunters.manager.LevelManager.Title;
 
 public class BountiesCommand implements CommandExecutor {
 	@Override
@@ -97,61 +98,63 @@ public class BountiesCommand implements CommandExecutor {
 		}
 
 		// choose title
-		if (args[0].equalsIgnoreCase("title")) {
+		if (args[0].equalsIgnoreCase("title") && args.length > 1) {
 			if (!(sender instanceof Player)) {
 				sender.sendMessage(ChatColor.RED + "This command is for players only.");
 				return true;
 			}
 
-			Player p = (Player) sender;
+			Player player = (Player) sender;
 			if (!sender.hasPermission("bountyhunters.title")) {
 				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(sender);
 				return true;
 			}
 
-			if (args.length < 2)
+			if (!BountyHunters.getInstance().getLevelManager().hasTitle(args[1]))
 				return true;
 
-			FileConfiguration levels = BountyHunters.getInstance().getLevelsConfigFile();
-			if (!levels.getConfigurationSection("reward.title").contains(args[1]))
+			PlayerData playerData = PlayerData.get(player);
+			if (!playerData.canSelectItem())
 				return true;
 
-			PlayerData playerData = PlayerData.get(p);
-			if (!playerData.hasUnlocked(args[1]))
+			Title item = BountyHunters.getInstance().getLevelManager().getTitle(args[1]);
+			if (!playerData.hasUnlocked(item))
 				return true;
 
-			playerData.setCurrentTitle(args[1]);
-			p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
-			Message.SUCCESSFULLY_SELECTED.format(ChatColor.YELLOW, "%item%", playerData.getTitle()).send(p);
+			playerData.setCurrentTitle(item);
+			playerData.setLastSelect();
+			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
+			Message.SUCCESSFULLY_SELECTED.format(ChatColor.YELLOW, "%item%", playerData.getTitle()).send(player);
 		}
 
 		// choose quote
-		if (args[0].equalsIgnoreCase("quote")) {
+		if (args[0].equalsIgnoreCase("quote") && args.length > 1) {
 			if (!(sender instanceof Player)) {
 				sender.sendMessage(ChatColor.RED + "This command is for players only.");
 				return true;
 			}
 
-			Player p = (Player) sender;
-			if (!p.hasPermission("bountyhunters.quote")) {
+			Player player = (Player) sender;
+			if (!player.hasPermission("bountyhunters.quote")) {
 				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(sender);
 				return true;
 			}
 
-			if (args.length < 2)
+			if (!BountyHunters.getInstance().getLevelManager().hasQuote(args[1]))
 				return true;
 
-			FileConfiguration levels = BountyHunters.getInstance().getLevelsConfigFile();
-			if (!levels.getConfigurationSection("reward.quote").contains(args[1]))
+			PlayerData playerData = PlayerData.get(player);
+			if (!playerData.canSelectItem())
 				return true;
 
-			PlayerData playerData = PlayerData.get(p);
-			if (!playerData.hasUnlocked(args[1]))
+			DeathQuote item = BountyHunters.getInstance().getLevelManager().getQuote(args[1]);
+			if (!playerData.hasUnlocked(item))
 				return true;
 
-			playerData.setCurrentQuote(args[1]);
-			p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
-			Message.SUCCESSFULLY_SELECTED.format(ChatColor.YELLOW, "%item%", playerData.getQuote()).send(p);
+			playerData.setCurrentQuote(item);
+			playerData.setLastSelect();
+			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
+			Message.SUCCESSFULLY_SELECTED.format(ChatColor.YELLOW, "%item%", playerData.getQuote()).send(player);
 		}
 
 		// choose title
@@ -161,21 +164,19 @@ public class BountiesCommand implements CommandExecutor {
 				return true;
 			}
 
-			Player p = (Player) sender;
-			if (!p.hasPermission("bountyhunters.title")) {
-				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(p);
+			Player player = (Player) sender;
+			if (!player.hasPermission("bountyhunters.title")) {
+				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(player);
 				return true;
 			}
 
-			Message.CHAT_BAR.format(ChatColor.YELLOW).send(p);
-			Message.UNLOCKED_TITLES.format(ChatColor.YELLOW).send(p);
+			Message.CHAT_BAR.format(ChatColor.YELLOW).send(player);
+			Message.UNLOCKED_TITLES.format(ChatColor.YELLOW).send(player);
 
-			PlayerData playerData = PlayerData.get(p);
-			FileConfiguration levels = BountyHunters.getInstance().getLevelsConfigFile();
-			for (String s : levels.getConfigurationSection("reward.title").getKeys(false)) {
-				String title = levels.getString("reward.title." + s + ".format");
-				if (playerData.hasUnlocked(s))
-					BountyHunters.getInstance().getNMS().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + AltChar.apply(title) + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties title " + s + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getUpdated() + "\",\"color\":\"white\"}]}}}");
+			PlayerData playerData = PlayerData.get(player);
+			for (Title title : BountyHunters.getInstance().getLevelManager().getTitles()) {
+				if (playerData.hasUnlocked(title))
+					BountyHunters.getInstance().getNMS().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + title.format() + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties title " + title.getId() + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getUpdated() + "\",\"color\":\"white\"}]}}}");
 			}
 		}
 
@@ -186,21 +187,19 @@ public class BountiesCommand implements CommandExecutor {
 				return true;
 			}
 
-			Player p = (Player) sender;
-			if (!p.hasPermission("bountyhunters.quote")) {
-				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(p);
+			Player player = (Player) sender;
+			if (!player.hasPermission("bountyhunters.quote")) {
+				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(player);
 				return true;
 			}
 
-			Message.CHAT_BAR.format(ChatColor.YELLOW).send(p);
-			Message.UNLOCKED_QUOTES.format(ChatColor.YELLOW).send(p);
+			Message.CHAT_BAR.format(ChatColor.YELLOW).send(player);
+			Message.UNLOCKED_QUOTES.format(ChatColor.YELLOW).send(player);
 
-			PlayerData playerData = PlayerData.get(p);
-			FileConfiguration levels = BountyHunters.getInstance().getLevelsConfigFile();
-			for (String s : levels.getConfigurationSection("reward.quote").getKeys(false)) {
-				String quote = levels.getString("reward.quote." + s + ".format");
-				if (playerData.hasUnlocked(s))
-					BountyHunters.getInstance().getNMS().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + quote + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties quote " + s + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getUpdated() + "\",\"color\":\"white\"}]}}}");
+			PlayerData playerData = PlayerData.get(player);
+			for (DeathQuote quote : BountyHunters.getInstance().getLevelManager().getQuotes()) {
+				if (playerData.hasUnlocked(quote))
+					BountyHunters.getInstance().getNMS().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + quote.format() + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties quote " + quote.getId() + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getUpdated() + "\",\"color\":\"white\"}]}}}");
 			}
 		}
 
@@ -213,6 +212,7 @@ public class BountiesCommand implements CommandExecutor {
 
 			BountyHunters.getInstance().reloadConfig();
 			BountyHunters.getInstance().reloadConfigFiles();
+			BountyHunters.getInstance().getLevelManager().reload(new ConfigFile("levels").getConfig());
 
 			FileConfiguration items = new ConfigFile("/language", "items").getConfig();
 			for (CustomItem item : CustomItem.values())

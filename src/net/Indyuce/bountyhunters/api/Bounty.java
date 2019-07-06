@@ -31,7 +31,7 @@ public class Bounty {
 	}
 
 	public Bounty(OfflinePlayer creator, OfflinePlayer target, double reward) {
-		Validate.notNull(target);
+		Validate.notNull(target, "Bounty target must not be null");
 
 		this.target = target;
 		this.creator = creator;

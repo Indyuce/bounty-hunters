@@ -20,7 +20,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.Message;
-import net.Indyuce.bountyhunters.api.PlayerData;
+import net.Indyuce.bountyhunters.api.player.PlayerData;
 
 public class Leaderboard extends PluginInventory {
 	private static final int[] slots = { 13, 21, 22, 23, 29, 30, 31, 32, 33, 37, 38, 39, 40, 41, 42, 43 };

@@ -20,7 +20,7 @@ import net.Indyuce.bountyhunters.api.ConfigFile;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.NumberFormat;
-import net.Indyuce.bountyhunters.api.PlayerData;
+import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.command.AddBountyCommand;
 import net.Indyuce.bountyhunters.command.BountiesCommand;
 import net.Indyuce.bountyhunters.command.HuntersCommand;
@@ -39,6 +39,7 @@ import net.Indyuce.bountyhunters.listener.HuntListener;
 import net.Indyuce.bountyhunters.listener.PlayerListener;
 import net.Indyuce.bountyhunters.manager.BountyManager;
 import net.Indyuce.bountyhunters.manager.HuntManager;
+import net.Indyuce.bountyhunters.manager.LevelManager;
 import net.Indyuce.bountyhunters.version.PluginVersion;
 import net.Indyuce.bountyhunters.version.SpigotPlugin;
 import net.Indyuce.bountyhunters.version.nms.NMSHandler;
@@ -58,8 +59,9 @@ public class BountyHunters extends JavaPlugin {
 
 	private BountyManager bountyManager;
 	private HuntManager huntManager;
+	private LevelManager levelManager;
 
-	private FileConfiguration levels, leaderboard, messages;
+	private FileConfiguration leaderboard, messages;
 	public boolean formattedNumbers;
 
 	public void onEnable() {
@@ -132,9 +134,11 @@ public class BountyHunters extends JavaPlugin {
 			File file = new File(getDataFolder(), "levels.yml");
 			if (!file.exists())
 				Files.copy(BountyHunters.plugin.getResource("default/levels.yml"), file.getAbsoluteFile().toPath());
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException exception) {
+			exception.printStackTrace();
 		}
+
+		levelManager = new LevelManager(new ConfigFile("levels").getConfig());
 
 		ConfigFile messages = new ConfigFile("/language", "messages");
 		for (Message key : Message.values()) {
@@ -215,8 +219,8 @@ public class BountyHunters extends JavaPlugin {
 		return huntManager;
 	}
 
-	public FileConfiguration getLevelsConfigFile() {
-		return levels;
+	public LevelManager getLevelManager() {
+		return levelManager;
 	}
 
 	public PluginVersion getVersion() {
@@ -236,9 +240,8 @@ public class BountyHunters extends JavaPlugin {
 	}
 
 	public void reloadConfigFiles() {
-		levels = new ConfigFile("levels").getConfig();
 		messages = new ConfigFile("/language", "messages").getConfig();
-		
+
 		formattedNumbers = getConfig().getBoolean("formatted-numbers");
 	}
 }

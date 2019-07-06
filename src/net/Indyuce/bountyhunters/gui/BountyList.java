@@ -21,9 +21,9 @@ import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.NumberFormat;
-import net.Indyuce.bountyhunters.api.PlayerData;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent.BountyExpireCause;
+import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.api.event.HunterTargetEvent;
 import net.Indyuce.bountyhunters.version.nms.ItemTag;
 
@@ -69,7 +69,7 @@ public class BountyList extends PluginInventory {
 			insertInLore(lore, "bounty-instruction", statusString);
 
 			String compassString = bounty.hasHunter(player) ? Message.CLICK_UNTARGET.formatRaw(ChatColor.RED) : Message.CLICK_TARGET.formatRaw(ChatColor.YELLOW);
-			if (!BountyHunters.getInstance().getConfig().getBoolean("compass.enabled") || bounty.hasTarget(player))
+			if (!BountyHunters.getInstance().getConfig().getBoolean("player-tracking.enabled") || bounty.hasTarget(player))
 				insertInLore(lore, "compass-instruction");
 			else
 				insertInLore(lore, "compass-instruction", compassString);

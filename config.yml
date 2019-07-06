@@ -105,7 +105,7 @@ tax: 15
 display-death-quote-on-title: false
   
 # Enables leveling rewards.
-enable-quotes-levels-titles: true
+enable-level-rewards: true
 
 # Worlds in which the bounty system is completely disabled.
 world-blacklist:
