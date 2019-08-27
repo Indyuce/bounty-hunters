@@ -4,13 +4,13 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 
@@ -40,11 +40,7 @@ public class BountyEffect {
 
 			Item item = loc.getWorld().dropItemNaturally(loc, stack);
 			item.setPickupDelay(100000000);
-			new BukkitRunnable() {
-				public void run() {
-					item.remove();
-				}
-			}.runTaskLater(BountyHunters.getInstance(), 30 + random.nextInt(40));
+			Bukkit.getScheduler().runTaskLater(BountyHunters.getInstance(), () -> item.remove(), 30 + random.nextInt(40));
 		}
 	}
 }

@@ -3,6 +3,7 @@ package net.Indyuce.bountyhunters.manager;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -21,7 +22,11 @@ public class BountyManager {
 		// load bounties in the map
 		FileConfiguration data = new ConfigFile("data").getConfig();
 		for (String key : data.getKeys(false))
-			registerBounty(new Bounty(data.getConfigurationSection(key)));
+			try {
+				registerBounty(new Bounty(data.getConfigurationSection(key)));
+			} catch (IllegalArgumentException exception) {
+				BountyHunters.getInstance().getLogger().log(Level.WARNING, "Could not load bounty " + key);
+			}
 	}
 
 	public void saveBounties() {

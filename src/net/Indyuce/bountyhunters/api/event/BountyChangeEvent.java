@@ -12,7 +12,7 @@ import net.Indyuce.bountyhunters.api.NumberFormat;
 
 public class BountyChangeEvent extends BountyEvent {
 	private BountyChangeCause cause;
-	
+
 	private static final HandlerList handlers = new HandlerList();
 
 	/*
@@ -54,9 +54,19 @@ public class BountyChangeEvent extends BountyEvent {
 		PLAYER,
 
 		/*
+		 * when the server adds money to a bounty using /bounty
+		 */
+		CONSOLE,
+
+		/*
 		 * when the auto bounty increases a player's bounty since the killer has
 		 * killed a player illegaly
 		 */
-		AUTO_BOUNTY;
+		AUTO_BOUNTY,
+
+		/*
+		 * extra cause which can be used by other plugins/addons
+		 */
+		PLUGIN;
 	}
 }

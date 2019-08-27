@@ -3,25 +3,12 @@ package net.Indyuce.bountyhunters.api;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import net.Indyuce.bountyhunters.BountyHunters;
-
 public enum Message {
-	SET_BY("Set by &f%creator%&7."),
-	SET_BY_YOURSELF("You set this bounty."),
-	REWARD_IS("The reward is &f$%reward%&7."),
-	KILL_HIM_CLAIM_BOUNTY("Kill him to claim the bounty!"),
-	DONT_LET_THEM_KILL_U("Don't let them kill you."),
-	THUG_PLAYER("This player is a thug!"),
-	RIGHT_CLICK_REMOVE_BOUNTY("Right click to remove this bounty."),
-	CLICK_BUY_COMPASS("Click to buy the compass for $%price%."),
-	CLICK_TARGET("Click to target him."),
-	CLICK_UNTARGET("Click to untarget him."),
-	CLICK_UP_BOUNTY("<Shift Click> to increase the bounty."),
-	CURRENT_HUNTERS("There are &f%hunters% &7players tracking him."),
-	NO_TITLE("&cNo Title"),
-	NO_PLAYER("&c- No Player -"),
 
 	// gui
+	CLICK_BUY_COMPASS("Click to buy the compass for $%price%."),
+	NO_TITLE("&cNo Title"),
+	NO_PLAYER("&c- No Player -"),
 	GUI_NAME("&nBounties (%page%/%max-page%)"),
 	LEADERBOARD_GUI_NAME("&nHunter Leaderboard"),
 	CHAT_BAR("-----------------------------------------------------"),
@@ -68,6 +55,7 @@ public enum Message {
 	LEVEL_UP_2("Claim &6%bounties% &emore bounties to level up again!"),
 	LEVEL_UP_REWARDS("Hover this message to see your rewards!"),
 	LEVEL_UP_REWARD("- &f%reward%"),
+	LEVEL_UP_REWARD_MONEY("- &f$%amount%"),
 
 	CLICK_SELECT("Click to select."),
 	SUCCESSFULLY_SELECTED("You successfully selected &6%item%&e."),
@@ -78,22 +66,30 @@ public enum Message {
 	// COMPASS_IN_ANOTHER_WORLD("In another world"),
 	COMPASS_FORMAT("&7&l[ &6&l%blocks% blocks &7&l]");
 
-	private String defaultMessage;
+	private String message;
 
-	private Message(String defaultMessage) {
-		this.defaultMessage = defaultMessage;
+	private Message(String message) {
+		this.message = message;
 	}
 
-	public String getDefault() {
-		return defaultMessage;
+	public String getUncolored() {
+		return message;
 	}
 
-	public String getUpdated() {
-		return ChatColor.translateAlternateColorCodes('&', BountyHunters.getInstance().getMessages().getString(name().toLowerCase().replace("_", "-")));
+	public String getMessage() {
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String getPath() {
+		return name().toLowerCase().replace("_", "-");
+	}
+
+	public void update(String string) {
+		message = string;
 	}
 
 	public String formatRaw(ChatColor prefix, String... toReplace) {
-		String message = prefix + getUpdated();
+		String message = prefix + getMessage();
 		for (int j = 0; j < toReplace.length; j += 2)
 			message = message.replace(toReplace[j], toReplace[j + 1]);
 		return message;
@@ -101,7 +97,7 @@ public enum Message {
 
 	// toReplace length must be even
 	public String formatRaw(String... toReplace) {
-		String message = getUpdated();
+		String message = getMessage();
 		for (int j = 0; j < toReplace.length; j += 2)
 			message = message.replace(toReplace[j], toReplace[j + 1]);
 		return message;
@@ -124,4 +120,5 @@ public enum Message {
 				p.sendMessage(message);
 		}
 	}
+
 }

@@ -17,22 +17,15 @@ public class NMSHandler_Reflection implements NMSHandler {
 			Object compound = ((boolean) nmsStack.getClass().getDeclaredMethod("hasTag").invoke(nmsStack) ? nmsStack.getClass().getDeclaredMethod("getTag").invoke(nmsStack) : nms("NBTTagCompound").getDeclaredConstructor().newInstance());
 
 			for (ItemTag tag : tags) {
-				if (tag.getValue() instanceof Boolean) {
+				if (tag.getValue() instanceof Boolean)
 					compound.getClass().getDeclaredMethod("setBoolean", String.class, Boolean.TYPE).invoke(compound, tag.getPath(), (boolean) tag.getValue());
-					continue;
-				}
-				if (tag.getValue() instanceof Double) {
+				else if (tag.getValue() instanceof Double)
 					compound.getClass().getDeclaredMethod("setDouble", String.class, Double.TYPE).invoke(compound, tag.getPath(), (double) tag.getValue());
-					continue;
-				}
-				if (tag.getValue() instanceof Integer) {
+				else if (tag.getValue() instanceof Integer)
 					compound.getClass().getDeclaredMethod("setInt", String.class, int.class).invoke(compound, tag.getPath(), (Integer) tag.getValue());
-					continue;
-				}
-				if (tag.getValue() instanceof String) {
+				else if (tag.getValue() instanceof String)
 					compound.getClass().getDeclaredMethod("setString", String.class, String.class).invoke(compound, tag.getPath(), (String) tag.getValue());
-					continue;
-				}
+
 			}
 
 			nmsStack.getClass().getDeclaredMethod("setTag", compound.getClass()).invoke(nmsStack, compound);

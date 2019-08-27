@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.comp;
+package net.Indyuce.bountyhunters.comp.placeholder;
 
 import org.bukkit.entity.Player;
 
@@ -32,6 +32,10 @@ public class BountyHuntersPlaceholders extends PlaceholderExpansion {
 			return "" + playerData.getSuccessfulBounties();
 		case "claimed_bounties":
 			return "" + playerData.getClaimedBounties();
+		case "illegal_streak":
+			return "" + playerData.getIllegalKillStreak();
+		case "illegal_kills":
+			return "" + playerData.getIllegalKills();
 		case "current_bounty":
 			return BountyHunters.getInstance().getBountyManager().hasBounty(player) ? new NumberFormat().format(BountyHunters.getInstance().getBountyManager().getBounty(player).getReward()) : "0";
 		case "quote":

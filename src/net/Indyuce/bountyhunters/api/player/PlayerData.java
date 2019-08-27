@@ -22,6 +22,7 @@ import net.Indyuce.bountyhunters.api.AltChar;
 import net.Indyuce.bountyhunters.api.ConfigFile;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.Message;
+import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.event.HunterLevelUpEvent;
 import net.Indyuce.bountyhunters.manager.LevelManager.DeathQuote;
 import net.Indyuce.bountyhunters.manager.LevelManager.LevelUpItem;
@@ -34,7 +35,7 @@ public class PlayerData implements PlayerDataInterface {
 	/*
 	 * player data
 	 */
-	private int level, successful, claimed;
+	private int level, successful, claimed, illegalStreak, illegalKills;
 	private DeathQuote quote;
 	private Title title;
 
@@ -52,6 +53,8 @@ public class PlayerData implements PlayerDataInterface {
 		level = config.getInt("level");
 		successful = config.getInt("successful-bounties");
 		claimed = config.getInt("claimed-bounties");
+		illegalKills = config.getInt("illegal-kills");
+		illegalStreak = config.getInt("illegal-kill-streak");
 
 		try {
 			quote = config.contains("current-quote") ? BountyHunters.getInstance().getLevelManager().getQuote(config.getString("current-quote")) : null;
@@ -72,6 +75,8 @@ public class PlayerData implements PlayerDataInterface {
 		config.getConfig().set("level", level);
 		config.getConfig().set("successful-bounties", successful);
 		config.getConfig().set("claimed-bounties", claimed);
+		config.getConfig().set("illegal-kills", illegalKills);
+		config.getConfig().set("illegal-kill-streak", illegalStreak);
 		config.getConfig().set("current-title", hasTitle() ? title.getId() : null);
 		config.getConfig().set("current-quote", hasQuote() ? quote.getId() : null);
 
@@ -159,13 +164,21 @@ public class PlayerData implements PlayerDataInterface {
 		profileMeta.setOwningPlayer(Bukkit.getOfflinePlayer(offline.getUniqueId()));
 		List<String> profileLore = profileMeta.getLore();
 
-		String title = hasTitle() ? getTitle() : Message.NO_TITLE.getUpdated();
+		String title = hasTitle() ? getTitle() : Message.NO_TITLE.getMessage();
 		for (int j = 0; j < profileLore.size(); j++)
 			profileLore.set(j, profileLore.get(j).replace("%lvl-progress%", getLevelProgressBar()).replace("%claimed-bounties%", "" + getClaimedBounties()).replace("%successful-bounties%", "" + getSuccessfulBounties()).replace("%current-title%", title).replace("%level%", "" + getLevel()));
 
 		profileMeta.setLore(profileLore);
 		profile.setItemMeta(profileMeta);
 		return profile;
+	}
+
+	public int getIllegalKillStreak() {
+		return illegalStreak;
+	}
+
+	public int getIllegalKills() {
+		return illegalKills;
 	}
 
 	public void log(String... message) {
@@ -205,6 +218,14 @@ public class PlayerData implements PlayerDataInterface {
 		claimed = Math.max(0, value);
 	}
 
+	public void setIllegalKills(int value) {
+		illegalKills = Math.max(0, value);
+	}
+
+	public void setIllegalKillStreak(int value) {
+		illegalStreak = Math.max(0, value);
+	}
+
 	public void setCurrentQuote(DeathQuote quote) {
 		this.quote = quote;
 	}
@@ -226,6 +247,15 @@ public class PlayerData implements PlayerDataInterface {
 		setClaimedBounties(claimed + value);
 	}
 
+	public void addIllegalKills(int value) {
+		setIllegalKills(illegalKills + value);
+		setIllegalKillStreak(illegalStreak + value);
+	}
+
+	public void resetStreaks() {
+		illegalStreak = 0;
+	}
+
 	public void refreshLevel(Player player) {
 		while (levelUp(player))
 			;
@@ -237,8 +267,7 @@ public class PlayerData implements PlayerDataInterface {
 		if (getClaimedBounties() < neededBounties)
 			return false;
 
-		HunterLevelUpEvent event = new HunterLevelUpEvent(player, nextLevel);
-		Bukkit.getPluginManager().callEvent(event);
+		Bukkit.getPluginManager().callEvent(new HunterLevelUpEvent(player, nextLevel));
 
 		Message.CHAT_BAR.format(ChatColor.YELLOW).send(player);
 		Message.LEVEL_UP.format(ChatColor.YELLOW, "%level%", "" + nextLevel).send(player);
@@ -265,10 +294,10 @@ public class PlayerData implements PlayerDataInterface {
 		BountyHunters.getInstance().getEconomy().depositPlayer(player, money);
 
 		// send json list
-		String jsonList = money > 0 ? "\n" + Message.LEVEL_UP_REWARD.formatRaw(ChatColor.YELLOW, "%reward%", "$" + money) : "";
+		String jsonList = money > 0 ? "\n" + Message.LEVEL_UP_REWARD_MONEY.formatRaw(ChatColor.YELLOW, "%amount%", new NumberFormat().format(money)) : "";
 		for (String s : chatDisplay)
 			jsonList += "\n" + Message.LEVEL_UP_REWARD.formatRaw(ChatColor.YELLOW, "%reward%", AltChar.apply(s));
-		BountyHunters.getInstance().getNMS().sendJson(player, "{\"text\":\"" + ChatColor.YELLOW + Message.LEVEL_UP_REWARDS.getUpdated() + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1) + "\"}}}");
+		BountyHunters.getInstance().getNMS().sendJson(player, "{\"text\":\"" + ChatColor.YELLOW + Message.LEVEL_UP_REWARDS.getMessage() + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1) + "\"}}}");
 
 		setLevel(nextLevel);
 		return true;

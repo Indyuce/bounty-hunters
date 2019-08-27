@@ -19,12 +19,13 @@ import org.bukkit.inventory.meta.SkullMeta;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.CustomItem;
+import net.Indyuce.bountyhunters.api.CustomItem.Builder;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent.BountyExpireCause;
-import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.api.event.HunterTargetEvent;
+import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.version.nms.ItemTag;
 
 public class BountyList extends PluginInventory {
@@ -49,34 +50,16 @@ public class BountyList extends PluginInventory {
 
 		for (int j = min; j < max && j < bounties.size(); j++) {
 			Bounty bounty = bounties.get(j);
-			ItemStack item = CustomItem.GUI_PLAYER_HEAD.toItemStack();
+			Builder builder = CustomItem.GUI_PLAYER_HEAD.newBuilder();
+			boolean isTarget = bounty.hasTarget(player), isCreator = bounty.hasCreator(player), isHunter = bounty.hasHunter(player), noCreator = !bounty.hasCreator();
+			builder.applyConditions(new String[] { "noCreator", "isCreator", "extraCreator", "isExtra", "isTarget", "isHunter", "!isHunter" }, new boolean[] { !bounty.hasCreator(), isCreator, !noCreator && !isCreator, !isTarget && !isCreator, isTarget, !isTarget && isHunter, !isTarget && !isHunter });
+			builder.applyPlaceholders("target", bounty.getTarget().getName(), "creator", bounty.hasCreator() ? bounty.getCreator().getName() : "Server", "reward", "" + new NumberFormat().format(bounty.getReward()), "hunters", "" + bounty.getHunters().size());
+			ItemStack item = builder.build();
+
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
 			if (BountyHunters.getInstance().getConfig().getBoolean("display-player-skulls"))
 				meta.setOwningPlayer(bounty.getTarget());
-			meta.setDisplayName(meta.getDisplayName().replace("%name%", bounty.getTarget().getName()));
-			List<String> lore = meta.getLore();
-
-			String creatorString = !bounty.hasCreator() ? Message.THUG_PLAYER.formatRaw(ChatColor.RED) : (bounty.hasCreator(player) ? Message.SET_BY_YOURSELF.formatRaw(ChatColor.GRAY) : Message.SET_BY.formatRaw(ChatColor.GRAY, "%creator%", bounty.getCreator().getName()));
-			insertInLore(lore, "bounty-creator", creatorString);
-
-			String rewardString = Message.REWARD_IS.formatRaw(ChatColor.GRAY, "%reward%", new NumberFormat().format(bounty.getReward()));
-			insertInLore(lore, "bounty-reward", rewardString);
-
-			String huntersString = Message.CURRENT_HUNTERS.formatRaw(ChatColor.GRAY, "%hunters%", "" + bounty.getHunters().size());
-			insertInLore(lore, "bounty-hunters", huntersString);
-
-			String statusString = bounty.getTarget().getName().equals(player.getName()) ? Message.DONT_LET_THEM_KILL_U.formatRaw(ChatColor.RED) : (!bounty.hasCreator() ? Message.KILL_HIM_CLAIM_BOUNTY.formatRaw(ChatColor.YELLOW) : (bounty.hasCreator(player) ? Message.RIGHT_CLICK_REMOVE_BOUNTY.formatRaw(ChatColor.YELLOW) : Message.KILL_HIM_CLAIM_BOUNTY.formatRaw(ChatColor.YELLOW)));
-			insertInLore(lore, "bounty-instruction", statusString);
-
-			String compassString = bounty.hasHunter(player) ? Message.CLICK_UNTARGET.formatRaw(ChatColor.RED) : Message.CLICK_TARGET.formatRaw(ChatColor.YELLOW);
-			if (!BountyHunters.getInstance().getConfig().getBoolean("player-tracking.enabled") || bounty.hasTarget(player))
-				insertInLore(lore, "compass-instruction");
-			else
-				insertInLore(lore, "compass-instruction", compassString);
-
-			meta.setLore(lore);
 			item.setItemMeta(meta);
-
 			inv.setItem(slots[j - min], BountyHunters.getInstance().getNMS().addTag(item, new ItemTag("playerUuid", bounty.getTarget().getUniqueId().toString())));
 		}
 
@@ -99,6 +82,10 @@ public class BountyList extends PluginInventory {
 		inv.setItem(49, CustomItem.SET_BOUNTY.toItemStack());
 
 		return inv;
+	}
+
+	public int getMaxPage() {
+		return Math.max(1, (int) Math.ceil(((double) BountyHunters.getInstance().getBountyManager().getBounties().size()) / 21d));
 	}
 
 	@Override
@@ -238,19 +225,5 @@ public class BountyList extends PluginInventory {
 
 				open();
 			}
-	}
-
-	public int getMaxPage() {
-		return Math.max(1, (int) Math.ceil(((double) BountyHunters.getInstance().getBountyManager().getBounties().size()) / 21d));
-	}
-
-	private void insertInLore(List<String> lore, String path, String... add) {
-		if (!lore.contains(ChatColor.GRAY + "%" + path + "%"))
-			return;
-
-		int index = lore.indexOf(ChatColor.GRAY + "%" + path + "%");
-		for (String add1 : add)
-			lore.add(index + 1, add1);
-		lore.remove(index);
 	}
 }

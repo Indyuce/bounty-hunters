@@ -3,30 +3,30 @@ package net.Indyuce.bountyhunters.api;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 
 public class BountyCommands {
-	private List<String> commands;
-	private OfflinePlayer killer;
-	private Bounty bounty;
+	private final List<String> commands;
+	private final CommandSender sender;
+	private final Bounty bounty;
 
-	public BountyCommands(String path, Bounty bounty, OfflinePlayer killer) {
-		this(BountyHunters.getInstance().getConfig().getStringList("bounty-commands." + path), bounty, killer);
+	public BountyCommands(String path, Bounty bounty, CommandSender sender) {
+		this(BountyHunters.getInstance().getConfig().getStringList("bounty-commands." + path), bounty, sender);
 	}
 
-	public BountyCommands(List<String> commands, Bounty bounty, OfflinePlayer killer) {
+	public BountyCommands(List<String> commands, Bounty bounty, CommandSender sender) {
 		this.commands = commands;
 		this.bounty = bounty;
-		this.killer = killer;
+		this.sender = sender;
 	}
 
-	public void send(OfflinePlayer player) {
+	public void send() {
 		for (String command : commands) {
 			if (bounty.hasCreator())
 				command = command.replace("%creator%", bounty.getCreator().getName());
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), BountyHunters.getInstance().getPlaceholderParser().parse(player, command.replace("%target%", bounty.getTarget().getName()).replace("%killer%", killer.getName())));
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), BountyHunters.getInstance().getPlaceholderParser().parse(null, command.replace("%target%", bounty.getTarget().getName()).replace("%player%", sender.getName())));
 		}
 	}
 }

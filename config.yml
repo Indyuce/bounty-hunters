@@ -14,7 +14,7 @@ update-notify: true
 # Looks cool with CHEST, GOLD_NUGGET, REDSTONE...
 bounty-effect:
     enabled: true
-    material: CHEST
+    material: GOLD_NUGGET
 
 # Time players have to wait to do /bounty twice.
 # In seconds.
@@ -26,28 +26,33 @@ disable-death-message:
     auto-bounty: true
     bounty-claim: true
 
+# Players may ONLY claim bounties if  
+# they are tracking the bounty target.
+target-bounty-claim: false
+
 # Commands sent by the console when a player claims a bounty.
 # %target% returns the target's name and %player% the claimer's
-# name. Commands support PlaceholderAPI placeholders. 
-# 'killer'/'target'/'creator' are the commands which
-# placeholders are calculated using the corresponding players.
+# name. Commands support PlaceholderAPI placeholders.
 bounty-commands:
 
     # When a player claims a bounty.
-    claim:
-        killer: []
-#       - '/give %killer% minecraft:diamond 10'
-        target: []
-#       - '/say %target% Someone claimed your bounty.'
-        creator: []
+    claim: []
+#   - '/give %player% minecraft:diamond 10'
+#   - '/tell %target% Someone claimed your bounty.'
 
-    # When a player kills another player illegaly.
-    auto-bounty:
-        killer: []
-#       - '/jail %killer% 100'
-        target: []
-#       - '/say %target% You killed a man illegaly, watch out!'
-        creator: []
+    # When a bounty is placed. %reward%
+    place:
+        player: []
+        console: []
+        # When a player kills another player illegaly.
+        auto-bounty: []
+    
+    # When a bounty is increased by %amount%
+    increase:
+        player: []
+        console: []
+        # When a player kills another player illegaly.
+        auto-bounty: []
 
 # When enabled, it will automaticaly place a bounty onto any
 # player who kills a player with no bounty on him (illegal kill).

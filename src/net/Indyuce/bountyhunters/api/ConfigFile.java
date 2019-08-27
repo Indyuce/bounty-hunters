@@ -11,10 +11,10 @@ import org.bukkit.plugin.Plugin;
 import net.Indyuce.bountyhunters.BountyHunters;
 
 public class ConfigFile {
-	private Plugin plugin;
-	private String path, name;
+	private final Plugin plugin;
+	private final String path, name;
 
-	private FileConfiguration config;
+	private final FileConfiguration config;
 
 	public ConfigFile(String name) {
 		this(BountyHunters.getInstance(), "", name);

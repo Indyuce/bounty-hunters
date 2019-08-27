@@ -17,10 +17,10 @@ import net.Indyuce.bountyhunters.BountyHunters;
 
 public class Bounty {
 	private double reward;
-	private OfflinePlayer creator, target;
+	private final OfflinePlayer creator, target;
 
-	private List<UUID> hunters = new ArrayList<>();
-	private Map<UUID, Double> up = new HashMap<>();
+	private final List<UUID> hunters = new ArrayList<>();
+	private final Map<UUID, Double> up = new HashMap<>();
 
 	/*
 	 * creator is nullable since auto-bounties do not have any creator

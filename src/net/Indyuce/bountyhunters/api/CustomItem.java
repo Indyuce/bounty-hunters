@@ -1,7 +1,12 @@
 package net.Indyuce.bountyhunters.api;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,7 +21,18 @@ public enum CustomItem {
 	NEXT_PAGE(new ItemStack(Material.ARROW), "Next"),
 	PREVIOUS_PAGE(new ItemStack(Material.ARROW), "Previous"),
 	PLAYER_HEAD(new ItemStack(Material.PLAYER_HEAD), "%name%"),
-	GUI_PLAYER_HEAD(new ItemStack(Material.PLAYER_HEAD), "%name%", "&8--------------------------------", "%bounty-creator%", "%bounty-reward%", "%bounty-hunters%", "", "%bounty-instruction%", "%compass-instruction%", "&8--------------------------------"),
+	GUI_PLAYER_HEAD(new ItemStack(Material.PLAYER_HEAD), "%target%", "", 
+			"{noCreator}&cThis player is a thug!", 
+			"{isCreator}&7You set this bounty.", 
+			"{extraCreator}&7Set by &f%creator%&7.", 
+			"&7" + AltChar.listDash + " The reward is &f$%reward%&7.",
+			"&7" + AltChar.listDash + " There are &f%hunters% &7players tracking him.", 
+			"", 
+			"{isTarget}&cDon't let them kill you.", 
+			"{isCreator}&eRight click to remove the bounty.",
+			"{isExtra}&eKill him to claim the bounty!", 
+			"{isHunter}&7" + AltChar.listDash + " Click to &euntarget &7him.", 
+			"{!isHunter}&7" + AltChar.listDash + " Click to &ctarget &7him."),
 	LB_PLAYER_DATA(new ItemStack(Material.PLAYER_HEAD), "[%rank%] %name%", "&8-----------------------------", "Claimed Bounties: &f%bounties%", "Head Collection: &f%successful-bounties%", "Current Title: &f%title%", "Level: &f%level%", "&8-----------------------------"),
 	PROFILE(new ItemStack(Material.PLAYER_HEAD), "[%level%] %name%", "&8--------------------------------", "Claimed Bounties: &f%claimed-bounties%", "Head Collection: &f%successful-bounties%", "Level: &f%level%", "Level Progress: %lvl-progress%", "", "Current Title: &f%current-title%", "", "Type /bounties titles to manage your title.", "Type /bounties quotes to manage your quote.", "&8--------------------------------"),
 	SET_BOUNTY(new ItemStack(Material.WRITABLE_BOOK), "How to create a bounty?", "Use /bounty <player> <reward>", "to create a bounty on a player.", "", "&aHow to increase a bounty?", "Use /bounty <player> <amount>", "to increase a bounty.", "", "&aHow to remove a bounty?", "You can remove a bounty as the", "bounty creator by right clicking", "it in this menu."),
@@ -27,6 +43,8 @@ public enum CustomItem {
 	private ItemStack item;
 	private String name;
 	private List<String> lore;
+
+	private static final String conditionPrefix = ChatColor.GRAY + "{";
 
 	private CustomItem(ItemStack item, String name, String... lore) {
 		this.item = item;
@@ -63,5 +81,73 @@ public enum CustomItem {
 
 	public boolean loreMatches(ItemStack item) {
 		return BountyUtils.isPluginItem(item, true) && item.getItemMeta().getLore().equals(lore);
+	}
+
+	public Builder newBuilder() {
+		return new Builder();
+	}
+
+	/*
+	 * allows to format the item lore based on boolean conditions, also applies
+	 * placeholders
+	 */
+	public class Builder {
+		private Map<String, Boolean> conditions = new HashMap<>();
+		private Set<Placeholder> placeholders = new HashSet<>();
+
+		private final ItemStack item = toItemStack();
+
+		public Builder applyPlaceholders(String... placeholders) {
+			for (int j = 0; j < placeholders.length - 1; j += 2)
+				this.placeholders.add(new Placeholder(placeholders[j], placeholders[j + 1]));
+			return this;
+		}
+
+		public Builder applyConditions(String[] conditions, boolean[] values) {
+			for (int j = 0; j < conditions.length && j < values.length; j++) 
+				this.conditions.put(conditions[j], values[j]);
+			return this;
+		}
+
+		public ItemStack build() {
+			ItemMeta meta = item.getItemMeta();
+			List<String> lore = meta.getLore();
+
+			/*
+			 * check for conditions.
+			 */
+			String next;
+			for (Iterator<String> iterator = lore.iterator(); iterator.hasNext();)
+				if ((next = iterator.next()).startsWith(conditionPrefix)) {
+					String condition = next.substring(3).split("\\}")[0];
+					if (conditions.containsKey(condition) && !conditions.get(condition))
+						iterator.remove();
+				}
+
+			for (int j = 0; j < lore.size(); j++)
+				lore.set(j, format(lore.get(j)));
+			meta.setDisplayName(format(meta.getDisplayName()));
+
+			meta.setLore(lore);
+			item.setItemMeta(meta);
+			return item;
+		}
+
+		private String format(String str) {
+			if (str.startsWith(conditionPrefix) && str.contains("}"))
+				str = str.split("\\}")[1];
+			for (Placeholder placeholder : placeholders)
+				str = str.replace("%" + placeholder.placeholder + "%", placeholder.replacement);
+			return str;
+		}
+
+		public class Placeholder {
+			private final String placeholder, replacement;
+
+			public Placeholder(String placeholder, String replacement) {
+				this.placeholder = placeholder;
+				this.replacement = replacement;
+			}
+		}
 	}
 }

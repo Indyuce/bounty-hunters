@@ -49,7 +49,7 @@ public class Leaderboard extends PluginInventory {
 		 */
 		hunters = sortByBounties(hunters);
 
-		Inventory inv = Bukkit.createInventory(this, 54, Message.LEADERBOARD_GUI_NAME.getUpdated());
+		Inventory inv = Bukkit.createInventory(this, 54, Message.LEADERBOARD_GUI_NAME.getMessage());
 
 		int slot = 0;
 		for (Entry<PlayerData, Integer> entry : hunters.entrySet()) {
@@ -73,7 +73,7 @@ public class Leaderboard extends PluginInventory {
 
 		ItemStack glass = new ItemStack(Material.RED_STAINED_GLASS_PANE);
 		ItemMeta glassMeta = glass.getItemMeta();
-		glassMeta.setDisplayName(Message.NO_PLAYER.getUpdated());
+		glassMeta.setDisplayName(Message.NO_PLAYER.getMessage());
 		glass.setItemMeta(glassMeta);
 
 		while (slot < slots.length)
@@ -98,7 +98,7 @@ public class Leaderboard extends PluginInventory {
 	}
 
 	private String applyPlaceholders(String s, PlayerData playerData, int rank) {
-		String title = playerData.hasTitle() ? playerData.getTitle() : Message.NO_TITLE.getUpdated();
+		String title = playerData.hasTitle() ? playerData.getTitle() : Message.NO_TITLE.getMessage();
 
 		s = s.replace("%level%", "" + playerData.getLevel());
 		s = s.replace("%bounties%", "" + playerData.getClaimedBounties());

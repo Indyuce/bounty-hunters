@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.BountyUtils;
 import net.Indyuce.bountyhunters.api.Bounty;
+import net.Indyuce.bountyhunters.api.BountyCommands;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.event.BountyChangeEvent;
@@ -61,7 +62,7 @@ public class AddBountyCommand implements CommandExecutor {
 		double reward = 0;
 		try {
 			reward = Double.parseDouble(args[1]);
-		} catch (Exception e) {
+		} catch (NumberFormatException exception) {
 			Message.NOT_VALID_NUMBER.format(ChatColor.RED, "%arg%", args[1]).send(sender);
 			return true;
 		}
@@ -80,8 +81,7 @@ public class AddBountyCommand implements CommandExecutor {
 		}
 
 		// tax calculation
-		double tax = reward * BountyHunters.getInstance().getConfig().getDouble("tax") / 100;
-		tax = BountyUtils.truncation(tax, 1);
+		double tax = BountyUtils.truncation(reward * BountyHunters.getInstance().getConfig().getDouble("tax") / 100, 1);
 
 		// set restriction
 		if (sender instanceof Player) {
@@ -111,7 +111,7 @@ public class AddBountyCommand implements CommandExecutor {
 
 			// API
 			Bounty bounty = bountyManager.getBounty(target);
-			BountyChangeEvent bountyEvent = new BountyChangeEvent(bounty, BountyChangeCause.PLAYER);
+			BountyChangeEvent bountyEvent = new BountyChangeEvent(bounty, sender instanceof Player ? BountyChangeCause.PLAYER : BountyChangeCause.CONSOLE);
 			Bukkit.getPluginManager().callEvent(bountyEvent);
 			if (bountyEvent.isCancelled())
 				return true;
@@ -123,9 +123,9 @@ public class AddBountyCommand implements CommandExecutor {
 				PlayerData.get((OfflinePlayer) sender).setLastBounty();
 			}
 
+			new BountyCommands("increase." + bountyEvent.getCause().name().toLowerCase().replace("_", "-"), bounty, sender).send();
 			bounty.addToReward(sender instanceof Player ? (Player) sender : null, reward);
-			for (Player ent : Bukkit.getOnlinePlayers())
-				Message.BOUNTY_CHANGE.format(ChatColor.YELLOW, "%player%", target.getName(), "%reward%", new NumberFormat().format(bounty.getReward())).send(ent);
+			bountyEvent.sendAllert();
 			return true;
 		}
 
@@ -144,6 +144,7 @@ public class AddBountyCommand implements CommandExecutor {
 			PlayerData.get((OfflinePlayer) sender).setLastBounty();
 		}
 
+		new BountyCommands("place." + bountyEvent.getCause().name().toLowerCase().replace("_", "-"), bounty, sender).send();
 		BountyHunters.getInstance().getBountyManager().registerBounty(bounty);
 		bountyEvent.sendAllert();
 

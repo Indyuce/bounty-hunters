@@ -18,24 +18,15 @@ public class NMSHandler_1_13_R1 implements NMSHandler {
 		net.minecraft.server.v1_13_R1.ItemStack nmsi = CraftItemStack.asNMSCopy(item);
 		NBTTagCompound compound = nmsi.hasTag() ? nmsi.getTag() : new NBTTagCompound();
 
-		for (ItemTag tag : tags) {
-			if (tag.getValue() instanceof String) {
+		for (ItemTag tag : tags)
+			if (tag.getValue() instanceof String)
 				compound.setString(tag.getPath(), (String) tag.getValue());
-				continue;
-			}
-			if (tag.getValue() instanceof Boolean) {
+			else if (tag.getValue() instanceof Boolean)
 				compound.setBoolean(tag.getPath(), (boolean) tag.getValue());
-				continue;
-			}
-			if (tag.getValue() instanceof Double) {
+			else if (tag.getValue() instanceof Double)
 				compound.setDouble(tag.getPath(), (double) tag.getValue());
-				continue;
-			}
-			if (tag.getValue() instanceof Integer) {
+			else if (tag.getValue() instanceof Integer)
 				compound.setInt(tag.getPath(), (Integer) tag.getValue());
-				continue;
-			}
-		}
 
 		nmsi.setTag(compound);
 		return CraftItemStack.asBukkitCopy(nmsi);

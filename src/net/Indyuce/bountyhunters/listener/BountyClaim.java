@@ -56,6 +56,8 @@ public class BountyClaim implements Listener {
 				if (bountyEvent.isCancelled())
 					return;
 
+				PlayerData.get(killer).addIllegalKills(1);
+
 				/*
 				 * removes the death message
 				 */
@@ -63,24 +65,20 @@ public class BountyClaim implements Listener {
 					event.setDeathMessage(null);
 
 				/*
-				 * send auto-bounty commands
-				 */
-				new BountyCommands("auto-bounty.target", bounty, killer).send(target);
-				new BountyCommands("auto-bounty.killer", bounty, killer).send(killer);
-				if (bounty.hasCreator())
-					new BountyCommands("auto-bounty.creator", bounty, killer).send(bounty.getCreator());
-
-				/*
 				 * create a new bounty using the auto bounty
 				 */
-				if (!BountyHunters.getInstance().getBountyManager().hasBounty(killer))
+				if (bountyEvent instanceof BountyCreateEvent) {
 					BountyHunters.getInstance().getBountyManager().registerBounty(bounty);
+					new BountyCommands("place.auto-bounty", bounty, killer).send();
+				}
 
 				/*
 				 * increase the existing bounty amount
 				 */
-				else
+				else {
 					bounty.setReward(bounty.getReward() + BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward"));
+					new BountyCommands("increase.auto-bounty", bounty, killer).send();
+				}
 
 				bountyEvent.sendAllert();
 			}
@@ -91,13 +89,19 @@ public class BountyClaim implements Listener {
 			return;
 
 		/*
+		 * option- prevent players from claiming a bounty if they are not
+		 * tracking the bounty target.
+		 */
+		Bounty bounty = BountyHunters.getInstance().getBountyManager().getBounty(target);
+		if (BountyHunters.getInstance().getConfig().getBoolean("target-bounty-claim") && !bounty.hasHunter(killer))
+			return;
+
+		/*
 		 * prevents the player from claiming the bounty if he is the bounty
 		 * creator & if the corresponding option is disabled
 		 */
-		Bounty bounty = BountyHunters.getInstance().getBountyManager().getBounty(target);
-		if (bounty.hasCreator())
-			if (!BountyHunters.getInstance().getConfig().getBoolean("own-bounty-claiming") && bounty.hasCreator(killer))
-				return;
+		if (bounty.hasCreator(killer) && !BountyHunters.getInstance().getConfig().getBoolean("own-bounty-claiming"))
+			return;
 
 		/*
 		 * create an event instance, call it and check if it is cancelled. if it
@@ -107,6 +111,7 @@ public class BountyClaim implements Listener {
 		Bukkit.getPluginManager().callEvent(bountyEvent);
 		if (bountyEvent.isCancelled())
 			return;
+
 		bountyEvent.sendAllert();
 
 		/*
@@ -126,10 +131,7 @@ public class BountyClaim implements Listener {
 		/*
 		 * send bounty commands TODO improve command tables
 		 */
-		new BountyCommands("claim.target", bounty, killer).send(target);
-		new BountyCommands("claim.killer", bounty, killer).send(killer);
-		if (bounty.hasCreator())
-			new BountyCommands("claim.creator", bounty, killer).send(bounty.getCreator());
+		new BountyCommands("claim", bounty, killer).send();
 
 		/*
 		 * drops the killed player's head

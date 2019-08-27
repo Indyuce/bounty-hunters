@@ -26,9 +26,9 @@ import net.Indyuce.bountyhunters.command.BountiesCommand;
 import net.Indyuce.bountyhunters.command.HuntersCommand;
 import net.Indyuce.bountyhunters.command.completion.AddBountyCompletion;
 import net.Indyuce.bountyhunters.command.completion.BountiesCompletion;
-import net.Indyuce.bountyhunters.comp.BountyHuntersPlaceholders;
 import net.Indyuce.bountyhunters.comp.Metrics;
 import net.Indyuce.bountyhunters.comp.TownySupport;
+import net.Indyuce.bountyhunters.comp.placeholder.BountyHuntersPlaceholders;
 import net.Indyuce.bountyhunters.comp.placeholder.DefaultParser;
 import net.Indyuce.bountyhunters.comp.placeholder.PlaceholderAPIParser;
 import net.Indyuce.bountyhunters.comp.placeholder.PlaceholderParser;
@@ -61,11 +61,10 @@ public class BountyHunters extends JavaPlugin {
 	private HuntManager huntManager;
 	private LevelManager levelManager;
 
-	private FileConfiguration leaderboard, messages;
+	private FileConfiguration leaderboard;
 	public boolean formattedNumbers;
 
 	public void onEnable() {
-		new SpigotPlugin(40610, this).checkForUpdate();
 
 		try {
 			version = new PluginVersion(Bukkit.getServer().getClass());
@@ -78,6 +77,20 @@ public class BountyHunters extends JavaPlugin {
 			getLogger().log(Level.SEVERE, "Your server version is not handled with NMS.");
 			nms = new NMSHandler_Reflection();
 		}
+
+		// vault compatibility
+		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
+		RegisteredServiceProvider<Permission> permProvider = getServer().getServicesManager().getRegistration(Permission.class);
+		if (economyProvider != null && permProvider != null) {
+			economy = economyProvider.getProvider();
+			permission = permProvider.getProvider();
+		} else {
+			getLogger().log(Level.SEVERE, "Couldn't load Vault. Disabling...");
+			Bukkit.getPluginManager().disablePlugin(this);
+			return;
+		}
+		
+		new SpigotPlugin(40610, this).checkForUpdate();
 
 		// load first the plugin, then hunters and
 		// last bounties (bounties need hunters setup)
@@ -118,18 +131,6 @@ public class BountyHunters extends JavaPlugin {
 			getLogger().log(Level.INFO, "Hooked onto Towny");
 		}
 
-		// vault compatibility
-		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
-		RegisteredServiceProvider<Permission> permProvider = getServer().getServicesManager().getRegistration(Permission.class);
-		if (economyProvider != null && permProvider != null) {
-			economy = economyProvider.getProvider();
-			permission = permProvider.getProvider();
-		} else {
-			getLogger().log(Level.SEVERE, "Couldn't load Vault. Disabling...");
-			Bukkit.getPluginManager().disablePlugin(this);
-			return;
-		}
-
 		try {
 			File file = new File(getDataFolder(), "levels.yml");
 			if (!file.exists())
@@ -142,9 +143,11 @@ public class BountyHunters extends JavaPlugin {
 
 		ConfigFile messages = new ConfigFile("/language", "messages");
 		for (Message key : Message.values()) {
-			String path = key.name().toLowerCase().replace("_", "-");
+			String path = key.getPath();
 			if (!messages.getConfig().contains(path))
-				messages.getConfig().set(path, key.getDefault());
+				messages.getConfig().set(path, key.getUncolored());
+
+			key.update(messages.getConfig().getString(path));
 		}
 		messages.save();
 
@@ -231,17 +234,15 @@ public class BountyHunters extends JavaPlugin {
 		return leaderboard;
 	}
 
-	public FileConfiguration getMessages() {
-		return messages;
-	}
-
 	public PlaceholderParser getPlaceholderParser() {
 		return placeholderParser;
 	}
 
 	public void reloadConfigFiles() {
-		messages = new ConfigFile("/language", "messages").getConfig();
-
 		formattedNumbers = getConfig().getBoolean("formatted-numbers");
+
+		FileConfiguration messages = new ConfigFile("/language", "messages").getConfig();
+		for (Message message : Message.values())
+			message.update(messages.getString(message.getPath()));
 	}
 }
