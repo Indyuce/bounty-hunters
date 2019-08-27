@@ -2,13 +2,13 @@ package net.Indyuce.bountyhunters.api.event;
 
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import net.Indyuce.bountyhunters.api.Message;
+import net.Indyuce.bountyhunters.version.VersionSound;
 
 public class HunterTargetEvent extends Event implements Cancellable {
 	private Player player;
@@ -46,7 +46,7 @@ public class HunterTargetEvent extends Event implements Cancellable {
 
 	public void sendAllert(Player target) {
 		Message.NEW_HUNTER_ALERT.format(ChatColor.RED, "%hunter%", player.getName()).send(target);
-		target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_HURT, 1, 0);
+		target.playSound(target.getLocation(), VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 1, 0);
 	}
 
 	public HandlerList getHandlers() {

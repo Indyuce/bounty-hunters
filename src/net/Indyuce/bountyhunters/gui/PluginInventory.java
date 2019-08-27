@@ -6,7 +6,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 public abstract class PluginInventory implements InventoryHolder {
-	protected Player player;
+	protected final Player player;
 
 	public PluginInventory(Player player) {
 		this.player = player;

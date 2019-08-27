@@ -12,6 +12,7 @@ import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.manager.HuntManager.HunterData;
+import net.Indyuce.bountyhunters.version.VersionSound;
 
 public class HuntListener implements Listener {
 	@EventHandler
@@ -33,7 +34,7 @@ public class HuntListener implements Listener {
 		}
 
 		if (!data.isCompassActive()) {
-			player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1, 1);
+			player.playSound(player.getLocation(), VersionSound.BLOCK_NOTE_BLOCK_HAT.toSound(), 1, 1);
 			data.showParticles(player);
 		}
 	}

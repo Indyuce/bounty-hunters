@@ -1,8 +1,8 @@
 package net.Indyuce.bountyhunters.version;
 
 public class PluginVersion {
-	public String version;
-	public int[] integers;
+	public final String version;
+	public final int[] integers;
 
 	public PluginVersion(Class<?> clazz) {
 		this.version = clazz.getPackage().getName().replace(".", ",").split(",")[3];
@@ -10,12 +10,12 @@ public class PluginVersion {
 		this.integers = new int[] { Integer.parseInt(split[0]), Integer.parseInt(split[1]) };
 	}
 
-	public boolean isBelowOrEqual(int... version) {
-		return version[0] > integers[0] ? true : version[1] >= integers[1];
+	public boolean isBelowOrEqual(int first, int second) {
+		return first > integers[0] ? true : second >= integers[1];
 	}
 
-	public boolean isStrictlyHigher(int... version) {
-		return version[0] < integers[0] ? true : version[1] < integers[1];
+	public boolean isStrictlyHigher(int first, int second) {
+		return first < integers[0] ? true : second < integers[1];
 	}
 
 	public int getRevisionNumber() {

@@ -2,13 +2,13 @@ package net.Indyuce.bountyhunters.api.event;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.NumberFormat;
+import net.Indyuce.bountyhunters.version.VersionSound;
 
 public class BountyChangeEvent extends BountyEvent {
 	private BountyChangeCause cause;
@@ -34,7 +34,7 @@ public class BountyChangeEvent extends BountyEvent {
 			Message.BOUNTY_CHANGE.format(ChatColor.YELLOW, "%player%", getBounty().getTarget().getName(), "%reward%", new NumberFormat().format(getBounty().getReward())).send(player);
 		if (getBounty().getTarget().isOnline()) {
 			Player target = getBounty().getTarget().getPlayer();
-			target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_HURT, 1, 0);
+			target.playSound(target.getLocation(), VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 1, 0);
 		}
 	}
 

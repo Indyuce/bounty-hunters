@@ -159,17 +159,17 @@ public class PlayerData implements PlayerDataInterface {
 
 	public ItemStack getProfileItem() {
 		ItemStack profile = CustomItem.PROFILE.toItemStack().clone();
-		SkullMeta profileMeta = (SkullMeta) profile.getItemMeta();
-		profileMeta.setDisplayName(profileMeta.getDisplayName().replace("%name%", offline.getName()).replace("%level%", "" + getLevel()));
-		profileMeta.setOwningPlayer(Bukkit.getOfflinePlayer(offline.getUniqueId()));
-		List<String> profileLore = profileMeta.getLore();
+		SkullMeta meta = (SkullMeta) profile.getItemMeta();
+		meta.setDisplayName(meta.getDisplayName().replace("%name%", offline.getName()).replace("%level%", "" + getLevel()));
+		BountyHunters.getInstance().getVersionWrapper().setOwner(meta, offline);
+		List<String> profileLore = meta.getLore();
 
 		String title = hasTitle() ? getTitle() : Message.NO_TITLE.getMessage();
 		for (int j = 0; j < profileLore.size(); j++)
 			profileLore.set(j, profileLore.get(j).replace("%lvl-progress%", getLevelProgressBar()).replace("%claimed-bounties%", "" + getClaimedBounties()).replace("%successful-bounties%", "" + getSuccessfulBounties()).replace("%current-title%", title).replace("%level%", "" + getLevel()));
 
-		profileMeta.setLore(profileLore);
-		profile.setItemMeta(profileMeta);
+		meta.setLore(profileLore);
+		profile.setItemMeta(meta);
 		return profile;
 	}
 
@@ -297,7 +297,7 @@ public class PlayerData implements PlayerDataInterface {
 		String jsonList = money > 0 ? "\n" + Message.LEVEL_UP_REWARD_MONEY.formatRaw(ChatColor.YELLOW, "%amount%", new NumberFormat().format(money)) : "";
 		for (String s : chatDisplay)
 			jsonList += "\n" + Message.LEVEL_UP_REWARD.formatRaw(ChatColor.YELLOW, "%reward%", AltChar.apply(s));
-		BountyHunters.getInstance().getNMS().sendJson(player, "{\"text\":\"" + ChatColor.YELLOW + Message.LEVEL_UP_REWARDS.getMessage() + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1) + "\"}}}");
+		BountyHunters.getInstance().getVersionWrapper().sendJson(player, "{\"text\":\"" + ChatColor.YELLOW + Message.LEVEL_UP_REWARDS.getMessage() + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1) + "\"}}}");
 
 		setLevel(nextLevel);
 		return true;

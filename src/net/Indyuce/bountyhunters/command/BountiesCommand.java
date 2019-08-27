@@ -176,7 +176,7 @@ public class BountiesCommand implements CommandExecutor {
 			PlayerData playerData = PlayerData.get(player);
 			for (Title title : BountyHunters.getInstance().getLevelManager().getTitles()) {
 				if (playerData.hasUnlocked(title))
-					BountyHunters.getInstance().getNMS().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + title.format() + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties title " + title.getId() + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getMessage() + "\",\"color\":\"white\"}]}}}");
+					BountyHunters.getInstance().getVersionWrapper().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + title.format() + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties title " + title.getId() + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getMessage() + "\",\"color\":\"white\"}]}}}");
 			}
 		}
 
@@ -199,7 +199,7 @@ public class BountiesCommand implements CommandExecutor {
 			PlayerData playerData = PlayerData.get(player);
 			for (DeathQuote quote : BountyHunters.getInstance().getLevelManager().getQuotes()) {
 				if (playerData.hasUnlocked(quote))
-					BountyHunters.getInstance().getNMS().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + quote.format() + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties quote " + quote.getId() + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getMessage() + "\",\"color\":\"white\"}]}}}");
+					BountyHunters.getInstance().getVersionWrapper().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + quote.format() + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties quote " + quote.getId() + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getMessage() + "\",\"color\":\"white\"}]}}}");
 			}
 		}
 

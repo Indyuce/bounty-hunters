@@ -9,6 +9,7 @@ import org.bukkit.event.HandlerList;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.NumberFormat;
+import net.Indyuce.bountyhunters.version.VersionSound;
 
 public class BountyCreateEvent extends BountyEvent {
 	private BountyCause cause;
@@ -36,7 +37,7 @@ public class BountyCreateEvent extends BountyEvent {
 
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			if (getBounty().hasTarget(player)) {
-				player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_HURT, 1, 0);
+				player.playSound(player.getLocation(), VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 1, 0);
 				player.sendMessage(toTarget);
 				continue;
 			}

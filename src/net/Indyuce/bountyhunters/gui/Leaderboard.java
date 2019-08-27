@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.Inventory;
@@ -21,6 +20,7 @@ import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
+import net.Indyuce.bountyhunters.version.VersionMaterial;
 
 public class Leaderboard extends PluginInventory {
 	private static final int[] slots = { 13, 21, 22, 23, 29, 30, 31, 32, 33, 37, 38, 39, 40, 41, 42, 43 };
@@ -60,7 +60,7 @@ public class Leaderboard extends PluginInventory {
 			ItemStack skull = CustomItem.LB_PLAYER_DATA.toItemStack();
 			SkullMeta meta = (SkullMeta) skull.getItemMeta();
 			if (BountyHunters.getInstance().getConfig().getBoolean("display-player-skulls"))
-				meta.setOwningPlayer(Bukkit.getOfflinePlayer(data.getUniqueId()));
+				BountyHunters.getInstance().getVersionWrapper().setOwner(meta, Bukkit.getOfflinePlayer(data.getUniqueId()));
 			meta.setDisplayName(applyPlaceholders(meta.getDisplayName(), data, slot + 1));
 			List<String> lore = meta.getLore();
 			for (int j = 0; j < lore.size(); j++)
@@ -71,7 +71,7 @@ public class Leaderboard extends PluginInventory {
 			inv.setItem(slots[slot++], skull);
 		}
 
-		ItemStack glass = new ItemStack(Material.RED_STAINED_GLASS_PANE);
+		ItemStack glass = VersionMaterial.RED_STAINED_GLASS_PANE.toItem();
 		ItemMeta glassMeta = glass.getItemMeta();
 		glassMeta.setDisplayName(Message.NO_PLAYER.getMessage());
 		glass.setItemMeta(glassMeta);

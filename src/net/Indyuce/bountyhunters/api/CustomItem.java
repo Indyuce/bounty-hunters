@@ -16,26 +16,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.bountyhunters.BountyUtils;
+import net.Indyuce.bountyhunters.version.VersionMaterial;
 
 public enum CustomItem {
 	NEXT_PAGE(new ItemStack(Material.ARROW), "Next"),
 	PREVIOUS_PAGE(new ItemStack(Material.ARROW), "Previous"),
-	PLAYER_HEAD(new ItemStack(Material.PLAYER_HEAD), "%name%"),
-	GUI_PLAYER_HEAD(new ItemStack(Material.PLAYER_HEAD), "%target%", "", 
-			"{noCreator}&cThis player is a thug!", 
-			"{isCreator}&7You set this bounty.", 
-			"{extraCreator}&7Set by &f%creator%&7.", 
-			"&7" + AltChar.listDash + " The reward is &f$%reward%&7.",
-			"&7" + AltChar.listDash + " There are &f%hunters% &7players tracking him.", 
-			"", 
-			"{isTarget}&cDon't let them kill you.", 
-			"{isCreator}&eRight click to remove the bounty.",
-			"{isExtra}&eKill him to claim the bounty!", 
-			"{isHunter}&7" + AltChar.listDash + " Click to &euntarget &7him.", 
-			"{!isHunter}&7" + AltChar.listDash + " Click to &ctarget &7him."),
-	LB_PLAYER_DATA(new ItemStack(Material.PLAYER_HEAD), "[%rank%] %name%", "&8-----------------------------", "Claimed Bounties: &f%bounties%", "Head Collection: &f%successful-bounties%", "Current Title: &f%title%", "Level: &f%level%", "&8-----------------------------"),
-	PROFILE(new ItemStack(Material.PLAYER_HEAD), "[%level%] %name%", "&8--------------------------------", "Claimed Bounties: &f%claimed-bounties%", "Head Collection: &f%successful-bounties%", "Level: &f%level%", "Level Progress: %lvl-progress%", "", "Current Title: &f%current-title%", "", "Type /bounties titles to manage your title.", "Type /bounties quotes to manage your quote.", "&8--------------------------------"),
-	SET_BOUNTY(new ItemStack(Material.WRITABLE_BOOK), "How to create a bounty?", "Use /bounty <player> <reward>", "to create a bounty on a player.", "", "&aHow to increase a bounty?", "Use /bounty <player> <amount>", "to increase a bounty.", "", "&aHow to remove a bounty?", "You can remove a bounty as the", "bounty creator by right clicking", "it in this menu."),
+	PLAYER_HEAD(VersionMaterial.PLAYER_HEAD.toItem(), "%name%"),
+	GUI_PLAYER_HEAD(VersionMaterial.PLAYER_HEAD.toItem(), "%target%", "", "{noCreator}&cThis player is a thug!", "{isCreator}&7You set this bounty.", "{extraCreator}&7Set by &f%creator%&7.", "&7" + AltChar.listDash + " The reward is &f$%reward%&7.", "&7" + AltChar.listDash + " There are &f%hunters% &7players tracking him.", "", "{isTarget}&cDon't let them kill you.", "{isCreator}&eRight click to remove the bounty.", "{isExtra}&eKill him to claim the bounty!", "{isHunter}&7" + AltChar.listDash + " Click to &euntarget &7him.", "{!isHunter}&7" + AltChar.listDash + " Click to &ctarget &7him."),
+	LB_PLAYER_DATA(VersionMaterial.PLAYER_HEAD.toItem(), "[%rank%] %name%", "&8-----------------------------", "Claimed Bounties: &f%bounties%", "Head Collection: &f%successful-bounties%", "Current Title: &f%title%", "Level: &f%level%", "&8-----------------------------"),
+	PROFILE(VersionMaterial.PLAYER_HEAD.toItem(), "[%level%] %name%", "&8--------------------------------", "Claimed Bounties: &f%claimed-bounties%", "Head Collection: &f%successful-bounties%", "Level: &f%level%", "Level Progress: %lvl-progress%", "", "Current Title: &f%current-title%", "", "Type /bounties titles to manage your title.", "Type /bounties quotes to manage your quote.", "&8--------------------------------"),
+	SET_BOUNTY(new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial()), "How to create a bounty?", "Use /bounty <player> <reward>", "to create a bounty on a player.", "", "&aHow to increase a bounty?", "Use /bounty <player> <amount>", "to increase a bounty.", "", "&aHow to remove a bounty?", "You can remove a bounty as the", "bounty creator by right clicking", "it in this menu."),
 	BOUNTY_COMPASS(new ItemStack(Material.COMPASS), "Bounty Compass", "Allows you to see at which", "distance your target is."),
 
 	;
@@ -104,7 +94,7 @@ public enum CustomItem {
 		}
 
 		public Builder applyConditions(String[] conditions, boolean[] values) {
-			for (int j = 0; j < conditions.length && j < values.length; j++) 
+			for (int j = 0; j < conditions.length && j < values.length; j++)
 				this.conditions.put(conditions[j], values[j]);
 			return this;
 		}

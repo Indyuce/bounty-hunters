@@ -13,7 +13,6 @@ import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.BountyCommands;
 import net.Indyuce.bountyhunters.api.BountyEffect;
-import net.Indyuce.bountyhunters.api.PlayerHead;
 import net.Indyuce.bountyhunters.api.event.BountyChangeEvent;
 import net.Indyuce.bountyhunters.api.event.BountyChangeEvent.BountyChangeCause;
 import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
@@ -137,7 +136,7 @@ public class BountyClaim implements Listener {
 		 * drops the killed player's head
 		 */
 		if (BountyHunters.getInstance().getConfig().getBoolean("drop-head.enabled") && random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("drop-head.chance") / 100)
-			target.getWorld().dropItem(target.getLocation(), new PlayerHead(target));
+			target.getWorld().dropItem(target.getLocation(), BountyHunters.getInstance().getVersionWrapper().getHead(target));
 
 		/*
 		 * give the money to the player who claimed the bounty
@@ -170,7 +169,7 @@ public class BountyClaim implements Listener {
 				for (Player online : Bukkit.getOnlinePlayers()) {
 					online.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + killer.getName() + "> " + deathQuote);
 					if (bool)
-						BountyHunters.getInstance().getNMS().sendTitle(online, ChatColor.GOLD + "" + ChatColor.BOLD + killer.getName().toUpperCase(), ChatColor.ITALIC + deathQuote, 10, 60, 10);
+						BountyHunters.getInstance().getVersionWrapper().sendTitle(online, ChatColor.GOLD + "" + ChatColor.BOLD + killer.getName().toUpperCase(), ChatColor.ITALIC + deathQuote, 10, 60, 10);
 				}
 			}
 		}

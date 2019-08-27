@@ -97,13 +97,13 @@ public class HuntManager {
 					Location src = player.getLocation().add(0, 1.3, 0).add(player.getEyeLocation().getDirection().setY(0).normalize());
 					Vector vec = tracked.getPlayer().getLocation().subtract(src.clone().add(0, -1.3, 0)).toVector().normalize().multiply(.2);
 					for (int j = 0; j < 9; j++)
-						player.spawnParticle(Particle.REDSTONE, src.add(vec), 1, new Particle.DustOptions(Color.RED, 1));
+						BountyHunters.getInstance().getVersionWrapper().spawnParticle(Particle.REDSTONE, src.add(vec), player, Color.RED);
 
 					// draw circle around target
 					if (circle && (ti = (ti + 1) % 20) < 3) {
 						Location loc = tracked.getPlayer().getLocation();
 						for (double j = 0; j < Math.PI * 2; j += Math.PI / 16)
-							player.spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(j) * .8, .15, Math.sin(j) * .8), 0, new Particle.DustOptions(Color.RED, 1));
+							BountyHunters.getInstance().getVersionWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(j) * .8, .15, Math.sin(j) * .8), player, Color.RED);
 					}
 				}
 			}).runTaskTimer(BountyHunters.getInstance(), 0, 6);

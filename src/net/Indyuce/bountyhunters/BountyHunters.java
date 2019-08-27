@@ -42,8 +42,8 @@ import net.Indyuce.bountyhunters.manager.HuntManager;
 import net.Indyuce.bountyhunters.manager.LevelManager;
 import net.Indyuce.bountyhunters.version.PluginVersion;
 import net.Indyuce.bountyhunters.version.SpigotPlugin;
-import net.Indyuce.bountyhunters.version.nms.NMSHandler;
-import net.Indyuce.bountyhunters.version.nms.NMSHandler_Reflection;
+import net.Indyuce.bountyhunters.version.wrapper.VersionWrapper;
+import net.Indyuce.bountyhunters.version.wrapper.VersionWrapper_Reflection;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
@@ -51,7 +51,7 @@ public class BountyHunters extends JavaPlugin {
 	private static BountyHunters plugin;
 
 	private PluginVersion version;
-	private NMSHandler nms;
+	private VersionWrapper wrapper;
 	private PlaceholderParser placeholderParser;
 
 	private Economy economy;
@@ -69,13 +69,10 @@ public class BountyHunters extends JavaPlugin {
 		try {
 			version = new PluginVersion(Bukkit.getServer().getClass());
 			getLogger().log(Level.INFO, "Detected Server Version: " + version.toString());
-
-			// no reflection nms, each class
-			// corresponds to a server version
-			nms = (NMSHandler) Class.forName("net.Indyuce.bountyhunters.version.nms.NMSHandler_" + version.toString().substring(1)).newInstance();
+			wrapper = (VersionWrapper) Class.forName("net.Indyuce.bountyhunters.version.wrapper.VersionWrapper_" + version.toString().substring(1)).newInstance();
 		} catch (Exception e) {
 			getLogger().log(Level.SEVERE, "Your server version is not handled with NMS.");
-			nms = new NMSHandler_Reflection();
+			wrapper = new VersionWrapper_Reflection();
 		}
 
 		// vault compatibility
@@ -202,8 +199,8 @@ public class BountyHunters extends JavaPlugin {
 		return plugin;
 	}
 
-	public NMSHandler getNMS() {
-		return nms;
+	public VersionWrapper getVersionWrapper() {
+		return wrapper;
 	}
 
 	public Economy getEconomy() {

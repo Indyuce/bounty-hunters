@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -26,16 +25,19 @@ import net.Indyuce.bountyhunters.api.event.BountyExpireEvent;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent.BountyExpireCause;
 import net.Indyuce.bountyhunters.api.event.HunterTargetEvent;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
-import net.Indyuce.bountyhunters.version.nms.ItemTag;
+import net.Indyuce.bountyhunters.version.VersionMaterial;
+import net.Indyuce.bountyhunters.version.wrapper.ItemTag;
 
 public class BountyList extends PluginInventory {
+	private final PlayerData data;
+
 	private int page = 1;
-	private PlayerData data;
 
 	private static final int[] slots = { 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34 };
 
 	public BountyList(Player player) {
 		super(player);
+
 		data = PlayerData.get(player);
 	}
 
@@ -58,9 +60,9 @@ public class BountyList extends PluginInventory {
 
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
 			if (BountyHunters.getInstance().getConfig().getBoolean("display-player-skulls"))
-				meta.setOwningPlayer(bounty.getTarget());
+				BountyHunters.getInstance().getVersionWrapper().setOwner(meta, bounty.getTarget());
 			item.setItemMeta(meta);
-			inv.setItem(slots[j - min], BountyHunters.getInstance().getNMS().addTag(item, new ItemTag("playerUuid", bounty.getTarget().getUniqueId().toString())));
+			inv.setItem(slots[j - min], BountyHunters.getInstance().getVersionWrapper().addTag(item, new ItemTag("playerUuid", bounty.getTarget().getUniqueId().toString())));
 		}
 
 		if (BountyHunters.getInstance().getConfig().getBoolean("player-tracking.enabled")) {
@@ -131,8 +133,8 @@ public class BountyList extends PluginInventory {
 
 		// target someone
 		if (action == InventoryAction.PICKUP_ALL && BountyHunters.getInstance().getConfig().getBoolean("player-tracking.enabled"))
-			if (slot < 35 && item.getType() == Material.PLAYER_HEAD) {
-				String tag = BountyHunters.getInstance().getNMS().getStringTag(item, "playerUuid");
+			if (slot < 35 && item.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()) {
+				String tag = BountyHunters.getInstance().getVersionWrapper().getStringTag(item, "playerUuid");
 				if (tag == null || tag.equals(""))
 					return;
 
@@ -189,8 +191,8 @@ public class BountyList extends PluginInventory {
 
 		// remove bounty
 		if (action == InventoryAction.PICKUP_HALF)
-			if (slot < 35 && item.getType() == Material.PLAYER_HEAD) {
-				String tag = BountyHunters.getInstance().getNMS().getStringTag(item, "playerUuid");
+			if (slot < 35 && item.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()) {
+				String tag = BountyHunters.getInstance().getVersionWrapper().getStringTag(item, "playerUuid");
 				if (tag == null || tag.equals(""))
 					return;
 
