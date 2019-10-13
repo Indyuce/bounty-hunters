@@ -14,6 +14,10 @@ import net.Indyuce.bountyhunters.manager.HuntManager.HunterData;
 public abstract class BountyManager {
 	private final LinkedHashMap<UUID, Bounty> bounties = new LinkedHashMap<>();
 
+	public BountyManager() {
+		loadBounties();
+	}
+	
 	public void unregisterBounty(Bounty bounty) {
 		bounties.remove(bounty.getTarget().getUniqueId());
 		bounty.getHunters().forEach(hunter -> {

@@ -10,7 +10,10 @@ import net.Indyuce.bountyhunters.api.ConfigFile;
 import net.Indyuce.bountyhunters.manager.BountyManager;
 
 public class YAMLBountyManager extends BountyManager {
-
+	public YAMLBountyManager() {
+		super();
+	}
+	
 	@Override
 	public void loadBounties() {
 
