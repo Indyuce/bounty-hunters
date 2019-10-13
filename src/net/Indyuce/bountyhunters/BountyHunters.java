@@ -196,7 +196,7 @@ public class BountyHunters extends JavaPlugin {
 
 	public void onDisable() {
 		bountyManager.saveBounties();
-		playerDataManager.getLoaded().forEach(data -> data.saveFile());
+		playerDataManager.getLoaded().forEach(data -> playerDataManager.saveData(data));
 
 		for (Player online : Bukkit.getOnlinePlayers())
 			if (online.getOpenInventory() != null && online.getOpenInventory().getTopInventory().getHolder() instanceof PluginInventory)

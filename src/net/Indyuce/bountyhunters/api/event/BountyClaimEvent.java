@@ -39,7 +39,7 @@ public class BountyClaimEvent extends BountyEvent {
 
 		// message to server
 		PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(player);
-		String title = playerData.hasTitle() ? ChatColor.LIGHT_PURPLE + "[" + playerData.getTitle() + ChatColor.LIGHT_PURPLE + "] " : "";
+		String title = playerData.hasTitle() ? ChatColor.LIGHT_PURPLE + "[" + playerData.getTitle().format() + ChatColor.LIGHT_PURPLE + "] " : "";
 		for (Player online : Bukkit.getOnlinePlayers()) {
 			online.playSound(online.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 			if (online != player)

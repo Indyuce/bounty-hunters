@@ -121,10 +121,10 @@ public class BountiesCommand implements CommandExecutor {
 			if (!playerData.hasUnlocked(item))
 				return true;
 
-			playerData.setCurrentTitle(item);
+			playerData.setTitle(item);
 			playerData.setLastSelect();
 			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
-			Message.SUCCESSFULLY_SELECTED.format(ChatColor.YELLOW, "%item%", playerData.getTitle()).send(player);
+			Message.SUCCESSFULLY_SELECTED.format(ChatColor.YELLOW, "%item%", playerData.getTitle().format()).send(player);
 		}
 
 		// choose quote
@@ -151,10 +151,10 @@ public class BountiesCommand implements CommandExecutor {
 			if (!playerData.hasUnlocked(item))
 				return true;
 
-			playerData.setCurrentQuote(item);
+			playerData.setQuote(item);
 			playerData.setLastSelect();
 			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
-			Message.SUCCESSFULLY_SELECTED.format(ChatColor.YELLOW, "%item%", playerData.getQuote()).send(player);
+			Message.SUCCESSFULLY_SELECTED.format(ChatColor.YELLOW, "%item%", playerData.getQuote().format()).send(player);
 		}
 
 		// choose title

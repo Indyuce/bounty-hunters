@@ -163,7 +163,7 @@ public class BountyClaim implements Listener {
 		 * displays the claimer's death title
 		 */
 		if (BountyHunters.getInstance().getLevelManager().isEnabled()) {
-			String deathQuote = playerData.getQuote();
+			String deathQuote = playerData.hasQuote() ? playerData.getQuote().format() : "";
 			if (!deathQuote.equals("")) {
 				boolean bool = BountyHunters.getInstance().getConfig().getBoolean("display-death-quote-on-title");
 				for (Player online : Bukkit.getOnlinePlayers()) {

@@ -1,0 +1,57 @@
+package net.Indyuce.bountyhunters.comp.data.player;
+
+import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import net.Indyuce.bountyhunters.BountyHunters;
+import net.Indyuce.bountyhunters.api.ConfigFile;
+import net.Indyuce.bountyhunters.api.player.PlayerData;
+import net.Indyuce.bountyhunters.manager.LevelManager;
+import net.Indyuce.bountyhunters.manager.PlayerDataManager;
+
+public class YAMLPlayerDataManager extends PlayerDataManager {
+
+	@Override
+	public void saveData(PlayerData data) {
+		ConfigFile config = new ConfigFile("/userdata", data.getUniqueId().toString());
+
+		config.getConfig().set("level", data.getLevel());
+		config.getConfig().set("successful-bounties", data.getSuccessfulBounties());
+		config.getConfig().set("claimed-bounties", data.getClaimedBounties());
+		config.getConfig().set("illegal-kills", data.getIllegalKills());
+		config.getConfig().set("illegal-kill-streak", data.getIllegalKillStreak());
+		config.getConfig().set("current-title", data.hasTitle() ? data.getTitle().getId() : null);
+		config.getConfig().set("current-quote", data.hasQuote() ? data.getQuote().getId() : null);
+
+		config.save();
+	}
+
+	@Override
+	protected void loadData(PlayerData data) {
+		FileConfiguration config = new ConfigFile("/userdata", data.getUniqueId().toString()).getConfig();
+
+		data.setLevel(config.getInt("level"));
+		data.setSuccessfulBounties(config.getInt("successful-bounties"));
+		data.setClaimedBounties(config.getInt("claimed-bounties"));
+		data.setIllegalKills(config.getInt("illegal-kills"));
+		data.setIllegalKillStreak(config.getInt("illegal-kill-streak"));
+
+		LevelManager levelManager = BountyHunters.getInstance().getLevelManager();
+
+		if (config.contains("current-quote"))
+			try {
+				Validate.isTrue(levelManager.hasQuote(config.getString("current-quote")), "Could not load quote from " + data.getOfflinePlayer().getName());
+				data.setQuote(levelManager.getQuote(config.getString("current-quote")));
+			} catch (IllegalArgumentException exception) {
+				data.log(exception.getMessage());
+			}
+
+		if (config.contains("current-title"))
+			try {
+				Validate.isTrue(levelManager.hasTitle("current-title"), "Could not load title from " + data.getOfflinePlayer().getName());
+				data.setTitle(BountyHunters.getInstance().getLevelManager().getTitle(config.getString("current-title")));
+			} catch (IllegalArgumentException exception) {
+				data.log(exception.getMessage());
+			}
+	}
+}

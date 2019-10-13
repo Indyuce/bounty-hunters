@@ -10,14 +10,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.AltChar;
-import net.Indyuce.bountyhunters.api.ConfigFile;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.NumberFormat;
@@ -44,39 +42,6 @@ public class PlayerData implements PlayerDataInterface {
 
 	public PlayerData(OfflinePlayer player) {
 		this.offline = player;
-		FileConfiguration config = new ConfigFile("/userdata", offline.getUniqueId().toString()).getConfig();
-
-		level = config.getInt("level");
-		successful = config.getInt("successful-bounties");
-		claimed = config.getInt("claimed-bounties");
-		illegalKills = config.getInt("illegal-kills");
-		illegalStreak = config.getInt("illegal-kill-streak");
-
-		try {
-			quote = config.contains("current-quote") ? BountyHunters.getInstance().getLevelManager().getQuote(config.getString("current-quote")) : null;
-		} catch (NullPointerException exception) {
-			log("Could not load quote from " + offline.getUniqueId().toString() + " (" + offline.getName() + ")");
-		}
-
-		try {
-			title = config.contains("current-title") ? BountyHunters.getInstance().getLevelManager().getTitle(config.getString("current-title")) : null;
-		} catch (NullPointerException exception) {
-			log("Could not load title from " + offline.getUniqueId().toString() + " (" + offline.getName() + ")");
-		}
-	}
-
-	public void saveFile() {
-		ConfigFile config = new ConfigFile("/userdata", offline.getUniqueId().toString());
-
-		config.getConfig().set("level", level);
-		config.getConfig().set("successful-bounties", successful);
-		config.getConfig().set("claimed-bounties", claimed);
-		config.getConfig().set("illegal-kills", illegalKills);
-		config.getConfig().set("illegal-kill-streak", illegalStreak);
-		config.getConfig().set("current-title", hasTitle() ? title.getId() : null);
-		config.getConfig().set("current-quote", hasQuote() ? quote.getId() : null);
-
-		config.save();
 	}
 
 	@Deprecated
@@ -126,12 +91,12 @@ public class PlayerData implements PlayerDataInterface {
 		return claimed;
 	}
 
-	public String getQuote() {
-		return quote == null ? "" : quote.format();
+	public DeathQuote getQuote() {
+		return quote;
 	}
 
-	public String getTitle() {
-		return title == null ? "" : title.format();
+	public Title getTitle() {
+		return title;
 	}
 
 	public boolean hasUnlocked(LevelUpItem item) {
@@ -162,7 +127,7 @@ public class PlayerData implements PlayerDataInterface {
 		BountyHunters.getInstance().getVersionWrapper().setOwner(meta, offline);
 		List<String> profileLore = meta.getLore();
 
-		String title = hasTitle() ? getTitle() : Message.NO_TITLE.getMessage();
+		String title = hasTitle() ? getTitle().format() : Message.NO_TITLE.getMessage();
 		for (int j = 0; j < profileLore.size(); j++)
 			profileLore.set(j, profileLore.get(j).replace("%lvl-progress%", getLevelProgressBar()).replace("%claimed-bounties%", "" + getClaimedBounties()).replace("%successful-bounties%", "" + getSuccessfulBounties()).replace("%current-title%", title).replace("%level%", "" + getLevel()));
 
@@ -197,11 +162,11 @@ public class PlayerData implements PlayerDataInterface {
 	}
 
 	public boolean hasQuote() {
-		return !getQuote().equals("");
+		return quote != null;
 	}
 
 	public boolean hasTitle() {
-		return !getTitle().equals("");
+		return title != null;
 	}
 
 	public void setLevel(int value) {
@@ -224,11 +189,11 @@ public class PlayerData implements PlayerDataInterface {
 		illegalStreak = Math.max(0, value);
 	}
 
-	public void setCurrentQuote(DeathQuote quote) {
+	public void setQuote(DeathQuote quote) {
 		this.quote = quote;
 	}
 
-	public void setCurrentTitle(Title title) {
+	public void setTitle(Title title) {
 		this.title = title;
 	}
 
@@ -248,10 +213,6 @@ public class PlayerData implements PlayerDataInterface {
 	public void addIllegalKills(int value) {
 		setIllegalKills(illegalKills + value);
 		setIllegalKillStreak(illegalStreak + value);
-	}
-
-	public void resetStreaks() {
-		illegalStreak = 0;
 	}
 
 	public void refreshLevel(Player player) {

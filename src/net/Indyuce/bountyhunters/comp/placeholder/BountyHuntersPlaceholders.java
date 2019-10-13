@@ -39,9 +39,9 @@ public class BountyHuntersPlaceholders extends PlaceholderExpansion {
 		case "current_bounty":
 			return BountyHunters.getInstance().getBountyManager().hasBounty(player) ? new NumberFormat().format(BountyHunters.getInstance().getBountyManager().getBounty(player).getReward()) : "0";
 		case "quote":
-			return playerData.getQuote();
+			return playerData.hasQuote() ? playerData.getQuote().format() : "";
 		case "title":
-			return playerData.getTitle();
+			return playerData.hasTitle() ? playerData.getTitle().format() : "";
 		case "progress":
 			return playerData.getLevelProgressBar();
 		case "before_level_up":
