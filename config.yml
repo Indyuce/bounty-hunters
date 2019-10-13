@@ -1,13 +1,17 @@
-# --------------------------------------------------------------
-#
-# Thanks for using BountyHunters!
-#
-# --------------------------------------------------------------
 
 # Notifies players with the 'bountyhunters.update-notify' perm node when
 # they join the server if a new update is available for download.
 # Requires /reload when changed.
 update-notify: true
+
+# Use a database for bounty and player data
+my-sql:
+    enabled: false
+    host: 127.0.0.1
+    port: 3306
+    database: db
+    user: username
+    pass: password
 
 # When enabled, some items that can't be picked up will
 # drop from the target's body (can be any material).

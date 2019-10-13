@@ -11,8 +11,9 @@ import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.version.VersionSound;
 
 public class HunterTargetEvent extends Event implements Cancellable {
-	private Player player;
-	private OfflinePlayer target;
+	private final Player player;
+	private final OfflinePlayer target;
+	
 	private boolean cancelled = false;
 
 	private static final HandlerList handlers = new HandlerList();

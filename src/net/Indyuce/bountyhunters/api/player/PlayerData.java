@@ -2,9 +2,7 @@ package net.Indyuce.bountyhunters.api.player;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -44,9 +42,7 @@ public class PlayerData implements PlayerDataInterface {
 	 */
 	private long lastBounty, lastTarget, lastSelect;
 
-	private static Map<UUID, PlayerData> map = new HashMap<>();
-
-	private PlayerData(OfflinePlayer player) {
+	public PlayerData(OfflinePlayer player) {
 		this.offline = player;
 		FileConfiguration config = new ConfigFile("/userdata", offline.getUniqueId().toString()).getConfig();
 
@@ -83,8 +79,9 @@ public class PlayerData implements PlayerDataInterface {
 		config.save();
 	}
 
+	@Deprecated
 	public static boolean isLoaded(UUID uuid) {
-		return map.containsKey(uuid);
+		return BountyHunters.getInstance().getPlayerDataManager().isLoaded(uuid);
 	}
 
 	public OfflinePlayer getOfflinePlayer() {
@@ -96,8 +93,9 @@ public class PlayerData implements PlayerDataInterface {
 	 * the player data using saveFile() before unloading the player data from
 	 * the map!
 	 */
+	@Deprecated
 	public void unload() {
-		map.remove(offline.getUniqueId());
+		BountyHunters.getInstance().getPlayerDataManager().unload(getUniqueId());
 	}
 
 	public long getLastBounty() {
@@ -308,17 +306,19 @@ public class PlayerData implements PlayerDataInterface {
 		return object != null && object instanceof PlayerData && ((PlayerData) object).getUniqueId().equals(getUniqueId());
 	}
 
+	@Deprecated
 	public static Collection<PlayerData> getLoaded() {
-		return map.values();
+		return BountyHunters.getInstance().getPlayerDataManager().getLoaded();
 	}
 
+	@Deprecated
 	public static PlayerData get(OfflinePlayer player) {
-		return map.get(player.getUniqueId());
+		return BountyHunters.getInstance().getPlayerDataManager().get(player.getUniqueId());
 	}
 
+	@Deprecated
 	public static void load(OfflinePlayer player) {
-		if (!map.containsKey(player.getUniqueId()))
-			map.put(player.getUniqueId(), new PlayerData(player));
+		BountyHunters.getInstance().getPlayerDataManager().load(player);
 	}
 
 	public enum Value {

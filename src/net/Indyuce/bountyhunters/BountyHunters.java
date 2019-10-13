@@ -20,7 +20,6 @@ import net.Indyuce.bountyhunters.api.ConfigFile;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.NumberFormat;
-import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.command.AddBountyCommand;
 import net.Indyuce.bountyhunters.command.BountiesCommand;
 import net.Indyuce.bountyhunters.command.HuntersCommand;
@@ -28,6 +27,9 @@ import net.Indyuce.bountyhunters.command.completion.AddBountyCompletion;
 import net.Indyuce.bountyhunters.command.completion.BountiesCompletion;
 import net.Indyuce.bountyhunters.comp.Metrics;
 import net.Indyuce.bountyhunters.comp.TownySupport;
+import net.Indyuce.bountyhunters.comp.data.DataProvider;
+import net.Indyuce.bountyhunters.comp.data.DefaultDataProvider;
+import net.Indyuce.bountyhunters.comp.data.MySQLProvider;
 import net.Indyuce.bountyhunters.comp.placeholder.BountyHuntersPlaceholders;
 import net.Indyuce.bountyhunters.comp.placeholder.DefaultParser;
 import net.Indyuce.bountyhunters.comp.placeholder.PlaceholderAPIParser;
@@ -40,6 +42,7 @@ import net.Indyuce.bountyhunters.listener.PlayerListener;
 import net.Indyuce.bountyhunters.manager.BountyManager;
 import net.Indyuce.bountyhunters.manager.HuntManager;
 import net.Indyuce.bountyhunters.manager.LevelManager;
+import net.Indyuce.bountyhunters.manager.PlayerDataManager;
 import net.Indyuce.bountyhunters.version.PluginVersion;
 import net.Indyuce.bountyhunters.version.SpigotPlugin;
 import net.Indyuce.bountyhunters.version.wrapper.VersionWrapper;
@@ -56,15 +59,18 @@ public class BountyHunters extends JavaPlugin {
 
 	private Economy economy;
 	private Permission permission;
+	private DataProvider dataProvider;
 
 	private BountyManager bountyManager;
 	private HuntManager huntManager;
 	private LevelManager levelManager;
+	private PlayerDataManager playerDataManager;
 
 	private FileConfiguration leaderboard;
 	public boolean formattedNumbers;
 
 	public void onEnable() {
+		plugin = this;
 
 		try {
 			version = new PluginVersion(Bukkit.getServer().getClass());
@@ -86,16 +92,19 @@ public class BountyHunters extends JavaPlugin {
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
-		
+
 		new SpigotPlugin(40610, this).checkForUpdate();
+
+		/*
+		 * determines if BH is using a MySQL database or default YAML
+		 */
+		saveDefaultConfig();
+		dataProvider = getConfig().getBoolean("my-sql.enabled") ? new MySQLProvider() : new DefaultDataProvider();
 
 		// load first the plugin, then hunters and
 		// last bounties (bounties need hunters setup)
-		plugin = this;
 		huntManager = new HuntManager();
-		bountyManager = new BountyManager();
-
-		saveDefaultConfig();
+		bountyManager = dataProvider.provideBounties();
 
 		// listeners
 		Bukkit.getServer().getPluginManager().registerEvents(new BountyClaim(), this);
@@ -168,7 +177,7 @@ public class BountyHunters extends JavaPlugin {
 		/*
 		 * load player data from all online players in case of /reload
 		 */
-		Bukkit.getOnlinePlayers().forEach(player -> PlayerData.load(player));
+		Bukkit.getOnlinePlayers().forEach(player -> playerDataManager.load(player));
 
 		/*
 		 * only reload config files after levels.yml is loaded or else it can't
@@ -187,8 +196,7 @@ public class BountyHunters extends JavaPlugin {
 
 	public void onDisable() {
 		bountyManager.saveBounties();
-
-		PlayerData.getLoaded().forEach(data -> data.saveFile());
+		playerDataManager.getLoaded().forEach(data -> data.saveFile());
 
 		for (Player online : Bukkit.getOnlinePlayers())
 			if (online.getOpenInventory() != null && online.getOpenInventory().getTopInventory().getHolder() instanceof PluginInventory)
@@ -213,6 +221,10 @@ public class BountyHunters extends JavaPlugin {
 
 	public BountyManager getBountyManager() {
 		return bountyManager;
+	}
+
+	public PlayerDataManager getPlayerDataManager() {
+		return playerDataManager;
 	}
 
 	public HuntManager getHuntManager() {

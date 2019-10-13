@@ -15,9 +15,9 @@ import net.Indyuce.bountyhunters.api.AltChar;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
 
 public class LevelManager {
-	private Map<String, DeathQuote> quotes = new HashMap<>();
-	private Map<String, Title> titles = new HashMap<>();
-	private Map<Integer, List<String>> commands = new HashMap<>();
+	private final Map<String, DeathQuote> quotes = new HashMap<>();
+	private final Map<String, Title> titles = new HashMap<>();
+	private final Map<Integer, List<String>> commands = new HashMap<>();
 
 	private int bountiesPerLevel;
 	private double moneyBase, moneyPerLevel;

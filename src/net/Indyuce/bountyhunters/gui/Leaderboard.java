@@ -40,7 +40,7 @@ public class Leaderboard extends PluginInventory {
 		 */
 		Map<PlayerData, Integer> hunters = new HashMap<>();
 		for (String key : BountyHunters.getInstance().getCachedLeaderboard().getKeys(false)) {
-			PlayerData data = PlayerData.get(Bukkit.getOfflinePlayer(UUID.fromString(key)));
+			PlayerData data = BountyHunters.getInstance().getPlayerDataManager().get(Bukkit.getOfflinePlayer(UUID.fromString(key)));
 			hunters.put(data, data.getClaimedBounties());
 		}
 

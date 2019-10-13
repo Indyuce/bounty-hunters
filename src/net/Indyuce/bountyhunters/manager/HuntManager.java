@@ -28,7 +28,7 @@ public class HuntManager {
 	 * players tracking other bounty targets are not saved when the server
 	 * resets.
 	 */
-	private Map<UUID, HunterData> hunting = new HashMap<>();
+	private final Map<UUID, HunterData> hunting = new HashMap<>();
 
 	public Set<UUID> getHuntingPlayers() {
 		return hunting.keySet();

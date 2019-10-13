@@ -12,7 +12,7 @@ import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.version.VersionSound;
 
 public class BountyCreateEvent extends BountyEvent {
-	private BountyCause cause;
+	private final BountyCause cause;
 
 	private static final HandlerList handlers = new HandlerList();
 

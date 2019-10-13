@@ -10,7 +10,7 @@ import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.Message;
 
 public class BountyExpireEvent extends BountyEvent {
-	private BountyExpireCause cause;
+	private final BountyExpireCause cause;
 	
 	private static final HandlerList handlers = new HandlerList();
 

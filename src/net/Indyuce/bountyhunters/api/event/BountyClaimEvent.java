@@ -6,6 +6,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
+import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.NumberFormat;
@@ -37,7 +38,7 @@ public class BountyClaimEvent extends BountyEvent {
 		Message.BOUNTY_CLAIMED_BY_YOU.format(ChatColor.YELLOW, "%target%", getBounty().getTarget().getName(), "%reward%", reward).send(player);
 
 		// message to server
-		PlayerData playerData = PlayerData.get(player);
+		PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(player);
 		String title = playerData.hasTitle() ? ChatColor.LIGHT_PURPLE + "[" + playerData.getTitle() + ChatColor.LIGHT_PURPLE + "] " : "";
 		for (Player online : Bukkit.getOnlinePlayers()) {
 			online.playSound(online.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);

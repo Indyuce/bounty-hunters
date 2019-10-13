@@ -24,7 +24,7 @@ public class BountyHuntersPlaceholders extends PlaceholderExpansion {
 	}
 
 	public String onPlaceholderRequest(Player player, String identifier) {
-		PlayerData playerData = PlayerData.get(player);
+		PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(player);
 		switch (identifier) {
 		case "level":
 			return "" + playerData.getLevel();

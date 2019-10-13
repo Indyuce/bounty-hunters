@@ -6,7 +6,8 @@ import org.bukkit.event.Event;
 import net.Indyuce.bountyhunters.api.Bounty;
 
 public abstract class BountyEvent extends Event implements Cancellable {
-	private Bounty bounty;
+	private final Bounty bounty;
+	
 	private boolean cancelled = false;
 
 	/*

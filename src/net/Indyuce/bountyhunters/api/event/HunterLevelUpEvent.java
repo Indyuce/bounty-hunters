@@ -5,8 +5,8 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 public class HunterLevelUpEvent extends Event {
-	private Player player;
-	private int newLevel;
+	private final Player player;
+	private final int newLevel;
 
 	private static final HandlerList handlers = new HandlerList();
 

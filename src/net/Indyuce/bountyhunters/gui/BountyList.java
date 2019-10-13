@@ -38,7 +38,7 @@ public class BountyList extends PluginInventory {
 	public BountyList(Player player) {
 		super(player);
 
-		data = PlayerData.get(player);
+		data = BountyHunters.getInstance().getPlayerDataManager().get(player);
 	}
 
 	@Override

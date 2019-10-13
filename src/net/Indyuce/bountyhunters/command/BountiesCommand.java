@@ -113,7 +113,7 @@ public class BountiesCommand implements CommandExecutor {
 			if (!BountyHunters.getInstance().getLevelManager().hasTitle(args[1]))
 				return true;
 
-			PlayerData playerData = PlayerData.get(player);
+			PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(player);
 			if (!playerData.canSelectItem())
 				return true;
 
@@ -143,7 +143,7 @@ public class BountiesCommand implements CommandExecutor {
 			if (!BountyHunters.getInstance().getLevelManager().hasQuote(args[1]))
 				return true;
 
-			PlayerData playerData = PlayerData.get(player);
+			PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(player);
 			if (!playerData.canSelectItem())
 				return true;
 
@@ -173,7 +173,7 @@ public class BountiesCommand implements CommandExecutor {
 			Message.CHAT_BAR.format(ChatColor.YELLOW).send(player);
 			Message.UNLOCKED_TITLES.format(ChatColor.YELLOW).send(player);
 
-			PlayerData playerData = PlayerData.get(player);
+			PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(player);
 			for (Title title : BountyHunters.getInstance().getLevelManager().getTitles()) {
 				if (playerData.hasUnlocked(title))
 					BountyHunters.getInstance().getVersionWrapper().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + title.format() + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties title " + title.getId() + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getMessage() + "\",\"color\":\"white\"}]}}}");
@@ -196,7 +196,7 @@ public class BountiesCommand implements CommandExecutor {
 			Message.CHAT_BAR.format(ChatColor.YELLOW).send(player);
 			Message.UNLOCKED_QUOTES.format(ChatColor.YELLOW).send(player);
 
-			PlayerData playerData = PlayerData.get(player);
+			PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(player);
 			for (DeathQuote quote : BountyHunters.getInstance().getLevelManager().getQuotes()) {
 				if (playerData.hasUnlocked(quote))
 					BountyHunters.getInstance().getVersionWrapper().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + quote.format() + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties quote " + quote.getId() + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getMessage() + "\",\"color\":\"white\"}]}}}");

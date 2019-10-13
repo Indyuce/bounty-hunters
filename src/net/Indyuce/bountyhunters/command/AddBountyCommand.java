@@ -18,7 +18,6 @@ import net.Indyuce.bountyhunters.api.event.BountyChangeEvent;
 import net.Indyuce.bountyhunters.api.event.BountyChangeEvent.BountyChangeCause;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
-import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.manager.BountyManager;
 
 public class AddBountyCommand implements CommandExecutor {
@@ -87,7 +86,7 @@ public class AddBountyCommand implements CommandExecutor {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			long restriction = BountyHunters.getInstance().getConfig().getInt("bounty-set-restriction") * 1000;
-			long left = PlayerData.get(player).getLastBounty() + restriction - System.currentTimeMillis();
+			long left = BountyHunters.getInstance().getPlayerDataManager().get(player).getLastBounty() + restriction - System.currentTimeMillis();
 
 			if (left > 0) {
 				Message.BOUNTY_SET_RESTRICTION.format(ChatColor.RED, "%left%", "" + left / 1000, "%s%", left / 1000 > 1 ? "s" : "").send(sender);
@@ -120,7 +119,7 @@ public class AddBountyCommand implements CommandExecutor {
 			// set last bounty value
 			if (sender instanceof Player) {
 				BountyHunters.getInstance().getEconomy().withdrawPlayer((Player) sender, reward + tax);
-				PlayerData.get((OfflinePlayer) sender).setLastBounty();
+				BountyHunters.getInstance().getPlayerDataManager().get((OfflinePlayer) sender).setLastBounty();
 			}
 
 			new BountyCommands("increase." + bountyEvent.getCause().name().toLowerCase().replace("_", "-"), bounty, sender).send();
@@ -141,7 +140,7 @@ public class AddBountyCommand implements CommandExecutor {
 		// set last bounty value
 		if (sender instanceof Player) {
 			BountyHunters.getInstance().getEconomy().withdrawPlayer((Player) sender, reward + tax);
-			PlayerData.get((OfflinePlayer) sender).setLastBounty();
+			BountyHunters.getInstance().getPlayerDataManager().get((OfflinePlayer) sender).setLastBounty();
 		}
 
 		new BountyCommands("place." + bountyEvent.getCause().name().toLowerCase().replace("_", "-"), bounty, sender).send();

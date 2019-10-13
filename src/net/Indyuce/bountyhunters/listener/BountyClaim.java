@@ -55,7 +55,7 @@ public class BountyClaim implements Listener {
 				if (bountyEvent.isCancelled())
 					return;
 
-				PlayerData.get(killer).addIllegalKills(1);
+				BountyHunters.getInstance().getPlayerDataManager().get(killer).addIllegalKills(1);
 
 				/*
 				 * removes the death message
@@ -147,7 +147,7 @@ public class BountyClaim implements Listener {
 		 * adds 1 to the claimer's claimed bounties stat and checks for a level
 		 * up ; also checks if the player can join the hunter leaderboard
 		 */
-		PlayerData playerData = PlayerData.get(killer);
+		PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(killer);
 		playerData.addClaimedBounties(1);
 		if (BountyHunters.getInstance().getLevelManager().isEnabled())
 			playerData.refreshLevel(killer);

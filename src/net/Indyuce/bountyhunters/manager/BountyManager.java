@@ -14,9 +14,10 @@ import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.ConfigFile;
 import net.Indyuce.bountyhunters.manager.HuntManager.HunterData;
 
-public class BountyManager {
-	private LinkedHashMap<UUID, Bounty> bounties = new LinkedHashMap<>();
+public abstract class BountyManager {
+	private final LinkedHashMap<UUID, Bounty> bounties = new LinkedHashMap<>();
 
+	
 	public BountyManager() {
 
 		// load bounties in the map
