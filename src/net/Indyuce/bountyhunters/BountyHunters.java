@@ -27,9 +27,9 @@ import net.Indyuce.bountyhunters.command.completion.AddBountyCompletion;
 import net.Indyuce.bountyhunters.command.completion.BountiesCompletion;
 import net.Indyuce.bountyhunters.comp.Metrics;
 import net.Indyuce.bountyhunters.comp.TownySupport;
-import net.Indyuce.bountyhunters.comp.data.DataProvider;
-import net.Indyuce.bountyhunters.comp.data.DefaultDataProvider;
-import net.Indyuce.bountyhunters.comp.data.MySQLProvider;
+import net.Indyuce.bountyhunters.comp.database.DataProvider;
+import net.Indyuce.bountyhunters.comp.database.YAMLDataProvider;
+import net.Indyuce.bountyhunters.comp.database.MySQLProvider;
 import net.Indyuce.bountyhunters.comp.placeholder.BountyHuntersPlaceholders;
 import net.Indyuce.bountyhunters.comp.placeholder.DefaultParser;
 import net.Indyuce.bountyhunters.comp.placeholder.PlaceholderAPIParser;
@@ -99,7 +99,7 @@ public class BountyHunters extends JavaPlugin {
 		 * determines if BH is using a MySQL database or default YAML
 		 */
 		saveDefaultConfig();
-		dataProvider = getConfig().getBoolean("my-sql.enabled") ? new MySQLProvider() : new DefaultDataProvider();
+		dataProvider = getConfig().getBoolean("my-sql.enabled") ? new MySQLProvider() : new YAMLDataProvider();
 
 		// load first the plugin, then hunters and
 		// last bounties (bounties need hunters setup)

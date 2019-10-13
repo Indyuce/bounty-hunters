@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.comp.data.player;
+package net.Indyuce.bountyhunters.comp.database.player;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;

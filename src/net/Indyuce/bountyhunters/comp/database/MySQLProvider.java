@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.comp.data;
+package net.Indyuce.bountyhunters.comp.database;
 
 import net.Indyuce.bountyhunters.manager.BountyManager;
 import net.Indyuce.bountyhunters.manager.PlayerDataManager;
