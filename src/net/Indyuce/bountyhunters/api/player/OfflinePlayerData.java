@@ -5,7 +5,7 @@ import org.bukkit.OfflinePlayer;
 import net.Indyuce.bountyhunters.api.ConfigFile;
 
 public class OfflinePlayerData implements PlayerDataInterface {
-	private ConfigFile config;
+	private final ConfigFile config;
 
 	OfflinePlayerData(OfflinePlayer player) {
 		config = new ConfigFile("/userdata", player.getUniqueId().toString());

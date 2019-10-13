@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="C:/Users/cympe/eclipse/spigot-1.14.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cympe/eclipse/spigot-1.13.2.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/Users/cympe/eclipse/BuildTools/Spigot/Spigot-API/src/main/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/cympe/eclipse/spigot-1.13.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cympe/eclipse/PlaceholderAPI-2.10.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cympe/eclipse/Vault-1.7.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cympe/eclipse/Towny.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cympe/eclipse/spigot-1.9.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cympe/eclipse/spigot-1.9.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cympe/eclipse/spigot-1.10.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cympe/eclipse/spigot-1.11.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cympe/eclipse/spigot-1.12.2.jar"/>
+	<classpathentry kind="output" path="src"/>
+</classpath>
