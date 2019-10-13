@@ -6,6 +6,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.Indyuce.bountyhunters.BountyHunters;
@@ -67,20 +68,25 @@ public class AddBountyCommand implements CommandExecutor {
 		}
 		reward = BountyUtils.truncation(reward, 1);
 
-		// min/max check
-		double min = BountyHunters.getInstance().getConfig().getDouble("min-reward");
-		double max = BountyHunters.getInstance().getConfig().getDouble("max-reward");
-		if (reward < min) {
-			Message.REWARD_MUST_BE_HIGHER.format(ChatColor.RED, "%min%", new NumberFormat().format(min)).send(sender);
-			return true;
-		}
-		if (max > 0 && reward > max) {
-			Message.REWARD_MUST_BE_LOWER.format(ChatColor.RED, "%max%", new NumberFormat().format(max)).send(sender);
-			return true;
+		/*
+		 * minimum and maximum checks do not apply for console.
+		 */
+		CommandArguments arguments = new CommandArguments(args);
+		if (!(sender instanceof ConsoleCommandSender) || !arguments.bypassMinMax) {
+			double min = BountyHunters.getInstance().getConfig().getDouble("min-reward");
+			double max = BountyHunters.getInstance().getConfig().getDouble("max-reward");
+			if (reward < min) {
+				Message.REWARD_MUST_BE_HIGHER.format(ChatColor.RED, "%min%", new NumberFormat().format(min)).send(sender);
+				return true;
+			}
+			if (max > 0 && reward > max) {
+				Message.REWARD_MUST_BE_LOWER.format(ChatColor.RED, "%max%", new NumberFormat().format(max)).send(sender);
+				return true;
+			}
 		}
 
 		// tax calculation
-		double tax = BountyUtils.truncation(reward * BountyHunters.getInstance().getConfig().getDouble("tax") / 100, 1);
+		double tax = sender instanceof ConsoleCommandSender && arguments.noTax ? 0 : BountyUtils.truncation(reward * BountyHunters.getInstance().getConfig().getDouble("tax") / 100, 1);
 
 		// set restriction
 		if (sender instanceof Player) {
@@ -150,5 +156,21 @@ public class AddBountyCommand implements CommandExecutor {
 		if (tax > 0)
 			Message.TAX_EXPLAIN.format(ChatColor.RED, "%percent%", "" + BountyHunters.getInstance().getConfig().getDouble("tax"), "%price%", new NumberFormat().format(tax)).send(sender);
 		return true;
+	}
+
+	public class CommandArguments {
+		final boolean bypassMinMax, noTax;
+
+		public CommandArguments(String[] args) {
+			bypassMinMax = has(args, "bmm");
+			noTax = has(args, "nt");
+		}
+
+		private boolean has(String[] args, String arg) {
+			for (String checked : args)
+				if (checked.equalsIgnoreCase("-" + "arg"))
+					return true;
+			return false;
+		}
 	}
 }
