@@ -86,7 +86,14 @@ public class BountyList extends PluginInventory {
 		inv.setItem(26, CustomItem.NEXT_PAGE.toItemStack());
 		inv.setItem(18, CustomItem.PREVIOUS_PAGE.toItemStack());
 
-		inv.setItem(47, data.getProfileItem());
+		ItemStack profile = data.getProfileItem();
+		Bukkit.getScheduler().runTaskAsynchronously(BountyHunters.getInstance(), () -> {
+			SkullMeta meta = (SkullMeta) profile.getItemMeta();
+			BountyHunters.getInstance().getVersionWrapper().setOwner(meta, player);
+			inv.getItem(47).setItemMeta(meta);
+		});
+
+		inv.setItem(47, profile);
 		inv.setItem(49, CustomItem.SET_BOUNTY.toItemStack());
 
 		return inv;

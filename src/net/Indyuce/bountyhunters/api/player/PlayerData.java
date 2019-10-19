@@ -113,11 +113,13 @@ public class PlayerData implements OfflinePlayerData {
 		return advancement;
 	}
 
+	/*
+	 * has no texture, handled via async when the inventory is opened.
+	 */
 	public ItemStack getProfileItem() {
 		ItemStack profile = CustomItem.PROFILE.toItemStack().clone();
 		SkullMeta meta = (SkullMeta) profile.getItemMeta();
 		meta.setDisplayName(meta.getDisplayName().replace("{name}", offline.getName()).replace("{level}", "" + getLevel()));
-		BountyHunters.getInstance().getVersionWrapper().setOwner(meta, offline);
 		List<String> profileLore = meta.getLore();
 
 		String title = hasTitle() ? getTitle().format() : Language.NO_TITLE.format();
@@ -127,6 +129,7 @@ public class PlayerData implements OfflinePlayerData {
 
 		meta.setLore(profileLore);
 		profile.setItemMeta(meta);
+
 		return profile;
 	}
 
