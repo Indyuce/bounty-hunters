@@ -1,7 +1,11 @@
 package net.Indyuce.bountyhunters.comp.database.bounty;
 
+import java.util.UUID;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import net.Indyuce.bountyhunters.BountyHunters;
@@ -11,9 +15,9 @@ import net.Indyuce.bountyhunters.manager.BountyManager;
 
 public class YAMLBountyManager extends BountyManager {
 	public YAMLBountyManager() {
-		super();
+		loadBounties();
 	}
-	
+
 	@Override
 	public void loadBounties() {
 
@@ -21,7 +25,7 @@ public class YAMLBountyManager extends BountyManager {
 		FileConfiguration data = new ConfigFile("data").getConfig();
 		for (String key : data.getKeys(false))
 			try {
-				registerBounty(new Bounty(data.getConfigurationSection(key)));
+				registerBounty(load(data.getConfigurationSection(key)));
 			} catch (IllegalArgumentException exception) {
 				BountyHunters.getInstance().getLogger().log(Level.WARNING, "Could not load bounty " + key);
 			}
@@ -31,13 +35,38 @@ public class YAMLBountyManager extends BountyManager {
 	public void saveBounties() {
 		ConfigFile data = new ConfigFile("data");
 
-		// clear
-		for (String s : data.getConfig().getKeys(false))
-			data.getConfig().set(s, null);
-
-		for (Bounty bounty : getBounties())
-			bounty.save(data.getConfig());
+		data.getConfig().getKeys(false).forEach(key -> data.getConfig().set(key, null));
+		getBounties().forEach(bounty -> save(bounty, data.getConfig()));
 
 		data.save();
+	}
+
+	public Bounty load(ConfigurationSection section) {
+
+		Bounty bounty = new Bounty(
+				section.contains("creator") ? Bukkit.getOfflinePlayer(UUID.fromString(section.getString("creator")))
+						: null,
+				Bukkit.getOfflinePlayer(UUID.fromString(section.getName())), section.getDouble("reward"));
+
+		for (String key : section.getStringList("hunters"))
+			bounty.addHunter(Bukkit.getOfflinePlayer(UUID.fromString(key)));
+		if (section.contains("up"))
+			for (String key : section.getConfigurationSection("up").getKeys(false))
+				bounty.setBountyIncrease(Bukkit.getOfflinePlayer(UUID.fromString(key)), section.getDouble("up." + key));
+
+		return bounty;
+	}
+
+	public void save(Bounty bounty, FileConfiguration config) {
+		String key = bounty.getTarget().getUniqueId().toString();
+		config.set(key + ".reward", bounty.getReward());
+		config.set(key + ".creator", bounty.hasCreator() ? bounty.getCreator().getUniqueId().toString() : null);
+
+		config.set(key + ".hunters",
+				bounty.getHunters().stream().map(uuid -> uuid.toString()).collect(Collectors.toList()));
+
+		config.createSection(key + ".up");
+		for (UUID uuid : bounty.getPlayersWhoIncreased())
+			config.set(key + ".up." + uuid.toString(), bounty.getIncreaseAmount(uuid));
 	}
 }

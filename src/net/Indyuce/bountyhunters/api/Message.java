@@ -108,16 +108,16 @@ public enum Message {
 	}
 
 	public class PlayerMessage {
-		private String message;
+		private final String message;
 
 		public PlayerMessage(String message) {
 			this.message = message;
 		}
 
 		// send if message is not empty
-		public void send(CommandSender p) {
+		public void send(CommandSender sender) {
 			if (!ChatColor.stripColor(message).equals(""))
-				p.sendMessage(message);
+				sender.sendMessage(message);
 		}
 	}
 

@@ -3,6 +3,7 @@ package net.Indyuce.bountyhunters;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.SQLException;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -99,7 +100,13 @@ public class BountyHunters extends JavaPlugin {
 		 * determines if BH is using a MySQL database or default YAML
 		 */
 		saveDefaultConfig();
-		dataProvider = getConfig().getBoolean("my-sql.enabled") ? new MySQLProvider() : new YAMLDataProvider();
+		try {
+			dataProvider = getConfig().getBoolean("my-sql.enabled") ? new MySQLProvider(getConfig().getConfigurationSection("my-sql")) : new YAMLDataProvider();
+		} catch (SQLException | IllegalArgumentException exception) {
+			getLogger().log(Level.SEVERE, "Database error: " + exception.getMessage());
+			Bukkit.getPluginManager().disablePlugin(this);
+			return;
+		}
 
 		// load first the plugin, then hunters and
 		// last bounties (bounties need hunters setup)

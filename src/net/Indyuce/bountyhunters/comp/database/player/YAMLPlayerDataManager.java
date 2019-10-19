@@ -1,11 +1,12 @@
 package net.Indyuce.bountyhunters.comp.database.player;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.ConfigFile;
-import net.Indyuce.bountyhunters.api.player.PlayerData;
+import net.Indyuce.bountyhunters.api.PlayerData;
 import net.Indyuce.bountyhunters.manager.LevelManager;
 import net.Indyuce.bountyhunters.manager.PlayerDataManager;
 
@@ -27,7 +28,7 @@ public class YAMLPlayerDataManager extends PlayerDataManager {
 	}
 
 	@Override
-	protected void loadData(PlayerData data) {
+	public void loadData(PlayerData data) {
 		FileConfiguration config = new ConfigFile("/userdata", data.getUniqueId().toString()).getConfig();
 
 		data.setLevel(config.getInt("level"));
@@ -53,5 +54,37 @@ public class YAMLPlayerDataManager extends PlayerDataManager {
 			} catch (IllegalArgumentException exception) {
 				data.log(exception.getMessage());
 			}
+	}
+
+	@Override
+	public OfflinePlayerData loadOfflineData(OfflinePlayer player) {
+		return new YAMLOfflinePlayerData(player);
+	}
+	
+	public class YAMLOfflinePlayerData implements OfflinePlayerData {
+		private final ConfigFile config;
+
+		private YAMLOfflinePlayerData(OfflinePlayer player) {
+			config = new ConfigFile("/userdata", player.getUniqueId().toString());
+		}
+
+		@Override
+		public int getSuccessfulBounties() {
+			return config.getConfig().getInt("successful-bounties");
+		}
+
+		@Override
+		public void setSuccessfulBounties(int value) {
+			config.getConfig().set("successful-bounties", value);
+		}
+
+		@Override
+		public void addSuccessfulBounties(int value) {
+			setSuccessfulBounties(getSuccessfulBounties() + value);
+		}
+
+		public void save() {
+			config.save();
+		}
 	}
 }

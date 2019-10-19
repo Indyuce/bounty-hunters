@@ -10,10 +10,9 @@ import java.util.UUID;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import net.Indyuce.bountyhunters.BountyHunters;
+import net.Indyuce.bountyhunters.manager.HuntManager;
 
 public class Bounty {
 	private double reward;
@@ -36,15 +35,6 @@ public class Bounty {
 		this.target = target;
 		this.creator = creator;
 		this.reward = reward;
-	}
-
-	public Bounty(ConfigurationSection section) {
-		this(section.contains("creator") ? UUID.fromString(section.getString("creator")) : null, UUID.fromString(section.getName()), section.getDouble("reward"));
-		for (String key : section.getStringList("hunters"))
-			addHunter(Bukkit.getOfflinePlayer(UUID.fromString(key)));
-		if (section.contains("up"))
-			for (String key : section.getConfigurationSection("up").getKeys(false))
-				setBountyIncrease(Bukkit.getOfflinePlayer(UUID.fromString(key)), section.getDouble("up." + key));
 	}
 
 	public double getReward() {
@@ -71,14 +61,24 @@ public class Bounty {
 		return target.equals(player);
 	}
 
-	public void addToReward(OfflinePlayer player, double value) {
+	public void addToReward(double value) {
 		reward += value;
-		if (player != null)
-			setBountyIncrease(player, value);
+	}
+
+	public void addToReward(OfflinePlayer player, double value) {
+		addToReward(value);
+		setBountyIncrease(player, value);
 	}
 
 	public void setBountyIncrease(OfflinePlayer player, double value) {
-		up.put(player.getUniqueId(), (up.containsKey(player.getUniqueId()) ? up.get(player.getUniqueId()) : 0) + value);
+		setBountyIncrease(player.getUniqueId(), value);
+	}
+
+	/*
+	 * this method ADDS the given value to the mapped value, it does NOT replace it
+	 */
+	public void setBountyIncrease(UUID uuid, double value) {
+		up.put(uuid, (up.containsKey(uuid) ? up.get(uuid) : 0) + value);
 	}
 
 	public Set<UUID> getPlayersWhoIncreased() {
@@ -86,7 +86,11 @@ public class Bounty {
 	}
 
 	public double getIncreaseAmount(OfflinePlayer player) {
-		return up.get(player.getUniqueId());
+		return getIncreaseAmount(player.getUniqueId());
+	}
+
+	public double getIncreaseAmount(UUID uuid) {
+		return up.get(uuid);
 	}
 
 	public void setReward(double reward) {
@@ -110,30 +114,18 @@ public class Bounty {
 
 	public void addHunter(OfflinePlayer player) {
 
-		if (BountyHunters.getInstance().getHuntManager().isHunting(player))
-			BountyHunters.getInstance().getHuntManager().getTargetBounty(player).removeHunter(player);
-		
-		BountyHunters.getInstance().getHuntManager().setHunting(player, target);
+		HuntManager huntManager = BountyHunters.getInstance().getHuntManager();
+		if (huntManager.isHunting(player))
+			huntManager.getTargetBounty(player).removeHunter(player);
+
+		huntManager.setHunting(player, target);
 		hunters.add(player.getUniqueId());
 	}
 
 	public void removeHunter(OfflinePlayer player) {
-		if (hasHunter(player))
+		if (hasHunter(player)) {
 			BountyHunters.getInstance().getHuntManager().stopHunting(player);
-		hunters.remove(player.getUniqueId());
-	}
-
-	public void save(FileConfiguration config) {
-		config.set(target.getUniqueId().toString() + ".reward", reward);
-		config.set(target.getUniqueId().toString() + ".creator", hasCreator() ? creator.getUniqueId().toString() : null);
-
-		List<String> hunterList = new ArrayList<>();
-		for (UUID hunter : hunters)
-			hunterList.add(hunter.toString());
-		config.set(target.getUniqueId().toString() + ".hunters", hunterList);
-
-		config.createSection(target.getUniqueId().toString() + ".up");
-		for (UUID player : up.keySet())
-			config.set(target.getUniqueId().toString() + ".up." + player.toString(), up.get(player));
+			hunters.remove(player.getUniqueId());
+		}
 	}
 }

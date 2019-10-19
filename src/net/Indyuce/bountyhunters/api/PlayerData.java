@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.api.player;
+package net.Indyuce.bountyhunters.api;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,16 +15,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import net.Indyuce.bountyhunters.BountyHunters;
-import net.Indyuce.bountyhunters.api.AltChar;
-import net.Indyuce.bountyhunters.api.CustomItem;
-import net.Indyuce.bountyhunters.api.Message;
-import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.event.HunterLevelUpEvent;
+import net.Indyuce.bountyhunters.comp.database.player.OfflinePlayerData;
 import net.Indyuce.bountyhunters.manager.LevelManager.DeathQuote;
 import net.Indyuce.bountyhunters.manager.LevelManager.LevelUpItem;
 import net.Indyuce.bountyhunters.manager.LevelManager.Title;
 
-public class PlayerData implements PlayerDataInterface {
+public class PlayerData implements OfflinePlayerData {
 
 	private final OfflinePlayer offline;
 
@@ -54,9 +51,8 @@ public class PlayerData implements PlayerDataInterface {
 	}
 
 	/*
-	 * CAREFUL! this method does NOT save any of the player data. you MUST save
-	 * the player data using saveFile() before unloading the player data from
-	 * the map!
+	 * CAREFUL! this method does NOT save any of the player data. you MUST save the
+	 * player data using saveFile() before unloading the player data from the map!
 	 */
 	@Deprecated
 	public void unload() {
@@ -123,13 +119,18 @@ public class PlayerData implements PlayerDataInterface {
 	public ItemStack getProfileItem() {
 		ItemStack profile = CustomItem.PROFILE.toItemStack().clone();
 		SkullMeta meta = (SkullMeta) profile.getItemMeta();
-		meta.setDisplayName(meta.getDisplayName().replace("%name%", offline.getName()).replace("%level%", "" + getLevel()));
+		meta.setDisplayName(
+				meta.getDisplayName().replace("%name%", offline.getName()).replace("%level%", "" + getLevel()));
 		BountyHunters.getInstance().getVersionWrapper().setOwner(meta, offline);
 		List<String> profileLore = meta.getLore();
 
 		String title = hasTitle() ? getTitle().format() : Message.NO_TITLE.getMessage();
 		for (int j = 0; j < profileLore.size(); j++)
-			profileLore.set(j, profileLore.get(j).replace("%lvl-progress%", getLevelProgressBar()).replace("%claimed-bounties%", "" + getClaimedBounties()).replace("%successful-bounties%", "" + getSuccessfulBounties()).replace("%current-title%", title).replace("%level%", "" + getLevel()));
+			profileLore.set(j,
+					profileLore.get(j).replace("%lvl-progress%", getLevelProgressBar())
+							.replace("%claimed-bounties%", "" + getClaimedBounties())
+							.replace("%successful-bounties%", "" + getSuccessfulBounties())
+							.replace("%current-title%", title).replace("%level%", "" + getLevel()));
 
 		meta.setLore(profileLore);
 		profile.setItemMeta(meta);
@@ -146,7 +147,8 @@ public class PlayerData implements PlayerDataInterface {
 
 	public void log(String... message) {
 		for (String line : message)
-			BountyHunters.getInstance().getLogger().log(Level.WARNING, "[Player Data] " + offline.getName() + ": " + line);
+			BountyHunters.getInstance().getLogger().log(Level.WARNING,
+					"[Player Data] " + offline.getName() + ": " + line);
 	}
 
 	public void setLastBounty() {
@@ -203,7 +205,7 @@ public class PlayerData implements PlayerDataInterface {
 
 	@Override
 	public void addSuccessfulBounties(int value) {
-		setSuccessfulBounties(successful + value);
+		setSuccessfulBounties(getSuccessfulBounties() + value);
 	}
 
 	public void addClaimedBounties(int value) {
@@ -230,7 +232,8 @@ public class PlayerData implements PlayerDataInterface {
 
 		Message.CHAT_BAR.format(ChatColor.YELLOW).send(player);
 		Message.LEVEL_UP.format(ChatColor.YELLOW, "%level%", "" + nextLevel).send(player);
-		Message.LEVEL_UP_2.format(ChatColor.YELLOW, "%bounties%", "" + BountyHunters.getInstance().getLevelManager().getBountiesPerLevel()).send(player);
+		Message.LEVEL_UP_2.format(ChatColor.YELLOW, "%bounties%",
+				"" + BountyHunters.getInstance().getLevelManager().getBountiesPerLevel()).send(player);
 
 		List<String> chatDisplay = new ArrayList<>();
 
@@ -246,17 +249,23 @@ public class PlayerData implements PlayerDataInterface {
 
 		// send commands
 		if (BountyHunters.getInstance().getLevelManager().hasCommands(nextLevel))
-			BountyHunters.getInstance().getLevelManager().getCommands(nextLevel).forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), BountyHunters.getInstance().getPlaceholderParser().parse(player, cmd)));
+			BountyHunters.getInstance().getLevelManager().getCommands(nextLevel)
+					.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+							BountyHunters.getInstance().getPlaceholderParser().parse(player, cmd)));
 
 		// money
 		double money = BountyHunters.getInstance().getLevelManager().calculateLevelMoney(nextLevel);
 		BountyHunters.getInstance().getEconomy().depositPlayer(player, money);
 
 		// send json list
-		String jsonList = money > 0 ? "\n" + Message.LEVEL_UP_REWARD_MONEY.formatRaw(ChatColor.YELLOW, "%amount%", new NumberFormat().format(money)) : "";
+		String jsonList = money > 0 ? "\n" + Message.LEVEL_UP_REWARD_MONEY.formatRaw(ChatColor.YELLOW, "%amount%",
+				new NumberFormat().format(money)) : "";
 		for (String s : chatDisplay)
 			jsonList += "\n" + Message.LEVEL_UP_REWARD.formatRaw(ChatColor.YELLOW, "%reward%", AltChar.apply(s));
-		BountyHunters.getInstance().getVersionWrapper().sendJson(player, "{\"text\":\"" + ChatColor.YELLOW + Message.LEVEL_UP_REWARDS.getMessage() + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1) + "\"}}}");
+		BountyHunters.getInstance().getVersionWrapper().sendJson(player,
+				"{\"text\":\"" + ChatColor.YELLOW + Message.LEVEL_UP_REWARDS.getMessage()
+						+ "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1)
+						+ "\"}}}");
 
 		setLevel(nextLevel);
 		return true;
@@ -264,7 +273,8 @@ public class PlayerData implements PlayerDataInterface {
 
 	@Override
 	public boolean equals(Object object) {
-		return object != null && object instanceof PlayerData && ((PlayerData) object).getUniqueId().equals(getUniqueId());
+		return object != null && object instanceof PlayerData
+				&& ((PlayerData) object).getUniqueId().equals(getUniqueId());
 	}
 
 	@Deprecated
@@ -283,11 +293,7 @@ public class PlayerData implements PlayerDataInterface {
 	}
 
 	public enum Value {
-		CLAIMED_BOUNTIES(0),
-		SUCCESSFUL_BOUNTIES(0),
-		LEVEL(0),
-		CURRENT_TITLE(""),
-		CURRENT_QUOTE(""),
+		CLAIMED_BOUNTIES(0), SUCCESSFUL_BOUNTIES(0), LEVEL(0), CURRENT_TITLE(""), CURRENT_QUOTE(""),
 		UNLOCKED(new ArrayList<>());
 
 		private Object def;

@@ -4,7 +4,7 @@
 # Requires /reload when changed.
 update-notify: true
 
-# Use a database for bounty and player data
+# Use a MySQL database for bounty and player data
 my-sql:
     enabled: false
     host: 127.0.0.1

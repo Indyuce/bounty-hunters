@@ -23,11 +23,6 @@ import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.NumberFormat;
 
 public class HuntManager {
-
-	/*
-	 * players tracking other bounty targets are not saved when the server
-	 * resets.
-	 */
 	private final Map<UUID, HunterData> hunting = new HashMap<>();
 
 	public Set<UUID> getHuntingPlayers() {

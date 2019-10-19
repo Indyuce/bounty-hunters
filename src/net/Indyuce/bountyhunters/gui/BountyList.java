@@ -21,10 +21,10 @@ import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.CustomItem.Builder;
 import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.NumberFormat;
+import net.Indyuce.bountyhunters.api.PlayerData;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent.BountyExpireCause;
 import net.Indyuce.bountyhunters.api.event.HunterTargetEvent;
-import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.version.VersionMaterial;
 import net.Indyuce.bountyhunters.version.wrapper.ItemTag;
 

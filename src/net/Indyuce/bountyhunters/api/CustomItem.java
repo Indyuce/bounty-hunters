@@ -82,8 +82,8 @@ public enum CustomItem {
 	 * placeholders
 	 */
 	public class Builder {
-		private Map<String, Boolean> conditions = new HashMap<>();
-		private Set<Placeholder> placeholders = new HashSet<>();
+		private final Map<String, Boolean> conditions = new HashMap<>();
+		private final Set<Placeholder> placeholders = new HashSet<>();
 
 		private final ItemStack item = toItemStack();
 
