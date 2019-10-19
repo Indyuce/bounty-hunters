@@ -22,6 +22,7 @@ public class BountyChangeEvent extends BountyEvent {
 	 */
 	public BountyChangeEvent(Bounty bounty, BountyChangeCause cause) {
 		super(bounty);
+		
 		this.cause = cause;
 	}
 

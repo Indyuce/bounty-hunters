@@ -23,6 +23,7 @@ public class BountyCreateEvent extends BountyEvent {
 	 */
 	public BountyCreateEvent(Bounty bounty, BountyCause cause) {
 		super(bounty);
+		
 		this.cause = cause;
 	}
 

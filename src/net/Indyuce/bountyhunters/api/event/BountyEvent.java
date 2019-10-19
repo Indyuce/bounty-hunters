@@ -7,7 +7,7 @@ import net.Indyuce.bountyhunters.api.Bounty;
 
 public abstract class BountyEvent extends Event implements Cancellable {
 	private final Bounty bounty;
-	
+
 	private boolean cancelled = false;
 
 	/*
@@ -32,6 +32,6 @@ public abstract class BountyEvent extends Event implements Cancellable {
 	public Bounty getBounty() {
 		return bounty;
 	}
-	
+
 	public abstract void sendAllert();
 }

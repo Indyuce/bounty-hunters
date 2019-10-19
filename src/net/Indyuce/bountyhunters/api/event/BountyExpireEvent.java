@@ -21,6 +21,7 @@ public class BountyExpireEvent extends BountyEvent {
 	 */
 	public BountyExpireEvent(Bounty bounty, BountyExpireCause cause) {
 		super(bounty);
+		
 		this.cause = cause;
 	}
 

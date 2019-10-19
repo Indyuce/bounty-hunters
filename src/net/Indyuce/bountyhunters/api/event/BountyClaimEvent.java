@@ -13,7 +13,7 @@ import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
 
 public class BountyClaimEvent extends BountyEvent {
-	private Player player;
+	private final Player player;
 	
 	private static final HandlerList handlers = new HandlerList();
 
@@ -23,6 +23,7 @@ public class BountyClaimEvent extends BountyEvent {
 	 */
 	public BountyClaimEvent(Bounty bounty, Player player) {
 		super(bounty);
+		
 		this.player = player;
 	}
 
