@@ -7,7 +7,7 @@ public enum Language {
 	/*
 	 * menu
 	 */
-	CLICK_BUY_COMPASS("Click to buy the compass for ${price}."),
+	CLICK_BUY_COMPASS("&eClick to buy the compass for ${price}."),
 	NO_TITLE("&cNo Title"),
 	NO_PLAYER("&c- No Player -"),
 	GUI_NAME("&nBounties ({page}/{max_page})"),
