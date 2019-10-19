@@ -51,6 +51,8 @@ public class BountyList extends PluginInventory {
 		int max = page * 21;
 
 		for (int j = min; j < max && j < bounties.size(); j++) {
+			final int index = j - min;
+
 			Bounty bounty = bounties.get(j);
 			Builder builder = CustomItem.GUI_PLAYER_HEAD.newBuilder();
 			boolean isTarget = bounty.hasTarget(player), isCreator = bounty.hasCreator(player), isHunter = bounty.hasHunter(player), noCreator = !bounty.hasCreator();
@@ -64,10 +66,10 @@ public class BountyList extends PluginInventory {
 			if (BountyHunters.getInstance().getConfig().getBoolean("display-player-skulls"))
 				Bukkit.getScheduler().runTaskAsynchronously(BountyHunters.getInstance(), () -> {
 					BountyHunters.getInstance().getVersionWrapper().setOwner(meta, bounty.getTarget());
-					item.setItemMeta(meta);
+					inv.getItem(slots[index]).setItemMeta(meta);
 				});
 			item.setItemMeta(meta);
-			inv.setItem(slots[j - min], item);
+			inv.setItem(slots[index], item);
 		}
 
 		if (BountyHunters.getInstance().getConfig().getBoolean("player-tracking.enabled")) {
