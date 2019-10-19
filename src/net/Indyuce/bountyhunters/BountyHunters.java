@@ -140,7 +140,7 @@ public class BountyHunters extends JavaPlugin {
 				public void a(PlayerJoinEvent event) {
 					Player player = event.getPlayer();
 					if (bountyManager.hasBounty(player))
-						event.setJoinMessage(message.replace("%player%", player.getName()).replace("%bounty%", new NumberFormat().format(bountyManager.getBounty(player).getReward())));
+						event.setJoinMessage(message.replace("{player}", player.getName()).replace("{bounty}", new NumberFormat().format(bountyManager.getBounty(player).getReward())));
 				}
 			}, this);
 

@@ -100,12 +100,12 @@ public class Leaderboard extends PluginInventory {
 	private String applyPlaceholders(String s, PlayerData playerData, int rank) {
 		String title = playerData.hasTitle() ? playerData.getTitle().format() : Language.NO_TITLE.format();
 
-		s = s.replace("%level%", "" + playerData.getLevel());
-		s = s.replace("%bounties%", "" + playerData.getClaimedBounties());
-		s = s.replace("%successful-bounties%", "" + playerData.getSuccessfulBounties());
-		s = s.replace("%title%", title);
-		s = s.replace("%name%", playerData.getOfflinePlayer().getName());
-		s = s.replace("%rank%", "" + rank);
+		s = s.replace("{level}", "" + playerData.getLevel());
+		s = s.replace("{bounties}", "" + playerData.getClaimedBounties());
+		s = s.replace("{successful_bounties}", "" + playerData.getSuccessfulBounties());
+		s = s.replace("{title}", title);
+		s = s.replace("{name}", playerData.getOfflinePlayer().getName());
+		s = s.replace("{rank}", "" + rank);
 
 		return s;
 	}

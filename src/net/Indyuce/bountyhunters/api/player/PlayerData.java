@@ -116,14 +116,14 @@ public class PlayerData implements OfflinePlayerData {
 	public ItemStack getProfileItem() {
 		ItemStack profile = CustomItem.PROFILE.toItemStack().clone();
 		SkullMeta meta = (SkullMeta) profile.getItemMeta();
-		meta.setDisplayName(meta.getDisplayName().replace("%name%", offline.getName()).replace("%level%", "" + getLevel()));
+		meta.setDisplayName(meta.getDisplayName().replace("{name}", offline.getName()).replace("{level}", "" + getLevel()));
 		BountyHunters.getInstance().getVersionWrapper().setOwner(meta, offline);
 		List<String> profileLore = meta.getLore();
 
 		String title = hasTitle() ? getTitle().format() : Language.NO_TITLE.format();
 		for (int j = 0; j < profileLore.size(); j++)
-			profileLore.set(j, profileLore.get(j).replace("%lvl-progress%", getLevelProgressBar()).replace("%claimed-bounties%", "" + getClaimedBounties())
-					.replace("%successful-bounties%", "" + getSuccessfulBounties()).replace("%current-title%", title).replace("%level%", "" + getLevel()));
+			profileLore.set(j, profileLore.get(j).replace("{level_progress}", getLevelProgressBar()).replace("{claimed_bounties}", "" + getClaimedBounties())
+					.replace("{successful_bounties}", "" + getSuccessfulBounties()).replace("{current_title}", title).replace("{level}", "" + getLevel()));
 
 		meta.setLore(profileLore);
 		profile.setItemMeta(meta);

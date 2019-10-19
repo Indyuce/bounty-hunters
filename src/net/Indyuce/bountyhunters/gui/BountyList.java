@@ -173,7 +173,7 @@ public class BountyList extends PluginInventory {
 					// check for target cooldown
 					long remain = (long) (data.getLastTarget() + BountyHunters.getInstance().getConfig().getDouble("player-tracking.cooldown") * 1000 - System.currentTimeMillis()) / 1000;
 					if (remain > 0) {
-						Message.TARGET_COOLDOWN.format("%remain%", "" + remain, "%s%", remain >= 2 ? "s" : "").send(player);
+						Message.TARGET_COOLDOWN.format("remain", "" + remain, "s", remain >= 2 ? "s" : "").send(player);
 						return;
 					}
 

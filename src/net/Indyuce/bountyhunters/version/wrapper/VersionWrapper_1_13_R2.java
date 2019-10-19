@@ -65,7 +65,7 @@ public class VersionWrapper_1_13_R2 implements VersionWrapper {
 
 		ItemStack item = new ItemStack(Material.PLAYER_HEAD);
 		SkullMeta meta = (SkullMeta) CustomItem.PLAYER_HEAD.toItemStack().getItemMeta();
-		meta.setDisplayName(meta.getDisplayName().replace("%name%", player.getName()));
+		meta.setDisplayName(meta.getDisplayName().replace("{name}", player.getName()));
 		meta.setOwningPlayer(player);
 		item.setItemMeta(meta);
 

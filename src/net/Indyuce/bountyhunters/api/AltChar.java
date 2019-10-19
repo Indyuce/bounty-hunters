@@ -8,7 +8,7 @@ public class AltChar {
 	public static final String square = "█";
 	public static final String listDash = "▸";
 
-	public static String apply(String s) {
-		return ChatColor.translateAlternateColorCodes('&', s.replace("%star%", star).replace("%diamond%", diamond));
+	public static String apply(String str) {
+		return ChatColor.translateAlternateColorCodes('&', str.replace("{star}", star).replace("{diamond}", diamond));
 	}
 }

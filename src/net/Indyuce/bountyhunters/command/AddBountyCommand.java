@@ -75,11 +75,11 @@ public class AddBountyCommand implements CommandExecutor {
 			double min = BountyHunters.getInstance().getConfig().getDouble("min-reward");
 			double max = BountyHunters.getInstance().getConfig().getDouble("max-reward");
 			if (reward < min) {
-				Message.REWARD_MUST_BE_HIGHER.format("%min%", new NumberFormat().format(min)).send(sender);
+				Message.REWARD_MUST_BE_HIGHER.format("min", new NumberFormat().format(min)).send(sender);
 				return true;
 			}
 			if (max > 0 && reward > max) {
-				Message.REWARD_MUST_BE_LOWER.format("%max%", new NumberFormat().format(max)).send(sender);
+				Message.REWARD_MUST_BE_LOWER.format("max", new NumberFormat().format(max)).send(sender);
 				return true;
 			}
 		}
@@ -94,7 +94,7 @@ public class AddBountyCommand implements CommandExecutor {
 			long left = BountyHunters.getInstance().getPlayerDataManager().get(player).getLastBounty() + restriction - System.currentTimeMillis();
 
 			if (left > 0) {
-				Message.BOUNTY_SET_RESTRICTION.format("%left%", "" + left / 1000, "%s%", left / 1000 > 1 ? "s" : "").send(sender);
+				Message.BOUNTY_SET_RESTRICTION.format("left", "" + left / 1000, "s", left / 1000 > 1 ? "s" : "").send(sender);
 				return true;
 			}
 		}
