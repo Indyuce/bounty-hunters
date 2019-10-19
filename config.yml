@@ -13,6 +13,13 @@ my-sql:
     username: username
     password: password
 
+# Enable/disable plugin logging;
+# requires a server reload when changed.
+logging:
+    bounty-claim: true
+    bounty-expire: true
+    level-up: false
+
 # When enabled, some items that can't be picked up will
 # drop from the target's body (can be any material).
 # Looks cool with CHEST, GOLD_NUGGET, REDSTONE...

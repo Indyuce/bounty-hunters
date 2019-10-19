@@ -54,8 +54,9 @@ public class PlayerData implements OfflinePlayerData {
 	}
 
 	/*
-	 * CAREFUL! this method does NOT save any of the player data. you MUST save the
-	 * player data using saveFile() before unloading the player data from the map!
+	 * CAREFUL! this method does NOT save any of the player data. you MUST save
+	 * the player data using saveFile() before unloading the player data from
+	 * the map!
 	 */
 	@Deprecated
 	public void unload() {
@@ -68,10 +69,6 @@ public class PlayerData implements OfflinePlayerData {
 
 	public long getLastTarget() {
 		return lastTarget;
-	}
-
-	public boolean canSelectItem() {
-		return lastSelect + 3000 < System.currentTimeMillis();
 	}
 
 	public UUID getUniqueId() {
@@ -98,10 +95,6 @@ public class PlayerData implements OfflinePlayerData {
 		return title;
 	}
 
-	public boolean hasUnlocked(LevelUpItem item) {
-		return level >= item.getUnlockLevel();
-	}
-
 	public double getValueDependingOnLevel(ConfigurationSection section, int level) {
 		return section.getDouble("base") + section.getDouble("per-level") * level;
 	}
@@ -122,18 +115,14 @@ public class PlayerData implements OfflinePlayerData {
 	public ItemStack getProfileItem() {
 		ItemStack profile = CustomItem.PROFILE.toItemStack().clone();
 		SkullMeta meta = (SkullMeta) profile.getItemMeta();
-		meta.setDisplayName(
-				meta.getDisplayName().replace("%name%", offline.getName()).replace("%level%", "" + getLevel()));
+		meta.setDisplayName(meta.getDisplayName().replace("%name%", offline.getName()).replace("%level%", "" + getLevel()));
 		BountyHunters.getInstance().getVersionWrapper().setOwner(meta, offline);
 		List<String> profileLore = meta.getLore();
 
 		String title = hasTitle() ? getTitle().format() : Message.NO_TITLE.getMessage();
 		for (int j = 0; j < profileLore.size(); j++)
-			profileLore.set(j,
-					profileLore.get(j).replace("%lvl-progress%", getLevelProgressBar())
-							.replace("%claimed-bounties%", "" + getClaimedBounties())
-							.replace("%successful-bounties%", "" + getSuccessfulBounties())
-							.replace("%current-title%", title).replace("%level%", "" + getLevel()));
+			profileLore.set(j, profileLore.get(j).replace("%lvl-progress%", getLevelProgressBar()).replace("%claimed-bounties%", "" + getClaimedBounties())
+					.replace("%successful-bounties%", "" + getSuccessfulBounties()).replace("%current-title%", title).replace("%level%", "" + getLevel()));
 
 		meta.setLore(profileLore);
 		profile.setItemMeta(meta);
@@ -148,10 +137,25 @@ public class PlayerData implements OfflinePlayerData {
 		return illegalKills;
 	}
 
+	public boolean hasUnlocked(LevelUpItem item) {
+		return level >= item.getUnlockLevel();
+	}
+
+	public boolean hasQuote() {
+		return quote != null;
+	}
+
+	public boolean hasTitle() {
+		return title != null;
+	}
+
+	public boolean canSelectItem() {
+		return lastSelect + 3000 < System.currentTimeMillis();
+	}
+
 	public void log(String... message) {
 		for (String line : message)
-			BountyHunters.getInstance().getLogger().log(Level.WARNING,
-					"[Player Data] " + offline.getName() + ": " + line);
+			BountyHunters.getInstance().getLogger().log(Level.WARNING, "[Player Data] " + offline.getName() + ": " + line);
 	}
 
 	public void setLastBounty() {
@@ -164,14 +168,6 @@ public class PlayerData implements OfflinePlayerData {
 
 	public void setLastSelect() {
 		lastSelect = System.currentTimeMillis();
-	}
-
-	public boolean hasQuote() {
-		return quote != null;
-	}
-
-	public boolean hasTitle() {
-		return title != null;
 	}
 
 	public void setLevel(int value) {
@@ -235,8 +231,7 @@ public class PlayerData implements OfflinePlayerData {
 
 		Message.CHAT_BAR.format(ChatColor.YELLOW).send(player);
 		Message.LEVEL_UP.format(ChatColor.YELLOW, "%level%", "" + nextLevel).send(player);
-		Message.LEVEL_UP_2.format(ChatColor.YELLOW, "%bounties%",
-				"" + BountyHunters.getInstance().getLevelManager().getBountiesPerLevel()).send(player);
+		Message.LEVEL_UP_2.format(ChatColor.YELLOW, "%bounties%", "" + BountyHunters.getInstance().getLevelManager().getBountiesPerLevel()).send(player);
 
 		List<String> chatDisplay = new ArrayList<>();
 
@@ -253,22 +248,18 @@ public class PlayerData implements OfflinePlayerData {
 		// send commands
 		if (BountyHunters.getInstance().getLevelManager().hasCommands(nextLevel))
 			BountyHunters.getInstance().getLevelManager().getCommands(nextLevel)
-					.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-							BountyHunters.getInstance().getPlaceholderParser().parse(player, cmd)));
+					.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), BountyHunters.getInstance().getPlaceholderParser().parse(player, cmd)));
 
 		// money
 		double money = BountyHunters.getInstance().getLevelManager().calculateLevelMoney(nextLevel);
 		BountyHunters.getInstance().getEconomy().depositPlayer(player, money);
 
 		// send json list
-		String jsonList = money > 0 ? "\n" + Message.LEVEL_UP_REWARD_MONEY.formatRaw(ChatColor.YELLOW, "%amount%",
-				new NumberFormat().format(money)) : "";
+		String jsonList = money > 0 ? "\n" + Message.LEVEL_UP_REWARD_MONEY.formatRaw(ChatColor.YELLOW, "%amount%", new NumberFormat().format(money)) : "";
 		for (String s : chatDisplay)
 			jsonList += "\n" + Message.LEVEL_UP_REWARD.formatRaw(ChatColor.YELLOW, "%reward%", AltChar.apply(s));
 		BountyHunters.getInstance().getVersionWrapper().sendJson(player,
-				"{\"text\":\"" + ChatColor.YELLOW + Message.LEVEL_UP_REWARDS.getMessage()
-						+ "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1)
-						+ "\"}}}");
+				"{\"text\":\"" + ChatColor.YELLOW + Message.LEVEL_UP_REWARDS.getMessage() + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1) + "\"}}}");
 
 		setLevel(nextLevel);
 		return true;
@@ -276,8 +267,13 @@ public class PlayerData implements OfflinePlayerData {
 
 	@Override
 	public boolean equals(Object object) {
-		return object != null && object instanceof PlayerData
-				&& ((PlayerData) object).getUniqueId().equals(getUniqueId());
+		return object != null && object instanceof PlayerData && ((PlayerData) object).getUniqueId().equals(getUniqueId());
+	}
+
+	@Override
+	public String toString() {
+		return "{Level=" + level + ", ClaimedBounties=" + claimed + ", SuccessfulBounties=" + successful + ", IllegalKills=" + illegalKills + ", IllegalKillStreak=" + illegalStreak
+				+ (hasTitle() ? ", Title=" + title.getId() : "") + (hasQuote() ? ", Quote=" + quote.getId() : "") + "}";
 	}
 
 	@Deprecated
@@ -293,24 +289,5 @@ public class PlayerData implements OfflinePlayerData {
 	@Deprecated
 	public static void load(OfflinePlayer player) {
 		BountyHunters.getInstance().getPlayerDataManager().load(player);
-	}
-
-	public enum Value {
-		CLAIMED_BOUNTIES(0), SUCCESSFUL_BOUNTIES(0), LEVEL(0), CURRENT_TITLE(""), CURRENT_QUOTE(""),
-		UNLOCKED(new ArrayList<>());
-
-		private Object def;
-
-		private Value(Object def) {
-			this.def = def;
-		}
-
-		public String getPath() {
-			return name().toLowerCase().replace("_", "-");
-		}
-
-		public Object getDefault() {
-			return def;
-		}
 	}
 }

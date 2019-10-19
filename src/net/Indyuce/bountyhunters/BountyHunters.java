@@ -29,8 +29,8 @@ import net.Indyuce.bountyhunters.command.completion.BountiesCompletion;
 import net.Indyuce.bountyhunters.comp.Metrics;
 import net.Indyuce.bountyhunters.comp.TownySupport;
 import net.Indyuce.bountyhunters.comp.database.DataProvider;
-import net.Indyuce.bountyhunters.comp.database.YAMLDataProvider;
 import net.Indyuce.bountyhunters.comp.database.MySQLProvider;
+import net.Indyuce.bountyhunters.comp.database.YAMLDataProvider;
 import net.Indyuce.bountyhunters.comp.placeholder.BountyHuntersPlaceholders;
 import net.Indyuce.bountyhunters.comp.placeholder.DefaultParser;
 import net.Indyuce.bountyhunters.comp.placeholder.PlaceholderAPIParser;
@@ -40,6 +40,9 @@ import net.Indyuce.bountyhunters.gui.listener.GuiListener;
 import net.Indyuce.bountyhunters.listener.BountyClaim;
 import net.Indyuce.bountyhunters.listener.HuntListener;
 import net.Indyuce.bountyhunters.listener.PlayerListener;
+import net.Indyuce.bountyhunters.listener.log.ClaimLog;
+import net.Indyuce.bountyhunters.listener.log.ExpireLog;
+import net.Indyuce.bountyhunters.listener.log.LevelUpLog;
 import net.Indyuce.bountyhunters.manager.BountyManager;
 import net.Indyuce.bountyhunters.manager.HuntManager;
 import net.Indyuce.bountyhunters.manager.LevelManager;
@@ -116,10 +119,17 @@ public class BountyHunters extends JavaPlugin {
 		playerDataManager = dataProvider.providePlayerData();
 
 		// listeners
-		Bukkit.getServer().getPluginManager().registerEvents(new BountyClaim(), this);
-		Bukkit.getServer().getPluginManager().registerEvents(new GuiListener(), this);
-		Bukkit.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-		Bukkit.getServer().getPluginManager().registerEvents(new HuntListener(), this);
+		Bukkit.getPluginManager().registerEvents(new BountyClaim(), this);
+		Bukkit.getPluginManager().registerEvents(new GuiListener(), this);
+		Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+		Bukkit.getPluginManager().registerEvents(new HuntListener(), this);
+
+		if (getConfig().getBoolean("logging.bounty-claim"))
+			Bukkit.getPluginManager().registerEvents(new ClaimLog(), this);
+		if (getConfig().getBoolean("logging.bounty-expire"))
+			Bukkit.getPluginManager().registerEvents(new ExpireLog(), this);
+		if (getConfig().getBoolean("logging.level-up"))
+			Bukkit.getPluginManager().registerEvents(new LevelUpLog(), this);
 
 		if (getConfig().getBoolean("target-login-message.enabled"))
 			Bukkit.getServer().getPluginManager().registerEvents(new Listener() {

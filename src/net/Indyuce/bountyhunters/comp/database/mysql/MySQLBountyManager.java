@@ -40,11 +40,8 @@ public class MySQLBountyManager extends BountyManager {
 				try {
 
 					String creatorFormat = result.getString("creator");
-					UUID creator = creatorFormat.equalsIgnoreCase("null") ? null : UUID.fromString(creatorFormat);
-					UUID target = UUID.fromString(result.getString("target"));
-					double reward = result.getDouble("reward");
-
-					Bounty bounty = new Bounty(creator == null ? null : Bukkit.getOfflinePlayer(creator), Bukkit.getOfflinePlayer(target), reward);
+					Bounty bounty = new Bounty(creatorFormat == null ? null : Bukkit.getOfflinePlayer(UUID.fromString(creatorFormat)),
+							Bukkit.getOfflinePlayer(UUID.fromString(result.getString("target"))), result.getDouble("reward"));
 
 					JsonObject increased = (JsonObject) new JsonParser().parse(result.getString("increased"));
 					increased.entrySet().forEach(entry -> bounty.setBountyIncrease(UUID.fromString(entry.getKey()), entry.getValue().getAsDouble()));
@@ -60,7 +57,6 @@ public class MySQLBountyManager extends BountyManager {
 
 		} catch (SQLException exception) {
 			BountyHunters.getInstance().getLogger().log(Level.SEVERE, "Could not load bounty data from database: " + exception.getMessage());
-			Bukkit.getPluginManager().disablePlugin(BountyHunters.getInstance());
 		}
 	}
 
@@ -79,11 +75,11 @@ public class MySQLBountyManager extends BountyManager {
 				bounty.getPlayersWhoIncreased().forEach(key -> increased.addProperty(key.toString(), bounty.getIncreaseAmount(key)));
 
 				save.setString(1, bounty.getTarget().getUniqueId().toString());
-				save.setString(2, bounty.hasCreator() ? bounty.getCreator().getUniqueId().toString() : "NULL");
+				save.setString(2, bounty.hasCreator() ? bounty.getCreator().getUniqueId().toString() : "null");
 				save.setDouble(3, bounty.getReward());
 				save.setString(4, hunters.toString());
 				save.setString(5, increased.toString());
-				
+
 				save.addBatch();
 			}
 

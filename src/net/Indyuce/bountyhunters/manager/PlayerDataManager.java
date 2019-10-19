@@ -15,12 +15,12 @@ import net.Indyuce.bountyhunters.api.player.PlayerData;
 public abstract class PlayerDataManager {
 	private static Map<UUID, PlayerData> map = new HashMap<>();
 
-	public boolean isLoaded(UUID uuid) {
-		return map.containsKey(uuid);
-	}
-
 	public boolean isLoaded(OfflinePlayer player) {
 		return isLoaded(player.getUniqueId());
+	}
+
+	public boolean isLoaded(UUID uuid) {
+		return map.containsKey(uuid);
 	}
 
 	public PlayerData get(OfflinePlayer player) {
@@ -31,7 +31,7 @@ public abstract class PlayerDataManager {
 		return map.get(uuid);
 	}
 
-	public  OfflinePlayerData getOfflineData(OfflinePlayer player) {
+	public OfflinePlayerData getOfflineData(OfflinePlayer player) {
 		return map.containsKey(player.getUniqueId()) ? map.get(player.getUniqueId()) : loadOfflineData(player);
 	}
 
@@ -53,20 +53,21 @@ public abstract class PlayerDataManager {
 			PlayerData data = new PlayerData(player);
 
 			/*
-			 * directly maps the player data into the hashMap however data is not loaded
-			 * yet. better for extra plugins not to glitch out and so they can cache the
-			 * player data instance if needed for later calculations
+			 * directly maps the player data into the HashMap however data is
+			 * not loaded yet. better for extra plugins not to glitch out and so
+			 * they can cache the player data instance if needed for later
+			 * calculations
 			 */
 			map.put(player.getUniqueId(), data);
 
 			/*
-			 * load data asynchronously for databases and YAML not to harm main server
-			 * thread
+			 * load data asynchronously for databases and YAML not to harm main
+			 * server thread
 			 */
 			Bukkit.getScheduler().runTaskAsynchronously(BountyHunters.getInstance(), () -> loadData(data));
 		}
 	}
-	
+
 	public abstract OfflinePlayerData loadOfflineData(OfflinePlayer player);
 
 	public abstract void loadData(PlayerData data);
