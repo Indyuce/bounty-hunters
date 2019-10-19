@@ -1,13 +1,12 @@
 package net.Indyuce.bountyhunters.api.event;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
 import net.Indyuce.bountyhunters.api.Bounty;
-import net.Indyuce.bountyhunters.api.Message;
+import net.Indyuce.bountyhunters.api.language.Message;
 
 public class BountyExpireEvent extends BountyEvent {
 	private final BountyExpireCause cause;
@@ -32,7 +31,7 @@ public class BountyExpireEvent extends BountyEvent {
 	public void sendAllert() {
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
-			Message.BOUNTY_EXPIRED.format(ChatColor.YELLOW, "%target%", getBounty().getTarget().getName()).send(player);
+			Message.BOUNTY_EXPIRED.format("target", getBounty().getTarget().getName()).send(player);
 		}
 	}
 

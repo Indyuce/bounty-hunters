@@ -40,8 +40,7 @@ public class BountyEffect {
 
 				Item item = loc.getWorld().dropItemNaturally(loc, stack);
 				item.setPickupDelay(100000000);
-				Bukkit.getScheduler().runTaskLater(BountyHunters.getInstance(), () -> item.remove(),
-						30 + random.nextInt(40));
+				Bukkit.getScheduler().runTaskLater(BountyHunters.getInstance(), () -> item.remove(), 30 + random.nextInt(40));
 			}
 	}
 }

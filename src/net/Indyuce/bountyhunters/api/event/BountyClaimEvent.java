@@ -8,13 +8,13 @@ import org.bukkit.event.HandlerList;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
-import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.NumberFormat;
+import net.Indyuce.bountyhunters.api.language.Message;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
 
 public class BountyClaimEvent extends BountyEvent {
 	private final Player player;
-	
+
 	private static final HandlerList handlers = new HandlerList();
 
 	/*
@@ -23,7 +23,7 @@ public class BountyClaimEvent extends BountyEvent {
 	 */
 	public BountyClaimEvent(Bounty bounty, Player player) {
 		super(bounty);
-		
+
 		this.player = player;
 	}
 
@@ -35,8 +35,7 @@ public class BountyClaimEvent extends BountyEvent {
 
 		// message to player
 		String reward = new NumberFormat().format(getBounty().getReward());
-		Message.CHAT_BAR.format(ChatColor.YELLOW).send(player);
-		Message.BOUNTY_CLAIMED_BY_YOU.format(ChatColor.YELLOW, "%target%", getBounty().getTarget().getName(), "%reward%", reward).send(player);
+		Message.BOUNTY_CLAIMED_BY_YOU.format("target", getBounty().getTarget().getName(), "reward", reward).send(player);
 
 		// message to server
 		PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(player);
@@ -44,7 +43,8 @@ public class BountyClaimEvent extends BountyEvent {
 		for (Player online : Bukkit.getOnlinePlayers()) {
 			online.playSound(online.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 			if (online != player)
-				Message.BOUNTY_CLAIMED.format(ChatColor.YELLOW, "%reward%", new NumberFormat().format(getBounty().getReward()), "%killer%", title + player.getName(), "%target%", getBounty().getTarget().getName()).send(online);
+				Message.BOUNTY_CLAIMED.format("reward", new NumberFormat().format(getBounty().getReward()), "killer", title + player.getName(), "target", getBounty().getTarget().getName())
+						.send(online);
 		}
 	}
 

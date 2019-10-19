@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -19,12 +18,13 @@ import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.CustomItem.Builder;
-import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent.BountyExpireCause;
-import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.api.event.HunterTargetEvent;
+import net.Indyuce.bountyhunters.api.language.Language;
+import net.Indyuce.bountyhunters.api.language.Message;
+import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.version.VersionMaterial;
 import net.Indyuce.bountyhunters.version.wrapper.ItemTag;
 
@@ -46,7 +46,7 @@ public class BountyList extends PluginInventory {
 		List<Bounty> bounties = new ArrayList<>(BountyHunters.getInstance().getBountyManager().getBounties());
 		int maxPage = getMaxPage();
 
-		Inventory inv = Bukkit.createInventory(this, 54, Message.GUI_NAME.formatRaw("%page%", "" + page, "%max-page%", "" + maxPage));
+		Inventory inv = Bukkit.createInventory(this, 54, Language.GUI_NAME.format("page", "" + page, "max_page", "" + maxPage));
 		int min = (page - 1) * 21;
 		int max = page * 21;
 
@@ -54,8 +54,10 @@ public class BountyList extends PluginInventory {
 			Bounty bounty = bounties.get(j);
 			Builder builder = CustomItem.GUI_PLAYER_HEAD.newBuilder();
 			boolean isTarget = bounty.hasTarget(player), isCreator = bounty.hasCreator(player), isHunter = bounty.hasHunter(player), noCreator = !bounty.hasCreator();
-			builder.applyConditions(new String[] { "noCreator", "isCreator", "extraCreator", "isExtra", "isTarget", "isHunter", "!isHunter" }, new boolean[] { !bounty.hasCreator(), isCreator, !noCreator && !isCreator, !isTarget && !isCreator, isTarget, !isTarget && isHunter, !isTarget && !isHunter });
-			builder.applyPlaceholders("target", bounty.getTarget().getName(), "creator", bounty.hasCreator() ? bounty.getCreator().getName() : "Server", "reward", "" + new NumberFormat().format(bounty.getReward()), "hunters", "" + bounty.getHunters().size());
+			builder.applyConditions(new String[] { "noCreator", "isCreator", "extraCreator", "isExtra", "isTarget", "isHunter", "!isHunter" },
+					new boolean[] { !bounty.hasCreator(), isCreator, !noCreator && !isCreator, !isTarget && !isCreator, isTarget, !isTarget && isHunter, !isTarget && !isHunter });
+			builder.applyPlaceholders("target", bounty.getTarget().getName(), "creator", bounty.hasCreator() ? bounty.getCreator().getName() : "Server", "reward",
+					"" + new NumberFormat().format(bounty.getReward()), "hunters", "" + bounty.getHunters().size());
 			ItemStack item = builder.build();
 
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
@@ -73,7 +75,7 @@ public class BountyList extends PluginInventory {
 			ItemMeta compassMeta = compass.getItemMeta();
 			List<String> compassLore = compassMeta.getLore();
 			compassLore.add("");
-			compassLore.add(Message.CLICK_BUY_COMPASS.formatRaw(ChatColor.YELLOW, "%price%", new NumberFormat().format(BountyHunters.getInstance().getConfig().getDouble("player-tracking.price"))));
+			compassLore.add(Language.CLICK_BUY_COMPASS.format("price", new NumberFormat().format(BountyHunters.getInstance().getConfig().getDouble("player-tracking.price"))));
 			compassMeta.setLore(compassLore);
 			compass.setItemMeta(compassMeta);
 
@@ -113,18 +115,18 @@ public class BountyList extends PluginInventory {
 		// buy bounty compass
 		if (item.getItemMeta().getDisplayName().equals(CustomItem.BOUNTY_COMPASS.toItemStack().getItemMeta().getDisplayName())) {
 			if (player.getInventory().firstEmpty() <= -1) {
-				Message.EMPTY_INV_FIRST.format(ChatColor.RED).send(player);
+				Message.EMPTY_INV_FIRST.format().send(player);
 				return;
 			}
 
 			if (!player.hasPermission(BountyHunters.getInstance().getConfig().getString("player-tracking.permission"))) {
-				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(player);
+				Message.NOT_ENOUGH_PERMS.format().send(player);
 				return;
 			}
 
 			double price = BountyHunters.getInstance().getConfig().getDouble("player-tracking.price");
 			if (BountyHunters.getInstance().getEconomy().getBalance(player) < price) {
-				Message.NOT_ENOUGH_MONEY.format(ChatColor.RED).send(player);
+				Message.NOT_ENOUGH_MONEY.format().send(player);
 				return;
 			}
 
@@ -146,12 +148,12 @@ public class BountyList extends PluginInventory {
 
 				if (bounty.hasHunter(player)) {
 					bounty.removeHunter(player);
-					Message.TARGET_REMOVED.format(ChatColor.YELLOW).send(player);
+					Message.TARGET_REMOVED.format().send(player);
 				} else {
 
 					// permission check
 					if (BountyHunters.getInstance().getPermission().playerHas(null, target, "bountyhunters.untargetable") && !player.hasPermission("bountyhunters.untargetable.bypass")) {
-						Message.TRACK_IMUN.format(ChatColor.RED).send(player);
+						Message.TRACK_IMUN.format().send(player);
 						return;
 					}
 
@@ -160,7 +162,7 @@ public class BountyList extends PluginInventory {
 					 * not created the bounty.
 					 */
 					if (bounty.hasCreator(player) && !BountyHunters.getInstance().getConfig().getBoolean("own-bounty-claiming")) {
-						Message.CANT_TRACK_CREATOR.format(ChatColor.RED).send(player);
+						Message.CANT_TRACK_CREATOR.format().send(player);
 						return;
 					}
 
@@ -171,7 +173,7 @@ public class BountyList extends PluginInventory {
 					// check for target cooldown
 					long remain = (long) (data.getLastTarget() + BountyHunters.getInstance().getConfig().getDouble("player-tracking.cooldown") * 1000 - System.currentTimeMillis()) / 1000;
 					if (remain > 0) {
-						Message.TARGET_COOLDOWN.format(ChatColor.RED, "%remain%", "" + remain, "%s%", remain >= 2 ? "s" : "").send(player);
+						Message.TARGET_COOLDOWN.format("%remain%", "" + remain, "%s%", remain >= 2 ? "s" : "").send(player);
 						return;
 					}
 
@@ -186,7 +188,7 @@ public class BountyList extends PluginInventory {
 					bounty.addHunter(player);
 					if (target.isOnline())
 						hunterEvent.sendAllert(target.getPlayer());
-					Message.TARGET_SET.format(ChatColor.YELLOW).send(player);
+					Message.TARGET_SET.format().send(player);
 				}
 
 				open();

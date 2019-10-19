@@ -1,15 +1,13 @@
 package net.Indyuce.bountyhunters.api.event;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
 import net.Indyuce.bountyhunters.api.Bounty;
-import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.NumberFormat;
-import net.Indyuce.bountyhunters.version.VersionSound;
+import net.Indyuce.bountyhunters.api.language.Message;
+import net.Indyuce.bountyhunters.api.language.PlayerMessage;
 
 public class BountyCreateEvent extends BountyEvent {
 	private final BountyCause cause;
@@ -23,7 +21,7 @@ public class BountyCreateEvent extends BountyEvent {
 	 */
 	public BountyCreateEvent(Bounty bounty, BountyCause cause) {
 		super(bounty);
-		
+
 		this.cause = cause;
 	}
 
@@ -33,26 +31,23 @@ public class BountyCreateEvent extends BountyEvent {
 
 	public void sendAllert() {
 		String reward = new NumberFormat().format(getBounty().getReward());
-		String toOnline = cause == BountyCause.PLAYER ? Message.NEW_BOUNTY_ON_PLAYER.formatRaw(ChatColor.YELLOW, "%creator%", getBounty().getCreator().getName(), "%target%", getBounty().getTarget().getName(), "%reward%", reward) : (cause == BountyCause.AUTO_BOUNTY ? Message.NEW_BOUNTY_ON_PLAYER_ILLEGAL.formatRaw(ChatColor.YELLOW, "%target%", getBounty().getTarget().getName(), "%reward%", reward) : Message.NEW_BOUNTY_ON_PLAYER_UNDEFINED.formatRaw(ChatColor.YELLOW, "%target%", getBounty().getTarget().getName(), "%reward%", reward));
-		String toTarget = cause == BountyCause.PLAYER ? Message.NEW_BOUNTY_ON_YOU.formatRaw(ChatColor.RED, "%creator%", getBounty().getCreator().getName(), "%reward%", reward) : (cause == BountyCause.AUTO_BOUNTY ? Message.NEW_BOUNTY_ON_YOU_ILLEGAL.formatRaw(ChatColor.RED, "%reward%", reward) : Message.NEW_BOUNTY_ON_YOU_UNDEFINED.formatRaw(ChatColor.RED, "%reward%", reward));
+
+		PlayerMessage toOnline = (cause == BountyCause.PLAYER ? Message.NEW_BOUNTY_ON_PLAYER
+				: cause == BountyCause.AUTO_BOUNTY ? Message.NEW_BOUNTY_ON_PLAYER_ILLEGAL : Message.NEW_BOUNTY_ON_PLAYER_UNDEFINED).format("creator",
+						getBounty().hasCreator() ? getBounty().getCreator().getName() : "null", "target", getBounty().getTarget().getName(), "reward", reward);
 
 		for (Player player : Bukkit.getOnlinePlayers()) {
-			if (getBounty().hasTarget(player)) {
-				player.playSound(player.getLocation(), VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 1, 0);
-				player.sendMessage(toTarget);
-				continue;
-			}
 
-			if (getBounty().hasCreator(player)) {
-				player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
-				Message.CHAT_BAR.format(ChatColor.YELLOW).send(player);
-				Message.BOUNTY_CREATED.format(ChatColor.YELLOW, "%target%", getBounty().getTarget().getName()).send(player);
-				Message.BOUNTY_EXPLAIN.format(ChatColor.YELLOW, "%reward%", reward).send(player);
-				continue;
-			}
+			if (getBounty().hasTarget(player))
+				(cause == BountyCause.PLAYER ? Message.NEW_BOUNTY_ON_YOU : cause == BountyCause.AUTO_BOUNTY ? Message.NEW_BOUNTY_ON_YOU_ILLEGAL : Message.NEW_BOUNTY_ON_YOU_UNDEFINED)
+						.format("creator", getBounty().hasCreator() ? getBounty().getCreator().getName() : "null", "target", getBounty().getTarget().getName(), "reward", reward).send(player);
 
-			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
-			player.sendMessage(toOnline);
+			else if (getBounty().hasCreator(player))
+				Message.BOUNTY_CREATED.format("creator", getBounty().hasCreator() ? getBounty().getCreator().getName() : "null", "target", getBounty().getTarget().getName(), "reward", reward)
+						.send(player);
+
+			else
+				toOnline.send(player);
 		}
 	}
 

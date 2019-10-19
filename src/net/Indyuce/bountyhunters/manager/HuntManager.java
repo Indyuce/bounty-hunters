@@ -19,8 +19,8 @@ import org.bukkit.util.Vector;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.CustomItem;
-import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.NumberFormat;
+import net.Indyuce.bountyhunters.api.language.Language;
 
 public class HuntManager {
 	private final Map<UUID, HunterData> hunting = new HashMap<>();
@@ -85,7 +85,7 @@ public class HuntManager {
 
 					// update compass display name based on distance
 					ItemMeta meta = compass.getItemMeta();
-					meta.setDisplayName(Message.COMPASS_FORMAT.formatRaw("%blocks%", new NumberFormat().thousands().format(tracked.getPlayer().getLocation().distance(player.getLocation()))));
+					meta.setDisplayName(Language.COMPASS_FORMAT.format("blocks", new NumberFormat().thousands().format(tracked.getPlayer().getLocation().distance(player.getLocation()))));
 					compass.setItemMeta(meta);
 
 					// draw vector

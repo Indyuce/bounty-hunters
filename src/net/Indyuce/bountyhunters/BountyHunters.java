@@ -19,8 +19,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import net.Indyuce.bountyhunters.api.ConfigFile;
 import net.Indyuce.bountyhunters.api.CustomItem;
-import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.NumberFormat;
+import net.Indyuce.bountyhunters.api.language.Language;
+import net.Indyuce.bountyhunters.api.language.Message;
 import net.Indyuce.bountyhunters.command.AddBountyCommand;
 import net.Indyuce.bountyhunters.command.BountiesCommand;
 import net.Indyuce.bountyhunters.command.HuntersCommand;
@@ -169,12 +170,28 @@ public class BountyHunters extends JavaPlugin {
 		ConfigFile messages = new ConfigFile("/language", "messages");
 		for (Message key : Message.values()) {
 			String path = key.getPath();
-			if (!messages.getConfig().contains(path))
-				messages.getConfig().set(path, key.getUncolored());
+			if (!messages.getConfig().contains(path)) {
+				messages.getConfig().set(path + ".format", key.getDefault());
+				if (key.hasSound()) {
+					messages.getConfig().set(path + ".sound.name", key.getSound().getSound().name());
+					messages.getConfig().set(path + ".sound.vol", key.getSound().getVolume());
+					messages.getConfig().set(path + ".sound.pitch", key.getSound().getPitch());
+				}
+			}
 
-			key.update(messages.getConfig().getString(path));
+			key.update(messages.getConfig().getConfigurationSection(path));
 		}
 		messages.save();
+
+		ConfigFile language = new ConfigFile("/language", "language");
+		for (Language key : Language.values()) {
+			String path = key.getPath();
+			if (!language.getConfig().contains(path))
+				language.getConfig().set(path, key.getDefault());
+
+			key.update(language.getConfig().getString(path));
+		}
+		language.save();
 
 		ConfigFile items = new ConfigFile("/language", "items");
 		for (CustomItem item : CustomItem.values()) {
@@ -279,6 +296,10 @@ public class BountyHunters extends JavaPlugin {
 
 		FileConfiguration messages = new ConfigFile("/language", "messages").getConfig();
 		for (Message message : Message.values())
-			message.update(messages.getString(message.getPath()));
+			message.update(messages.getConfigurationSection(message.getPath()));
+
+		FileConfiguration language = new ConfigFile("/language", "language").getConfig();
+		for (Language key : Language.values())
+			key.update(language.getString(key.getPath()));
 	}
 }

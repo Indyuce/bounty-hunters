@@ -1,6 +1,5 @@
 package net.Indyuce.bountyhunters.listener;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,7 +9,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.CustomItem;
-import net.Indyuce.bountyhunters.api.Message;
+import net.Indyuce.bountyhunters.api.language.Message;
 import net.Indyuce.bountyhunters.manager.HuntManager.HunterData;
 import net.Indyuce.bountyhunters.version.VersionSound;
 
@@ -29,7 +28,7 @@ public class HuntListener implements Listener {
 		}
 
 		if (!player.hasPermission(BountyHunters.getInstance().getConfig().getString("player-tracking.permission"))) {
-			Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(player);
+			Message.NOT_ENOUGH_PERMS.format().send(player);
 			return;
 		}
 

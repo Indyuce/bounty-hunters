@@ -13,9 +13,10 @@ import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.ConfigFile;
 import net.Indyuce.bountyhunters.api.CustomItem;
-import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent.BountyExpireCause;
+import net.Indyuce.bountyhunters.api.language.Language;
+import net.Indyuce.bountyhunters.api.language.Message;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.gui.BountyList;
 import net.Indyuce.bountyhunters.manager.LevelManager.DeathQuote;
@@ -33,7 +34,7 @@ public class BountiesCommand implements CommandExecutor {
 			}
 
 			if (!sender.hasPermission("bountyhunters.list")) {
-				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(sender);
+				Message.NOT_ENOUGH_PERMS.format().send(sender);
 				return true;
 			}
 
@@ -44,11 +45,12 @@ public class BountiesCommand implements CommandExecutor {
 		// help
 		if (args[0].equalsIgnoreCase("help")) {
 			if (!sender.hasPermission("bountyhunters.admin")) {
-				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(sender);
+				Message.NOT_ENOUGH_PERMS.format().send(sender);
 				return true;
 			}
 
-			sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " BountyHunters Help " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
+			sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " BountyHunters Help " + ChatColor.DARK_GRAY + ""
+					+ ChatColor.STRIKETHROUGH + "]-----------------");
 			sender.sendMessage("");
 			sender.sendMessage(ChatColor.GRAY + "" + ChatColor.BOLD + "Player Commands");
 			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounty <player> <reward>" + ChatColor.WHITE + " sets a bounty on a player.");
@@ -68,7 +70,7 @@ public class BountiesCommand implements CommandExecutor {
 		// remove bounty
 		if (args[0].equalsIgnoreCase("remove")) {
 			if (!sender.hasPermission("bountyhunters.admin")) {
-				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(sender);
+				Message.NOT_ENOUGH_PERMS.format().send(sender);
 				return true;
 			}
 
@@ -106,7 +108,7 @@ public class BountiesCommand implements CommandExecutor {
 
 			Player player = (Player) sender;
 			if (!sender.hasPermission("bountyhunters.title")) {
-				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(sender);
+				Message.NOT_ENOUGH_PERMS.format().send(sender);
 				return true;
 			}
 
@@ -124,7 +126,7 @@ public class BountiesCommand implements CommandExecutor {
 			playerData.setTitle(item);
 			playerData.setLastSelect();
 			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
-			Message.SUCCESSFULLY_SELECTED.format(ChatColor.YELLOW, "%item%", playerData.getTitle().format()).send(player);
+			Message.SUCCESSFULLY_SELECTED.format("item", playerData.getTitle().format()).send(sender);
 		}
 
 		// choose quote
@@ -136,7 +138,7 @@ public class BountiesCommand implements CommandExecutor {
 
 			Player player = (Player) sender;
 			if (!player.hasPermission("bountyhunters.quote")) {
-				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(sender);
+				Message.NOT_ENOUGH_PERMS.format().send(sender);
 				return true;
 			}
 
@@ -154,7 +156,7 @@ public class BountiesCommand implements CommandExecutor {
 			playerData.setQuote(item);
 			playerData.setLastSelect();
 			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
-			Message.SUCCESSFULLY_SELECTED.format(ChatColor.YELLOW, "%item%", playerData.getQuote().format()).send(player);
+			Message.SUCCESSFULLY_SELECTED.format("item", playerData.getQuote().format()).send(sender);
 		}
 
 		// choose title
@@ -166,17 +168,18 @@ public class BountiesCommand implements CommandExecutor {
 
 			Player player = (Player) sender;
 			if (!player.hasPermission("bountyhunters.title")) {
-				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(player);
+				Message.NOT_ENOUGH_PERMS.format().send(player);
 				return true;
 			}
 
-			Message.CHAT_BAR.format(ChatColor.YELLOW).send(player);
-			Message.UNLOCKED_TITLES.format(ChatColor.YELLOW).send(player);
+			Message.UNLOCKED_TITLES.format().send(player);
 
 			PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(player);
 			for (Title title : BountyHunters.getInstance().getLevelManager().getTitles()) {
 				if (playerData.hasUnlocked(title))
-					BountyHunters.getInstance().getVersionWrapper().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + title.format() + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties title " + title.getId() + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getMessage() + "\",\"color\":\"white\"}]}}}");
+					BountyHunters.getInstance().getVersionWrapper().sendJson((Player) sender,
+							"{\"text\":\"* " + ChatColor.GREEN + title.format() + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties title " + title.getId()
+									+ "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Language.CLICK_SELECT.format() + "\",\"color\":\"white\"}]}}}");
 			}
 		}
 
@@ -189,24 +192,25 @@ public class BountiesCommand implements CommandExecutor {
 
 			Player player = (Player) sender;
 			if (!player.hasPermission("bountyhunters.quote")) {
-				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(player);
+				Message.NOT_ENOUGH_PERMS.format().send(player);
 				return true;
 			}
 
-			Message.CHAT_BAR.format(ChatColor.YELLOW).send(player);
-			Message.UNLOCKED_QUOTES.format(ChatColor.YELLOW).send(player);
+			Message.UNLOCKED_QUOTES.format().send(player);
 
 			PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(player);
 			for (DeathQuote quote : BountyHunters.getInstance().getLevelManager().getQuotes()) {
 				if (playerData.hasUnlocked(quote))
-					BountyHunters.getInstance().getVersionWrapper().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + quote.format() + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties quote " + quote.getId() + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Message.CLICK_SELECT.getMessage() + "\",\"color\":\"white\"}]}}}");
+					BountyHunters.getInstance().getVersionWrapper().sendJson((Player) sender,
+							"{\"text\":\"* " + ChatColor.GREEN + quote.format() + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties quote " + quote.getId()
+									+ "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Language.CLICK_SELECT.format() + "\",\"color\":\"white\"}]}}}");
 			}
 		}
 
 		// reload plugin
 		if (args[0].equalsIgnoreCase("reload")) {
 			if (!sender.hasPermission("bountyhunters.admin")) {
-				Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(sender);
+				Message.NOT_ENOUGH_PERMS.format().send(sender);
 				return true;
 			}
 

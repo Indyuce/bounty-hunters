@@ -1,10 +1,11 @@
 
-# Notifies players with the 'bountyhunters.update-notify' perm node when
-# they join the server if a new update is available for download.
-# Requires /reload when changed.
+# Notifies players with the 'bountyhunters.update-notify' perm 
+# node when they join the server if a new update is available
+# for download. Requires a server reload when changed.
 update-notify: true
 
-# Use a MySQL database for bounty and player data
+# Use a MySQL database for bounty and player data.
+# Requires a server reload.
 my-sql:
     enabled: false
     host: 127.0.0.1
@@ -20,8 +21,8 @@ logging:
     bounty-expire: true
     level-up: false
 
-# When enabled, some items that can't be picked up will
-# drop from the target's body (can be any material).
+# When enabled, drops some purely cosmetic
+# items whenever someone's bounty is claimed.
 # Looks cool with CHEST, GOLD_NUGGET, REDSTONE...
 bounty-effect:
     enabled: true
@@ -42,23 +43,23 @@ disable-death-message:
 target-bounty-claim: false
 
 # Commands sent by the console when a player claims a bounty.
-# %target% returns the target's name and %player% the claimer's
+# {target} returns the target's name and {player} the claimer's
 # name. Commands support PlaceholderAPI placeholders.
 bounty-commands:
 
     # When a player claims a bounty.
     claim: []
-#   - '/give %player% minecraft:diamond 10'
-#   - '/tell %target% Someone claimed your bounty.'
+#   - '/give {player} minecraft:diamond 10'
+#   - '/tell {target} Someone claimed your bounty.'
 
-    # When a bounty is placed. %reward%
+    # When a bounty is placed. {reward}
     place:
         player: []
         console: []
         # When a player kills another player illegaly.
         auto-bounty: []
     
-    # When a bounty is increased by %amount%
+    # When a bounty is increased by {amount}
     increase:
         player: []
         console: []
@@ -75,7 +76,7 @@ auto-bounty:
 # Displays a different login message when a player
 # logs on with a bounty. Requires /reload when changed.
 target-login-message:
-    format: '&e%player% joined the game with a &6$%bounty%&e bounty!'
+    format: '&e{player} joined the game with a &6${bounty}&e bounty!'
     enabled: true
 
 # Drops the player head when claming a bounty.

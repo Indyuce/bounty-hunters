@@ -6,7 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.Indyuce.bountyhunters.api.Message;
+import net.Indyuce.bountyhunters.api.language.Message;
 import net.Indyuce.bountyhunters.gui.Leaderboard;
 
 public class HuntersCommand implements CommandExecutor {
@@ -18,7 +18,7 @@ public class HuntersCommand implements CommandExecutor {
 		}
 		
 		if (!sender.hasPermission("bountyhunters.leaderboard")) {
-			Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(sender);
+			Message.NOT_ENOUGH_PERMS.format().send(sender);
 			return true;
 		}
 

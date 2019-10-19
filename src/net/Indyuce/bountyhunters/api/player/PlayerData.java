@@ -17,9 +17,10 @@ import org.bukkit.inventory.meta.SkullMeta;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.AltChar;
 import net.Indyuce.bountyhunters.api.CustomItem;
-import net.Indyuce.bountyhunters.api.Message;
 import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.event.HunterLevelUpEvent;
+import net.Indyuce.bountyhunters.api.language.Language;
+import net.Indyuce.bountyhunters.api.language.Message;
 import net.Indyuce.bountyhunters.manager.LevelManager.DeathQuote;
 import net.Indyuce.bountyhunters.manager.LevelManager.LevelUpItem;
 import net.Indyuce.bountyhunters.manager.LevelManager.Title;
@@ -119,7 +120,7 @@ public class PlayerData implements OfflinePlayerData {
 		BountyHunters.getInstance().getVersionWrapper().setOwner(meta, offline);
 		List<String> profileLore = meta.getLore();
 
-		String title = hasTitle() ? getTitle().format() : Message.NO_TITLE.getMessage();
+		String title = hasTitle() ? getTitle().format() : Language.NO_TITLE.format();
 		for (int j = 0; j < profileLore.size(); j++)
 			profileLore.set(j, profileLore.get(j).replace("%lvl-progress%", getLevelProgressBar()).replace("%claimed-bounties%", "" + getClaimedBounties())
 					.replace("%successful-bounties%", "" + getSuccessfulBounties()).replace("%current-title%", title).replace("%level%", "" + getLevel()));
@@ -229,9 +230,7 @@ public class PlayerData implements OfflinePlayerData {
 
 		Bukkit.getPluginManager().callEvent(new HunterLevelUpEvent(player, nextLevel));
 
-		Message.CHAT_BAR.format(ChatColor.YELLOW).send(player);
-		Message.LEVEL_UP.format(ChatColor.YELLOW, "%level%", "" + nextLevel).send(player);
-		Message.LEVEL_UP_2.format(ChatColor.YELLOW, "%bounties%", "" + BountyHunters.getInstance().getLevelManager().getBountiesPerLevel()).send(player);
+		Message.LEVEL_UP.format("level", "" + nextLevel, "bounties", "" + BountyHunters.getInstance().getLevelManager().getBountiesPerLevel()).send(player);
 
 		List<String> chatDisplay = new ArrayList<>();
 
@@ -255,11 +254,11 @@ public class PlayerData implements OfflinePlayerData {
 		BountyHunters.getInstance().getEconomy().depositPlayer(player, money);
 
 		// send json list
-		String jsonList = money > 0 ? "\n" + Message.LEVEL_UP_REWARD_MONEY.formatRaw(ChatColor.YELLOW, "%amount%", new NumberFormat().format(money)) : "";
+		String jsonList = money > 0 ? "\n" + Language.LEVEL_UP_REWARD_MONEY.format("amount", new NumberFormat().format(money)) : "";
 		for (String s : chatDisplay)
-			jsonList += "\n" + Message.LEVEL_UP_REWARD.formatRaw(ChatColor.YELLOW, "%reward%", AltChar.apply(s));
+			jsonList += "\n" + Language.LEVEL_UP_REWARD.format("reward", AltChar.apply(s));
 		BountyHunters.getInstance().getVersionWrapper().sendJson(player,
-				"{\"text\":\"" + ChatColor.YELLOW + Message.LEVEL_UP_REWARDS.getMessage() + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1) + "\"}}}");
+				"{\"text\":\"" + ChatColor.YELLOW + Language.LEVEL_UP_REWARDS.format() + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1) + "\"}}}");
 
 		setLevel(nextLevel);
 		return true;

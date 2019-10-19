@@ -18,7 +18,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.CustomItem;
-import net.Indyuce.bountyhunters.api.Message;
+import net.Indyuce.bountyhunters.api.language.Language;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.version.VersionMaterial;
 
@@ -49,7 +49,7 @@ public class Leaderboard extends PluginInventory {
 		 */
 		hunters = sortByBounties(hunters);
 
-		Inventory inv = Bukkit.createInventory(this, 54, Message.LEADERBOARD_GUI_NAME.getMessage());
+		Inventory inv = Bukkit.createInventory(this, 54, Language.LEADERBOARD_GUI_NAME.format());
 
 		int slot = 0;
 		for (Entry<PlayerData, Integer> entry : hunters.entrySet()) {
@@ -73,7 +73,7 @@ public class Leaderboard extends PluginInventory {
 
 		ItemStack glass = VersionMaterial.RED_STAINED_GLASS_PANE.toItem();
 		ItemMeta glassMeta = glass.getItemMeta();
-		glassMeta.setDisplayName(Message.NO_PLAYER.getMessage());
+		glassMeta.setDisplayName(Language.NO_PLAYER.format());
 		glass.setItemMeta(glassMeta);
 
 		while (slot < slots.length)
@@ -98,7 +98,7 @@ public class Leaderboard extends PluginInventory {
 	}
 
 	private String applyPlaceholders(String s, PlayerData playerData, int rank) {
-		String title = playerData.hasTitle() ? playerData.getTitle().format() : Message.NO_TITLE.getMessage();
+		String title = playerData.hasTitle() ? playerData.getTitle().format() : Language.NO_TITLE.format();
 
 		s = s.replace("%level%", "" + playerData.getLevel());
 		s = s.replace("%bounties%", "" + playerData.getClaimedBounties());
