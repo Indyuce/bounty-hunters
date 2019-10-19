@@ -60,7 +60,10 @@ public class BountyList extends PluginInventory {
 
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
 			if (BountyHunters.getInstance().getConfig().getBoolean("display-player-skulls"))
-				BountyHunters.getInstance().getVersionWrapper().setOwner(meta, bounty.getTarget());
+				Bukkit.getScheduler().runTaskAsynchronously(BountyHunters.getInstance(), () -> {
+					BountyHunters.getInstance().getVersionWrapper().setOwner(meta, bounty.getTarget());
+					item.setItemMeta(meta);
+				});
 			item.setItemMeta(meta);
 			inv.setItem(slots[j - min], BountyHunters.getInstance().getVersionWrapper().addTag(item, new ItemTag("playerUuid", bounty.getTarget().getUniqueId().toString())));
 		}
