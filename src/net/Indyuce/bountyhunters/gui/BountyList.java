@@ -58,7 +58,7 @@ public class BountyList extends PluginInventory {
 					new boolean[] { !bounty.hasCreator(), isCreator, !noCreator && !isCreator, !isTarget && !isCreator, isTarget, !isTarget && isHunter, !isTarget && !isHunter });
 			builder.applyPlaceholders("target", bounty.getTarget().getName(), "creator", bounty.hasCreator() ? bounty.getCreator().getName() : "Server", "reward",
 					"" + new NumberFormat().format(bounty.getReward()), "hunters", "" + bounty.getHunters().size());
-			ItemStack item = builder.build();
+			ItemStack item = BountyHunters.getInstance().getVersionWrapper().addTag(builder.build(), new ItemTag("playerUuid", bounty.getTarget().getUniqueId().toString()));
 
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
 			if (BountyHunters.getInstance().getConfig().getBoolean("display-player-skulls"))
@@ -67,7 +67,7 @@ public class BountyList extends PluginInventory {
 					item.setItemMeta(meta);
 				});
 			item.setItemMeta(meta);
-			inv.setItem(slots[j - min], BountyHunters.getInstance().getVersionWrapper().addTag(item, new ItemTag("playerUuid", bounty.getTarget().getUniqueId().toString())));
+			inv.setItem(slots[j - min], item);
 		}
 
 		if (BountyHunters.getInstance().getConfig().getBoolean("player-tracking.enabled")) {
