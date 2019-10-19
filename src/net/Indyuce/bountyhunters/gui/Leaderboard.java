@@ -59,8 +59,13 @@ public class Leaderboard extends PluginInventory {
 			PlayerData data = entry.getKey();
 			ItemStack skull = CustomItem.LB_PLAYER_DATA.toItemStack();
 			SkullMeta meta = (SkullMeta) skull.getItemMeta();
-			if (BountyHunters.getInstance().getConfig().getBoolean("display-player-skulls"))
+
+			final int slot1 = slot;
+			Bukkit.getScheduler().runTaskAsynchronously(BountyHunters.getInstance(), () -> {
 				BountyHunters.getInstance().getVersionWrapper().setOwner(meta, Bukkit.getOfflinePlayer(data.getUniqueId()));
+				inv.getItem(slot1).setItemMeta(meta);
+			});
+
 			meta.setDisplayName(applyPlaceholders(meta.getDisplayName(), data, slot + 1));
 			List<String> lore = meta.getLore();
 			for (int j = 0; j < lore.size(); j++)

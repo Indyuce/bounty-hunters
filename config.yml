@@ -84,10 +84,6 @@ drop-head:
     enabled: false
     chance: 100
 
-# Displays player skulls
-# Can sometimes not work because of minecraft servers (too many requests).
-display-player-skulls: true
-
 # Player tracking lets player use a tracking compass to hunt
 # down their bounty target. On the one hand, it gives an
 # advantage to the hunters because they can find the player, but

@@ -71,7 +71,7 @@ public class BountyHunters extends JavaPlugin {
 	private LevelManager levelManager;
 	private PlayerDataManager playerDataManager;
 
-	private FileConfiguration leaderboard;
+	private ConfigFile leaderboard;
 	public boolean formattedNumbers;
 
 	public void onEnable() {
@@ -208,7 +208,7 @@ public class BountyHunters extends JavaPlugin {
 			userdataFolder.mkdir();
 
 		new ConfigFile("data").setup();
-		leaderboard = new ConfigFile("/cache", "leaderboard").getConfig();
+		leaderboard = new ConfigFile("/cache", "leaderboard");
 
 		/*
 		 * load player data from all online players in case of /reload
@@ -241,6 +241,8 @@ public class BountyHunters extends JavaPlugin {
 
 		bountyManager.saveBounties();
 		playerDataManager.getLoaded().forEach(data -> playerDataManager.saveData(data));
+		
+		leaderboard.save();
 
 		for (Player online : Bukkit.getOnlinePlayers())
 			if (online.getOpenInventory() != null && online.getOpenInventory().getTopInventory().getHolder() instanceof PluginInventory)
@@ -284,7 +286,7 @@ public class BountyHunters extends JavaPlugin {
 	}
 
 	public FileConfiguration getCachedLeaderboard() {
-		return leaderboard;
+		return leaderboard.getConfig();
 	}
 
 	public PlaceholderParser getPlaceholderParser() {
