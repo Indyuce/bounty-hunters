@@ -34,7 +34,7 @@ public class PlayerMessage {
 		if (format.isEmpty())
 			return;
 
-		if (sender instanceof Player)
+		if (message.hasSound() && sender instanceof Player)
 			message.getSound().play((Player) sender);
 		format.forEach(str -> sender.sendMessage(str));
 	}
