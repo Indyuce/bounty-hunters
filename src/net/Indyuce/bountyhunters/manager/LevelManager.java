@@ -12,7 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.AltChar;
-import net.Indyuce.bountyhunters.api.PlayerData;
+import net.Indyuce.bountyhunters.api.player.PlayerData;
 
 public class LevelManager {
 	private final Map<String, DeathQuote> quotes = new HashMap<>();

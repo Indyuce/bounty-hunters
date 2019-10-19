@@ -9,8 +9,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import net.Indyuce.bountyhunters.BountyHunters;
-import net.Indyuce.bountyhunters.api.PlayerData;
-import net.Indyuce.bountyhunters.comp.database.player.OfflinePlayerData;
+import net.Indyuce.bountyhunters.api.player.OfflinePlayerData;
+import net.Indyuce.bountyhunters.api.player.PlayerData;
 
 public abstract class PlayerDataManager {
 	private static Map<UUID, PlayerData> map = new HashMap<>();

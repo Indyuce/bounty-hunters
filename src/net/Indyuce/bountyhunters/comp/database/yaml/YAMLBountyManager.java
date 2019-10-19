@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.comp.database.bounty;
+package net.Indyuce.bountyhunters.comp.database.yaml;
 
 import java.util.UUID;
 import java.util.logging.Level;

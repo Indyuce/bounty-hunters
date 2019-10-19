@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.api;
+package net.Indyuce.bountyhunters.api.player;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,8 +15,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import net.Indyuce.bountyhunters.BountyHunters;
+import net.Indyuce.bountyhunters.api.AltChar;
+import net.Indyuce.bountyhunters.api.CustomItem;
+import net.Indyuce.bountyhunters.api.Message;
+import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.event.HunterLevelUpEvent;
-import net.Indyuce.bountyhunters.comp.database.player.OfflinePlayerData;
 import net.Indyuce.bountyhunters.manager.LevelManager.DeathQuote;
 import net.Indyuce.bountyhunters.manager.LevelManager.LevelUpItem;
 import net.Indyuce.bountyhunters.manager.LevelManager.Title;

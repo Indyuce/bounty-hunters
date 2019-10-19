@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.comp.database.bounty;
+package net.Indyuce.bountyhunters.comp.database.mysql;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -60,6 +60,7 @@ public class MySQLBountyManager extends BountyManager {
 
 		} catch (SQLException exception) {
 			BountyHunters.getInstance().getLogger().log(Level.SEVERE, "Could not load bounty data from database: " + exception.getMessage());
+			Bukkit.getPluginManager().disablePlugin(BountyHunters.getInstance());
 		}
 	}
 

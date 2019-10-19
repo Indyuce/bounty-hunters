@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.NumberFormat;
-import net.Indyuce.bountyhunters.api.PlayerData;
+import net.Indyuce.bountyhunters.api.player.PlayerData;
 
 public class BountyHuntersPlaceholders extends PlaceholderExpansion {
 	@Override

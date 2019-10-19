@@ -8,8 +8,8 @@ import java.sql.SQLException;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
-import net.Indyuce.bountyhunters.comp.database.bounty.MySQLBountyManager;
-import net.Indyuce.bountyhunters.comp.database.player.YAMLPlayerDataManager;
+import net.Indyuce.bountyhunters.comp.database.mysql.MySQLBountyManager;
+import net.Indyuce.bountyhunters.comp.database.mysql.MySQLPlayerDataManager;
 import net.Indyuce.bountyhunters.manager.BountyManager;
 import net.Indyuce.bountyhunters.manager.PlayerDataManager;
 
@@ -35,7 +35,7 @@ public class MySQLProvider implements DataProvider {
 
 	@Override
 	public PlayerDataManager providePlayerData() {
-		return new YAMLPlayerDataManager();
+		return new MySQLPlayerDataManager(this);
 	}
 
 	@Override

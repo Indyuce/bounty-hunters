@@ -19,7 +19,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.Message;
-import net.Indyuce.bountyhunters.api.PlayerData;
+import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.version.VersionMaterial;
 
 public class Leaderboard extends PluginInventory {
