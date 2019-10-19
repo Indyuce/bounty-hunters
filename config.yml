@@ -9,9 +9,9 @@ my-sql:
     enabled: false
     host: 127.0.0.1
     port: 3306
-    database: db
-    user: username
-    pass: password
+    database: database_name
+    username: username
+    password: password
 
 # When enabled, some items that can't be picked up will
 # drop from the target's body (can be any material).

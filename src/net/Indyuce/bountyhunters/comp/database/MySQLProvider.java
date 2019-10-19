@@ -9,6 +9,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
 import net.Indyuce.bountyhunters.comp.database.bounty.MySQLBountyManager;
+import net.Indyuce.bountyhunters.comp.database.player.YAMLPlayerDataManager;
 import net.Indyuce.bountyhunters.manager.BountyManager;
 import net.Indyuce.bountyhunters.manager.PlayerDataManager;
 
@@ -25,17 +26,16 @@ public class MySQLProvider implements DataProvider {
 		Validate.notNull(password = config.getString("password"), "Could not load password");
 		port = config.getInt("port");
 
-		connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username,
-				password);
+		connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
 	}
-	
+
 	public PreparedStatement prepareStatement(String query) throws SQLException {
 		return connection.prepareStatement(query);
 	}
 
 	@Override
 	public PlayerDataManager providePlayerData() {
-		return null;
+		return new YAMLPlayerDataManager();
 	}
 
 	@Override

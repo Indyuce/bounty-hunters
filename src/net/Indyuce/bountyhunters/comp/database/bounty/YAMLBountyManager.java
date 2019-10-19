@@ -15,11 +15,6 @@ import net.Indyuce.bountyhunters.manager.BountyManager;
 
 public class YAMLBountyManager extends BountyManager {
 	public YAMLBountyManager() {
-		loadBounties();
-	}
-
-	@Override
-	public void loadBounties() {
 
 		// load bounties in the map
 		FileConfiguration data = new ConfigFile("data").getConfig();
@@ -43,10 +38,7 @@ public class YAMLBountyManager extends BountyManager {
 
 	public Bounty load(ConfigurationSection section) {
 
-		Bounty bounty = new Bounty(
-				section.contains("creator") ? Bukkit.getOfflinePlayer(UUID.fromString(section.getString("creator")))
-						: null,
-				Bukkit.getOfflinePlayer(UUID.fromString(section.getName())), section.getDouble("reward"));
+		Bounty bounty = new Bounty(section.contains("creator") ? Bukkit.getOfflinePlayer(UUID.fromString(section.getString("creator"))) : null, Bukkit.getOfflinePlayer(UUID.fromString(section.getName())), section.getDouble("reward"));
 
 		for (String key : section.getStringList("hunters"))
 			bounty.addHunter(Bukkit.getOfflinePlayer(UUID.fromString(key)));
@@ -62,8 +54,7 @@ public class YAMLBountyManager extends BountyManager {
 		config.set(key + ".reward", bounty.getReward());
 		config.set(key + ".creator", bounty.hasCreator() ? bounty.getCreator().getUniqueId().toString() : null);
 
-		config.set(key + ".hunters",
-				bounty.getHunters().stream().map(uuid -> uuid.toString()).collect(Collectors.toList()));
+		config.set(key + ".hunters", bounty.getHunters().stream().map(uuid -> uuid.toString()).collect(Collectors.toList()));
 
 		config.createSection(key + ".up");
 		for (UUID uuid : bounty.getPlayersWhoIncreased())

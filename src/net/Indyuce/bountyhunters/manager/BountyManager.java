@@ -49,7 +49,5 @@ public abstract class BountyManager {
 		return bounties.get(target);
 	}
 
-	public abstract void loadBounties();
-
 	public abstract void saveBounties();
 }

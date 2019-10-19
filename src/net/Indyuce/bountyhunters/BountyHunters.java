@@ -77,7 +77,7 @@ public class BountyHunters extends JavaPlugin {
 			version = new PluginVersion(Bukkit.getServer().getClass());
 			getLogger().log(Level.INFO, "Detected Server Version: " + version.toString());
 			wrapper = (VersionWrapper) Class.forName("net.Indyuce.bountyhunters.version.wrapper.VersionWrapper_" + version.toString().substring(1)).newInstance();
-		} catch (Exception e) {
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			getLogger().log(Level.SEVERE, "Your server version is not handled with NMS.");
 			wrapper = new VersionWrapper_Reflection();
 		}
@@ -97,7 +97,7 @@ public class BountyHunters extends JavaPlugin {
 		new SpigotPlugin(40610, this).checkForUpdate();
 
 		/*
-		 * determines if BH is using a MySQL database or default YAML
+		 * determines using a MySQL database or default YAML
 		 */
 		saveDefaultConfig();
 		try {
@@ -108,10 +108,12 @@ public class BountyHunters extends JavaPlugin {
 			return;
 		}
 
-		// load first the plugin, then hunters and
-		// last bounties (bounties need hunters setup)
+		/*
+		 * bounties must be loaded after hunt manager is initialized
+		 */
 		huntManager = new HuntManager();
 		bountyManager = dataProvider.provideBounties();
+		playerDataManager = dataProvider.providePlayerData();
 
 		// listeners
 		Bukkit.getServer().getPluginManager().registerEvents(new BountyClaim(), this);
@@ -202,6 +204,14 @@ public class BountyHunters extends JavaPlugin {
 	}
 
 	public void onDisable() {
+
+		/*
+		 * must not be performed when the plugin disables after a startup error
+		 * occurs otherwise an additional error will prompt
+		 */
+		if (bountyManager == null)
+			return;
+
 		bountyManager.saveBounties();
 		playerDataManager.getLoaded().forEach(data -> playerDataManager.saveData(data));
 

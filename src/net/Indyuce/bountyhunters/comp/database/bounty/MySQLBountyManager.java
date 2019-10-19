@@ -26,64 +26,67 @@ public class MySQLBountyManager extends BountyManager {
 		Bukkit.getScheduler().runTaskAsynchronously(BountyHunters.getInstance(), () -> loadBounties());
 	}
 
-	@Override
-	public void loadBounties() {
+	private void loadBounties() {
+
 		try {
+
+			if (!provider.prepareStatement("SELECT * FROM information_schema.tables WHERE TABLE_NAME = 'bounties'").executeQuery().next())
+				provider.prepareStatement("CREATE TABLE bounties(target VARCHAR(36), creator VARCHAR(36), reward DECIMAL, hunters TEXT, increased TEXT)").execute();
+
 			ResultSet result = provider.prepareStatement("SELECT * FROM bounties").executeQuery();
 
 			while (result.next()) {
 
 				try {
 
-					UUID creator = UUID.fromString(result.getString("creator"));
+					String creatorFormat = result.getString("creator");
+					UUID creator = creatorFormat.equalsIgnoreCase("null") ? null : UUID.fromString(creatorFormat);
 					UUID target = UUID.fromString(result.getString("target"));
 					double reward = result.getDouble("reward");
 
-					Bounty bounty = new Bounty(Bukkit.getOfflinePlayer(creator), Bukkit.getOfflinePlayer(target),
-							reward);
+					Bounty bounty = new Bounty(creator == null ? null : Bukkit.getOfflinePlayer(creator), Bukkit.getOfflinePlayer(target), reward);
 
 					JsonObject increased = (JsonObject) new JsonParser().parse(result.getString("increased"));
-					increased.entrySet().forEach(entry -> bounty.setBountyIncrease(UUID.fromString(entry.getKey()),
-							entry.getValue().getAsDouble()));
+					increased.entrySet().forEach(entry -> bounty.setBountyIncrease(UUID.fromString(entry.getKey()), entry.getValue().getAsDouble()));
 
 					JsonArray hunters = (JsonArray) new JsonParser().parse(result.getString("hunters"));
-					hunters.forEach(
-							key -> bounty.addHunter(Bukkit.getOfflinePlayer(UUID.fromString(key.getAsString()))));
+					hunters.forEach(key -> bounty.addHunter(Bukkit.getOfflinePlayer(UUID.fromString(key.getAsString()))));
 
+					registerBounty(bounty);
 				} catch (IllegalArgumentException exception) {
-					BountyHunters.getInstance().getLogger().log(Level.WARNING,
-							"Could not load bounty from database: " + exception.getMessage());
+					BountyHunters.getInstance().getLogger().log(Level.WARNING, "Could not load bounty from database: " + exception.getMessage());
 				}
 			}
 
-		} catch (SQLException e) {
-			BountyHunters.getInstance().getLogger().log(Level.SEVERE, "Could not load bounty data from database.");
-			e.printStackTrace();
+		} catch (SQLException exception) {
+			BountyHunters.getInstance().getLogger().log(Level.SEVERE, "Could not load bounty data from database: " + exception.getMessage());
 		}
 	}
 
 	@Override
 	public void saveBounties() {
 		try {
-			PreparedStatement statement = provider.prepareStatement("DELETE * FROM bounties");
-			statement.addBatch("INSERT INTO bounties(target,creator,reward,hunters,increased)");
-			statement.addBatch("VALUES");
+			provider.prepareStatement("TRUNCATE TABLE bounties").execute();
+
+			PreparedStatement save = provider.prepareStatement("INSERT INTO bounties VALUES (?,?,?,?,?)");
 			for (Bounty bounty : BountyHunters.getInstance().getBountyManager().getBounties()) {
 
 				JsonArray hunters = new JsonArray();
 				bounty.getHunters().forEach(uuid -> hunters.add(uuid.toString()));
 
 				JsonObject increased = new JsonObject();
-				bounty.getPlayersWhoIncreased()
-						.forEach(key -> increased.addProperty(key.toString(), bounty.getIncreaseAmount(key)));
+				bounty.getPlayersWhoIncreased().forEach(key -> increased.addProperty(key.toString(), bounty.getIncreaseAmount(key)));
 
-				statement.addBatch("  (" + bounty.getTarget().getUniqueId().toString() + ","
-						+ bounty.getCreator().getUniqueId().toString() + "," + bounty.getReward() + ","
-						+ hunters.toString() + "," + increased.toString() + ")");
+				save.setString(1, bounty.getTarget().getUniqueId().toString());
+				save.setString(2, bounty.hasCreator() ? bounty.getCreator().getUniqueId().toString() : "NULL");
+				save.setDouble(3, bounty.getReward());
+				save.setString(4, hunters.toString());
+				save.setString(5, increased.toString());
+				
+				save.addBatch();
 			}
 
-			statement.execute();
-
+			save.executeBatch();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
