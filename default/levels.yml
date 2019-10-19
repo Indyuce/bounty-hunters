@@ -29,13 +29,13 @@ reward:
             format: Bloodthirsty
             unlock: 6
         BOUNTY_HUNTER:
-            format: '%star% Bounty Hunter %star%'
+            format: '{star} Bounty Hunter {star}'
             unlock: 8
         LEGENDARY_HUNTER:
-            format: '%star% Bounty Hunter %star%'
+            format: '{star} Bounty Hunter {star}'
             unlock: 15
         THE_LEGEND:
-            format: '%diamond% The Legend %diamond%'
+            format: '{diamond} The Legend {diamond}'
             unlock: 25
             
     # 'Death quotes' are displayed in the chat
@@ -61,7 +61,7 @@ reward:
     # Commands sent when leveling up.
     commands:
         '1':
-        - "say %player% reached level 1!"
+        - "say {player} reached level 1!"
         
     # Currency earned when leveling up.
     # cash earned = <base> + ( <per-level> * <player level> )
