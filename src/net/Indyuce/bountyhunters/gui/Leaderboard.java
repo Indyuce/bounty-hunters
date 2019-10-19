@@ -63,7 +63,7 @@ public class Leaderboard extends PluginInventory {
 			final int slot1 = slot;
 			Bukkit.getScheduler().runTaskAsynchronously(BountyHunters.getInstance(), () -> {
 				BountyHunters.getInstance().getVersionWrapper().setOwner(meta, Bukkit.getOfflinePlayer(data.getUniqueId()));
-				inv.getItem(slot1).setItemMeta(meta);
+				inv.getItem(slots[slot1]).setItemMeta(meta);
 			});
 
 			meta.setDisplayName(applyPlaceholders(meta.getDisplayName(), data, slot + 1));
