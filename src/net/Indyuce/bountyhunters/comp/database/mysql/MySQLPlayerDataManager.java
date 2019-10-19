@@ -62,7 +62,7 @@ public class MySQLPlayerDataManager extends PlayerDataManager {
 			 * down, might overwhelm it.
 			 */
 			if (!set.next()) {
-				provider.prepareStatement("INSERT INTO playerData VALUES ('" + data.getUniqueId().toString() + "', 0, 0, 0, 0, 0, null, null)");
+				provider.prepareStatement("INSERT INTO playerData VALUES ('" + data.getUniqueId().toString() + "', 0, 0, 0, 0, 0, null, null)").execute();
 				return;
 			}
 
@@ -112,7 +112,7 @@ public class MySQLPlayerDataManager extends PlayerDataManager {
 		@Override
 		public void addSuccessfulBounties(int value) {
 			try {
-				provider.prepareStatement("UPDATE playerData WHERE uuid = '" + uuid.toString() + "' SET successful_bounties = successful_bounties + 1");
+				provider.prepareStatement("UPDATE playerData SET successful_bounties = successful_bounties + 1 WHERE uuid = '" + uuid.toString() + "'");
 			} catch (SQLException exception) {
 				BountyHunters.getInstance().getLogger().log(Level.WARNING, "Could not update database player data (successful_bounties): " + exception.getMessage());
 			}
