@@ -1,6 +1,5 @@
 package net.Indyuce.bountyhunters.gui;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -88,13 +87,9 @@ public class Leaderboard extends PluginInventory {
 	}
 
 	private LinkedHashMap<PlayerData, Integer> sortByBounties(Map<PlayerData, Integer> map) {
-		List<Entry<PlayerData, Integer>> list = new ArrayList<>(map.entrySet());
-		list.sort(Entry.comparingByValue());
-
 		LinkedHashMap<PlayerData, Integer> result = new LinkedHashMap<>();
-		for (Entry<PlayerData, Integer> entry : list)
-			result.put(entry.getKey(), entry.getValue());
-
+		map.entrySet().stream().sorted((key1, key2) -> key1.getValue() > key2.getValue() ? 1 : key1.getValue() < key2.getValue() ? -1 : 0)
+				.forEach(entry -> result.put(entry.getKey(), entry.getValue()));
 		return result;
 	}
 
@@ -119,7 +114,6 @@ public class Leaderboard extends PluginInventory {
 		/*
 		 * if the leaderboard already contains that player, just add one to the
 		 * bounties counter
-		 * 
 		 */
 		if (BountyHunters.getInstance().getCachedLeaderboard().getKeys(false).contains(uuid.toString())) {
 			BountyHunters.getInstance().getCachedLeaderboard().set(uuid.toString(), bounties);
