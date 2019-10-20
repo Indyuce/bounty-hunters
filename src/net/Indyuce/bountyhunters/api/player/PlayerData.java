@@ -9,7 +9,6 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -94,10 +93,6 @@ public class PlayerData implements OfflinePlayerData {
 
 	public Title getTitle() {
 		return title;
-	}
-
-	public double getValueDependingOnLevel(ConfigurationSection section, int level) {
-		return section.getDouble("base") + section.getDouble("per-level") * level;
 	}
 
 	public int getBountiesNeededToLevelUp() {
