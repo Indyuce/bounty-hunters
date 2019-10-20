@@ -49,8 +49,8 @@ public class YAMLPlayerDataManager extends PlayerDataManager {
 
 		if (config.contains("current-title"))
 			try {
-				Validate.isTrue(levelManager.hasTitle("current-title"), "Could not load title from " + data.getOfflinePlayer().getName());
-				data.setTitle(BountyHunters.getInstance().getLevelManager().getTitle(config.getString("current-title")));
+				Validate.isTrue(levelManager.hasTitle(config.getString("current-title")), "Could not load title from " + data.getOfflinePlayer().getName());
+				data.setTitle(levelManager.getTitle(config.getString("current-title")));
 			} catch (IllegalArgumentException exception) {
 				data.log(exception.getMessage());
 			}
