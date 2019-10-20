@@ -52,7 +52,7 @@ public enum Message {
 	 * level up and cosmetics
 	 */
 	LEVEL_UP("&e-----------------------------------------------------", "&e&lWell done!&e You're level &6{level} &enow!", "&eClaim &6{bounties} &emore bounties to level up again!"),
-	SUCCESSFULLY_SELECTED(new SoundReader(Sound.ENTITY_PLAYER_LEVELUP, 1, 2), "You successfully selected &6{item}&e."),
+	SUCCESSFULLY_SELECTED(new SoundReader(Sound.ENTITY_PLAYER_LEVELUP, 1, 2), "&eYou successfully selected &6{item}&e."),
 	UNLOCKED_TITLES("&e-----------------------------------------------------", "&eUnlocked titles:"),
 	UNLOCKED_QUOTES("&e-----------------------------------------------------", "&eUnlocked quotes:"),
 
