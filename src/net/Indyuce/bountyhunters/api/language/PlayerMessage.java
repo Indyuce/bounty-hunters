@@ -1,5 +1,6 @@
 package net.Indyuce.bountyhunters.api.language;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -26,7 +27,7 @@ public class PlayerMessage {
 		return ChatColor.translateAlternateColorCodes('&', str);
 	}
 
-	public void send(List<? extends CommandSender> senders) {
+	public void send(Collection<? extends Player> senders) {
 		senders.forEach(sender -> send(sender));
 	}
 

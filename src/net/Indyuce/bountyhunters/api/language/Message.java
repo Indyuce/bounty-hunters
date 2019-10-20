@@ -28,7 +28,7 @@ public enum Message {
 
 	ERROR_PLAYER("&cCouldn't find the player called {arg}."),
 	NOT_VALID_NUMBER("&c{arg} is not a valid number."),
-	NEW_HUNTER_ALERT("&c{hunter} now targets you."),
+	NEW_HUNTER_ALERT(new SoundReader(VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 1, 0), "&c{hunter} now targets you."),
 	EMPTY_INV_FIRST("&cPlease empty your inventory first."),
 	NOT_ENOUGH_PERMS("&cYou don't have enough permissions."),
 	COMMAND_USAGE("&cUsage: {command}"),
@@ -37,14 +37,14 @@ public enum Message {
 	CANT_TRACK_CREATOR("&cYou created this bounty, you can't target him."),
 	TARGET_COOLDOWN("&cPlease wait another {remain} second{s} to target a player."),
 	CANT_SET_BOUNTY_ON_YOURSELF("&cYou can't set a bounty on yourself!"),
-	BOUNTY_EXPIRED("&eThe bounty on &6{target} &ehas expired."),
+	BOUNTY_EXPIRED(new SoundReader(Sound.ENTITY_VILLAGER_NO, 1, 2), "&eThe bounty on &6{target} &ehas expired."),
 	REWARD_MUST_BE_HIGHER("&cReward must be higher than ${min}!"),
 	REWARD_MUST_BE_LOWER("&cReward must be lower than ${max}!"),
 	NOT_ENOUGH_MONEY("&cYou don't have enough money."),
 	BOUNTY_SET_RESTRICTION("&cYou must wait {left} more second{s} before creating a bounty."),
 	TARGET_SET("&eTarget set."),
 	TARGET_REMOVED("&eTarget removed."),
-	BOUGHT_COMPASS("&eYou succesfully bought a &6tracking compass&e."),
+	BOUGHT_COMPASS(new SoundReader(Sound.ENTITY_PLAYER_LEVELUP, 1, 2), "&eYou succesfully bought a &6tracking compass&e."),
 	TAX_EXPLAIN("&6{percent}&e{ of the reward (&6${price}&e) were taken as tax."),
 	PLAYER_MUST_BE_CONNECTED("&cThe player must be connected in order to be tracked."),
 
@@ -52,7 +52,7 @@ public enum Message {
 	 * level up and cosmetics
 	 */
 	LEVEL_UP("&e-----------------------------------------------------", "&e&lWell done!&e You're level &6{level} &enow!", "&eClaim &6{bounties} &emore bounties to level up again!"),
-	SUCCESSFULLY_SELECTED(new SoundReader(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1), "You successfully selected &6{item}&e."),
+	SUCCESSFULLY_SELECTED(new SoundReader(Sound.ENTITY_PLAYER_LEVELUP, 1, 2), "You successfully selected &6{item}&e."),
 	UNLOCKED_TITLES("&e-----------------------------------------------------", "&eUnlocked titles:"),
 	UNLOCKED_QUOTES("&e-----------------------------------------------------", "&eUnlocked quotes:"),
 

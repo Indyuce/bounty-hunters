@@ -7,7 +7,6 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import net.Indyuce.bountyhunters.api.language.Message;
-import net.Indyuce.bountyhunters.version.VersionSound;
 
 public class HunterTargetEvent extends Event implements Cancellable {
 	private final Player player;
@@ -46,7 +45,6 @@ public class HunterTargetEvent extends Event implements Cancellable {
 
 	public void sendAllert(Player target) {
 		Message.NEW_HUNTER_ALERT.format("hunter", player.getName()).send(target);
-		target.playSound(target.getLocation(), VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 1, 0);
 	}
 
 	public HandlerList getHandlers() {

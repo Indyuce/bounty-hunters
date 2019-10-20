@@ -1,8 +1,6 @@
 package net.Indyuce.bountyhunters.api.event;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
 import net.Indyuce.bountyhunters.api.Bounty;
@@ -10,7 +8,7 @@ import net.Indyuce.bountyhunters.api.language.Message;
 
 public class BountyExpireEvent extends BountyEvent {
 	private final BountyExpireCause cause;
-	
+
 	private static final HandlerList handlers = new HandlerList();
 
 	/*
@@ -20,7 +18,7 @@ public class BountyExpireEvent extends BountyEvent {
 	 */
 	public BountyExpireEvent(Bounty bounty, BountyExpireCause cause) {
 		super(bounty);
-		
+
 		this.cause = cause;
 	}
 
@@ -29,10 +27,7 @@ public class BountyExpireEvent extends BountyEvent {
 	}
 
 	public void sendAllert() {
-		for (Player player : Bukkit.getOnlinePlayers()) {
-			player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
-			Message.BOUNTY_EXPIRED.format("target", getBounty().getTarget().getName()).send(player);
-		}
+		Message.BOUNTY_EXPIRED.format("target", getBounty().getTarget().getName()).send(Bukkit.getOnlinePlayers());
 	}
 
 	public HandlerList getHandlers() {

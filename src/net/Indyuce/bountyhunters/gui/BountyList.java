@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.Inventory;
@@ -139,7 +138,7 @@ public class BountyList extends PluginInventory {
 			}
 
 			BountyHunters.getInstance().getEconomy().withdrawPlayer(player, price);
-			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
+			Message.BOUGHT_COMPASS.format().send(player);
 			player.getInventory().addItem(CustomItem.BOUNTY_COMPASS.toItemStack());
 			return;
 		}

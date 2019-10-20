@@ -2,7 +2,6 @@ package net.Indyuce.bountyhunters.api.event;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
@@ -40,12 +39,10 @@ public class BountyClaimEvent extends BountyEvent {
 		// message to server
 		PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(player);
 		String title = playerData.hasTitle() ? ChatColor.LIGHT_PURPLE + "[" + playerData.getTitle().format() + ChatColor.LIGHT_PURPLE + "] " : "";
-		for (Player online : Bukkit.getOnlinePlayers()) {
-			online.playSound(online.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
+		for (Player online : Bukkit.getOnlinePlayers())
 			if (online != player)
 				Message.BOUNTY_CLAIMED.format("reward", new NumberFormat().format(getBounty().getReward()), "killer", title + player.getName(), "target", getBounty().getTarget().getName())
 						.send(online);
-		}
 	}
 
 	public HandlerList getHandlers() {

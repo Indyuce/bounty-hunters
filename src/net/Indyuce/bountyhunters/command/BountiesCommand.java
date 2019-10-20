@@ -2,7 +2,6 @@ package net.Indyuce.bountyhunters.command;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -125,7 +124,6 @@ public class BountiesCommand implements CommandExecutor {
 
 			playerData.setTitle(item);
 			playerData.setLastSelect();
-			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 			Message.SUCCESSFULLY_SELECTED.format("item", playerData.getTitle().format()).send(sender);
 		}
 
@@ -155,7 +153,6 @@ public class BountiesCommand implements CommandExecutor {
 
 			playerData.setQuote(item);
 			playerData.setLastSelect();
-			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 			Message.SUCCESSFULLY_SELECTED.format("item", playerData.getQuote().format()).send(sender);
 		}
 
