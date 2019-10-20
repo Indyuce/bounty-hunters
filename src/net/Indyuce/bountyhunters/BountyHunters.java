@@ -98,7 +98,7 @@ public class BountyHunters extends JavaPlugin {
 			return;
 		}
 
-		new SpigotPlugin(40610, this).checkForUpdate();
+		new SpigotPlugin(72142, this).checkForUpdate();
 
 		/*
 		 * determines using a MySQL database or default YAML
@@ -241,7 +241,7 @@ public class BountyHunters extends JavaPlugin {
 
 		bountyManager.saveBounties();
 		playerDataManager.getLoaded().forEach(data -> playerDataManager.saveData(data));
-		
+
 		leaderboard.save();
 
 		for (Player online : Bukkit.getOnlinePlayers())
