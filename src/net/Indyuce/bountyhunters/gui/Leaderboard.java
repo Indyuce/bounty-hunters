@@ -88,7 +88,7 @@ public class Leaderboard extends PluginInventory {
 
 	private LinkedHashMap<PlayerData, Integer> sortByBounties(Map<PlayerData, Integer> map) {
 		LinkedHashMap<PlayerData, Integer> result = new LinkedHashMap<>();
-		map.entrySet().stream().sorted((key1, key2) -> key1.getValue() > key2.getValue() ? 1 : key1.getValue() < key2.getValue() ? -1 : 0)
+		map.entrySet().stream().sorted((key1, key2) -> key1.getValue() < key2.getValue() ? 1 : key1.getValue() > key2.getValue() ? -1 : 0)
 				.forEach(entry -> result.put(entry.getKey(), entry.getValue()));
 		return result;
 	}
@@ -97,17 +97,17 @@ public class Leaderboard extends PluginInventory {
 	public void whenClicked(ItemStack item, InventoryAction action, int slot) {
 	}
 
-	private String applyPlaceholders(String s, PlayerData playerData, int rank) {
+	private String applyPlaceholders(String str, PlayerData playerData, int rank) {
 		String title = playerData.hasTitle() ? playerData.getTitle().format() : Language.NO_TITLE.format();
 
-		s = s.replace("{level}", "" + playerData.getLevel());
-		s = s.replace("{bounties}", "" + playerData.getClaimedBounties());
-		s = s.replace("{successful_bounties}", "" + playerData.getSuccessfulBounties());
-		s = s.replace("{title}", title);
-		s = s.replace("{name}", playerData.getOfflinePlayer().getName());
-		s = s.replace("{rank}", "" + rank);
+		str = str.replace("{level}", "" + playerData.getLevel());
+		str = str.replace("{bounties}", "" + playerData.getClaimedBounties());
+		str = str.replace("{successful_bounties}", "" + playerData.getSuccessfulBounties());
+		str = str.replace("{title}", title);
+		str = str.replace("{name}", playerData.getOfflinePlayer().getName());
+		str = str.replace("{rank}", "" + rank);
 
-		return s;
+		return str;
 	}
 
 	public static void updateCachedLeaderboard(UUID uuid, int bounties) {
