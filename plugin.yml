@@ -28,6 +28,8 @@ permissions:
         default: op
     bountyhunters.claim:
         default: op
+    bountyhunters.remove:
+        default: op
     bountyhunters.immunity.bypass:
         default: false
     bountyhunters.immunity:

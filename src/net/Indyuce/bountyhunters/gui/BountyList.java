@@ -208,20 +208,18 @@ public class BountyList extends PluginInventory {
 				if (tag == null || tag.equals(""))
 					return;
 
-				OfflinePlayer t = Bukkit.getOfflinePlayer(UUID.fromString(tag));
-				if (t == null)
-					return;
-
 				// check for creator
-				Bounty bounty = BountyHunters.getInstance().getBountyManager().getBounty(t);
-				if (!bounty.hasCreator())
+				Bounty bounty = BountyHunters.getInstance().getBountyManager().getBounty(UUID.fromString(tag));
+				if (bounty == null || !bounty.hasCreator(player))
 					return;
-
-				if (!bounty.hasCreator(player))
+				
+				if (!player.hasPermission("bountyhunters.remove"))
 					return;
 
 				BountyExpireEvent bountyEvent = new BountyExpireEvent(bounty, BountyExpireCause.CREATOR);
 				Bukkit.getPluginManager().callEvent(bountyEvent);
+				if (bountyEvent.isCancelled())
+					return;
 
 				double cashback = bounty.getReward();
 
