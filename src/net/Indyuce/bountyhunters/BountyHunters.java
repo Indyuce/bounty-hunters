@@ -29,6 +29,7 @@ import net.Indyuce.bountyhunters.command.completion.AddBountyCompletion;
 import net.Indyuce.bountyhunters.command.completion.BountiesCompletion;
 import net.Indyuce.bountyhunters.comp.Metrics;
 import net.Indyuce.bountyhunters.comp.TownySupport;
+import net.Indyuce.bountyhunters.comp.WorldGuardFlags;
 import net.Indyuce.bountyhunters.comp.database.DataProvider;
 import net.Indyuce.bountyhunters.comp.database.MySQLProvider;
 import net.Indyuce.bountyhunters.comp.database.YAMLDataProvider;
@@ -74,8 +75,25 @@ public class BountyHunters extends JavaPlugin {
 	private ConfigFile leaderboard;
 	public boolean formattedNumbers;
 
-	public void onEnable() {
+	public void onLoad() {
 		plugin = this;
+
+		try {
+			if (getServer().getPluginManager().getPlugin("WorldGuard") != null && version.isStrictlyHigher(1, 12)) {
+				new WorldGuardFlags();
+				getLogger().log(Level.INFO, "Hooked onto WorldGuard");
+			}
+
+			/*
+			 * bad exception handling.. cannot really tell what is going to
+			 * happen with different versions of WG API anyways
+			 */
+		} catch (Exception exception) {
+			getLogger().log(Level.WARNING, "Could not initialize support with WorldGuard 7: " + exception.getMessage());
+		}
+	}
+
+	public void onEnable() {
 
 		try {
 			version = new PluginVersion(Bukkit.getServer().getClass());
