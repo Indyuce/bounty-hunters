@@ -39,7 +39,7 @@ public class YAMLBountyManager extends BountyManager {
 
 	public Bounty load(ConfigurationSection section) {
 
-		Bounty bounty = new Bounty(section.contains("creator") ? Bukkit.getOfflinePlayer(UUID.fromString(section.getString("creator"))) : null, Bukkit.getOfflinePlayer(UUID.fromString(section.getName())), section.getDouble("reward"));
+		Bounty bounty = new Bounty(Bukkit.getOfflinePlayer(UUID.fromString(section.getName())), section.getDouble("extra"));
 
 		for (String key : section.getStringList("hunters"))
 			bounty.addHunter(Bukkit.getOfflinePlayer(UUID.fromString(key)));
@@ -52,8 +52,7 @@ public class YAMLBountyManager extends BountyManager {
 
 	public void save(Bounty bounty, FileConfiguration config) {
 		String key = bounty.getTarget().getUniqueId().toString();
-		config.set(key + ".reward", bounty.getReward());
-		config.set(key + ".creator", bounty.hasCreator() ? bounty.getCreator().getUniqueId().toString() : null);
+		config.set(key + ".extra", bounty.getExtra());
 
 		config.set(key + ".hunters", bounty.getHunters().stream().map(uuid -> uuid.toString()).collect(Collectors.toList()));
 
