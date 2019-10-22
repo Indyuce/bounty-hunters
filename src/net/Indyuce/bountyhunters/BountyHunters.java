@@ -52,7 +52,6 @@ import net.Indyuce.bountyhunters.manager.PlayerDataManager;
 import net.Indyuce.bountyhunters.version.PluginVersion;
 import net.Indyuce.bountyhunters.version.SpigotPlugin;
 import net.Indyuce.bountyhunters.version.wrapper.VersionWrapper;
-import net.Indyuce.bountyhunters.version.wrapper.VersionWrapper_Reflection;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
@@ -100,8 +99,9 @@ public class BountyHunters extends JavaPlugin {
 			getLogger().log(Level.INFO, "Detected Server Version: " + version.toString());
 			wrapper = (VersionWrapper) Class.forName("net.Indyuce.bountyhunters.version.wrapper.VersionWrapper_" + version.toString().substring(1)).newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException exception) {
-			getLogger().log(Level.SEVERE, "Your server version is not handled with NMS: " + exception.getMessage());
-			wrapper = new VersionWrapper_Reflection();
+			getLogger().log(Level.SEVERE, "Your server version is not compatible.");
+			// wrapper = new VersionWrapper_Reflection();
+			return;
 		}
 
 		// vault compatibility

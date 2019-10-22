@@ -70,7 +70,11 @@ bounty-commands:
 # player who kills a player with no bounty on him (illegal kill).
 auto-bounty:
     enabled: false
+    
+    # Bounty reward
     reward: 100
+    
+    # Chance of applying
     chance: 100
 
 # Displays a different login message when a player
@@ -110,9 +114,15 @@ player-tracking:
 min-reward: 0
 max-reward: 0
 
-# Tax taken when creating a bounty (to fight abuse).
-# In % of the money reward. Must be between 0 and 100.
-tax: 15
+bounty-tax:
+    # Tax taken when creating a bounty (to fight abuse).
+    # In % of the money reward. Must be between 0 and 100.
+    bounty-creation: 15
+    
+    # Tax taken when a player removes the bounty he set.
+    # Default is 17.8% because it corresponds to 30% of the
+    # initial amount when taking into account bounty creation tax
+    bounty-removal: 17.8
 
 # Enables the display of death quotes when claiming a bounty.
 display-death-quote-on-title: false

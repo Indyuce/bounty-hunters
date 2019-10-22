@@ -8,10 +8,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
-public interface VersionWrapper {
-	ItemStack addTag(ItemStack item, ItemTag... tags);
+import net.Indyuce.bountyhunters.version.wrapper.api.NBTItem;
 
-	String getStringTag(ItemStack item, String path);
+public interface VersionWrapper {
+	NBTItem getNBTItem(ItemStack item);
 
 	void sendTitle(Player player, String title, String subtitle, int fadeIn, int ticks, int fadeOut);
 
@@ -20,6 +20,6 @@ public interface VersionWrapper {
 	void spawnParticle(Particle particle, Location loc, Player player, Color color);
 
 	ItemStack getHead(OfflinePlayer player);
-	
+
 	void setOwner(SkullMeta meta, OfflinePlayer player);
 }

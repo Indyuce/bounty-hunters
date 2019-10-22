@@ -78,7 +78,7 @@ public enum CustomItem {
 	}
 
 	public boolean loreMatches(ItemStack item) {
-		return BountyUtils.isPluginItem(item, true) && item.getItemMeta().getLore().equals(lore);
+		return BountyUtils.hasItemMeta(item, true) && item.getItemMeta().getLore().equals(lore);
 	}
 
 	public Builder newBuilder() {

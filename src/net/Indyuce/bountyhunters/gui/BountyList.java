@@ -24,7 +24,8 @@ import net.Indyuce.bountyhunters.api.language.Language;
 import net.Indyuce.bountyhunters.api.language.Message;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.version.VersionMaterial;
-import net.Indyuce.bountyhunters.version.wrapper.ItemTag;
+import net.Indyuce.bountyhunters.version.wrapper.api.ItemTag;
+import net.Indyuce.bountyhunters.version.wrapper.api.NBTItem;
 
 public class BountyList extends PluginInventory {
 	private final PlayerData data;
@@ -56,7 +57,7 @@ public class BountyList extends PluginInventory {
 			boolean isTarget = bounty.hasTarget(player), isCreator = bounty.hasCreator(player), isHunter = bounty.hasHunter(player), noCreator = !bounty.hasCreator();
 			builder.applyConditions(new String[] { "noCreator", "isCreator", "extraCreator", "isExtra", "isTarget", "isHunter", "!isHunter" }, new boolean[] { !bounty.hasCreator(), isCreator, !noCreator && !isCreator, !isTarget && !isCreator, isTarget, !isTarget && isHunter, !isTarget && !isHunter });
 			builder.applyPlaceholders("target", bounty.getTarget().getName(), "creator", bounty.hasCreator() ? bounty.getCreator().getName() : "Server", "reward", "" + new NumberFormat().format(bounty.getReward()), "hunters", "" + bounty.getHunters().size());
-			ItemStack item = BountyHunters.getInstance().getVersionWrapper().addTag(builder.build(), new ItemTag("playerUuid", bounty.getTarget().getUniqueId().toString()));
+			ItemStack item = NBTItem.get(builder.build()).addTag(new ItemTag("playerUuid", bounty.getTarget().getUniqueId().toString())).toItem();
 
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
 			Bukkit.getScheduler().runTaskAsynchronously(BountyHunters.getInstance(), () -> {
@@ -143,7 +144,7 @@ public class BountyList extends PluginInventory {
 		// target someone
 		if (action == InventoryAction.PICKUP_ALL && BountyHunters.getInstance().getConfig().getBoolean("player-tracking.enabled"))
 			if (slot < 35 && item.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()) {
-				String tag = BountyHunters.getInstance().getVersionWrapper().getStringTag(item, "playerUuid");
+				String tag = NBTItem.get(item).getString("playerUuid");
 				if (tag == null || tag.equals(""))
 					return;
 
@@ -201,15 +202,11 @@ public class BountyList extends PluginInventory {
 		// remove bounty
 		if (action == InventoryAction.PICKUP_HALF)
 			if (slot < 35 && item.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()) {
-				String tag = BountyHunters.getInstance().getVersionWrapper().getStringTag(item, "playerUuid");
+				String tag = NBTItem.get(item).getString("playerUuid");
 				if (tag == null || tag.equals(""))
 					return;
 
-				// check for creator
 				Bounty bounty = BountyHunters.getInstance().getBountyManager().getBounty(UUID.fromString(tag));
-				// if (bounty == null || !bounty.hasCreator(player))
-				// return;
-
 				if (!bounty.hasContributed(player) || !player.hasPermission("bountyhunters.remove"))
 					return;
 
@@ -218,23 +215,12 @@ public class BountyList extends PluginInventory {
 				if (bountyEvent.isCancelled())
 					return;
 
-				// double cashback = bounty.getReward();
-
-				// gives the players the money back if upped the bounty
-				// for (OfflinePlayer offline : bounty.getContributors()) {
-				// double given = bounty.getContribution(offline);
-				// BountyHunters.getInstance().getEconomy().depositPlayer(offline,
-				// given);
-				// cashback -= given;
-				// }
-
 				BountyHunters.getInstance().getEconomy().depositPlayer(player, bountyEvent.getAmountRemoved());
 				if (bountyEvent.isExpiring())
 					BountyHunters.getInstance().getBountyManager().unregisterBounty(bounty);
 				else
 					bounty.removeContribution(player);
 				bountyEvent.sendAllert();
-				// BountyHunters.getInstance().getBountyManager().unregisterBounty(bounty);
 
 				open();
 			}

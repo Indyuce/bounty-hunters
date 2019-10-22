@@ -14,48 +14,9 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.CustomItem;
+import net.Indyuce.bountyhunters.version.wrapper.api.NBTItem;
 
 public class VersionWrapper_Reflection implements VersionWrapper {
-	@Override
-	public ItemStack addTag(ItemStack i, ItemTag... tags) {
-		try {
-			Object nmsStack = obc("inventory.CraftItemStack").getDeclaredMethod("asNMSCopy", ItemStack.class).invoke(obc("inventory.CraftItemStack"), i);
-			Object compound = ((boolean) nmsStack.getClass().getDeclaredMethod("hasTag").invoke(nmsStack) ? nmsStack.getClass().getDeclaredMethod("getTag").invoke(nmsStack) : nms("NBTTagCompound").getDeclaredConstructor().newInstance());
-
-			for (ItemTag tag : tags) {
-				if (tag.getValue() instanceof Boolean)
-					compound.getClass().getDeclaredMethod("setBoolean", String.class, Boolean.TYPE).invoke(compound, tag.getPath(), (boolean) tag.getValue());
-				else if (tag.getValue() instanceof Double)
-					compound.getClass().getDeclaredMethod("setDouble", String.class, Double.TYPE).invoke(compound, tag.getPath(), (double) tag.getValue());
-				else if (tag.getValue() instanceof Integer)
-					compound.getClass().getDeclaredMethod("setInt", String.class, int.class).invoke(compound, tag.getPath(), (Integer) tag.getValue());
-				else if (tag.getValue() instanceof String)
-					compound.getClass().getDeclaredMethod("setString", String.class, String.class).invoke(compound, tag.getPath(), (String) tag.getValue());
-
-			}
-
-			nmsStack.getClass().getDeclaredMethod("setTag", compound.getClass()).invoke(nmsStack, compound);
-			return (ItemStack) obc("inventory.CraftItemStack").getDeclaredMethod("asBukkitCopy", nmsStack.getClass()).invoke(obc("inventory.CraftItemStack"), nmsStack);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | ClassNotFoundException | InstantiationException e) {
-			e.printStackTrace();
-			return i;
-		}
-	}
-
-	@Override
-	public String getStringTag(ItemStack i, String path) {
-		if (i == null || i.getType() == Material.AIR)
-			return "";
-
-		try {
-			Object nmsStack = obc("inventory.CraftItemStack").getDeclaredMethod("asNMSCopy", ItemStack.class).invoke(obc("inventory.CraftItemStack"), i);
-			Object compound = ((boolean) nmsStack.getClass().getDeclaredMethod("hasTag").invoke(nmsStack) ? nmsStack.getClass().getDeclaredMethod("getTag").invoke(nmsStack) : nms("NBTTagCompound").getDeclaredConstructor().newInstance());
-			return (String) compound.getClass().getDeclaredMethod("getString", String.class).invoke(compound, path);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | ClassNotFoundException | InstantiationException e) {
-			e.printStackTrace();
-			return "";
-		}
-	}
 
 	@Override
 	public void sendTitle(Player player, String title, String subtitle, int fadeIn, int ticks, int fadeOut) {
@@ -99,9 +60,10 @@ public class VersionWrapper_Reflection implements VersionWrapper {
 		return Class.forName("net.minecraft.server." + BountyHunters.getInstance().getVersion().toString() + "." + str);
 	}
 
-	private Class<?> obc(String str) throws ClassNotFoundException {
-		return Class.forName("org.bukkit.craftbukkit." + BountyHunters.getInstance().getVersion().toString() + "." + str);
-	}
+	// private Class<?> obc(String str) throws ClassNotFoundException {
+	// return Class.forName("org.bukkit.craftbukkit." +
+	// BountyHunters.getInstance().getVersion().toString() + "." + str);
+	// }
 
 	private Class<?> enumTitleAction() throws SecurityException, ClassNotFoundException {
 		return nms("PacketPlayOutTitle").getDeclaredClasses().length > 0 ? nms("PacketPlayOutTitle").getDeclaredClasses()[0] : nms("EnumTitleAction");
@@ -131,5 +93,11 @@ public class VersionWrapper_Reflection implements VersionWrapper {
 	@Override
 	public void setOwner(SkullMeta meta, OfflinePlayer player) {
 		meta.setOwningPlayer(player);
+	}
+
+	@Override
+	public NBTItem getNBTItem(ItemStack item) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

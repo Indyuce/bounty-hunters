@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.version.wrapper;
+package net.Indyuce.bountyhunters.version.wrapper.api;
 
 public class ItemTag {
 	private final String path;

@@ -5,7 +5,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.Indyuce.bountyhunters.BountyHunters;
@@ -65,13 +64,13 @@ public class AddBountyCommand implements CommandExecutor {
 			Message.NOT_VALID_NUMBER.format("arg", args[1]).send(sender);
 			return true;
 		}
-		reward = BountyUtils.truncation(reward, 1);
+		reward = BountyUtils.truncate(reward, 1);
 
 		/*
 		 * minimum and maximum checks do not apply for console.
 		 */
 		CommandArguments arguments = new CommandArguments(args);
-		if (!(sender instanceof ConsoleCommandSender) || !arguments.bypassMinMax) {
+		if (!sender.hasPermission("bountyhunters.admin") || !arguments.bypassMinMax) {
 			double min = BountyHunters.getInstance().getConfig().getDouble("min-reward");
 			double max = BountyHunters.getInstance().getConfig().getDouble("max-reward");
 			if (reward < min) {
@@ -85,7 +84,7 @@ public class AddBountyCommand implements CommandExecutor {
 		}
 
 		// tax calculation
-		double tax = sender instanceof ConsoleCommandSender && arguments.noTax ? 0 : BountyUtils.truncation(reward * BountyHunters.getInstance().getConfig().getDouble("tax") / 100, 1);
+		double tax = sender.hasPermission("bountyhunters.admin") && arguments.noTax ? 0 : BountyUtils.truncate(reward * BountyHunters.getInstance().getConfig().getDouble("bounty-tax.bounty-creation") / 100, 1);
 
 		// set restriction
 		if (sender instanceof Player) {
@@ -128,7 +127,10 @@ public class AddBountyCommand implements CommandExecutor {
 			}
 
 			new BountyCommands("increase." + bountyEvent.getCause().name().toLowerCase().replace("_", "-"), bounty, sender).send();
-			bounty.addToReward(sender instanceof Player ? (Player) sender : null, reward);
+			if (sender instanceof Player)
+				bounty.addContribution((Player) sender, reward);
+			else
+				bounty.addReward(reward);
 			bountyEvent.sendAllert();
 			return true;
 		}

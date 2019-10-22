@@ -14,7 +14,7 @@ public class GuiListener implements Listener {
 		ItemStack item = event.getCurrentItem();
 		if (event.getInventory().getHolder() instanceof PluginInventory) {
 			event.setCancelled(true);
-			if (event.getClickedInventory() != null && event.getClickedInventory().equals(event.getInventory()) && BountyUtils.isPluginItem(item, false))
+			if (event.getClickedInventory() != null && event.getClickedInventory().equals(event.getInventory()) && BountyUtils.hasItemMeta(item, false))
 				((PluginInventory) event.getInventory().getHolder()).whenClicked(item, event.getAction(), event.getSlot());
 		}
 	}
