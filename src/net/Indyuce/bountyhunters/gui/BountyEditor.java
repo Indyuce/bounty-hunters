@@ -50,6 +50,7 @@ public class BountyEditor extends PluginInventory {
 		List<String> bookLore = new ArrayList<>();
 		bookLore.add("");
 		bookLore.add(ChatColor.GRAY + "Reward: " + ChatColor.GOLD + "$" + new NumberFormat().format(reward));
+		bookLore.add(ChatColor.GRAY + "  - From Players: " + ChatColor.GOLD + "$" + new NumberFormat().format(reward - bounty.getExtra()));
 		bookLore.add(ChatColor.GRAY + "  - Extra: " + ChatColor.GOLD + "$" + new NumberFormat().format(bounty.getExtra()));
 		bookLore.add("");
 		bookLore.add(ChatColor.GRAY + "Hunters: " + ChatColor.RED + bounty.getHunters().size());
@@ -129,7 +130,7 @@ public class BountyEditor extends PluginInventory {
 	 * literally useless
 	 */
 	private String genetive(String str) {
-		return str + (str.endsWith("s") || str.endsWith("z") || str.endsWith("x") ? "'s " : "' ");
+		return str + (str.endsWith("s") || str.endsWith("z") || str.endsWith("x") ? "' " : "'s ");
 	}
 
 	@Override
