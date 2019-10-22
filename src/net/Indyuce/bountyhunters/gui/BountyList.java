@@ -56,7 +56,7 @@ public class BountyList extends PluginInventory {
 			Builder builder = CustomItem.GUI_PLAYER_HEAD.newBuilder();
 			boolean isTarget = bounty.hasTarget(player), isCreator = bounty.hasCreator(player), isHunter = bounty.hasHunter(player), noCreator = !bounty.hasCreator();
 			builder.applyConditions(new String[] { "noCreator", "isCreator", "extraCreator", "isExtra", "isTarget", "isHunter", "!isHunter" }, new boolean[] { !bounty.hasCreator(), isCreator, !noCreator && !isCreator, !isTarget && !isCreator, isTarget, !isTarget && isHunter, !isTarget && !isHunter });
-			builder.applyPlaceholders("target", bounty.getTarget().getName(), "creator", bounty.hasCreator() ? bounty.getCreator().getName() : "Server", "reward", "" + new NumberFormat().format(bounty.getReward()), "hunters", "" + bounty.getHunters().size());
+			builder.applyPlaceholders("target", bounty.getTarget().getName(), "creator", bounty.hasCreator() ? bounty.getCreator().getName() : "Server", "reward", "" + new NumberFormat().format(bounty.getReward()), "contributors", "" + bounty.getContributors().size(), "hunters", "" + bounty.getHunters().size());
 			ItemStack item = NBTItem.get(builder.build()).addTag(new ItemTag("playerUuid", bounty.getTarget().getUniqueId().toString())).toItem();
 
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
@@ -214,6 +214,10 @@ public class BountyList extends PluginInventory {
 				Bukkit.getPluginManager().callEvent(bountyEvent);
 				if (bountyEvent.isCancelled())
 					return;
+
+				Bukkit.broadcastMessage("reward=" + bounty.getReward());
+				Bukkit.broadcastMessage("contribution=" + bounty.getContribution(player));
+				Bukkit.broadcastMessage("eventn=" + bountyEvent.getAmountRemoved());
 
 				BountyHunters.getInstance().getEconomy().depositPlayer(player, bountyEvent.getAmountRemoved());
 				if (bountyEvent.isExpiring())

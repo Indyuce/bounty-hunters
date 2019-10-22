@@ -82,7 +82,11 @@ public class Bounty {
 	 * ADDS given value the mapped value; does NOT replace it
 	 */
 	public void addContribution(OfflinePlayer player, double value) {
-		amount.put(player, (amount.containsKey(player) ? amount.get(player) : 0) + value);
+		setContribution(player, (amount.containsKey(player) ? amount.get(player) : 0) + value);
+	}
+
+	public void setContribution(OfflinePlayer player, double value) {
+		amount.put(player, value);
 	}
 
 	public void removeContribution(OfflinePlayer player) {

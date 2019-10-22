@@ -47,7 +47,7 @@ public class BountyExpireEvent extends BountyEvent {
 		this.player = player;
 		this.amount = amount;
 		this.cause = cause;
-		expiring = getBounty().getReward() >= amount;
+		expiring = getBounty().getReward() <= amount;
 	}
 
 	public BountyExpireCause getCause() {

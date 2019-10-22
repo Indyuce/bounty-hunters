@@ -2,6 +2,7 @@ package net.Indyuce.bountyhunters.manager;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -58,6 +59,10 @@ public abstract class BountyManager {
 
 	public Bounty getBounty(UUID target) {
 		return bounties.get(target);
+	}
+	
+	public Optional<Bounty> findByName(String name) {
+		return bounties.values().stream().filter(bounty -> bounty.getTarget().getName().equalsIgnoreCase(name)).findAny();
 	}
 
 	public abstract void saveBounties();

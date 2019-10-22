@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+
+import net.Indyuce.bountyhunters.BountyHunters;
 
 public class BountiesCompletion implements TabCompleter {
 	@Override
@@ -18,18 +19,17 @@ public class BountiesCompletion implements TabCompleter {
 			list.add("titles");
 			list.add("quotes");
 			if (sender.hasPermission("bountyhunters.admin")) {
-				list.add("help");
-				list.add("reload");
+				list.add("edit");
 				list.add("remove");
+				list.add("reload");
+				list.add("help");
 			}
 		}
 
 		if (args.length == 2)
-			if (args[0].equalsIgnoreCase("remove"))
-				Bukkit.getOnlinePlayers().forEach(online -> list.add(online.getName()));
+			if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit"))
+				BountyHunters.getInstance().getBountyManager().getBounties().forEach(bounty -> list.add(bounty.getTarget().getName()));
 
-		return args[args.length - 1].isEmpty() ? list
-				: list.stream().filter(string -> string.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
-						.collect(Collectors.toList());
+		return args[args.length - 1].isEmpty() ? list : list.stream().filter(string -> string.toLowerCase().startsWith(args[args.length - 1].toLowerCase())).collect(Collectors.toList());
 	}
 }
