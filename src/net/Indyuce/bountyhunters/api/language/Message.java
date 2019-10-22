@@ -38,7 +38,7 @@ public enum Message {
 	TARGET_COOLDOWN("&cPlease wait another {remain} second{s} to target a player."),
 	CANT_SET_BOUNTY_ON_YOURSELF("&cYou can't set a bounty on yourself!"),
 	BOUNTY_EXPIRED(new SoundReader(Sound.ENTITY_VILLAGER_NO, 1, 2), "&eThe bounty on &6{target} &ehas expired."),
-	BOUNTY_DECREASED("&eBounty on &6{target} &ehas decreased from &6${old} &eto &6${new}."),
+	BOUNTY_DECREASED("&eBounty on &6{target} &ehas decreased from &6${old} &eto &6${new}&e."),
 	REWARD_MUST_BE_HIGHER("&cReward must be higher than ${min}!"),
 	REWARD_MUST_BE_LOWER("&cReward must be lower than ${max}!"),
 	NOT_ENOUGH_MONEY("&cYou don't have enough money."),
