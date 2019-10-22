@@ -62,10 +62,11 @@ public class BountyHunters extends JavaPlugin {
 	private PluginVersion version;
 	private VersionWrapper wrapper;
 	private PlaceholderParser placeholderParser;
+	private DataProvider dataProvider;
+	private WorldGuardFlags wgFlags;
 
 	private Economy economy;
 	private Permission permission;
-	private DataProvider dataProvider;
 
 	private BountyManager bountyManager;
 	private HuntManager huntManager;
@@ -79,8 +80,18 @@ public class BountyHunters extends JavaPlugin {
 		plugin = this;
 
 		try {
+			version = new PluginVersion(Bukkit.getServer().getClass());
+			wrapper = (VersionWrapper) Class.forName("net.Indyuce.bountyhunters.version.wrapper.VersionWrapper_" + version.toString().substring(1)).newInstance();
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException exception) {
+			getLogger().log(Level.SEVERE, "Your server version is not compatible.");
+			Bukkit.getPluginManager().disablePlugin(this);
+			// wrapper = new VersionWrapper_Reflection();
+			return;
+		}
+
+		try {
 			if (getServer().getPluginManager().getPlugin("WorldGuard") != null && version.isStrictlyHigher(1, 12)) {
-				new WorldGuardFlags();
+				wgFlags = new WorldGuardFlags();
 				getLogger().log(Level.INFO, "Hooked onto WorldGuard");
 			}
 
@@ -94,16 +105,7 @@ public class BountyHunters extends JavaPlugin {
 	}
 
 	public void onEnable() {
-
-		try {
-			version = new PluginVersion(Bukkit.getServer().getClass());
-			getLogger().log(Level.INFO, "Detected Server Version: " + version.toString());
-			wrapper = (VersionWrapper) Class.forName("net.Indyuce.bountyhunters.version.wrapper.VersionWrapper_" + version.toString().substring(1)).newInstance();
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException exception) {
-			getLogger().log(Level.SEVERE, "Your server version is not compatible.");
-			// wrapper = new VersionWrapper_Reflection();
-			return;
-		}
+		getLogger().log(Level.INFO, "Detected Server Version: " + version.toString());
 
 		// vault compatibility
 		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
@@ -175,6 +177,9 @@ public class BountyHunters extends JavaPlugin {
 			Bukkit.getPluginManager().registerEvents(new TownySupport(), this);
 			getLogger().log(Level.INFO, "Hooked onto Towny");
 		}
+
+		if (wgFlags != null)
+			Bukkit.getPluginManager().registerEvents(wgFlags, this);
 
 		if (Bukkit.getPluginManager().getPlugin("Residence") != null) {
 			new ResidenceFlags();

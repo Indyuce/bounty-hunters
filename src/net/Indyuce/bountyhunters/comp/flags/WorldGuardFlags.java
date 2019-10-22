@@ -16,7 +16,6 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 
-import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
 
 public class WorldGuardFlags implements Listener {
@@ -41,8 +40,6 @@ public class WorldGuardFlags implements Listener {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
-		Bukkit.getPluginManager().registerEvents(this, BountyHunters.getInstance());
 	}
 
 	@EventHandler
