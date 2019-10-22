@@ -1,6 +1,6 @@
 # bounty-hunters
 
-Open a ticket or contact me via Spigot DM/Discord if you need anything. Don't hesitate to have a look at the wiki, it presents the main plugin & API features. If you would like to contribute to the plugin development, you can report an issue and indicate how it can be reproduced, write a feature request which I might add to the plugin, or write a pull request.
+**Please open a ticket if you need help with anything related to the plugin, I usually do not answer the plugin discussion thread.** The wiki presents the main plugin features as well as the main API methods and classes, don't hesitate to have a look before opening an issue to make sure it does not have the answer you're looking for.
 
 **Useful links:**
 * Metrics: https://bstats.org/plugin/bukkit/BountyHunters
