@@ -29,10 +29,11 @@ import net.Indyuce.bountyhunters.command.completion.AddBountyCompletion;
 import net.Indyuce.bountyhunters.command.completion.BountiesCompletion;
 import net.Indyuce.bountyhunters.comp.Metrics;
 import net.Indyuce.bountyhunters.comp.TownySupport;
-import net.Indyuce.bountyhunters.comp.WorldGuardFlags;
 import net.Indyuce.bountyhunters.comp.database.DataProvider;
 import net.Indyuce.bountyhunters.comp.database.MySQLProvider;
 import net.Indyuce.bountyhunters.comp.database.YAMLDataProvider;
+import net.Indyuce.bountyhunters.comp.flags.ResidenceFlags;
+import net.Indyuce.bountyhunters.comp.flags.WorldGuardFlags;
 import net.Indyuce.bountyhunters.comp.placeholder.BountyHuntersPlaceholders;
 import net.Indyuce.bountyhunters.comp.placeholder.DefaultParser;
 import net.Indyuce.bountyhunters.comp.placeholder.PlaceholderAPIParser;
@@ -173,6 +174,11 @@ public class BountyHunters extends JavaPlugin {
 		if (getServer().getPluginManager().getPlugin("Towny") != null && getConfig().getBoolean("plugin-compatibility.towny-bounty-friendly-fire")) {
 			Bukkit.getPluginManager().registerEvents(new TownySupport(), this);
 			getLogger().log(Level.INFO, "Hooked onto Towny");
+		}
+
+		if (Bukkit.getPluginManager().getPlugin("Residence") != null) {
+			new ResidenceFlags();
+			getLogger().log(Level.INFO, "Hooked onto Residence");
 		}
 
 		try {

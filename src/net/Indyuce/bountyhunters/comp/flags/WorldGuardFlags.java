@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.comp;
+package net.Indyuce.bountyhunters.comp.flags;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,13 +57,5 @@ public class WorldGuardFlags implements Listener {
 
 	private ApplicableRegionSet getApplicableRegion(Location loc) {
 		return worldguard.getPlatform().getRegionContainer().createQuery().getApplicableRegions(BukkitAdapter.adapt(loc));
-	}
-
-	public enum CustomFlag {
-		CLAIM_BOUNTIES;
-
-		public String getPath() {
-			return name().toLowerCase().replace("_", "-");
-		}
 	}
 }
