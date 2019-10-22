@@ -84,7 +84,8 @@ public class AddBountyCommand implements CommandExecutor {
 		}
 
 		// tax calculation
-		double tax = sender.hasPermission("bountyhunters.admin") && arguments.noTax ? 0 : BountyUtils.truncate(reward * BountyHunters.getInstance().getConfig().getDouble("bounty-tax.bounty-creation") / 100, 1);
+		double taxp = Math.max(0, Math.min(1, BountyHunters.getInstance().getConfig().getDouble("bounty-tax.bounty-creation") / 100));
+		double tax = sender.hasPermission("bountyhunters.admin") && arguments.noTax ? 0 : BountyUtils.truncate(reward * taxp, 1);
 
 		// set restriction
 		if (sender instanceof Player) {

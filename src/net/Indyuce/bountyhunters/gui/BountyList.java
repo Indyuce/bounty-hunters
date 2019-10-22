@@ -215,15 +215,12 @@ public class BountyList extends PluginInventory {
 				if (bountyEvent.isCancelled())
 					return;
 
-				Bukkit.broadcastMessage("reward=" + bounty.getReward());
-				Bukkit.broadcastMessage("contribution=" + bounty.getContribution(player));
-				Bukkit.broadcastMessage("eventn=" + bountyEvent.getAmountRemoved());
-
-				BountyHunters.getInstance().getEconomy().depositPlayer(player, bountyEvent.getAmountRemoved());
+				double tax = Math.max(0, Math.min(1, BountyHunters.getInstance().getConfig().getDouble("bounty-tax.bounty-removal") / 100));
+				BountyHunters.getInstance().getEconomy().depositPlayer(player, bountyEvent.getAmountRemoved() * (1 - tax));
+				
 				if (bountyEvent.isExpiring())
 					BountyHunters.getInstance().getBountyManager().unregisterBounty(bounty);
-				else
-					bounty.removeContribution(player);
+				bounty.removeContribution(player);
 				bountyEvent.sendAllert();
 
 				open();
