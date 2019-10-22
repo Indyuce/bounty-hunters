@@ -31,13 +31,6 @@ public class BountyClaim implements Listener {
 		if (target.getKiller() == null || !(target.getKiller() instanceof Player) || target.equals(target.getKiller()))
 			return;
 
-		/*
-		 * check if the player world is in the world blacklist (the plugin is
-		 * totally disabled in these worlds)
-		 */
-		if (BountyHunters.getInstance().getConfig().getStringList("world-blacklist").contains(target.getWorld().getName()))
-			return;
-
 		Player killer = target.getKiller();
 
 		/*

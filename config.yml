@@ -130,10 +130,6 @@ display-death-quote-on-title: false
 # Enables leveling rewards.
 enable-level-rewards: true
 
-# Worlds in which the bounty system is completely disabled.
-world-blacklist:
-- INSERT_WORLD_HERE
-
 # You can claim the bounties you create. This also lets
 # people target players using a bounty THEY created.
 # Warning: can be abused.
