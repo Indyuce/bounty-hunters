@@ -18,8 +18,8 @@ import net.Indyuce.bountyhunters.api.event.BountyChangeEvent.BountyChangeCause;
 import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
-import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.api.event.BountyEvent;
+import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.gui.Leaderboard;
 
 public class BountyClaim implements Listener {
@@ -74,7 +74,7 @@ public class BountyClaim implements Listener {
 				 * increase the existing bounty amount
 				 */
 				else {
-					bounty.setReward(bounty.getReward() + BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward"));
+					bounty.addReward(BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward"));
 					new BountyCommands("increase.auto-bounty", bounty, killer).send();
 				}
 

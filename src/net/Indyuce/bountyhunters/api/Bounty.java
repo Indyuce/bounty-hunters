@@ -1,9 +1,8 @@
 package net.Indyuce.bountyhunters.api;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -15,34 +14,48 @@ import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.manager.HuntManager;
 
 public class Bounty {
-	private double reward;
-	private final OfflinePlayer creator, target;
-
+	private final OfflinePlayer target;
 	private final List<UUID> hunters = new ArrayList<>();
-	private final Map<UUID, Double> up = new HashMap<>();
 
-	/*
-	 * creator is nullable since auto-bounties do not have any creator
-	 */
+	private final LinkedHashMap<OfflinePlayer, Double> amount = new LinkedHashMap<>();
+	private double extra;
+
 	@Deprecated
 	public Bounty(UUID creator, UUID target, double reward) {
-		this(creator == null ? null : Bukkit.getOfflinePlayer(creator), Bukkit.getOfflinePlayer(target), reward);
+		this(Bukkit.getOfflinePlayer(creator), Bukkit.getOfflinePlayer(target), reward);
 	}
 
 	public Bounty(OfflinePlayer creator, OfflinePlayer target, double reward) {
-		Validate.notNull(target, "Bounty target must not be null");
+		Validate.notNull(target, "Target cannot be null");
+		Validate.notNull(creator, "Creator cannot be null");
 
 		this.target = target;
-		this.creator = creator;
-		this.reward = reward;
+		amount.put(creator, reward);
+	}
+
+	public Bounty(OfflinePlayer target, double reward) {
+		Validate.notNull(target, "Target cannot be null");
+
+		this.target = target;
+		extra = reward;
 	}
 
 	public double getReward() {
-		return reward;
+		double t = extra;
+		for (double d : amount.values())
+			t += d;
+		return t;
+	}
+
+	public double getExtra() {
+		return extra;
 	}
 
 	public OfflinePlayer getCreator() {
-		return creator;
+		if (amount.size() != 0)
+			for (OfflinePlayer player : amount.keySet())
+				return player;
+		return null;
 	}
 
 	public OfflinePlayer getTarget() {
@@ -50,51 +63,71 @@ public class Bounty {
 	}
 
 	public boolean hasCreator() {
-		return creator != null;
+		return amount.size() > 0;
 	}
 
 	public boolean hasCreator(OfflinePlayer player) {
-		return creator != null && creator.equals(player);
+		return hasCreator() && getCreator().equals(player);
 	}
 
 	public boolean hasTarget(OfflinePlayer player) {
 		return target.equals(player);
 	}
 
-	public void addToReward(double value) {
-		reward += value;
-	}
-
-	public void addToReward(OfflinePlayer player, double value) {
-		addToReward(value);
-		setBountyIncrease(player, value);
-	}
-
-	public void setBountyIncrease(OfflinePlayer player, double value) {
-		setBountyIncrease(player.getUniqueId(), value);
+	public void addReward(double value) {
+		setExtra(extra + value);
 	}
 
 	/*
-	 * this method ADDS the given value to the mapped value, it does NOT replace it
+	 * ADDS given value the mapped value; does NOT replace it
 	 */
+	public void addContribution(OfflinePlayer player, double value) {
+		amount.put(player, (amount.containsKey(player) ? amount.get(player) : 0) + value);
+	}
+
+	public void removeContribution(OfflinePlayer player) {
+		amount.remove(player);
+	}
+
+	@Deprecated
 	public void setBountyIncrease(UUID uuid, double value) {
-		up.put(uuid, (up.containsKey(uuid) ? up.get(uuid) : 0) + value);
+		addContribution(Bukkit.getOfflinePlayer(uuid), value);
 	}
 
-	public Set<UUID> getPlayersWhoIncreased() {
-		return up.keySet();
+	@Deprecated
+	public void setBountyIncrease(OfflinePlayer player, double value) {
+		addContribution(player, value);
 	}
 
+	public Set<OfflinePlayer> getContributors() {
+		return amount.keySet();
+	}
+
+	public boolean hasContributed(OfflinePlayer player) {
+		return amount.containsKey(player);
+	}
+
+	public double getContribution(OfflinePlayer player) {
+		return amount.get(player);
+	}
+
+	@Deprecated
 	public double getIncreaseAmount(OfflinePlayer player) {
-		return getIncreaseAmount(player.getUniqueId());
+		return getContribution(player);
 	}
 
+	@Deprecated
 	public double getIncreaseAmount(UUID uuid) {
-		return up.get(uuid);
+		return getContribution(Bukkit.getOfflinePlayer(uuid));
 	}
 
+	@Deprecated
 	public void setReward(double reward) {
-		this.reward = reward;
+		setExtra(reward);
+	}
+
+	public void setExtra(double extra) {
+		this.extra = Math.max(0, extra);
 	}
 
 	public boolean isAutoBounty() {

@@ -13,6 +13,7 @@ import net.Indyuce.bountyhunters.api.player.PlayerData;
 
 public class BountyClaimEvent extends BountyEvent {
 	private final Player player;
+	private final Player target;
 
 	private static final HandlerList handlers = new HandlerList();
 
@@ -24,6 +25,11 @@ public class BountyClaimEvent extends BountyEvent {
 		super(bounty);
 
 		this.player = player;
+		this.target = bounty.getTarget().getPlayer();
+	}
+
+	public Player getTarget() {
+		return target;
 	}
 
 	public Player getClaimer() {
@@ -41,8 +47,7 @@ public class BountyClaimEvent extends BountyEvent {
 		String title = playerData.hasTitle() ? ChatColor.LIGHT_PURPLE + "[" + playerData.getTitle().format() + ChatColor.LIGHT_PURPLE + "] " : "";
 		for (Player online : Bukkit.getOnlinePlayers())
 			if (online != player)
-				Message.BOUNTY_CLAIMED.format("reward", new NumberFormat().format(getBounty().getReward()), "killer", title + player.getName(), "target", getBounty().getTarget().getName())
-						.send(online);
+				Message.BOUNTY_CLAIMED.format("reward", new NumberFormat().format(getBounty().getReward()), "killer", title + player.getName(), "target", getBounty().getTarget().getName()).send(online);
 	}
 
 	public HandlerList getHandlers() {

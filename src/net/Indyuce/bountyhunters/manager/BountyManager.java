@@ -6,9 +6,11 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
+import net.Indyuce.bountyhunters.gui.BountyEditor;
 import net.Indyuce.bountyhunters.manager.HuntManager.HunterData;
 
 public abstract class BountyManager {
@@ -23,6 +25,15 @@ public abstract class BountyManager {
 				data.hideParticles();
 			BountyHunters.getInstance().getHuntManager().stopHunting(player);
 		});
+
+		/*
+		 * checks for online admins who opened the bounty editor for that
+		 * specific bounty and close GUIs
+		 */
+		for (Player online : Bukkit.getOnlinePlayers())
+			if (online.getOpenInventory() != null && online.getOpenInventory().getTopInventory().getHolder() instanceof BountyEditor)
+				if (((BountyEditor) online.getOpenInventory().getTopInventory().getHolder()).getBounty().equals(bounty))
+					online.closeInventory();
 	}
 
 	public void registerBounty(Bounty bounty) {

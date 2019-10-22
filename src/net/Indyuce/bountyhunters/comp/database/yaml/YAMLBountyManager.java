@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -44,7 +45,7 @@ public class YAMLBountyManager extends BountyManager {
 			bounty.addHunter(Bukkit.getOfflinePlayer(UUID.fromString(key)));
 		if (section.contains("up"))
 			for (String key : section.getConfigurationSection("up").getKeys(false))
-				bounty.setBountyIncrease(Bukkit.getOfflinePlayer(UUID.fromString(key)), section.getDouble("up." + key));
+				bounty.addContribution(Bukkit.getOfflinePlayer(UUID.fromString(key)), section.getDouble("up." + key));
 
 		return bounty;
 	}
@@ -57,7 +58,7 @@ public class YAMLBountyManager extends BountyManager {
 		config.set(key + ".hunters", bounty.getHunters().stream().map(uuid -> uuid.toString()).collect(Collectors.toList()));
 
 		config.createSection(key + ".up");
-		for (UUID uuid : bounty.getPlayersWhoIncreased())
-			config.set(key + ".up." + uuid.toString(), bounty.getIncreaseAmount(uuid));
+		for (OfflinePlayer increase : bounty.getContributors())
+			config.set(key + ".up." + increase.getUniqueId().toString(), bounty.getContribution(increase));
 	}
 }

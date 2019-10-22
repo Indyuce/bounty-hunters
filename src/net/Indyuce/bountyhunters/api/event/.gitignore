@@ -8,3 +8,6 @@
 /BountyExpireEvent.class
 /HunterLevelUpEvent.class
 /HunterTargetEvent.class
+/BountyRemoveEvent$BountyExpireCause.class
+/BountyRemoveEvent.class
+/BountyRemoveEvent$BountyRemoveCause.class

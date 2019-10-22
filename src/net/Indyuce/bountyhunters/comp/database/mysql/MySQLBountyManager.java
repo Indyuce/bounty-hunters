@@ -44,7 +44,7 @@ public class MySQLBountyManager extends BountyManager {
 							Bukkit.getOfflinePlayer(UUID.fromString(result.getString("target"))), result.getDouble("reward"));
 
 					JsonObject increased = (JsonObject) new JsonParser().parse(result.getString("increased"));
-					increased.entrySet().forEach(entry -> bounty.setBountyIncrease(UUID.fromString(entry.getKey()), entry.getValue().getAsDouble()));
+					increased.entrySet().forEach(entry -> bounty.addContribution(Bukkit.getOfflinePlayer(UUID.fromString(entry.getKey())), entry.getValue().getAsDouble()));
 
 					JsonArray hunters = (JsonArray) new JsonParser().parse(result.getString("hunters"));
 					hunters.forEach(key -> bounty.addHunter(Bukkit.getOfflinePlayer(UUID.fromString(key.getAsString()))));
@@ -72,7 +72,7 @@ public class MySQLBountyManager extends BountyManager {
 				bounty.getHunters().forEach(uuid -> hunters.add(uuid.toString()));
 
 				JsonObject increased = new JsonObject();
-				bounty.getPlayersWhoIncreased().forEach(key -> increased.addProperty(key.toString(), bounty.getIncreaseAmount(key)));
+				bounty.getContributors().forEach(key -> increased.addProperty(key.getUniqueId().toString(), bounty.getContribution(key)));
 
 				save.setString(1, bounty.getTarget().getUniqueId().toString());
 				save.setString(2, bounty.hasCreator() ? bounty.getCreator().getUniqueId().toString() : "null");

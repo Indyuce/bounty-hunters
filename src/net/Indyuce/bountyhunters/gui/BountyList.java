@@ -19,7 +19,6 @@ import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.CustomItem.Builder;
 import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent;
-import net.Indyuce.bountyhunters.api.event.BountyExpireEvent.BountyExpireCause;
 import net.Indyuce.bountyhunters.api.event.HunterTargetEvent;
 import net.Indyuce.bountyhunters.api.language.Language;
 import net.Indyuce.bountyhunters.api.language.Message;
@@ -55,10 +54,8 @@ public class BountyList extends PluginInventory {
 			Bounty bounty = bounties.get(j);
 			Builder builder = CustomItem.GUI_PLAYER_HEAD.newBuilder();
 			boolean isTarget = bounty.hasTarget(player), isCreator = bounty.hasCreator(player), isHunter = bounty.hasHunter(player), noCreator = !bounty.hasCreator();
-			builder.applyConditions(new String[] { "noCreator", "isCreator", "extraCreator", "isExtra", "isTarget", "isHunter", "!isHunter" },
-					new boolean[] { !bounty.hasCreator(), isCreator, !noCreator && !isCreator, !isTarget && !isCreator, isTarget, !isTarget && isHunter, !isTarget && !isHunter });
-			builder.applyPlaceholders("target", bounty.getTarget().getName(), "creator", bounty.hasCreator() ? bounty.getCreator().getName() : "Server", "reward",
-					"" + new NumberFormat().format(bounty.getReward()), "hunters", "" + bounty.getHunters().size());
+			builder.applyConditions(new String[] { "noCreator", "isCreator", "extraCreator", "isExtra", "isTarget", "isHunter", "!isHunter" }, new boolean[] { !bounty.hasCreator(), isCreator, !noCreator && !isCreator, !isTarget && !isCreator, isTarget, !isTarget && isHunter, !isTarget && !isHunter });
+			builder.applyPlaceholders("target", bounty.getTarget().getName(), "creator", bounty.hasCreator() ? bounty.getCreator().getName() : "Server", "reward", "" + new NumberFormat().format(bounty.getReward()), "hunters", "" + bounty.getHunters().size());
 			ItemStack item = BountyHunters.getInstance().getVersionWrapper().addTag(builder.build(), new ItemTag("playerUuid", bounty.getTarget().getUniqueId().toString()));
 
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
@@ -210,30 +207,34 @@ public class BountyList extends PluginInventory {
 
 				// check for creator
 				Bounty bounty = BountyHunters.getInstance().getBountyManager().getBounty(UUID.fromString(tag));
-				if (bounty == null || !bounty.hasCreator(player))
-					return;
-				
-				if (!player.hasPermission("bountyhunters.remove"))
+				// if (bounty == null || !bounty.hasCreator(player))
+				// return;
+
+				if (!bounty.hasContributed(player) || !player.hasPermission("bountyhunters.remove"))
 					return;
 
-				BountyExpireEvent bountyEvent = new BountyExpireEvent(bounty, BountyExpireCause.CREATOR);
+				BountyExpireEvent bountyEvent = new BountyExpireEvent(bounty, player);
 				Bukkit.getPluginManager().callEvent(bountyEvent);
 				if (bountyEvent.isCancelled())
 					return;
 
-				double cashback = bounty.getReward();
+				// double cashback = bounty.getReward();
 
 				// gives the players the money back if upped the bounty
-				for (UUID up : bounty.getPlayersWhoIncreased()) {
-					OfflinePlayer offline = Bukkit.getOfflinePlayer(up);
-					double given = bounty.getIncreaseAmount(offline);
-					BountyHunters.getInstance().getEconomy().depositPlayer(offline, given);
-					cashback -= given;
-				}
+				// for (OfflinePlayer offline : bounty.getContributors()) {
+				// double given = bounty.getContribution(offline);
+				// BountyHunters.getInstance().getEconomy().depositPlayer(offline,
+				// given);
+				// cashback -= given;
+				// }
 
-				BountyHunters.getInstance().getEconomy().depositPlayer(player, cashback);
+				BountyHunters.getInstance().getEconomy().depositPlayer(player, bountyEvent.getAmountRemoved());
+				if (bountyEvent.isExpiring())
+					BountyHunters.getInstance().getBountyManager().unregisterBounty(bounty);
+				else
+					bounty.removeContribution(player);
 				bountyEvent.sendAllert();
-				BountyHunters.getInstance().getBountyManager().unregisterBounty(bounty);
+				// BountyHunters.getInstance().getBountyManager().unregisterBounty(bounty);
 
 				open();
 			}

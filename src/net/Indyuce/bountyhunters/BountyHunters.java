@@ -99,8 +99,8 @@ public class BountyHunters extends JavaPlugin {
 			version = new PluginVersion(Bukkit.getServer().getClass());
 			getLogger().log(Level.INFO, "Detected Server Version: " + version.toString());
 			wrapper = (VersionWrapper) Class.forName("net.Indyuce.bountyhunters.version.wrapper.VersionWrapper_" + version.toString().substring(1)).newInstance();
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-			getLogger().log(Level.SEVERE, "Your server version is not handled with NMS.");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException exception) {
+			getLogger().log(Level.SEVERE, "Your server version is not handled with NMS: " + exception.getMessage());
 			wrapper = new VersionWrapper_Reflection();
 		}
 
