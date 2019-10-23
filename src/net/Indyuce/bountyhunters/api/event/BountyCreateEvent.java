@@ -11,6 +11,7 @@ import net.Indyuce.bountyhunters.api.language.PlayerMessage;
 
 public class BountyCreateEvent extends BountyEvent {
 	private final BountyCause cause;
+	private final Player creator;
 
 	private static final HandlerList handlers = new HandlerList();
 
@@ -19,32 +20,37 @@ public class BountyCreateEvent extends BountyEvent {
 	 * or when the auto-bounty automatically sets a new bounty on a player since
 	 * he killed someone illegaly
 	 */
-	public BountyCreateEvent(Bounty bounty, BountyCause cause) {
+	public BountyCreateEvent(Bounty bounty, Player creator, BountyCause cause) {
 		super(bounty);
 
 		this.cause = cause;
+		this.creator = creator;
 	}
 
 	public BountyCause getCause() {
 		return cause;
 	}
 
+	public Player getCreator() {
+		return creator;
+	}
+
+	public boolean hasCreator() {
+		return creator != null;
+	}
+
 	public void sendAllert() {
 		String reward = new NumberFormat().format(getBounty().getReward());
 
-		PlayerMessage toOnline = (cause == BountyCause.PLAYER ? Message.NEW_BOUNTY_ON_PLAYER
-				: cause == BountyCause.AUTO_BOUNTY ? Message.NEW_BOUNTY_ON_PLAYER_ILLEGAL : Message.NEW_BOUNTY_ON_PLAYER_UNDEFINED).format("creator",
-						getBounty().hasCreator() ? getBounty().getCreator().getName() : "null", "target", getBounty().getTarget().getName(), "reward", reward);
+		PlayerMessage toOnline = (cause == BountyCause.PLAYER ? Message.NEW_BOUNTY_ON_PLAYER : cause == BountyCause.AUTO_BOUNTY ? Message.NEW_BOUNTY_ON_PLAYER_ILLEGAL : Message.NEW_BOUNTY_ON_PLAYER_UNDEFINED).format("creator", getBounty().hasCreator() ? getBounty().getCreator().getName() : "null", "target", getBounty().getTarget().getName(), "reward", reward);
 
 		for (Player player : Bukkit.getOnlinePlayers()) {
 
 			if (getBounty().hasTarget(player))
-				(cause == BountyCause.PLAYER ? Message.NEW_BOUNTY_ON_YOU : cause == BountyCause.AUTO_BOUNTY ? Message.NEW_BOUNTY_ON_YOU_ILLEGAL : Message.NEW_BOUNTY_ON_YOU_UNDEFINED)
-						.format("creator", getBounty().hasCreator() ? getBounty().getCreator().getName() : "null", "target", getBounty().getTarget().getName(), "reward", reward).send(player);
+				(cause == BountyCause.PLAYER ? Message.NEW_BOUNTY_ON_YOU : cause == BountyCause.AUTO_BOUNTY ? Message.NEW_BOUNTY_ON_YOU_ILLEGAL : Message.NEW_BOUNTY_ON_YOU_UNDEFINED).format("creator", getBounty().hasCreator() ? getBounty().getCreator().getName() : "null", "target", getBounty().getTarget().getName(), "reward", reward).send(player);
 
 			else if (getBounty().hasCreator(player))
-				Message.BOUNTY_CREATED.format("creator", getBounty().hasCreator() ? getBounty().getCreator().getName() : "null", "target", getBounty().getTarget().getName(), "reward", reward)
-						.send(player);
+				Message.BOUNTY_CREATED.format("creator", getBounty().hasCreator() ? getBounty().getCreator().getName() : "null", "target", getBounty().getTarget().getName(), "reward", reward).send(player);
 
 			else
 				toOnline.send(player);
