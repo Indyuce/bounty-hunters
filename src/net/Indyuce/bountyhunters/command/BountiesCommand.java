@@ -1,11 +1,9 @@
 package net.Indyuce.bountyhunters.command;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -31,17 +29,15 @@ public class BountiesCommand implements CommandExecutor {
 
 		// open bounties menu
 		if (args.length < 1) {
-//			if (!(sender instanceof Player)) {
-//				sender.sendMessage(ChatColor.RED + "This command is for players only.");
-//				return true;
-//			}
-//
-//			if (!sender.hasPermission("bountyhunters.list")) {
-//				Message.NOT_ENOUGH_PERMS.format().send(sender);
-//				return true;
-//			}
-			
-			BountyHunters.getInstance().getPlayerDataManager().get((OfflinePlayer) sender).addRedeemableHead(UUID.fromString("c3a7f48c-c70e-4766-bc13-86f02311e943"));
+			if (!(sender instanceof Player)) {
+				sender.sendMessage(ChatColor.RED + "This command is for players only.");
+				return true;
+			}
+
+			if (!sender.hasPermission("bountyhunters.list")) {
+				Message.NOT_ENOUGH_PERMS.format().send(sender);
+				return true;
+			}
 
 			new BountyList((Player) sender).open();
 			return true;
@@ -198,10 +194,9 @@ public class BountiesCommand implements CommandExecutor {
 			Message.UNLOCKED_TITLES.format().send(player);
 
 			PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(player);
-			for (Title title : BountyHunters.getInstance().getLevelManager().getTitles()) {
+			for (Title title : BountyHunters.getInstance().getLevelManager().getTitles())
 				if (playerData.hasUnlocked(title))
 					BountyHunters.getInstance().getVersionWrapper().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + title.format() + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties title " + title.getId() + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Language.CLICK_SELECT.format() + "\",\"color\":\"white\"}]}}}");
-			}
 		}
 
 		// quotes list
@@ -220,10 +215,10 @@ public class BountiesCommand implements CommandExecutor {
 			Message.UNLOCKED_QUOTES.format().send(player);
 
 			PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(player);
-			for (DeathQuote quote : BountyHunters.getInstance().getLevelManager().getQuotes()) {
+			for (DeathQuote quote : BountyHunters.getInstance().getLevelManager().getQuotes())
 				if (playerData.hasUnlocked(quote))
 					BountyHunters.getInstance().getVersionWrapper().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + quote.format() + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties quote " + quote.getId() + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Language.CLICK_SELECT.format() + "\",\"color\":\"white\"}]}}}");
-			}
+
 		}
 
 		// reload plugin

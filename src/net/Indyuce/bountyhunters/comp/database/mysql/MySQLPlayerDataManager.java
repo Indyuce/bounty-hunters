@@ -31,10 +31,10 @@ public class MySQLPlayerDataManager extends PlayerDataManager {
 	private void initialize() {
 		try {
 			BountyHunters.getInstance().getLogger().log(Level.INFO, "Initializing player data..");
-			if (!provider.prepareStatement("SELECT 1 FROM information_schema.tables WHERE TABLE_NAME = 'playerData'").executeQuery().next())
+			if (!provider.prepareStatement("SELECT * FROM information_schema.tables WHERE TABLE_NAME = 'playerData'").executeQuery().next())
 				provider.prepareStatement("CREATE TABLE playerData(uuid VARCHAR(36), level INT, successful_bounties INT, claimed_bounties INT, illegal_kills INT, illegal_kill_streak INT, current_title TEXT, current_quote TEXT, redeem_heads JSON)").execute();
 
-			if (!provider.prepareStatement("SELECT 1 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" + provider.getDatabase() + "' AND TABLE_NAME = 'playerData' AND COLUMN_NAME = 'redeem_heads'").executeQuery().next())
+			if (!provider.prepareStatement("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" + provider.getDatabase() + "' AND TABLE_NAME = 'playerData' AND COLUMN_NAME = 'redeem_heads'").executeQuery().next())
 				provider.prepareStatement("ALTER TABLE playerData ADD COLUMN redeem_heads JSON").execute();
 
 		} catch (SQLException exception) {
@@ -48,11 +48,7 @@ public class MySQLPlayerDataManager extends PlayerDataManager {
 			String redeemHeads = data.getRedeemableHeads().stream().map(uuid -> "'" + uuid.toString() + "'").collect(Collectors.toList()).toString();
 			redeemHeads = redeemHeads.substring(1, redeemHeads.length() - 1);
 
-			provider.prepareStatement("UPDATE playerData SET level = " + data.getLevel() + ", successful_bounties = " + data.getSuccessfulBounties()
-					+ ", claimed_bounties = " + data.getClaimedBounties() + ", illegal_kills = " + data.getIllegalKills() + ", illegal_kill_streak = "
-					+ data.getIllegalKillStreak() + ", current_title = " + (data.hasTitle() ? "'" + data.getTitle().getId() + "'" : "NULL")
-					+ ", current_quote = " + (data.hasQuote() ? "'" + data.getQuote().getId() + "'" : "NULL") + ", redeem_heads = JSON_ARRAY("
-					+ redeemHeads + "] WHERE uuid = '" + data.getUniqueId().toString() + "'").execute();
+			provider.prepareStatement("UPDATE playerData SET level = " + data.getLevel() + ", successful_bounties = " + data.getSuccessfulBounties() + ", claimed_bounties = " + data.getClaimedBounties() + ", illegal_kills = " + data.getIllegalKills() + ", illegal_kill_streak = " + data.getIllegalKillStreak() + ", current_title = " + (data.hasTitle() ? "'" + data.getTitle().getId() + "'" : "NULL") + ", current_quote = " + (data.hasQuote() ? "'" + data.getQuote().getId() + "'" : "NULL") + ", redeem_heads = JSON_ARRAY(" + redeemHeads + ") WHERE uuid = '" + data.getUniqueId().toString() + "'").execute();
 
 		} catch (SQLException exception) {
 			BountyHunters.getInstance().getLogger().log(Level.SEVERE, "Could not save player data of " + data.getOfflinePlayer().getName() + ": " + exception.getMessage());
@@ -63,14 +59,14 @@ public class MySQLPlayerDataManager extends PlayerDataManager {
 	@Override
 	public void loadData(PlayerData data) {
 		try {
-			ResultSet set = provider.prepareStatement("SELECT 1 FROM playerData WHERE uuid = '" + data.getUniqueId().toString() + "'").executeQuery();
+			ResultSet set = provider.prepareStatement("SELECT * FROM playerData WHERE uuid = '" + data.getUniqueId().toString() + "'").executeQuery();
 
 			/*
 			 * initialize player data. must NOT be done when the server shuts
 			 * down, might overwhelm it.
 			 */
 			if (!set.next()) {
-				provider.prepareStatement("INSERT INTO playerData VALUES ('" + data.getUniqueId().toString() + "', 0, 0, 0, 0, 0, null, null, JSON_ARRAY('[]'))").execute();
+				provider.prepareStatement("INSERT INTO playerData VALUES ('" + data.getUniqueId().toString() + "', 0, 0, 0, 0, 0, null, null, JSON_ARRAY())").execute();
 				return;
 			}
 

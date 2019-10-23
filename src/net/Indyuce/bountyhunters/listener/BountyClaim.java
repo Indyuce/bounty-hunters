@@ -29,8 +29,8 @@ public class BountyClaim implements Listener {
 	@EventHandler
 	public void a(PlayerDeathEvent event) {
 		Player target = event.getEntity();
-		if (target.getKiller() == null || !(target.getKiller() instanceof Player) || target.equals(target.getKiller()))
-			return;
+//		if (target.getKiller() == null || !(target.getKiller() instanceof Player) || target.equals(target.getKiller()))
+//			return;
 
 		Player killer = target.getKiller();
 

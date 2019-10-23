@@ -298,7 +298,7 @@ public class PlayerData implements OfflinePlayerData {
 
 	@Override
 	public String toString() {
-		return "{Level=" + level + ", ClaimedBounties=" + claimed + ", SuccessfulBounties=" + successful + ", IllegalKills=" + illegalKills + ", IllegalKillStreak=" + illegalStreak + (hasTitle() ? ", Title=" + title.getId() : "") + (hasQuote() ? ", Quote=" + quote.getId() : "") + "}";
+		return "{Level=" + level + ", ClaimedBounties=" + claimed + ", SuccessfulBounties=" + successful + ", IllegalKills=" + illegalKills + ", IllegalKillStreak=" + illegalStreak + (hasTitle() ? ", Title=" + title.getId() : "") + (hasQuote() ? ", Quote=" + quote.getId() : "") + ", RedeemHeads=" + redeemHeads.toString() + "}";
 	}
 
 	@Deprecated

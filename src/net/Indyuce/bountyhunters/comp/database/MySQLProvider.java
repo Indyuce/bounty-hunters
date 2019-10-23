@@ -28,7 +28,7 @@ public class MySQLProvider implements DataProvider {
 
 		connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
 	}
-	
+
 	public String getDatabase() {
 		return database;
 	}

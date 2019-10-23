@@ -11,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import net.Indyuce.bountyhunters.BountyHunters;
-import net.Indyuce.bountyhunters.BountyUtils;
 import net.Indyuce.bountyhunters.api.language.Language;
 import net.Indyuce.bountyhunters.api.language.Message;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
@@ -41,7 +40,7 @@ public class RedeemableHeads extends PluginInventory {
 	@Override
 	public void whenClicked(ItemStack item, InventoryAction action, int slot) {
 
-		if (!BountyUtils.hasItemMeta(item, false) || !(item.getItemMeta() instanceof SkullMeta))
+		if (item == null || !item.hasItemMeta() || !(item.getItemMeta() instanceof SkullMeta))
 			return;
 
 		if (player.getInventory().firstEmpty() == -1) {
