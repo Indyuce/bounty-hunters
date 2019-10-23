@@ -82,13 +82,13 @@ public class BountyHunters extends JavaPlugin {
 	public void onLoad() {
 		plugin = this;
 
-//		try {
+		try {
 			version = new PluginVersion(Bukkit.getServer().getClass());
-//			wrapper = (VersionWrapper) Class.forName("net.Indyuce.bountyhunters.version.wrapper.VersionWrapper_" + version.toString().substring(1)).newInstance();
-//		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException exception) {
+			wrapper = (VersionWrapper) Class.forName("net.Indyuce.bountyhunters.version.wrapper.VersionWrapper_" + version.toString().substring(1)).newInstance();
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException exception) {
 			getLogger().log(Level.INFO, "Your server version is handled via reflection.");
 			wrapper = new VersionWrapper_Reflection();
-//		}
+		}
 
 		try {
 			if (getServer().getPluginManager().getPlugin("WorldGuard") != null && version.isStrictlyHigher(1, 12)) {
