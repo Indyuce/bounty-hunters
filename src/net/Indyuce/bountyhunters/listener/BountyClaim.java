@@ -131,6 +131,8 @@ public class BountyClaim implements Listener {
 		 */
 		if (BountyHunters.getInstance().getConfig().getBoolean("drop-head.killer.enabled") && random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("drop-head.killer.chance") / 100)
 			target.getWorld().dropItem(target.getLocation(), BountyHunters.getInstance().getVersionWrapper().getHead(target));
+		if (BountyHunters.getInstance().getConfig().getBoolean("drop-head.creator.enabled") && random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("drop-head.creator.chance") / 100)
+			BountyHunters.getInstance().getPlayerDataManager().getOfflineData(bounty.getCreator()).givePlayerHead(target);
 
 		/*
 		 * give the money to the player who claimed the bounty

@@ -1,9 +1,11 @@
 package net.Indyuce.bountyhunters.command;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -29,15 +31,17 @@ public class BountiesCommand implements CommandExecutor {
 
 		// open bounties menu
 		if (args.length < 1) {
-			if (!(sender instanceof Player)) {
-				sender.sendMessage(ChatColor.RED + "This command is for players only.");
-				return true;
-			}
-
-			if (!sender.hasPermission("bountyhunters.list")) {
-				Message.NOT_ENOUGH_PERMS.format().send(sender);
-				return true;
-			}
+//			if (!(sender instanceof Player)) {
+//				sender.sendMessage(ChatColor.RED + "This command is for players only.");
+//				return true;
+//			}
+//
+//			if (!sender.hasPermission("bountyhunters.list")) {
+//				Message.NOT_ENOUGH_PERMS.format().send(sender);
+//				return true;
+//			}
+			
+			BountyHunters.getInstance().getPlayerDataManager().get((OfflinePlayer) sender).addRedeemableHead(UUID.fromString("c3a7f48c-c70e-4766-bc13-86f02311e943"));
 
 			new BountyList((Player) sender).open();
 			return true;

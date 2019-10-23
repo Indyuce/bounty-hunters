@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.version.wrapper.api.ItemTag;
 import net.Indyuce.bountyhunters.version.wrapper.api.NBTItem;
 import net.minecraft.server.v1_13_R2.IChatBaseComponent.ChatSerializer;
@@ -41,8 +40,7 @@ public class VersionWrapper_1_13_R2 implements VersionWrapper {
 	public ItemStack getHead(OfflinePlayer player) {
 
 		ItemStack item = new ItemStack(Material.PLAYER_HEAD);
-		SkullMeta meta = (SkullMeta) CustomItem.PLAYER_HEAD.toItemStack().getItemMeta();
-		meta.setDisplayName(meta.getDisplayName().replace("{name}", player.getName()));
+		SkullMeta meta = (SkullMeta) item.getItemMeta();
 		meta.setOwningPlayer(player);
 		item.setItemMeta(meta);
 

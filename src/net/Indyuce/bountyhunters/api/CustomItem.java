@@ -21,7 +21,6 @@ import net.Indyuce.bountyhunters.version.VersionMaterial;
 public enum CustomItem {
 	NEXT_PAGE(new ItemStack(Material.ARROW), "Next"),
 	PREVIOUS_PAGE(new ItemStack(Material.ARROW), "Previous"),
-	PLAYER_HEAD(VersionMaterial.PLAYER_HEAD.toItem(), "{name}"),
 	GUI_PLAYER_HEAD(VersionMaterial.PLAYER_HEAD.toItem(), "{target}", "", "{noCreator}&cThis player is a thug!", "{isCreator}&7You set this bounty.", "{extraCreator}&7Set by &f{creator}&7.",
 			"&7" + AltChar.listDash + " The reward is &f${reward}&7.", "&7" + AltChar.listDash + " &f{contributors} &7player(s) have contributed.", "&7" + AltChar.listDash + " There are &f{hunters} &7player(s) tracking him.", "", "{isTarget}&cDon't let them kill you.",
 			"{isCreator}&eRight click to take away your contribution.", "{isExtra}&eKill him to claim the bounty!", "{isHunter}&7" + AltChar.listDash + " Click to &euntarget &7him.",
