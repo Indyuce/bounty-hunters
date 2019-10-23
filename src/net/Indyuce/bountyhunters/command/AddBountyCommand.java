@@ -1,5 +1,6 @@
 package net.Indyuce.bountyhunters.command;
 
+import java.text.DecimalFormat;
 import java.util.Optional;
 
 import org.bukkit.Bukkit;
@@ -20,6 +21,8 @@ import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
 import net.Indyuce.bountyhunters.api.language.Message;
 
 public class AddBountyCommand implements CommandExecutor {
+	private static final DecimalFormat digit1 = new DecimalFormat("0.#");
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!sender.hasPermission("bountyhunters.add")) {
@@ -149,7 +152,7 @@ public class AddBountyCommand implements CommandExecutor {
 		bountyEvent.sendAllert();
 
 		if (tax > 0)
-			Message.TAX_EXPLAIN.format("percent", "" + BountyUtils.truncate(tax * 100, 1), "price", new NumberFormat().format(taxed)).send(sender);
+			Message.TAX_EXPLAIN.format("percent", digit1.format(tax * 100), "price", new NumberFormat().format(taxed)).send(sender);
 		return true;
 	}
 
