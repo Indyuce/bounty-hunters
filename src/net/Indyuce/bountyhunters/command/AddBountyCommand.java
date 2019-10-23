@@ -151,7 +151,7 @@ public class AddBountyCommand implements CommandExecutor {
 		bountyEvent.sendAllert();
 
 		if (tax > 0)
-			Message.TAX_EXPLAIN.format("percent", "" + BountyUtils.truncate(tax * 100, 1), "price", new NumberFormat().format(tax)).send(sender);
+			Message.TAX_EXPLAIN.format("percent", "" + BountyUtils.truncate(tax * 100, 1), "price", new NumberFormat().format(tax * bounty.getReward())).send(sender);
 		return true;
 	}
 
