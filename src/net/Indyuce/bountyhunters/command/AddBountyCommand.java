@@ -37,19 +37,14 @@ public class AddBountyCommand implements CommandExecutor {
 
 		// check for player
 		Player target = Bukkit.getPlayer(args[0]);
-		if (target == null) {
+		if (target == null || !target.isOnline()) {
 			Message.ERROR_PLAYER.format("arg", args[0]).send(sender);
 			return true;
 		}
-		if (!target.isOnline()) {
-			Message.ERROR_PLAYER.format("arg", args[0]).send(sender);
+		if (sender instanceof Player && target.getName().equals(((Player) sender).getName())) {
+			Message.CANT_SET_BOUNTY_ON_YOURSELF.format().send(sender);
 			return true;
 		}
-		if (sender instanceof Player)
-			if (target.getName().equals(((Player) sender).getName())) {
-				Message.CANT_SET_BOUNTY_ON_YOURSELF.format().send(sender);
-				return true;
-			}
 
 		// permission
 		if (target.hasPermission("bountyhunters.immunity") && !sender.hasPermission("bountyhunters.immunity.bypass")) {
@@ -159,7 +154,7 @@ public class AddBountyCommand implements CommandExecutor {
 		bountyEvent.sendAllert();
 
 		if (tax > 0)
-			Message.TAX_EXPLAIN.format("percent", "" + BountyHunters.getInstance().getConfig().getDouble("tax"), "price", new NumberFormat().format(tax)).send(sender);
+			Message.TAX_EXPLAIN.format("percent", "" + BountyUtils.truncate(taxp * 100, 1), "price", new NumberFormat().format(tax)).send(sender);
 		return true;
 	}
 
