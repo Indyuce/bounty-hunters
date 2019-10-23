@@ -58,7 +58,7 @@ public enum Message {
 	 */
 	MUST_REDEEM_HEAD("&eYou may redeem &6{target}&e's head using &6/redeembountyheads&e whenever you have some free inventory space."),
 	OBTAINED_HEAD("&eYou obtained &6{target}&e's head."),
-	REDEEM_HEAD("&eYou successfully redeemed &6{target}&e's head."),
+	REDEEM_HEAD(new SoundReader(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 2), "&eYou successfully redeemed &6{target}&e's head."),
 	NO_HEAD_TO_REDEEM("&cYou have no head to redeem."),
 
 	/*

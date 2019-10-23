@@ -59,7 +59,7 @@ public class RedeemableHeads extends PluginInventory {
 
 		player.getInventory().addItem(item);
 		playerData.removeRedeemableHead(owner.getUniqueId());
-		Message.REDEEM_HEAD.format("target", owner.getName());
+		Message.REDEEM_HEAD.format("target", owner.getName()).send(player);
 		open();
 	}
 }
