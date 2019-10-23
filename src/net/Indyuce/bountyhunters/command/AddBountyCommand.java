@@ -3,7 +3,6 @@ package net.Indyuce.bountyhunters.command;
 import java.util.Optional;
 
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -79,10 +78,6 @@ public class AddBountyCommand implements CommandExecutor {
 			}
 		}
 
-		// tax calculation
-		double taxp = Math.max(0, Math.min(1, BountyHunters.getInstance().getConfig().getDouble("bounty-tax.bounty-creation") / 100));
-		double tax = sender.hasPermission("bountyhunters.admin") && arguments.noTax ? 0 : BountyUtils.truncate(reward * taxp, 1);
-
 		// set restriction
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
@@ -103,9 +98,12 @@ public class AddBountyCommand implements CommandExecutor {
 			}
 
 		/*
-		 * by there, bounty may be created if the event is not cancelled.
+		 * right now, bounty will be registered if the event is not cancelled.
+		 * calculate tax and update reward
 		 */
-		reward -= tax;
+		double tax = Math.max(0, Math.min(1, BountyHunters.getInstance().getConfig().getDouble("bounty-tax.bounty-creation") / 100));
+		if (!sender.hasPermission("bountyhunters.admin") || !arguments.noTax)
+			reward *= 1 - tax;
 
 		// add to existing bounty
 		Optional<Bounty> currentBounty = BountyHunters.getInstance().getBountyManager().getBounty(target);
@@ -121,8 +119,8 @@ public class AddBountyCommand implements CommandExecutor {
 			// remove balance
 			// set last bounty value
 			if (sender instanceof Player) {
-				BountyHunters.getInstance().getEconomy().withdrawPlayer((Player) sender, reward + tax);
-				BountyHunters.getInstance().getPlayerDataManager().get((OfflinePlayer) sender).setLastBounty();
+				BountyHunters.getInstance().getEconomy().withdrawPlayer((Player) sender, BountyUtils.truncate(reward / (1 - tax), 1));
+				BountyHunters.getInstance().getPlayerDataManager().get((Player) sender).setLastBounty();
 			}
 
 			new BountyCommands("increase." + bountyEvent.getCause().name().toLowerCase().replace("_", "-"), bounty, sender).send();
@@ -138,15 +136,14 @@ public class AddBountyCommand implements CommandExecutor {
 		Bounty bounty = new Bounty(sender instanceof Player ? (Player) sender : null, target, reward);
 		BountyCreateEvent bountyEvent = new BountyCreateEvent(bounty, sender instanceof Player ? (Player) sender : null, sender instanceof Player ? BountyCause.PLAYER : BountyCause.CONSOLE);
 		Bukkit.getPluginManager().callEvent(bountyEvent);
-		reward = bountyEvent.getBounty().getReward();
 		if (bountyEvent.isCancelled())
 			return true;
 
 		// remove balance
 		// set last bounty value
 		if (sender instanceof Player) {
-			BountyHunters.getInstance().getEconomy().withdrawPlayer((Player) sender, reward + tax);
-			BountyHunters.getInstance().getPlayerDataManager().get((OfflinePlayer) sender).setLastBounty();
+			BountyHunters.getInstance().getEconomy().withdrawPlayer((Player) sender, BountyUtils.truncate(reward / (1 - tax), 1));
+			BountyHunters.getInstance().getPlayerDataManager().get((Player) sender).setLastBounty();
 		}
 
 		new BountyCommands("place." + bountyEvent.getCause().name().toLowerCase().replace("_", "-"), bounty, sender).send();
@@ -154,7 +151,7 @@ public class AddBountyCommand implements CommandExecutor {
 		bountyEvent.sendAllert();
 
 		if (tax > 0)
-			Message.TAX_EXPLAIN.format("percent", "" + BountyUtils.truncate(taxp * 100, 1), "price", new NumberFormat().format(tax)).send(sender);
+			Message.TAX_EXPLAIN.format("percent", "" + BountyUtils.truncate(tax * 100, 1), "price", new NumberFormat().format(tax)).send(sender);
 		return true;
 	}
 
