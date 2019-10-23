@@ -13,8 +13,8 @@
 	<classpathentry kind="lib" path="C:/Users/cympe/eclipse/spigot-1.11.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/cympe/eclipse/spigot-1.12.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/cympe/eclipse/PlaceholderAPI-2.10.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/cympe/eclipse/Residence4.8.5.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/cympe/eclipse/worldguard-bukkit-7.0.1-rc2-dist.jar"/>
 	<classpathentry kind="lib" path="C:/Users/cympe/eclipse/worldedit-bukkit-7.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cympe/eclipse/Residence4.8.7.4.jar"/>
 	<classpathentry kind="output" path="src"/>
 </classpath>

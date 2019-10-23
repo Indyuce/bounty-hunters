@@ -17,6 +17,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 
 import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
+import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 
 public class WorldGuardFlags implements Listener {
 	private final WorldGuard worldguard;
@@ -45,6 +46,12 @@ public class WorldGuardFlags implements Listener {
 	@EventHandler
 	public void a(BountyClaimEvent event) {
 		if (!isFlagAllowed(event.getBounty().getTarget().getPlayer(), CustomFlag.CLAIM_BOUNTIES))
+			event.setCancelled(true);
+	}
+
+	@EventHandler
+	public void b(BountyCreateEvent event) {
+		if (event.hasCreator() && !isFlagAllowed(event.getCreator(), CustomFlag.CREATE_BOUNTIES))
 			event.setCancelled(true);
 	}
 

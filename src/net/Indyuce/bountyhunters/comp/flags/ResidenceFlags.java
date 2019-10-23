@@ -11,6 +11,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
+import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 
 public class ResidenceFlags implements Listener {
 	public ResidenceFlags() {
@@ -23,6 +24,12 @@ public class ResidenceFlags implements Listener {
 	@EventHandler
 	public void a(BountyClaimEvent event) {
 		if (!isFlagAllowed(event.getBounty().getTarget().getPlayer(), CustomFlag.CLAIM_BOUNTIES))
+			event.setCancelled(true);
+	}
+
+	@EventHandler
+	public void b(BountyCreateEvent event) {
+		if (event.hasCreator() && !isFlagAllowed(event.getCreator(), CustomFlag.CREATE_BOUNTIES))
 			event.setCancelled(true);
 	}
 
