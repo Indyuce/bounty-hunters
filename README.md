@@ -7,8 +7,8 @@ BountyHunters is an open source project and aims at providing an all-in-one boun
 Bug reports and feature suggestions keep the project alive too!
 
 **Useful links:**
-* Premium Version: https://www.spigotmc.org/resources/bountyhunters-premium.72142/
-* Lite Version: https://www.spigotmc.org/resources/bounty-hunters.40610/
+* Premium Version: https://www.spigotmc.org/resources/72142/
+* Lite Version: https://www.spigotmc.org/resources/40610/
 * Metrics: https://bstats.org/plugin/bukkit/BountyHunters
 * Wiki: https://github.com/Indyuce/bounty-hunters/wiki
 * Issue Tracker: https://github.com/Indyuce/bounty-hunters/issues
