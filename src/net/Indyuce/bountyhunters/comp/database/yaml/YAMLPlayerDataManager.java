@@ -1,5 +1,8 @@
 package net.Indyuce.bountyhunters.comp.database.yaml;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.Validate;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -71,6 +74,17 @@ public class YAMLPlayerDataManager extends PlayerDataManager {
 		@Override
 		public void addSuccessfulBounties(int value) {
 			config.getConfig().set("successful-bounties", Math.max(0, value + config.getConfig().getInt("successful-bounties")));
+			
+			config.save();
+		}
+
+		@Override
+		public void givePlayerHead(OfflinePlayer owner) {
+			List<String> list = config.getConfig().contains("redeem-heads") ? config.getConfig().getStringList("redeem-heads") : new ArrayList<>();
+			list.add(owner.getUniqueId().toString());
+			config.getConfig().set("redeem-heads", list);
+			
+			config.save();
 		}
 	}
 }

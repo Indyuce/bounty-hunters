@@ -122,14 +122,14 @@ public class BountyClaim implements Listener {
 			new BountyEffect(BountyHunters.getInstance().getConfig().getConfigurationSection("bounty-effect")).play(target.getLocation());
 
 		/*
-		 * send bounty commands TODO improve command tables
+		 * send bounty commands
 		 */
 		new BountyCommands("claim", bounty, killer).send();
 
 		/*
 		 * drops the killed player's head
 		 */
-		if (BountyHunters.getInstance().getConfig().getBoolean("drop-head.enabled") && random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("drop-head.chance") / 100)
+		if (BountyHunters.getInstance().getConfig().getBoolean("drop-head.killer.enabled") && random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("drop-head.killer.chance") / 100)
 			target.getWorld().dropItem(target.getLocation(), BountyHunters.getInstance().getVersionWrapper().getHead(target));
 
 		/*

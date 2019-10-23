@@ -90,10 +90,21 @@ target-login-message:
 head-hunting:
     enabled: false
 
-# Drops the player head when claming a bounty.
+# Drops the player head when claming a bounty
+# or give the head to the bounty creator.
 drop-head:
-    enabled: false
-    chance: 100
+
+    # Drops the head on the ground.
+    killer:
+        enabled: false
+        chance: 100
+    
+    # Give the head to the bounty creator or
+    # saves it in the bounty head GUI that 
+    # can be opened using /redeembountyheads
+    creator:
+        enabled: false
+        chance: 100
 
 # Player tracking lets player use a tracking compass to hunt
 # down their bounty target. On the one hand, it gives an

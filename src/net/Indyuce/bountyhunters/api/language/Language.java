@@ -12,6 +12,7 @@ public enum Language {
 	NO_PLAYER("&c- No Player -"),
 	GUI_NAME("&nBounties ({page}/{max_page})"),
 	LEADERBOARD_GUI_NAME("&nHunter Leaderboard"),
+	REDEEMABLE_HEADS("Redeem your player heads"),
 	CLICK_SELECT("&eClick to select."),
 
 	/*

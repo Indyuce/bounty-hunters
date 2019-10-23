@@ -12,7 +12,9 @@ import net.Indyuce.bountyhunters.version.VersionSound;
 
 public enum Message {
 
-	// bounty creation
+	/*
+	 * bounty creation, auto-bounties and bounty updates
+	 */
 	BOUNTY_CREATED(new SoundReader(Sound.ENTITY_PLAYER_LEVELUP, 1, 2), "&eYou successfully set a bounty on &6{target}&e.", "&eThe first to kill this player will receive &6${reward}&e."),
 	NEW_BOUNTY_ON_YOU(new SoundReader(VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 1, 0), "&6{creator} &ejust set a &6${reward}&e bounty on you!"),
 	NEW_BOUNTY_ON_YOU_ILLEGAL(new SoundReader(VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 1, 0), "&eYou killed a man illegally! A ${reward} bounty was set on you!"),
@@ -22,7 +24,9 @@ public enum Message {
 	NEW_BOUNTY_ON_PLAYER_UNDEFINED(new SoundReader(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1), "&eSomeone set a bounty on &6{target}&e! Kill him to get &6${reward}&e!"),
 	BOUNTY_CHANGE(new SoundReader(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1), "&6{player}&e's bounty is now &6${reward}&e."),
 
-	// bounty claim
+	/*
+	 * bounty claim
+	 */
 	BOUNTY_CLAIMED(new SoundReader(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1), "&6{killer} &eclaimed &6{target}&e's bounty: &6${reward}&e!"),
 	BOUNTY_CLAIMED_BY_YOU(new SoundReader(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1), "&eYou successfully claimed &6{target}&e's bounty: &6${reward}&e!"),
 
@@ -48,6 +52,14 @@ public enum Message {
 	BOUGHT_COMPASS(new SoundReader(Sound.ENTITY_PLAYER_LEVELUP, 1, 2), "&eYou succesfully bought a &6tracking compass&e."),
 	TAX_EXPLAIN("&6{percent}%&e of the reward (&6${price}&e) were taken as tax."),
 	PLAYER_MUST_BE_CONNECTED("&cThe player must be connected in order to be tracked."),
+
+	/*
+	 * player heads
+	 */
+	MUST_REDEEM_HEAD("&eYou may redeem &6{target}&e's head using &6/redeembountyheads&e whenever you have some free inventory space."),
+	OBTAINED_HEAD("&eYou obtained &6{target}&e's head."),
+	REDEEM_HEAD("&eYou successfully redeemed &6{target}&e's head."),
+	NO_HEAD_TO_REDEEM("&cYou have no head to redeem."),
 
 	/*
 	 * level up and cosmetics

@@ -20,7 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.bountyhunters.api.AltChar;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.NumberFormat;
-import net.Indyuce.bountyhunters.gui.ap.ChatInput;
+import net.Indyuce.bountyhunters.gui.api.ChatInput;
 import net.Indyuce.bountyhunters.version.VersionMaterial;
 import net.Indyuce.bountyhunters.version.wrapper.api.ItemTag;
 import net.Indyuce.bountyhunters.version.wrapper.api.NBTItem;

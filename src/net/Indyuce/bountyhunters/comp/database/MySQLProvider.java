@@ -28,6 +28,10 @@ public class MySQLProvider implements DataProvider {
 
 		connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
 	}
+	
+	public String getDatabase() {
+		return database;
+	}
 
 	public PreparedStatement prepareStatement(String query) throws SQLException {
 		return connection.prepareStatement(query);

@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.gui.ap;
+package net.Indyuce.bountyhunters.gui.api;
 
 import java.util.function.Function;
 

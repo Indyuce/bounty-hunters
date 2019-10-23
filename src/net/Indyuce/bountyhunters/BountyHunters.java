@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -27,6 +30,7 @@ import net.Indyuce.bountyhunters.api.language.Message;
 import net.Indyuce.bountyhunters.command.AddBountyCommand;
 import net.Indyuce.bountyhunters.command.BountiesCommand;
 import net.Indyuce.bountyhunters.command.HuntersCommand;
+import net.Indyuce.bountyhunters.command.RedeemBountyHeadsCommand;
 import net.Indyuce.bountyhunters.command.completion.AddBountyCompletion;
 import net.Indyuce.bountyhunters.command.completion.BountiesCompletion;
 import net.Indyuce.bountyhunters.comp.Metrics;
@@ -119,6 +123,10 @@ public class BountyHunters extends JavaPlugin {
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
+
+		List<UUID> test = new ArrayList<>();
+		for (int j = 0; j < 4; j++)
+			test.add(UUID.randomUUID());
 
 		new SpigotPlugin(72142, this).checkForUpdate();
 
@@ -256,6 +264,7 @@ public class BountyHunters extends JavaPlugin {
 		getCommand("addbounty").setExecutor(new AddBountyCommand());
 		getCommand("bounties").setExecutor(new BountiesCommand());
 		getCommand("hunters").setExecutor(new HuntersCommand());
+		getCommand("redeembountyheads").setExecutor(new RedeemBountyHeadsCommand());
 
 		getCommand("addbounty").setTabCompleter(new AddBountyCompletion());
 		getCommand("bounties").setTabCompleter(new BountiesCompletion());

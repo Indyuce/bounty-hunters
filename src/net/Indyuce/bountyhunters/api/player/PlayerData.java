@@ -29,14 +29,15 @@ public class PlayerData implements OfflinePlayerData {
 	private final OfflinePlayer offline;
 
 	/*
-	 * player data
+	 * player data that must be saved when the server shuts down
 	 */
 	private int level, successful, claimed, illegalStreak, illegalKills;
 	private DeathQuote quote;
 	private Title title;
+	private final List<UUID> redeemHeads = new ArrayList<>();
 
 	/*
-	 * temp stuff
+	 * temp stuff that is not being saved when the server closes
 	 */
 	private long lastBounty, lastTarget, lastSelect;
 
@@ -119,8 +120,7 @@ public class PlayerData implements OfflinePlayerData {
 
 		String title = hasTitle() ? getTitle().format() : Language.NO_TITLE.format();
 		for (int j = 0; j < profileLore.size(); j++)
-			profileLore.set(j, profileLore.get(j).replace("{level_progress}", getLevelProgressBar()).replace("{claimed_bounties}", "" + getClaimedBounties())
-					.replace("{successful_bounties}", "" + getSuccessfulBounties()).replace("{current_title}", title).replace("{level}", "" + getLevel()));
+			profileLore.set(j, profileLore.get(j).replace("{level_progress}", getLevelProgressBar()).replace("{claimed_bounties}", "" + getClaimedBounties()).replace("{successful_bounties}", "" + getSuccessfulBounties()).replace("{current_title}", title).replace("{level}", "" + getLevel()));
 
 		meta.setLore(profileLore);
 		profile.setItemMeta(meta);
@@ -215,6 +215,37 @@ public class PlayerData implements OfflinePlayerData {
 		setIllegalKillStreak(illegalStreak + value);
 	}
 
+	public void addRedeemableHead(UUID uuid) {
+		redeemHeads.add(uuid);
+	}
+
+	public void removeRedeemableHead(UUID uuid) {
+		redeemHeads.remove(uuid);
+	}
+
+	public List<UUID> getRedeemableHeads() {
+		return redeemHeads;
+	}
+
+	@Override
+	public void givePlayerHead(OfflinePlayer owner) {
+
+		if (!offline.isOnline()) {
+			redeemHeads.add(owner.getUniqueId());
+			return;
+		}
+
+		Player player = offline.getPlayer();
+		if (player.getInventory().firstEmpty() == -1) {
+			redeemHeads.add(owner.getUniqueId());
+			Message.MUST_REDEEM_HEAD.format("target", owner.getName()).send(player);
+			return;
+		}
+
+		player.getInventory().addItem(BountyHunters.getInstance().getVersionWrapper().getHead(owner));
+		Message.OBTAINED_HEAD.format("target", owner.getName()).send(player);
+	}
+
 	public void refreshLevel(Player player) {
 		while (levelUp(player))
 			;
@@ -244,8 +275,7 @@ public class PlayerData implements OfflinePlayerData {
 
 		// send commands
 		if (BountyHunters.getInstance().getLevelManager().hasCommands(nextLevel))
-			BountyHunters.getInstance().getLevelManager().getCommands(nextLevel)
-					.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), BountyHunters.getInstance().getPlaceholderParser().parse(player, cmd)));
+			BountyHunters.getInstance().getLevelManager().getCommands(nextLevel).forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), BountyHunters.getInstance().getPlaceholderParser().parse(player, cmd)));
 
 		// money
 		double money = BountyHunters.getInstance().getLevelManager().calculateLevelMoney(nextLevel);
@@ -255,8 +285,7 @@ public class PlayerData implements OfflinePlayerData {
 		String jsonList = money > 0 ? "\n" + Language.LEVEL_UP_REWARD_MONEY.format("amount", new NumberFormat().format(money)) : "";
 		for (String s : chatDisplay)
 			jsonList += "\n" + Language.LEVEL_UP_REWARD.format("reward", AltChar.apply(s));
-		BountyHunters.getInstance().getVersionWrapper().sendJson(player,
-				"{\"text\":\"" + ChatColor.YELLOW + Language.LEVEL_UP_REWARDS.format() + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1) + "\"}}}");
+		BountyHunters.getInstance().getVersionWrapper().sendJson(player, "{\"text\":\"" + ChatColor.YELLOW + Language.LEVEL_UP_REWARDS.format() + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1) + "\"}}}");
 
 		setLevel(nextLevel);
 		return true;
@@ -269,8 +298,7 @@ public class PlayerData implements OfflinePlayerData {
 
 	@Override
 	public String toString() {
-		return "{Level=" + level + ", ClaimedBounties=" + claimed + ", SuccessfulBounties=" + successful + ", IllegalKills=" + illegalKills + ", IllegalKillStreak=" + illegalStreak
-				+ (hasTitle() ? ", Title=" + title.getId() : "") + (hasQuote() ? ", Quote=" + quote.getId() : "") + "}";
+		return "{Level=" + level + ", ClaimedBounties=" + claimed + ", SuccessfulBounties=" + successful + ", IllegalKills=" + illegalKills + ", IllegalKillStreak=" + illegalStreak + (hasTitle() ? ", Title=" + title.getId() : "") + (hasQuote() ? ", Quote=" + quote.getId() : "") + "}";
 	}
 
 	@Deprecated
