@@ -5,7 +5,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.bountyhunters.BountyUtils;
 import net.Indyuce.bountyhunters.gui.PluginInventory;
 
 public class GuiListener implements Listener {
@@ -14,7 +13,7 @@ public class GuiListener implements Listener {
 		ItemStack item = event.getCurrentItem();
 		if (event.getInventory().getHolder() instanceof PluginInventory) {
 			event.setCancelled(true);
-			if (event.getClickedInventory() != null && event.getClickedInventory().equals(event.getInventory()) && BountyUtils.hasItemMeta(item, false))
+			if (event.getClickedInventory() != null && event.getClickedInventory().equals(event.getInventory()))
 				((PluginInventory) event.getInventory().getHolder()).whenClicked(item, event.getAction(), event.getSlot());
 		}
 	}

@@ -17,6 +17,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import net.Indyuce.bountyhunters.BountyUtils;
 import net.Indyuce.bountyhunters.api.AltChar;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.NumberFormat;
@@ -136,6 +137,9 @@ public class BountyEditor extends PluginInventory {
 	@Override
 	public void whenClicked(ItemStack item, InventoryAction action, int slot) {
 
+		if (!BountyUtils.hasItemMeta(item, false))
+			return;
+		
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Previous")) {
 			player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1, 2);
 			offset = (offset - 1) % slots.length;
