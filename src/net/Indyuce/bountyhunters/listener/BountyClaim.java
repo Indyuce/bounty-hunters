@@ -29,8 +29,9 @@ public class BountyClaim implements Listener {
 	@EventHandler
 	public void a(PlayerDeathEvent event) {
 		Player target = event.getEntity();
-//		if (target.getKiller() == null || !(target.getKiller() instanceof Player) || target.equals(target.getKiller()))
-//			return;
+		// if (target.getKiller() == null || !(target.getKiller() instanceof
+		// Player) || target.equals(target.getKiller()))
+		// return;
 
 		Player killer = target.getKiller();
 
@@ -43,7 +44,7 @@ public class BountyClaim implements Listener {
 		if (!hasBounty.isPresent()) {
 			if (BountyHunters.getInstance().getConfig().getBoolean("auto-bounty.enabled") && random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("auto-bounty.chance") / 100) {
 
-				BountyEvent bountyEvent = BountyHunters.getInstance().getBountyManager().getBounty(killer).isPresent() ? new BountyChangeEvent(hasBounty.get(), BountyChangeCause.AUTO_BOUNTY) : new BountyCreateEvent(new Bounty(killer, BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward")), killer, BountyCause.AUTO_BOUNTY);
+				BountyEvent bountyEvent = BountyHunters.getInstance().getBountyManager().getBounty(killer).isPresent() ? new BountyChangeEvent(hasBounty.get(), BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward"), BountyChangeCause.AUTO_BOUNTY) : new BountyCreateEvent(new Bounty(killer, BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward")), killer, BountyCause.AUTO_BOUNTY);
 				Bounty bounty = bountyEvent.getBounty();
 				Bukkit.getPluginManager().callEvent(bountyEvent);
 				if (bountyEvent.isCancelled())
@@ -69,7 +70,7 @@ public class BountyClaim implements Listener {
 				 * increase the existing bounty amount
 				 */
 				else {
-					bounty.addReward(BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward"));
+					bounty.addReward(((BountyChangeEvent) bountyEvent).getAdded());
 					new BountyCommands("increase.auto-bounty", bounty, killer).send();
 				}
 
