@@ -57,7 +57,7 @@ public class YAMLBountyManager extends BountyManager {
 
 	public void save(Bounty bounty, FileConfiguration config) {
 		String key = bounty.getId().toString();
-		config.set(key + ".target", bounty.getTarget().getUniqueId());
+		config.set(key + ".target", bounty.getTarget().getUniqueId().toString());
 		config.set(key + ".extra", bounty.getExtra());
 
 		config.set(key + ".hunters", bounty.getHunters().stream().map(uuid -> uuid.toString()).collect(Collectors.toList()));
