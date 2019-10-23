@@ -67,8 +67,8 @@ public class VersionWrapper_1_9_R2 implements VersionWrapper {
 	}
 
 	public class NBTItem_v1_9_R2 extends NBTItem {
-		private net.minecraft.server.v1_9_R2.ItemStack nms;
-		private NBTTagCompound compound;
+		private final net.minecraft.server.v1_9_R2.ItemStack nms;
+		private final NBTTagCompound compound;
 
 		public NBTItem_v1_9_R2(org.bukkit.inventory.ItemStack item) {
 			super(item);
