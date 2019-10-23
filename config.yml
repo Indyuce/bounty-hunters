@@ -83,6 +83,13 @@ target-login-message:
     format: '&e{player} joined the game with a &6${bounty}&e bounty!'
     enabled: true
 
+# When enabled, players have to bring the target's head
+# back to the bounty creator in order to claim the bounty.
+# THIS OPTION REQUIRES THE 'drop-head' option DISABLED.
+# Reload your server when changing this option.
+head-hunting:
+    enabled: false
+
 # Drops the player head when claming a bounty.
 drop-head:
     enabled: false

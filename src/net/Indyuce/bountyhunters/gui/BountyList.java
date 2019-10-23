@@ -57,7 +57,7 @@ public class BountyList extends PluginInventory {
 			boolean isTarget = bounty.hasTarget(player), isCreator = bounty.hasCreator(player), isHunter = bounty.hasHunter(player), noCreator = !bounty.hasCreator();
 			builder.applyConditions(new String[] { "noCreator", "isCreator", "extraCreator", "isExtra", "isTarget", "isHunter", "!isHunter" }, new boolean[] { !bounty.hasCreator(), isCreator, !noCreator && !isCreator, !isTarget && !isCreator, isTarget, !isTarget && isHunter, !isTarget && !isHunter });
 			builder.applyPlaceholders("target", bounty.getTarget().getName(), "creator", bounty.hasCreator() ? bounty.getCreator().getName() : "Server", "reward", "" + new NumberFormat().format(bounty.getReward()), "contributors", "" + bounty.getContributors().size(), "hunters", "" + bounty.getHunters().size());
-			ItemStack item = NBTItem.get(builder.build()).addTag(new ItemTag("playerUuid", bounty.getTarget().getUniqueId().toString())).toItem();
+			ItemStack item = NBTItem.get(builder.build()).addTag(new ItemTag("bountyId", bounty.getId().toString())).toItem();
 
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
 			Bukkit.getScheduler().runTaskAsynchronously(BountyHunters.getInstance(), () -> {
@@ -144,12 +144,12 @@ public class BountyList extends PluginInventory {
 		// target someone
 		if (action == InventoryAction.PICKUP_ALL && BountyHunters.getInstance().getConfig().getBoolean("player-tracking.enabled"))
 			if (slot < 35 && item.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()) {
-				String tag = NBTItem.get(item).getString("playerUuid");
+				String tag = NBTItem.get(item).getString("bountyId");
 				if (tag == null || tag.equals(""))
 					return;
 
-				OfflinePlayer target = Bukkit.getOfflinePlayer(UUID.fromString(tag));
-				Bounty bounty = BountyHunters.getInstance().getBountyManager().getBounty(target);
+				Bounty bounty = BountyHunters.getInstance().getBountyManager().getBounty(UUID.fromString(tag));
+				OfflinePlayer target = bounty.getTarget();
 
 				if (bounty.hasHunter(player)) {
 					bounty.removeHunter(player);
@@ -202,7 +202,7 @@ public class BountyList extends PluginInventory {
 		// remove bounty
 		if (action == InventoryAction.PICKUP_HALF)
 			if (slot < 35 && item.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()) {
-				String tag = NBTItem.get(item).getString("playerUuid");
+				String tag = NBTItem.get(item).getString("bountyId");
 				if (tag == null || tag.equals(""))
 					return;
 

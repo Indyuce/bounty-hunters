@@ -1,5 +1,7 @@
 package net.Indyuce.bountyhunters.command;
 
+import java.util.Optional;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -17,7 +19,6 @@ import net.Indyuce.bountyhunters.api.event.BountyChangeEvent.BountyChangeCause;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
 import net.Indyuce.bountyhunters.api.language.Message;
-import net.Indyuce.bountyhunters.manager.BountyManager;
 
 public class AddBountyCommand implements CommandExecutor {
 	@Override
@@ -106,15 +107,17 @@ public class AddBountyCommand implements CommandExecutor {
 				return true;
 			}
 
-		// bounty can be created
-		BountyManager bountyManager = BountyHunters.getInstance().getBountyManager();
+		/*
+		 * by there, bounty may be created if the event is not cancelled.
+		 */
 		reward -= tax;
 
 		// add to existing bounty
-		if (bountyManager.hasBounty(target)) {
+		Optional<Bounty> currentBounty = BountyHunters.getInstance().getBountyManager().getBounty(target);
+		if (currentBounty.isPresent()) {
 
 			// API
-			Bounty bounty = bountyManager.getBounty(target);
+			Bounty bounty = currentBounty.get();
 			BountyChangeEvent bountyEvent = new BountyChangeEvent(bounty, sender instanceof Player ? BountyChangeCause.PLAYER : BountyChangeCause.CONSOLE);
 			Bukkit.getPluginManager().callEvent(bountyEvent);
 			if (bountyEvent.isCancelled())
@@ -138,7 +141,7 @@ public class AddBountyCommand implements CommandExecutor {
 
 		// API
 		Bounty bounty = new Bounty(sender instanceof Player ? (Player) sender : null, target, reward);
-		BountyCreateEvent bountyEvent = new BountyCreateEvent(bounty, sender instanceof Player ? BountyCause.PLAYER : BountyCause.CONSOLE);
+		BountyCreateEvent bountyEvent = new BountyCreateEvent(bounty, sender instanceof Player ? (Player) sender : null, sender instanceof Player ? BountyCause.PLAYER : BountyCause.CONSOLE);
 		Bukkit.getPluginManager().callEvent(bountyEvent);
 		reward = bountyEvent.getBounty().getReward();
 		if (bountyEvent.isCancelled())

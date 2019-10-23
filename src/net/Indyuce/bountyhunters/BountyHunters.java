@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -17,6 +18,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.ConfigFile;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.NumberFormat;
@@ -160,8 +162,9 @@ public class BountyHunters extends JavaPlugin {
 				@EventHandler(priority = EventPriority.HIGH)
 				public void a(PlayerJoinEvent event) {
 					Player player = event.getPlayer();
-					if (bountyManager.hasBounty(player))
-						event.setJoinMessage(message.replace("{player}", player.getName()).replace("{bounty}", new NumberFormat().format(bountyManager.getBounty(player).getReward())));
+					Optional<Bounty> bounty = bountyManager.getBounty(player);
+					if (bounty.isPresent())
+						event.setJoinMessage(message.replace("{player}", player.getName()).replace("{bounty}", new NumberFormat().format(bounty.get().getReward())));
 				}
 			}, this);
 

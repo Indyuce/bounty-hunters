@@ -4,6 +4,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
@@ -23,7 +24,7 @@ public class YAMLBountyManager extends BountyManager {
 			try {
 				registerBounty(load(data.getConfigurationSection(key)));
 			} catch (IllegalArgumentException exception) {
-				BountyHunters.getInstance().getLogger().log(Level.WARNING, "Could not load bounty " + key);
+				BountyHunters.getInstance().getLogger().log(Level.WARNING, "Could not load bounty " + key + ": " + exception.getMessage());
 			}
 	}
 
@@ -38,8 +39,12 @@ public class YAMLBountyManager extends BountyManager {
 	}
 
 	public Bounty load(ConfigurationSection section) {
+		Validate.notNull(section, "Cuold not read bounty config");
 
-		Bounty bounty = new Bounty(Bukkit.getOfflinePlayer(UUID.fromString(section.getName())), section.getDouble("extra"));
+		String target = section.getString("target");
+		Validate.notNull(target, "Could not read bounty target");
+
+		Bounty bounty = new Bounty(UUID.fromString(section.getName()), Bukkit.getOfflinePlayer(UUID.fromString(target)), section.getDouble("extra"));
 
 		for (String key : section.getStringList("hunters"))
 			bounty.addHunter(Bukkit.getOfflinePlayer(UUID.fromString(key)));
@@ -51,7 +56,8 @@ public class YAMLBountyManager extends BountyManager {
 	}
 
 	public void save(Bounty bounty, FileConfiguration config) {
-		String key = bounty.getTarget().getUniqueId().toString();
+		String key = bounty.getId().toString();
+		config.set(key + ".target", bounty.getTarget().getUniqueId());
 		config.set(key + ".extra", bounty.getExtra());
 
 		config.set(key + ".hunters", bounty.getHunters().stream().map(uuid -> uuid.toString()).collect(Collectors.toList()));

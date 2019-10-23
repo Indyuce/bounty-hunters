@@ -41,8 +41,8 @@ public class HuntManager {
 		return hunting.get(hunter.getUniqueId());
 	}
 
-	public void setHunting(OfflinePlayer hunter, OfflinePlayer hunted) {
-		hunting.put(hunter.getUniqueId(), new HunterData(hunted));
+	public void setHunting(OfflinePlayer hunter, Bounty bounty) {
+		hunting.put(hunter.getUniqueId(), new HunterData(bounty));
 	}
 
 	public void stopHunting(OfflinePlayer hunter) {
@@ -50,19 +50,19 @@ public class HuntManager {
 	}
 
 	public Bounty getTargetBounty(OfflinePlayer hunter) {
-		return BountyHunters.getInstance().getBountyManager().getBounty(getData(hunter).getHunted());
+		return getData(hunter).getBounty();
 	}
 
 	public class HunterData {
-		private final OfflinePlayer tracked;
+		private final Bounty bounty;
 
 		private BukkitRunnable particles;
 		private Player player;
 
 		private ItemStack compass;
 
-		public HunterData(OfflinePlayer tracked) {
-			this.tracked = tracked;
+		public HunterData(Bounty bounty) {
+			this.bounty = bounty;
 		}
 
 		public void showParticles(Player player) {
@@ -85,18 +85,18 @@ public class HuntManager {
 
 					// update compass display name based on distance
 					ItemMeta meta = compass.getItemMeta();
-					meta.setDisplayName(Language.COMPASS_FORMAT.format("blocks", new NumberFormat().thousands().format(tracked.getPlayer().getLocation().distance(player.getLocation()))));
+					meta.setDisplayName(Language.COMPASS_FORMAT.format("blocks", new NumberFormat().thousands().format(bounty.getTarget().getPlayer().getLocation().distance(player.getLocation()))));
 					compass.setItemMeta(meta);
 
 					// draw vector
 					Location src = player.getLocation().add(0, 1.3, 0).add(player.getEyeLocation().getDirection().setY(0).normalize());
-					Vector vec = tracked.getPlayer().getLocation().subtract(src.clone().add(0, -1.3, 0)).toVector().normalize().multiply(.2);
+					Vector vec = bounty.getTarget().getPlayer().getLocation().subtract(src.clone().add(0, -1.3, 0)).toVector().normalize().multiply(.2);
 					for (int j = 0; j < 9; j++)
 						BountyHunters.getInstance().getVersionWrapper().spawnParticle(Particle.REDSTONE, src.add(vec), player, Color.RED);
 
 					// draw circle around target
 					if (circle && (ti = (ti + 1) % 20) < 3) {
-						Location loc = tracked.getPlayer().getLocation();
+						Location loc = bounty.getTarget().getPlayer().getLocation();
 						for (double j = 0; j < Math.PI * 2; j += Math.PI / 16)
 							BountyHunters.getInstance().getVersionWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(j) * .8, .15, Math.sin(j) * .8), player, Color.RED);
 					}
@@ -109,7 +109,7 @@ public class HuntManager {
 		}
 
 		private boolean check() {
-			if (player == null || tracked == null || !player.isOnline() || !tracked.isOnline() || !tracked.getPlayer().getWorld().equals(player.getWorld()))
+			if (!player.isOnline() || !bounty.getTarget().isOnline() || !bounty.getTarget().getPlayer().getWorld().equals(player.getWorld()))
 				return false;
 
 			if (CustomItem.BOUNTY_COMPASS.loreMatches(player.getInventory().getItemInMainHand())) {
@@ -132,8 +132,12 @@ public class HuntManager {
 			}
 		}
 
+		public Bounty getBounty() {
+			return bounty;
+		}
+
 		public OfflinePlayer getHunted() {
-			return tracked;
+			return bounty.getTarget();
 		}
 	}
 }

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -15,10 +16,16 @@ import net.Indyuce.bountyhunters.gui.BountyEditor;
 import net.Indyuce.bountyhunters.manager.HuntManager.HunterData;
 
 public abstract class BountyManager {
+
+	/*
+	 * warning: bounty ID does NOT correspond to the target UUID! bounty ID used
+	 * as key to store bounties however bounty target uuid is stored inside the
+	 * bounty class instance
+	 */
 	private final LinkedHashMap<UUID, Bounty> bounties = new LinkedHashMap<>();
 
 	public void unregisterBounty(Bounty bounty) {
-		bounties.remove(bounty.getTarget().getUniqueId());
+		bounties.remove(bounty.getId());
 		bounty.getHunters().forEach(hunter -> {
 			OfflinePlayer player = Bukkit.getOfflinePlayer(hunter);
 			HunterData data = BountyHunters.getInstance().getHuntManager().getData(player);
@@ -37,30 +44,44 @@ public abstract class BountyManager {
 					online.closeInventory();
 	}
 
+	public Bounty newBounty(OfflinePlayer creator, OfflinePlayer target, double reward) {
+		return new Bounty(creator, target, reward);
+	}
+
+	public Bounty newBounty(OfflinePlayer target, double reward) {
+		return new Bounty(target, reward);
+	}
+
 	public void registerBounty(Bounty bounty) {
-		bounties.put(bounty.getTarget().getUniqueId(), bounty);
-	}
+		if (bounties.containsKey(bounty.getId())) {
+			BountyHunters.getInstance().getLogger().log(Level.WARNING, "Attempted to register bounty with duplicate ID " + bounty.getId());
+			return;
+		}
 
-	public boolean hasBounty(OfflinePlayer player) {
-		return hasBounty(player.getUniqueId());
-	}
-
-	public boolean hasBounty(UUID uuid) {
-		return bounties.containsKey(uuid);
+		bounties.put(bounty.getId(), bounty);
 	}
 
 	public Collection<Bounty> getBounties() {
 		return bounties.values();
 	}
-
-	public Bounty getBounty(OfflinePlayer target) {
-		return getBounty(target.getUniqueId());
-	}
-
-	public Bounty getBounty(UUID target) {
-		return bounties.get(target);
-	}
 	
+	@Deprecated
+	public boolean hasBounty(OfflinePlayer player) {
+		return getBounty(player).isPresent();
+	}
+
+//	public boolean hasBounty(UUID bountyId) {
+//		return bounties.containsKey(bountyId);
+//	}
+//
+	public Optional<Bounty> getBounty(OfflinePlayer target) {
+		return bounties.values().stream().filter(bounty -> bounty.getTarget().equals(target)).findAny();
+	}
+
+	public Bounty getBounty(UUID bountyId) {
+		return bounties.get(bountyId);
+	}
+
 	public Optional<Bounty> findByName(String name) {
 		return bounties.values().stream().filter(bounty -> bounty.getTarget().getName().equalsIgnoreCase(name)).findAny();
 	}

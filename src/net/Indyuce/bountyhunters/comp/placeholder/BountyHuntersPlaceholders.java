@@ -1,9 +1,12 @@
 package net.Indyuce.bountyhunters.comp.placeholder;
 
+import java.util.Optional;
+
 import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.Indyuce.bountyhunters.BountyHunters;
+import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
 
@@ -36,8 +39,10 @@ public class BountyHuntersPlaceholders extends PlaceholderExpansion {
 			return "" + playerData.getIllegalKillStreak();
 		case "illegal_kills":
 			return "" + playerData.getIllegalKills();
-		case "current_bounty":
-			return BountyHunters.getInstance().getBountyManager().hasBounty(player) ? new NumberFormat().format(BountyHunters.getInstance().getBountyManager().getBounty(player).getReward()) : "0";
+		case "current_bounty": {
+			Optional<Bounty> bounty = BountyHunters.getInstance().getBountyManager().getBounty(player);
+			return bounty.isPresent() ? new NumberFormat().format(bounty.get().getReward()) : "0";
+		}
 		case "quote":
 			return playerData.hasQuote() ? playerData.getQuote().format() : "";
 		case "title":

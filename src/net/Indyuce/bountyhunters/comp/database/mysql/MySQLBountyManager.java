@@ -31,7 +31,7 @@ public class MySQLBountyManager extends BountyManager {
 		try {
 
 			if (!provider.prepareStatement("SELECT * FROM information_schema.tables WHERE TABLE_NAME = 'bounties'").executeQuery().next())
-				provider.prepareStatement("CREATE TABLE bounties(target VARCHAR(36), extra DECIMAL, hunters TEXT, increased TEXT)").execute();
+				provider.prepareStatement("CREATE TABLE bounties(id VARCHAR(36), target VARCHAR(36), extra DECIMAL, hunters TEXT, increased TEXT)").execute();
 
 			ResultSet result = provider.prepareStatement("SELECT * FROM bounties").executeQuery();
 
@@ -39,7 +39,7 @@ public class MySQLBountyManager extends BountyManager {
 
 				try {
 
-					Bounty bounty = new Bounty(Bukkit.getOfflinePlayer(UUID.fromString(result.getString("target"))), result.getDouble("extra"));
+					Bounty bounty = new Bounty(UUID.fromString(result.getString("id")), Bukkit.getOfflinePlayer(UUID.fromString(result.getString("target"))), result.getDouble("extra"));
 
 					JsonObject increased = (JsonObject) new JsonParser().parse(result.getString("increased"));
 					increased.entrySet().forEach(entry -> bounty.addContribution(Bukkit.getOfflinePlayer(UUID.fromString(entry.getKey())), entry.getValue().getAsDouble()));
@@ -63,7 +63,7 @@ public class MySQLBountyManager extends BountyManager {
 		try {
 			provider.prepareStatement("TRUNCATE TABLE bounties").execute();
 
-			PreparedStatement save = provider.prepareStatement("INSERT INTO bounties VALUES (?,?,?,?)");
+			PreparedStatement save = provider.prepareStatement("INSERT INTO bounties VALUES (?,?,?,?,?)");
 			for (Bounty bounty : BountyHunters.getInstance().getBountyManager().getBounties()) {
 
 				JsonArray hunters = new JsonArray();
@@ -72,10 +72,11 @@ public class MySQLBountyManager extends BountyManager {
 				JsonObject increased = new JsonObject();
 				bounty.getContributors().forEach(key -> increased.addProperty(key.getUniqueId().toString(), bounty.getContribution(key)));
 
-				save.setString(1, bounty.getTarget().getUniqueId().toString());
-				save.setDouble(2, bounty.getExtra());
-				save.setString(3, hunters.toString());
-				save.setString(4, increased.toString());
+				save.setString(1, bounty.getId().toString());
+				save.setString(2, bounty.getTarget().getUniqueId().toString());
+				save.setDouble(3, bounty.getExtra());
+				save.setString(4, hunters.toString());
+				save.setString(5, increased.toString());
 
 				save.addBatch();
 			}

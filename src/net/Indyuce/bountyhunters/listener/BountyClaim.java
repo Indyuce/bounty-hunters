@@ -1,5 +1,6 @@
 package net.Indyuce.bountyhunters.listener;
 
+import java.util.Optional;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -38,10 +39,11 @@ public class BountyClaim implements Listener {
 		 * kill illegal. When a kill is illegal, the killer has a chance to have
 		 * a bounty drop onto him
 		 */
-		if (!BountyHunters.getInstance().getBountyManager().hasBounty(target)) {
+		Optional<Bounty> hasBounty = BountyHunters.getInstance().getBountyManager().getBounty(target);
+		if (!hasBounty.isPresent()) {
 			if (BountyHunters.getInstance().getConfig().getBoolean("auto-bounty.enabled") && random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("auto-bounty.chance") / 100) {
 
-				BountyEvent bountyEvent = BountyHunters.getInstance().getBountyManager().hasBounty(killer) ? new BountyChangeEvent(BountyHunters.getInstance().getBountyManager().getBounty(killer), BountyChangeCause.AUTO_BOUNTY) : new BountyCreateEvent(new Bounty(null, killer, BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward")), BountyCause.AUTO_BOUNTY);
+				BountyEvent bountyEvent = BountyHunters.getInstance().getBountyManager().getBounty(killer).isPresent() ? new BountyChangeEvent(hasBounty.get(), BountyChangeCause.AUTO_BOUNTY) : new BountyCreateEvent(new Bounty(killer, BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward")), killer, BountyCause.AUTO_BOUNTY);
 				Bounty bounty = bountyEvent.getBounty();
 				Bukkit.getPluginManager().callEvent(bountyEvent);
 				if (bountyEvent.isCancelled())
@@ -83,7 +85,7 @@ public class BountyClaim implements Listener {
 		 * option- prevent players from claiming a bounty if they are not
 		 * tracking the bounty target.
 		 */
-		Bounty bounty = BountyHunters.getInstance().getBountyManager().getBounty(target);
+		Bounty bounty = hasBounty.get();
 		if (BountyHunters.getInstance().getConfig().getBoolean("target-bounty-claim") && !bounty.hasHunter(killer))
 			return;
 
