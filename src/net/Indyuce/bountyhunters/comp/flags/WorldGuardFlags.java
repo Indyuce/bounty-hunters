@@ -18,6 +18,7 @@ import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 
 import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
+import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
 
 public class WorldGuardFlags implements Listener {
 	private final WorldGuard worldguard;
@@ -51,7 +52,8 @@ public class WorldGuardFlags implements Listener {
 
 	@EventHandler
 	public void b(BountyCreateEvent event) {
-		if (event.hasCreator() && !isFlagAllowed(event.getCreator(), CustomFlag.CREATE_BOUNTIES))
+		CustomFlag checked = event.getCause() == BountyCause.AUTO_BOUNTY ? CustomFlag.AUTO_BOUNTY : CustomFlag.CREATE_BOUNTIES;
+		if (event.hasCreator() && !isFlagAllowed(event.getCreator(), checked))
 			event.setCancelled(true);
 	}
 

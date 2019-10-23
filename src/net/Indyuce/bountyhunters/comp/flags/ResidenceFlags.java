@@ -12,6 +12,7 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
+import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
 
 public class ResidenceFlags implements Listener {
 	public ResidenceFlags() {
@@ -29,7 +30,8 @@ public class ResidenceFlags implements Listener {
 
 	@EventHandler
 	public void b(BountyCreateEvent event) {
-		if (event.hasCreator() && !isFlagAllowed(event.getCreator(), CustomFlag.CREATE_BOUNTIES))
+		CustomFlag checked = event.getCause() == BountyCause.AUTO_BOUNTY ? CustomFlag.AUTO_BOUNTY : CustomFlag.CREATE_BOUNTIES;
+		if (event.hasCreator() && !isFlagAllowed(event.getCreator(), checked))
 			event.setCancelled(true);
 	}
 
