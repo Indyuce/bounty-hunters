@@ -2,6 +2,8 @@ package net.Indyuce.bountyhunters.version.wrapper;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -14,6 +16,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.CustomItem;
+import net.Indyuce.bountyhunters.version.wrapper.api.ItemTag;
 import net.Indyuce.bountyhunters.version.wrapper.api.NBTItem;
 
 public class VersionWrapper_Reflection implements VersionWrapper {
@@ -21,12 +24,14 @@ public class VersionWrapper_Reflection implements VersionWrapper {
 	@Override
 	public void sendTitle(Player player, String title, String subtitle, int fadeIn, int ticks, int fadeOut) {
 		try {
-			Object chatTitle = chatSerializer().getMethod("a", String.class).invoke(null, "{\"text\": \"" + title + "\"}");
-			Object chatSubtitle = chatSerializer().getMethod("a", String.class).invoke(null, "{\"text\": \"" + subtitle + "\"}");
+			Class<?> chatSerializer = nms("IChatBaseComponent.ChatSerializer").getDeclaredClasses()[0];
+			Object chatTitle = chatSerializer.getMethod("a", String.class).invoke(null, "{\"text\": \"" + title + "\"}");
+			Object chatSubtitle = chatSerializer.getMethod("a", String.class).invoke(null, "{\"text\": \"" + subtitle + "\"}");
 
-			Constructor<?> cons = nms("PacketPlayOutTitle").getConstructor(enumTitleAction(), nms("IChatBaseComponent"), int.class, int.class, int.class);
-			Object titlePacket = cons.newInstance(enumTitleAction().getField("TITLE").get(null), chatTitle, fadeIn, ticks, fadeOut);
-			Object subtitlePacket = cons.newInstance(enumTitleAction().getField("SUBTITLE").get(null), chatSubtitle, fadeIn, ticks, fadeOut);
+			Class<?> enumTitleAction = nms("PacketPlayOutTitle").getDeclaredClasses()[0];
+			Constructor<?> cons = nms("PacketPlayOutTitle").getConstructor(enumTitleAction, nms("IChatBaseComponent"), int.class, int.class, int.class);
+			Object titlePacket = cons.newInstance(enumTitleAction.getField("TITLE").get(null), chatTitle, fadeIn, ticks, fadeOut);
+			Object subtitlePacket = cons.newInstance(enumTitleAction.getField("SUBTITLE").get(null), chatSubtitle, fadeIn, ticks, fadeOut);
 
 			sendPacket(player, titlePacket);
 			sendPacket(player, subtitlePacket);
@@ -38,7 +43,7 @@ public class VersionWrapper_Reflection implements VersionWrapper {
 	@Override
 	public void sendJson(Player player, String message) {
 		try {
-			Object chatMsg = chatSerializer().getMethod("a", String.class).invoke(null, message);
+			Object chatMsg = nms("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, message);
 			Object titlePacket = nms("PacketPlayOutChat").getConstructor(nms("IChatBaseComponent")).newInstance(chatMsg);
 			sendPacket(player, titlePacket);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException | NoSuchMethodException | ClassNotFoundException e) {
@@ -46,9 +51,9 @@ public class VersionWrapper_Reflection implements VersionWrapper {
 		}
 	}
 
-	private void sendPacket(Player p, Object packet) {
+	private void sendPacket(Player player, Object packet) {
 		try {
-			Object handle = p.getClass().getMethod("getHandle").invoke(p);
+			Object handle = player.getClass().getMethod("getHandle").invoke(player);
 			Object connection = handle.getClass().getDeclaredField("playerConnection").get(handle);
 			connection.getClass().getMethod("sendPacket", nms("Packet")).invoke(connection, packet);
 		} catch (ClassNotFoundException | IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException | InvocationTargetException | NoSuchMethodException e) {
@@ -60,17 +65,8 @@ public class VersionWrapper_Reflection implements VersionWrapper {
 		return Class.forName("net.minecraft.server." + BountyHunters.getInstance().getVersion().toString() + "." + str);
 	}
 
-	// private Class<?> obc(String str) throws ClassNotFoundException {
-	// return Class.forName("org.bukkit.craftbukkit." +
-	// BountyHunters.getInstance().getVersion().toString() + "." + str);
-	// }
-
-	private Class<?> enumTitleAction() throws SecurityException, ClassNotFoundException {
-		return nms("PacketPlayOutTitle").getDeclaredClasses().length > 0 ? nms("PacketPlayOutTitle").getDeclaredClasses()[0] : nms("EnumTitleAction");
-	}
-
-	private Class<?> chatSerializer() throws SecurityException, ClassNotFoundException {
-		return nms("IChatBaseComponent").getDeclaredClasses().length > 0 ? nms("IChatBaseComponent").getDeclaredClasses()[0] : nms("ChatSerializer");
+	private Class<?> obc(String str) throws ClassNotFoundException {
+		return Class.forName("org.bukkit.craftbukkit." + BountyHunters.getInstance().getVersion().toString() + "." + str);
 	}
 
 	@Override
@@ -96,8 +92,126 @@ public class VersionWrapper_Reflection implements VersionWrapper {
 	}
 
 	@Override
-	public NBTItem getNBTItem(ItemStack item) {
-		// TODO Auto-generated method stub
-		return null;
+	public NBTItem getNBTItem(org.bukkit.inventory.ItemStack item) {
+		return new NBTItem_Reflection(item);
+	}
+
+	public class NBTItem_Reflection extends NBTItem {
+		private Object nms, compound;
+		private Class<?> craftItemStack;
+
+		public NBTItem_Reflection(ItemStack item) {
+			super(item);
+
+			try {
+				craftItemStack = obc("inventory.CraftItemStack");
+				nms = craftItemStack.getMethod("asNMSCopy", ItemStack.class).invoke(craftItemStack, item);
+				compound = (boolean) nms.getClass().getMethod("hasTag").invoke(nms) ? nms.getClass().getMethod("getTag").invoke(nms) : nms("NBTTagCompound").getConstructor().newInstance();
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | ClassNotFoundException | InstantiationException e) {
+				e.printStackTrace();
+			}
+		}
+
+		@Override
+		public String getString(String path) {
+			try {
+				return (String) compound.getClass().getMethod("getString", String.class).invoke(compound, path);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+		@Override
+		public boolean hasTag(String path) {
+			try {
+				return (boolean) compound.getClass().getMethod("hasKey", String.class).invoke(compound, path);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+
+		@Override
+		public boolean getBoolean(String path) {
+			try {
+				return (boolean) compound.getClass().getMethod("getBoolean", String.class).invoke(compound, path);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+
+		@Override
+		public double getDouble(String path) {
+			try {
+				return (double) compound.getClass().getMethod("getDouble", String.class).invoke(compound, path);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				e.printStackTrace();
+				return 0;
+			}
+		}
+
+		@Override
+		public int getInteger(String path) {
+			try {
+				return (int) compound.getClass().getMethod("getInt", String.class).invoke(compound, path);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				e.printStackTrace();
+				return 0;
+			}
+		}
+
+		@Override
+		public NBTItem addTag(List<ItemTag> tags) {
+			tags.forEach(tag -> {
+				try {
+					if (tag.getValue() instanceof Boolean)
+						compound.getClass().getMethod("setBoolean", String.class, Boolean.TYPE).invoke(compound, tag.getPath(), tag.getValue());
+					else if (tag.getValue() instanceof Double)
+						compound.getClass().getMethod("setDouble", String.class, Double.TYPE).invoke(compound, tag.getPath(), tag.getValue());
+					else if (tag.getValue() instanceof String)
+						compound.getClass().getMethod("setString", String.class, String.class).invoke(compound, tag.getPath(), tag.getValue());
+					else if (tag.getValue() instanceof Integer)
+						compound.getClass().getMethod("setInt", String.class, Integer.TYPE).invoke(compound, tag.getPath(), tag.getValue());
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+					e.printStackTrace();
+				}
+			});
+			return this;
+		}
+
+		@Override
+		public NBTItem removeTag(String... paths) {
+			for (String path : paths)
+				try {
+					compound.getClass().getMethod("remove", String.class).invoke(compound, path);
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+					e.printStackTrace();
+				}
+			return this;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public Set<String> getTags() {
+			try {
+				return (Set<String>) compound.getClass().getMethod("getKeys").invoke(compound);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+		@Override
+		public ItemStack toItem() {
+			try {
+				nms.getClass().getMethod("setTag", compound.getClass()).invoke(nms, compound);
+				return (ItemStack) craftItemStack.getMethod("asBukkitCopy", nms.getClass()).invoke(craftItemStack, nms);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
 	}
 }

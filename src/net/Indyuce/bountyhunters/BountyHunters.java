@@ -55,6 +55,7 @@ import net.Indyuce.bountyhunters.manager.PlayerDataManager;
 import net.Indyuce.bountyhunters.version.PluginVersion;
 import net.Indyuce.bountyhunters.version.SpigotPlugin;
 import net.Indyuce.bountyhunters.version.wrapper.VersionWrapper;
+import net.Indyuce.bountyhunters.version.wrapper.VersionWrapper_Reflection;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
@@ -81,15 +82,13 @@ public class BountyHunters extends JavaPlugin {
 	public void onLoad() {
 		plugin = this;
 
-		try {
+//		try {
 			version = new PluginVersion(Bukkit.getServer().getClass());
-			wrapper = (VersionWrapper) Class.forName("net.Indyuce.bountyhunters.version.wrapper.VersionWrapper_" + version.toString().substring(1)).newInstance();
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException exception) {
-			getLogger().log(Level.SEVERE, "Your server version is not compatible.");
-			Bukkit.getPluginManager().disablePlugin(this);
-			// wrapper = new VersionWrapper_Reflection();
-			return;
-		}
+//			wrapper = (VersionWrapper) Class.forName("net.Indyuce.bountyhunters.version.wrapper.VersionWrapper_" + version.toString().substring(1)).newInstance();
+//		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException exception) {
+			getLogger().log(Level.INFO, "Your server version is handled via reflection.");
+			wrapper = new VersionWrapper_Reflection();
+//		}
 
 		try {
 			if (getServer().getPluginManager().getPlugin("WorldGuard") != null && version.isStrictlyHigher(1, 12)) {
