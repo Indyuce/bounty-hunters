@@ -16,16 +16,21 @@ public class PlayerListener implements Listener {
 		BountyHunters.getInstance().getPlayerDataManager().load(event.getPlayer());
 	}
 
-	/*
-	 * improve performance: save player data as soon as the player leaves the
-	 * server. that way server does not have to save all player data when it
-	 * shuts down
-	 */
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void b(PlayerQuitEvent event) {
 		PlayerDataManager manager = BountyHunters.getInstance().getPlayerDataManager();
+
+		/*
+		 * improve performance: save player data as soon as the player leaves
+		 * the server. that way server does not have to save all player data
+		 * when it shuts down
+		 */
 		manager.saveData(manager.get(event.getPlayer()));
-		manager.unload(event.getPlayer());
+
+		/*
+		 * cannot unload data completely otherwise all cooldowns are reset
+		 */
+		// manager.unload(event.getPlayer());
 	}
 
 	@EventHandler
