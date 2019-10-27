@@ -9,9 +9,10 @@ import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.language.Message;
 
 public class BountyChangeEvent extends BountyEvent {
-	private double added;
-
+	private final Player player;
 	private final BountyChangeCause cause;
+
+	private double added;
 
 	private static final HandlerList handlers = new HandlerList();
 
@@ -20,9 +21,10 @@ public class BountyChangeEvent extends BountyEvent {
 	 * increases the bounty reward since he killed someone illegaly, or when a
 	 * player increases manually a player bounty by using the /bounty command
 	 */
-	public BountyChangeEvent(Bounty bounty, double newAmount, BountyChangeCause cause) {
+	public BountyChangeEvent(Bounty bounty, Player player, double newAmount, BountyChangeCause cause) {
 		super(bounty);
 
+		this.player = player;
 		this.cause = cause;
 		this.added = newAmount;
 	}
@@ -39,9 +41,18 @@ public class BountyChangeEvent extends BountyEvent {
 		return cause;
 	}
 
+	public Player getPlayer() {
+		return player;
+	}
+
+	public boolean hasPlayer() {
+		return player != null;
+	}
+
 	public void sendAllert() {
 		for (Player player : Bukkit.getOnlinePlayers())
-			Message.BOUNTY_CHANGE.format("player", getBounty().getTarget().getName(), "reward", new NumberFormat().format(getBounty().getReward())).send(player);
+			Message.BOUNTY_CHANGE.format("player", getBounty().getTarget().getName(), "reward",
+					new NumberFormat().format(getBounty().getReward())).send(player);
 	}
 
 	public HandlerList getHandlers() {
@@ -65,8 +76,8 @@ public class BountyChangeEvent extends BountyEvent {
 		CONSOLE,
 
 		/*
-		 * when the auto bounty increases a player's bounty since the killer has
-		 * killed a player illegaly
+		 * when the auto bounty increases a player's bounty since the killer has killed
+		 * a player illegaly
 		 */
 		AUTO_BOUNTY,
 

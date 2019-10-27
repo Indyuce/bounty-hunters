@@ -5,6 +5,10 @@ import org.bukkit.Sound;
 import net.Indyuce.bountyhunters.BountyHunters;
 
 public enum VersionSound {
+	
+	/*
+	 * 1.13+ sound in name(), legacy name as first parameter
+	 */
 	ENTITY_ENDERMAN_HURT("ENTITY_ENDERMEN_HURT"),
 	ENTITY_ENDERMAN_DEATH("ENTITY_ENDERMEN_DEATH"),
 	ENTITY_ENDERMAN_TELEPORT("ENTITY_ENDERMEN_TELEPORT"),

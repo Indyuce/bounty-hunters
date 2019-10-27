@@ -5,6 +5,7 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,22 +30,29 @@ public class BountyClaim implements Listener {
 	@EventHandler
 	public void a(PlayerDeathEvent event) {
 		Player target = event.getEntity();
-		// if (target.getKiller() == null || !(target.getKiller() instanceof
-		// Player) || target.equals(target.getKiller()))
-		// return;
+		if (target.getKiller() == null || !(target.getKiller() instanceof Player) || target.equals(target.getKiller()))
+			return;
 
 		Player killer = target.getKiller();
 
 		/*
-		 * auto bounty: killing a player on whom there was no bounty makes the
-		 * kill illegal. When a kill is illegal, the killer has a chance to have
-		 * a bounty drop onto him
+		 * auto bounty: killing a player on whom there was no bounty makes the kill
+		 * illegal. When a kill is illegal, the killer has a chance to have a bounty
+		 * drop onto him
 		 */
 		Optional<Bounty> hasBounty = BountyHunters.getInstance().getBountyManager().getBounty(target);
 		if (!hasBounty.isPresent()) {
-			if (BountyHunters.getInstance().getConfig().getBoolean("auto-bounty.enabled") && random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("auto-bounty.chance") / 100) {
+			if (BountyHunters.getInstance().getConfig().getBoolean("auto-bounty.enabled") && random
+					.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("auto-bounty.chance") / 100) {
 
-				BountyEvent bountyEvent = BountyHunters.getInstance().getBountyManager().getBounty(killer).isPresent() ? new BountyChangeEvent(hasBounty.get(), BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward"), BountyChangeCause.AUTO_BOUNTY) : new BountyCreateEvent(new Bounty(killer, BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward")), killer, BountyCause.AUTO_BOUNTY);
+				BountyEvent bountyEvent = BountyHunters.getInstance().getBountyManager().getBounty(killer).isPresent()
+						? new BountyChangeEvent(hasBounty.get(), null,
+								BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward"),
+								BountyChangeCause.AUTO_BOUNTY)
+						: new BountyCreateEvent(
+								new Bounty(killer,
+										BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward")),
+								killer, BountyCause.AUTO_BOUNTY);
 				Bounty bounty = bountyEvent.getBounty();
 				Bukkit.getPluginManager().callEvent(bountyEvent);
 				if (bountyEvent.isCancelled())
@@ -83,30 +91,28 @@ public class BountyClaim implements Listener {
 			return;
 
 		/*
-		 * option- prevent players from claiming a bounty if they are not
-		 * tracking the bounty target.
+		 * option- prevent players from claiming a bounty if they are not tracking the
+		 * bounty target.
 		 */
 		Bounty bounty = hasBounty.get();
 		if (BountyHunters.getInstance().getConfig().getBoolean("target-bounty-claim") && !bounty.hasHunter(killer))
 			return;
 
 		/*
-		 * prevents the player from claiming the bounty if he is the bounty
-		 * creator & if the corresponding option is disabled
+		 * prevents the player from claiming the bounty if he is the bounty creator & if
+		 * the corresponding option is disabled
 		 */
 		if (bounty.hasCreator(killer) && !BountyHunters.getInstance().getConfig().getBoolean("own-bounty-claiming"))
 			return;
 
 		/*
-		 * create an event instance, call it and check if it is cancelled. if it
-		 * is not cancelled, send the corresponding allert
+		 * create an event instance, call it and check if it is cancelled. if it is not
+		 * cancelled, send the corresponding allert
 		 */
 		BountyClaimEvent bountyEvent = new BountyClaimEvent(bounty, killer);
 		Bukkit.getPluginManager().callEvent(bountyEvent);
 		if (bountyEvent.isCancelled())
 			return;
-
-		bountyEvent.sendAllert();
 
 		/*
 		 * removes the death message
@@ -114,13 +120,19 @@ public class BountyClaim implements Listener {
 		if (BountyHunters.getInstance().getConfig().getBoolean("disable-death-message.bounty-claim"))
 			event.setDeathMessage(null);
 
+		bountyEvent.sendAllert();
+		setClaimed(bounty, killer, target);
+	}
+
+	public void setClaimed(Bounty bounty, Player killer, OfflinePlayer target) {
+
 		/*
-		 * drops items at the target's location, best look with CHEST, REDSTONE
-		 * or GOLD_NUGGET. these items can't be picked up and only act as
-		 * cosmetics
+		 * drops items at the target's location, best look with CHEST, REDSTONE or
+		 * GOLD_NUGGET. these items can't be picked up and only act as cosmetics
 		 */
-		if (BountyHunters.getInstance().getConfig().getBoolean("bounty-effect.enabled"))
-			new BountyEffect(BountyHunters.getInstance().getConfig().getConfigurationSection("bounty-effect")).play(target.getLocation());
+		if (target instanceof Player && BountyHunters.getInstance().getConfig().getBoolean("bounty-effect.enabled"))
+			new BountyEffect(BountyHunters.getInstance().getConfig().getConfigurationSection("bounty-effect"))
+					.play(((Player) target).getLocation());
 
 		/*
 		 * send bounty commands
@@ -130,10 +142,15 @@ public class BountyClaim implements Listener {
 		/*
 		 * drops the killed player's head
 		 */
-		if (BountyHunters.getInstance().getConfig().getBoolean("drop-head.killer.enabled") && random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("drop-head.killer.chance") / 100)
-			target.getWorld().dropItem(target.getLocation(), BountyHunters.getInstance().getVersionWrapper().getHead(target));
-		if (BountyHunters.getInstance().getConfig().getBoolean("drop-head.creator.enabled") && random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("drop-head.creator.chance") / 100)
-			BountyHunters.getInstance().getPlayerDataManager().getOfflineData(bounty.getCreator()).givePlayerHead(target);
+		if (target instanceof Player && BountyHunters.getInstance().getConfig().getBoolean("drop-head.killer.enabled")
+				&& random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("drop-head.killer.chance")
+						/ 100)
+			((Player) target).getWorld().dropItem(((Player) target).getLocation(),
+					BountyHunters.getInstance().getVersionWrapper().getHead(target));
+		if (BountyHunters.getInstance().getConfig().getBoolean("drop-head.creator.enabled") && random
+				.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("drop-head.creator.chance") / 100)
+			BountyHunters.getInstance().getPlayerDataManager().getOfflineData(bounty.getCreator())
+					.givePlayerHead(target);
 
 		/*
 		 * give the money to the player who claimed the bounty
@@ -141,8 +158,8 @@ public class BountyClaim implements Listener {
 		BountyHunters.getInstance().getEconomy().depositPlayer(killer, bounty.getReward());
 
 		/*
-		 * adds 1 to the claimer's claimed bounties stat and checks for a level
-		 * up ; also checks if the player can join the hunter leaderboard
+		 * adds 1 to the claimer's claimed bounties stat and checks for a level up ;
+		 * also checks if the player can join the hunter leaderboard
 		 */
 		PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(killer);
 		playerData.addClaimedBounties(1);
@@ -154,7 +171,8 @@ public class BountyClaim implements Listener {
 		 * adds 1 to the bounty creator's successful-bounties stat
 		 */
 		if (bounty.hasCreator())
-			BountyHunters.getInstance().getPlayerDataManager().getOfflineData(bounty.getCreator()).addSuccessfulBounties(1);
+			BountyHunters.getInstance().getPlayerDataManager().getOfflineData(bounty.getCreator())
+					.addSuccessfulBounties(1);
 
 		/*
 		 * displays the claimer's death title
@@ -166,7 +184,9 @@ public class BountyClaim implements Listener {
 				for (Player online : Bukkit.getOnlinePlayers()) {
 					online.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + killer.getName() + "> " + deathQuote);
 					if (bool)
-						BountyHunters.getInstance().getVersionWrapper().sendTitle(online, ChatColor.GOLD + "" + ChatColor.BOLD + killer.getName().toUpperCase(), ChatColor.ITALIC + deathQuote, 10, 60, 10);
+						BountyHunters.getInstance().getVersionWrapper().sendTitle(online,
+								ChatColor.GOLD + "" + ChatColor.BOLD + killer.getName().toUpperCase(),
+								ChatColor.ITALIC + deathQuote, 10, 60, 10);
 				}
 			}
 		}

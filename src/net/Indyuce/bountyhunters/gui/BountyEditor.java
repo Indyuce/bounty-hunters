@@ -76,7 +76,7 @@ public class BountyEditor extends PluginInventory {
 
 		if (bounty.getContributors().size() == 0) {
 
-			ItemStack noContrib = new ItemStack(VersionMaterial.RED_STAINED_GLASS_PANE.toMaterial());
+			ItemStack noContrib = VersionMaterial.RED_STAINED_GLASS_PANE.toItem();
 			ItemMeta noContribMeta = noContrib.getItemMeta();
 			noContribMeta.setDisplayName(ChatColor.RED + "- No contributors -");
 			noContrib.setItemMeta(noContribMeta);

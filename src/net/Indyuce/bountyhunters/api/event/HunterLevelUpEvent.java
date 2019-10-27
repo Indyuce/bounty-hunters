@@ -1,11 +1,10 @@
 package net.Indyuce.bountyhunters.api.event;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.player.PlayerEvent;
 
-public class HunterLevelUpEvent extends Event {
-	private final Player player;
+public class HunterLevelUpEvent extends PlayerEvent {
 	private final int newLevel;
 
 	private static final HandlerList handlers = new HandlerList();
@@ -14,12 +13,9 @@ public class HunterLevelUpEvent extends Event {
 	 * this event is called when a player levels up (cannot be cancelled)
 	 */
 	public HunterLevelUpEvent(Player player, int newLevel) {
-		this.player = player;
-		this.newLevel = newLevel;
-	}
+		super(player);
 
-	public Player getPlayer() {
-		return player;
+		this.newLevel = newLevel;
 	}
 
 	public int getNewLevel() {
