@@ -3,6 +3,7 @@ package net.Indyuce.bountyhunters.comp.flags;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import com.bekvon.bukkit.residence.Residence;
@@ -22,15 +23,16 @@ public class ResidenceFlags implements Listener {
 		Bukkit.getPluginManager().registerEvents(this, BountyHunters.getInstance());
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void a(BountyClaimEvent event) {
 		if (!isFlagAllowed(event.getBounty().getTarget().getPlayer(), CustomFlag.CLAIM_BOUNTIES))
 			event.setCancelled(true);
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void b(BountyCreateEvent event) {
-		CustomFlag checked = event.getCause() == BountyCause.AUTO_BOUNTY ? CustomFlag.AUTO_BOUNTY : CustomFlag.CREATE_BOUNTIES;
+		CustomFlag checked = event.getCause() == BountyCause.AUTO_BOUNTY ? CustomFlag.AUTO_BOUNTY
+				: CustomFlag.CREATE_BOUNTIES;
 		if (event.hasCreator() && !isFlagAllowed(event.getCreator(), checked))
 			event.setCancelled(true);
 	}

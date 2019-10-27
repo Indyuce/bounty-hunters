@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -44,24 +45,27 @@ public class WorldGuardFlags implements Listener {
 			}
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void a(BountyClaimEvent event) {
 		if (!isFlagAllowed(event.getBounty().getTarget().getPlayer(), CustomFlag.CLAIM_BOUNTIES))
 			event.setCancelled(true);
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void b(BountyCreateEvent event) {
-		CustomFlag checked = event.getCause() == BountyCause.AUTO_BOUNTY ? CustomFlag.AUTO_BOUNTY : CustomFlag.CREATE_BOUNTIES;
+		CustomFlag checked = event.getCause() == BountyCause.AUTO_BOUNTY ? CustomFlag.AUTO_BOUNTY
+				: CustomFlag.CREATE_BOUNTIES;
 		if (event.hasCreator() && !isFlagAllowed(event.getCreator(), checked))
 			event.setCancelled(true);
 	}
 
 	public boolean isFlagAllowed(Player player, CustomFlag customFlag) {
-		return getApplicableRegion(player.getLocation()).queryValue(worldguardPlugin.wrapPlayer(player), flags.get(customFlag.getPath())) != StateFlag.State.DENY;
+		return getApplicableRegion(player.getLocation()).queryValue(worldguardPlugin.wrapPlayer(player),
+				flags.get(customFlag.getPath())) != StateFlag.State.DENY;
 	}
 
 	private ApplicableRegionSet getApplicableRegion(Location loc) {
-		return worldguard.getPlatform().getRegionContainer().createQuery().getApplicableRegions(BukkitAdapter.adapt(loc));
+		return worldguard.getPlatform().getRegionContainer().createQuery()
+				.getApplicableRegions(BukkitAdapter.adapt(loc));
 	}
 }
