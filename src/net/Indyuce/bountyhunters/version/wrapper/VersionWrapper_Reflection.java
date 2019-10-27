@@ -21,6 +21,11 @@ import net.Indyuce.bountyhunters.version.wrapper.api.NBTItem;
 public class VersionWrapper_Reflection implements VersionWrapper {
 
 	@Override
+	public boolean matchesMaterial(ItemStack item, ItemStack item1) {
+		return item.getType() == item1.getType() ;
+	}
+
+	@Override
 	public void sendTitle(Player player, String title, String subtitle, int fadeIn, int ticks, int fadeOut) {
 		try {
 			Class<?> chatSerializer = nms("IChatBaseComponent.ChatSerializer").getDeclaredClasses()[0];

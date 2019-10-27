@@ -50,30 +50,25 @@ public enum VersionMaterial {
 
 	;
 
-	private Material material;
-	private ItemStack item;
+	private final ItemStack item;
 
 	private VersionMaterial(String name_1_13, String legacy) {
-		material = Material.valueOf(BountyHunters.getInstance().getVersion().isStrictlyHigher(1, 13) ? name() : BountyHunters.getInstance().getVersion().isStrictlyHigher(1, 12) ? name_1_13 : legacy);
+		this(name_1_13, legacy, 0);
 	}
 
 	@SuppressWarnings("deprecation")
 	private VersionMaterial(String name_1_13, String legacy, int legacyDurability) {
-		if (BountyHunters.getInstance().getVersion().isStrictlyHigher(1, 12))
-			material = Material.valueOf(BountyHunters.getInstance().getVersion().isStrictlyHigher(1, 13) ? name() : name_1_13);
-		else
-			item = new ItemStack(material = Material.valueOf(legacy), 1, (short) legacyDurability);
+		item = BountyHunters.getInstance().getVersion().isStrictlyHigher(1, 12)
+				? new ItemStack(Material
+						.valueOf(BountyHunters.getInstance().getVersion().isStrictlyHigher(1, 13) ? name() : name_1_13))
+				: new ItemStack(Material.valueOf(legacy), 1, (short) legacyDurability);
 	}
 
-	public Material toMaterial() {
-		return material;
-	}
-
-	public boolean hasItem() {
-		return item != null;
+	public boolean matches(ItemStack item) {
+		return BountyHunters.getInstance().getVersionWrapper().matchesMaterial(item, this.item);
 	}
 
 	public ItemStack toItem() {
-		return hasItem() ? item.clone() : new ItemStack(material);
+		return item.clone();
 	}
 }

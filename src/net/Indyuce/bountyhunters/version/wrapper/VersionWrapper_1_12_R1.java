@@ -24,6 +24,12 @@ import net.minecraft.server.v1_12_R1.PacketPlayOutTitle.EnumTitleAction;
 
 public class VersionWrapper_1_12_R1 implements VersionWrapper {
 
+	@SuppressWarnings("deprecation")
+	@Override
+	public boolean matchesMaterial(ItemStack item, ItemStack item1) {
+		return item.getType() == item1.getType() && item.getDurability() == item1.getDurability();
+	}
+	
 	@Override
 	public void sendJson(Player player, String message) {
 		((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(ChatSerializer.a(message)));

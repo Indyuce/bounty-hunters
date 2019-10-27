@@ -22,4 +22,6 @@ public interface VersionWrapper {
 	ItemStack getHead(OfflinePlayer player);
 
 	void setOwner(SkullMeta meta, OfflinePlayer player);
+	
+	boolean matchesMaterial(ItemStack item, ItemStack item1);
 }

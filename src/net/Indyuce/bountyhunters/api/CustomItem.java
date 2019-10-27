@@ -30,7 +30,7 @@ public enum CustomItem {
 	PROFILE(VersionMaterial.PLAYER_HEAD.toItem(), "[{level}] {name}", "&8--------------------------------", "Claimed Bounties: &f{claimed_bounties}", "Head Collection: &f{successful_bounties}",
 			"Level: &f{level}", "Level Progress: {level_progress}", "", "Current Title: &f{current_title}", "", "Type /bounties titles to manage your title.",
 			"Type /bounties quotes to manage your quote.", "&8--------------------------------"),
-	SET_BOUNTY(new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial()), "How to create a bounty?", "Use /bounty <player> <reward>", "to create a bounty on a player.", "",
+	SET_BOUNTY(VersionMaterial.WRITABLE_BOOK.toItem(), "How to create a bounty?", "Use /bounty <player> <reward>", "to create a bounty on a player.", "",
 			"&aHow to increase a bounty?", "Use /bounty <player> <amount>", "to increase a bounty.", "", "&aHow to remove a bounty?", "You can remove a bounty as the",
 			"bounty creator by right clicking", "it in this menu."),
 	BOUNTY_COMPASS(new ItemStack(Material.COMPASS), "Bounty Compass", "Allows you to see at which", "distance your target is."),

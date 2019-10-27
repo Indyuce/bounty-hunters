@@ -25,6 +25,11 @@ import net.minecraft.server.v1_13_R2.PacketPlayOutTitle.EnumTitleAction;
 public class VersionWrapper_1_13_R2 implements VersionWrapper {
 
 	@Override
+	public boolean matchesMaterial(ItemStack item, ItemStack item1) {
+		return item.getType() == item1.getType() ;
+	}
+
+	@Override
 	public void sendJson(Player player, String message) {
 		((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(ChatSerializer.a(message)));
 	}
