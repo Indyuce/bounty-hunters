@@ -1,5 +1,6 @@
 package net.Indyuce.bountyhunters.listener;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,7 +11,7 @@ import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.event.BountyChangeEvent;
 import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
-import net.Indyuce.bountyhunters.api.restriction.ClaimRestriction;
+import net.Indyuce.bountyhunters.api.restriction.BountyRestriction;
 
 public class RestrictionListener implements Listener {
 
@@ -33,9 +34,10 @@ public class RestrictionListener implements Listener {
 	}
 
 	private boolean check(Player player, Bounty bounty) {
-		for (ClaimRestriction restriction : BountyHunters.getInstance().getBountyManager().getClaimRestrictions())
-			if (!restriction.canClaimBounty(player, bounty))
-				return false;
+		for (BountyRestriction restriction : BountyHunters.getInstance().getBountyManager().getClaimRestrictions())
+			if (!restriction.canClaimBounty(player, bounty)) {
+				Bukkit.broadcastMessage(""+restriction.getClass().getName());
+				return false;}
 		return true;
 	}
 }

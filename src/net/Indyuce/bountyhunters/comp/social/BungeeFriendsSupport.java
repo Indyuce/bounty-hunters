@@ -4,10 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import net.Indyuce.bountyhunters.api.Bounty;
-import net.Indyuce.bountyhunters.api.restriction.ClaimRestriction;
+import net.Indyuce.bountyhunters.api.restriction.BountyRestriction;
 import net.simplyrin.bungeefriends.Main;
 
-public class BungeeFriendsSupport implements ClaimRestriction {
+public class BungeeFriendsSupport implements BountyRestriction {
 	private final Main plugin = (Main) Bukkit.getPluginManager().getPlugin("BungeeFriends");
 
 	@Override

@@ -82,10 +82,16 @@ public class BountyClaim implements Listener {
 		if (!killer.hasPermission("bountyhunters.claim"))
 			return;
 
+		Bounty bounty = hasBounty.get();
+		if (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.targets-only") && !bounty.hasHunter(killer))
+			return;
+
+		if (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.own-bounties") && bounty.hasCreator(killer))
+			return;
+
 		/*
 		 * bukkit event check
 		 */
-		Bounty bounty = hasBounty.get();
 		BountyClaimEvent bountyEvent = new BountyClaimEvent(bounty, killer);
 		Bukkit.getPluginManager().callEvent(bountyEvent);
 		if (bountyEvent.isCancelled())

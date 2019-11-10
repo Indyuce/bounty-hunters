@@ -8,9 +8,9 @@ import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 
 import net.Indyuce.bountyhunters.api.Bounty;
-import net.Indyuce.bountyhunters.api.restriction.ClaimRestriction;
+import net.Indyuce.bountyhunters.api.restriction.BountyRestriction;
 
-public class TownySupport implements ClaimRestriction {
+public class TownySupport implements BountyRestriction {
 
 	@Override
 	public boolean canClaimBounty(Player claimer, Bounty bounty) {

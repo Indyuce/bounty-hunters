@@ -59,7 +59,7 @@ claim-restrictions:
     bed-spawn-point:
         enabled: true
         
-        # Radius in which 
+        # Blocks threshold
         radius: 100
     
     # Players may not kill members of the same town to claim bounties.

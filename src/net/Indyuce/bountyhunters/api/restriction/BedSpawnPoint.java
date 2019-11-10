@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 
 import net.Indyuce.bountyhunters.api.Bounty;
 
-public class BedSpawnPoint implements ClaimRestriction {
+public class BedSpawnPoint implements BountyRestriction {
 	private final int radiusSquared;
 
 	public BedSpawnPoint(ConfigurationSection config) {

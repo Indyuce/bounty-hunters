@@ -16,7 +16,7 @@ public class Bounty {
 	private final UUID id;
 
 	private final OfflinePlayer target;
-	private final List<UUID> hunters = new ArrayList<>();
+	private final List<OfflinePlayer> hunters = new ArrayList<>();
 
 	private final LinkedHashMap<OfflinePlayer, Double> amount = new LinkedHashMap<>();
 	private double extra;
@@ -73,11 +73,11 @@ public class Bounty {
 	}
 
 	public boolean hasCreator(OfflinePlayer player) {
-		return hasCreator() && getCreator().equals(player);
+		return hasCreator() && target.getUniqueId().equals(player.getUniqueId());
 	}
 
 	public boolean hasTarget(OfflinePlayer player) {
-		return target.equals(player);
+		return target.getUniqueId().equals(player.getUniqueId());
 	}
 
 	public void addReward(double value) {
@@ -88,7 +88,7 @@ public class Bounty {
 	 * ADDS given value the mapped value; does NOT replace it
 	 */
 	public void addContribution(OfflinePlayer player, double value) {
-		setContribution(player, (amount.containsKey(player) ? amount.get(player) : 0) + value);
+		setContribution(player, getContribution(player) + value);
 	}
 
 	public void setContribution(OfflinePlayer player, double value) {
@@ -104,11 +104,14 @@ public class Bounty {
 	}
 
 	public boolean hasContributed(OfflinePlayer player) {
-		return amount.containsKey(player);
+		for (OfflinePlayer contributor : amount.keySet())
+			if (contributor.getUniqueId().equals(player.getUniqueId()))
+				return true;
+		return false;
 	}
 
 	public double getContribution(OfflinePlayer player) {
-		return amount.get(player);
+		return hasContributed(player) ? amount.get(player) : 0;
 	}
 
 	public void setExtra(double extra) {
@@ -119,13 +122,13 @@ public class Bounty {
 		return !hasCreator();
 	}
 
-	public List<UUID> getHunters() {
+	public List<OfflinePlayer> getHunters() {
 		return hunters;
 	}
 
 	public boolean hasHunter(OfflinePlayer player) {
-		for (UUID hunter : hunters)
-			if (hunter.equals(player.getUniqueId()))
+		for (OfflinePlayer hunter : hunters)
+			if (hunter.getUniqueId().equals(player.getUniqueId()))
 				return true;
 		return false;
 	}
@@ -137,13 +140,13 @@ public class Bounty {
 			huntManager.getTargetBounty(player).removeHunter(player);
 
 		huntManager.setHunting(player, this);
-		hunters.add(player.getUniqueId());
+		hunters.add(player);
 	}
 
 	public void removeHunter(OfflinePlayer player) {
 		if (hasHunter(player)) {
 			BountyHunters.getInstance().getHuntManager().stopHunting(player);
-			hunters.remove(player.getUniqueId());
+			hunters.remove(player);
 		}
 	}
 }

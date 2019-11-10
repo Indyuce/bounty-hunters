@@ -44,11 +44,10 @@ public abstract class BountyManager {
 	public void unregisterBounty(Bounty bounty) {
 		bounties.remove(bounty.getId());
 		bounty.getHunters().forEach(hunter -> {
-			OfflinePlayer player = Bukkit.getOfflinePlayer(hunter);
-			HunterData data = BountyHunters.getInstance().getHuntManager().getData(player);
+			HunterData data = BountyHunters.getInstance().getHuntManager().getData(hunter);
 			if (data.isCompassActive())
 				data.hideParticles();
-			BountyHunters.getInstance().getHuntManager().stopHunting(player);
+			BountyHunters.getInstance().getHuntManager().stopHunting(hunter);
 		});
 
 		/*
