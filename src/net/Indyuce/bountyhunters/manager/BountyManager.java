@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
-import net.Indyuce.bountyhunters.api.restriction.ClaimRestriction;
+import net.Indyuce.bountyhunters.api.restriction.BountyRestriction;
 import net.Indyuce.bountyhunters.api.restriction.TeamRestriction;
 import net.Indyuce.bountyhunters.gui.BountyEditor;
 import net.Indyuce.bountyhunters.manager.HuntManager.HunterData;
@@ -33,15 +33,9 @@ public abstract class BountyManager {
 	 * claimed. makes implementing plugin compatibility and extra options much
 	 * easier
 	 */
-	private final Set<ClaimRestriction> restrictions = new HashSet<>();
+	private final Set<BountyRestriction> restrictions = new HashSet<>();
 
 	public BountyManager() {
-
-		if (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.targets-only"))
-			registerClaimRestriction((claimer, bounty) -> bounty.hasHunter(claimer));
-
-		if (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.own-bounties"))
-			registerClaimRestriction((claimer, bounty) -> !bounty.hasCreator(claimer));
 
 		if (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.team-mates"))
 			registerClaimRestriction(new TeamRestriction());
@@ -67,14 +61,6 @@ public abstract class BountyManager {
 					online.closeInventory();
 	}
 
-	public Bounty newBounty(OfflinePlayer creator, OfflinePlayer target, double reward) {
-		return new Bounty(creator, target, reward);
-	}
-
-	public Bounty newBounty(OfflinePlayer target, double reward) {
-		return new Bounty(target, reward);
-	}
-
 	public void registerBounty(Bounty bounty) {
 		if (bounties.containsKey(bounty.getId())) {
 			BountyHunters.getInstance().getLogger().log(Level.WARNING, "Attempted to register bounty with duplicate ID " + bounty.getId());
@@ -84,11 +70,11 @@ public abstract class BountyManager {
 		bounties.put(bounty.getId(), bounty);
 	}
 
-	public Set<ClaimRestriction> getClaimRestrictions() {
+	public Set<BountyRestriction> getClaimRestrictions() {
 		return restrictions;
 	}
 
-	public void registerClaimRestriction(ClaimRestriction restriction) {
+	public void registerClaimRestriction(BountyRestriction restriction) {
 		restrictions.add(restriction);
 	}
 
