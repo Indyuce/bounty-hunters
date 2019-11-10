@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.util.Optional;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,24 +20,34 @@ import net.Indyuce.bountyhunters.api.event.BountyChangeEvent.BountyChangeCause;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
 import net.Indyuce.bountyhunters.api.language.Message;
+import net.Indyuce.bountyhunters.gui.BountyList;
 
 public class AddBountyCommand implements CommandExecutor {
 	private static final DecimalFormat digit1 = new DecimalFormat("0.#");
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+
+		// open bounties menu
+		if (args.length < 1) {
+			if (!(sender instanceof Player)) {
+				sender.sendMessage(ChatColor.RED + "This command is for players only.");
+				return true;
+			}
+
+			if (!sender.hasPermission("bountyhunters.list")) {
+				Message.NOT_ENOUGH_PERMS.format().send(sender);
+				return true;
+			}
+
+			new BountyList((Player) sender).open();
+			return true;
+		}
+
 		if (!sender.hasPermission("bountyhunters.add")) {
 			Message.NOT_ENOUGH_PERMS.format().send(sender);
 			return true;
 		}
-		if (args.length < 2) {
-			Message.COMMAND_USAGE.format("command", "/bounty <player> <reward>").send(sender);
-			return true;
-		}
-		if (sender instanceof Player)
-			if (BountyHunters.getInstance().getConfig().getStringList("world-blacklist")
-					.contains(((Player) sender).getWorld().getName()))
-				return true;
 
 		// check for player
 		Player target = Bukkit.getPlayer(args[0]);
@@ -49,6 +60,23 @@ public class AddBountyCommand implements CommandExecutor {
 			return true;
 		}
 
+		/*
+		 * check player's current bounty
+		 */
+		if (args.length < 2) {
+			
+			
+			Optional<Bounty> bounty = BountyHunters.getInstance().getBountyManager().getBounty(target);
+			if (!bounty.isPresent()) {
+				Message.NO_BOUNTY_INDICATION.format("player", target.getName()).send(sender);
+				return true;
+			}
+			
+			Message.BOUNTY_INDICATION.format("player", target.getName(), "reward", bounty.get().getReward()).send(sender);
+			return true;
+		}
+		
+		
 		// permission
 		if (target.hasPermission("bountyhunters.immunity") && !sender.hasPermission("bountyhunters.immunity.bypass")) {
 			Message.BOUNTY_IMUN.format().send(sender);
@@ -86,12 +114,10 @@ public class AddBountyCommand implements CommandExecutor {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			long restriction = BountyHunters.getInstance().getConfig().getInt("bounty-set-restriction") * 1000;
-			long left = BountyHunters.getInstance().getPlayerDataManager().get(player).getLastBounty() + restriction
-					- System.currentTimeMillis();
+			long left = BountyHunters.getInstance().getPlayerDataManager().get(player).getLastBounty() + restriction - System.currentTimeMillis();
 
 			if (left > 0) {
-				Message.BOUNTY_SET_RESTRICTION.format("left", "" + left / 1000, "s", left / 1000 > 1 ? "s" : "")
-						.send(sender);
+				Message.BOUNTY_SET_RESTRICTION.format("left",  left / 1000, "s", left / 1000 > 1 ? "s" : "").send(sender);
 				return true;
 			}
 		}
@@ -104,12 +130,10 @@ public class AddBountyCommand implements CommandExecutor {
 			}
 
 		/*
-		 * right now, bounty will be registered if the event is not cancelled. calculate
-		 * tax and update reward
+		 * right now, bounty will be registered if the event is not cancelled.
+		 * calculate tax and update reward
 		 */
-		double tax = sender.hasPermission("bountyhunters.admin") && arguments.noTax ? 0
-				: Math.max(0, Math.min(1,
-						BountyHunters.getInstance().getConfig().getDouble("bounty-tax.bounty-creation") / 100));
+		double tax = sender.hasPermission("bountyhunters.admin") && arguments.noTax ? 0 : Math.max(0, Math.min(1, BountyHunters.getInstance().getConfig().getDouble("bounty-tax.bounty-creation") / 100));
 		double taxed = BountyUtils.truncate(reward * tax, 1);
 
 		// add to existing bounty
@@ -118,9 +142,7 @@ public class AddBountyCommand implements CommandExecutor {
 
 			// API
 			Bounty bounty = currentBounty.get();
-			BountyChangeEvent bountyEvent = new BountyChangeEvent(bounty,
-					sender instanceof Player ? (Player) sender : null, reward - taxed,
-					sender instanceof Player ? BountyChangeCause.PLAYER : BountyChangeCause.CONSOLE);
+			BountyChangeEvent bountyEvent = new BountyChangeEvent(bounty, sender instanceof Player ? (Player) sender : null, reward - taxed, sender instanceof Player ? BountyChangeCause.PLAYER : BountyChangeCause.CONSOLE);
 			Bukkit.getPluginManager().callEvent(bountyEvent);
 			if (bountyEvent.isCancelled())
 				return true;
@@ -131,8 +153,7 @@ public class AddBountyCommand implements CommandExecutor {
 				BountyHunters.getInstance().getPlayerDataManager().get((Player) sender).setLastBounty();
 			}
 
-			new BountyCommands("increase." + bountyEvent.getCause().name().toLowerCase().replace("_", "-"), bounty,
-					sender).send();
+			new BountyCommands("increase." + bountyEvent.getCause().name().toLowerCase().replace("_", "-"), bounty, sender).send();
 			if (sender instanceof Player)
 				bounty.addContribution((Player) sender, bountyEvent.getAdded());
 			else
@@ -143,8 +164,7 @@ public class AddBountyCommand implements CommandExecutor {
 
 		// API
 		Bounty bounty = new Bounty(sender instanceof Player ? (Player) sender : null, target, reward);
-		BountyCreateEvent bountyEvent = new BountyCreateEvent(bounty, sender instanceof Player ? (Player) sender : null,
-				sender instanceof Player ? BountyCause.PLAYER : BountyCause.CONSOLE);
+		BountyCreateEvent bountyEvent = new BountyCreateEvent(bounty, sender instanceof Player ? (Player) sender : null, sender instanceof Player ? BountyCause.PLAYER : BountyCause.CONSOLE);
 		Bukkit.getPluginManager().callEvent(bountyEvent);
 		if (bountyEvent.isCancelled())
 			return true;
@@ -156,14 +176,12 @@ public class AddBountyCommand implements CommandExecutor {
 			BountyHunters.getInstance().getPlayerDataManager().get((Player) sender).setLastBounty();
 		}
 
-		new BountyCommands("place." + bountyEvent.getCause().name().toLowerCase().replace("_", "-"), bounty, sender)
-				.send();
+		new BountyCommands("place." + bountyEvent.getCause().name().toLowerCase().replace("_", "-"), bounty, sender).send();
 		BountyHunters.getInstance().getBountyManager().registerBounty(bounty);
 		bountyEvent.sendAllert();
 
 		if (tax > 0)
-			Message.TAX_EXPLAIN.format("percent", digit1.format(tax * 100), "price", new NumberFormat().format(taxed))
-					.send(sender);
+			Message.TAX_EXPLAIN.format("percent", digit1.format(tax * 100), "price", new NumberFormat().format(taxed)).send(sender);
 		return true;
 	}
 
