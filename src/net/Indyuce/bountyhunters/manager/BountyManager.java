@@ -91,7 +91,7 @@ public abstract class BountyManager {
 	}
 
 	public Optional<Bounty> getBounty(OfflinePlayer target) {
-		return bounties.values().stream().filter(bounty -> bounty.getTarget().equals(target)).findAny();
+		return bounties.values().stream().filter(bounty -> bounty.hasTarget(target)).findAny();
 	}
 
 	public Bounty getBounty(UUID bountyId) {
