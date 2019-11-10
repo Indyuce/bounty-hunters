@@ -94,9 +94,9 @@ public enum CustomItem {
 
 		private final ItemStack item = toItemStack();
 
-		public Builder applyPlaceholders(String... placeholders) {
+		public Builder applyPlaceholders(Object... placeholders) {
 			for (int j = 0; j < placeholders.length - 1; j += 2)
-				this.placeholders.add(new Placeholder(placeholders[j], placeholders[j + 1]));
+				this.placeholders.add(new Placeholder(placeholders[j].toString(), placeholders[j + 1].toString()));
 			return this;
 		}
 

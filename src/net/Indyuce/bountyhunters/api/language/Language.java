@@ -44,11 +44,11 @@ public enum Language {
 		return format;
 	}
 
-	public String format(String... placeholders) {
+	public String format(Object... placeholders) {
 		String str = new String(format);
 
 		for (int k = 0; k < placeholders.length; k += 2)
-			str = str.replace("{" + placeholders[k] + "}", placeholders[k + 1]);
+			str = str.replace("{" + placeholders[k] + "}", placeholders[k + 1].toString());
 
 		return ChatColor.translateAlternateColorCodes('&', str);
 	}

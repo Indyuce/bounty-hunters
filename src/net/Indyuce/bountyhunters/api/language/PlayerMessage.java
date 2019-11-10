@@ -15,15 +15,15 @@ public class PlayerMessage {
 		format = (this.message = message).getDefault();
 	}
 
-	public PlayerMessage format(String... placeholders) {
+	public PlayerMessage format(Object... placeholders) {
 		for (int k = 0; k < format.size(); k++)
 			format.set(k, apply(format.get(k), placeholders));
 		return this;
 	}
 
-	private String apply(String str, String... placeholders) {
+	private String apply(String str, Object... placeholders) {
 		for (int k = 0; k < placeholders.length; k += 2)
-			str = str.replace("{" + placeholders[k] + "}", placeholders[k + 1]);
+			str = str.replace("{" + placeholders[k] + "}", placeholders[k + 1].toString());
 		return ChatColor.translateAlternateColorCodes('&', str);
 	}
 

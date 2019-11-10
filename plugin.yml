@@ -4,7 +4,7 @@ main: net.Indyuce.bountyhunters.BountyHunters
 author: Indyuce
 api-version: 1.13
 depend: [Vault]
-softdepend: [WorldGuard,Residence]
+softdepend: [WorldGuard,Residence,PartyAndFriends,BungeeFriends]
 
 commands:
     addbounty:

@@ -53,6 +53,8 @@ public enum Message {
 	BOUGHT_COMPASS(new SoundReader(Sound.ENTITY_PLAYER_LEVELUP, 1, 2), "&eYou succesfully bought a &6tracking compass&e."),
 	TAX_EXPLAIN("&6{percent}%&e of the reward (&6${price}&e) were taken as tax."),
 	PLAYER_MUST_BE_CONNECTED("&cThe player must be connected in order to be tracked."),
+	BOUNTY_INDICATION("&eBounty on &6{player}&e is &6${reward}&e."),
+	NO_BOUNTY_INDICATION("&c{player} has no bounty."),
 
 	/*
 	 * player heads
@@ -103,7 +105,7 @@ public enum Message {
 		return sound != null;
 	}
 
-	public PlayerMessage format(String... placeholders) {
+	public PlayerMessage format(Object... placeholders) {
 		return new PlayerMessage(this).format(placeholders);
 	}
 

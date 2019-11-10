@@ -259,7 +259,7 @@ public class PlayerData implements OfflinePlayerData {
 
 		Bukkit.getPluginManager().callEvent(new HunterLevelUpEvent(player, nextLevel));
 
-		Message.LEVEL_UP.format("level", "" + nextLevel, "bounties", "" + BountyHunters.getInstance().getLevelManager().getBountiesPerLevel()).send(player);
+		Message.LEVEL_UP.format("level", nextLevel, "bounties", BountyHunters.getInstance().getLevelManager().getBountiesPerLevel()).send(player);
 
 		List<String> chatDisplay = new ArrayList<>();
 

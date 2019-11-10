@@ -48,7 +48,7 @@ public class BountyList extends PluginInventory {
 		int maxPage = getMaxPage();
 
 		Inventory inv = Bukkit.createInventory(this, 54,
-				Language.GUI_NAME.format("page", "" + page, "max_page", "" + maxPage));
+				Language.GUI_NAME.format("page", page, "max_page", maxPage));
 		int min = (page - 1) * 21;
 		int max = page * 21;
 
@@ -66,8 +66,8 @@ public class BountyList extends PluginInventory {
 							isTarget, !isTarget && isHunter, !isTarget && !isHunter });
 			builder.applyPlaceholders("target", bounty.getTarget().getName(), "creator",
 					bounty.hasCreator() ? bounty.getCreator().getName() : "Server", "reward",
-					"" + new NumberFormat().format(bounty.getReward()), "contributors",
-					"" + bounty.getContributors().size(), "hunters", "" + bounty.getHunters().size());
+					new NumberFormat().format(bounty.getReward()), "contributors",
+					bounty.getContributors().size(), "hunters", bounty.getHunters().size());
 			ItemStack item = NBTItem.get(builder.build()).addTag(new ItemTag("bountyId", bounty.getId().toString()))
 					.toItem();
 
@@ -205,7 +205,7 @@ public class BountyList extends PluginInventory {
 							+ BountyHunters.getInstance().getConfig().getDouble("player-tracking.cooldown") * 1000
 							- System.currentTimeMillis()) / 1000;
 					if (remain > 0) {
-						Message.TARGET_COOLDOWN.format("remain", "" + remain, "s", remain >= 2 ? "s" : "").send(player);
+						Message.TARGET_COOLDOWN.format("remain", remain, "s", remain >= 2 ? "s" : "").send(player);
 						return;
 					}
 
