@@ -27,9 +27,9 @@ public enum Message {
 	/*
 	 * bounty claim
 	 */
-	BOUNTY_CLAIMED(new SoundReader(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1), "&6{killer} &eclaimed &6{target}&e's bounty: &6${reward}&e!"),
-	BOUNTY_CLAIMED_BY_YOU(new SoundReader(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1), "&eYou successfully claimed &6{target}&e's bounty: &6${reward}&e!"),
-	HEAD_DROPPED(new SoundReader(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1), "&eYou picked up &6{victim}&e's head, bring it to &6{creator}&e to claim the bounty."),
+	BOUNTY_CLAIMED(new SoundReader(Sound.ENTITY_PLAYER_LEVELUP, 1, 1), "&6{killer} &eclaimed &6{target}&e's bounty: &6${reward}&e!"),
+	BOUNTY_CLAIMED_BY_YOU(new SoundReader(Sound.ENTITY_PLAYER_LEVELUP, 1, 1), "&eYou successfully claimed &6{target}&e's bounty: &6${reward}&e!"),
+	HEAD_DROPPED(new SoundReader(Sound.ENTITY_PLAYER_LEVELUP, 1, 1), "&eYou picked up &6{victim}&e's head, bring it to &6{creator}&e to claim the bounty."),
 	
 	ERROR_PLAYER("&cCouldn't find the player called {arg}."),
 	NOT_VALID_NUMBER("&c{arg} is not a valid number."),
