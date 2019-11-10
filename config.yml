@@ -38,9 +38,29 @@ disable-death-message:
     auto-bounty: true
     bounty-claim: true
 
-# Players may ONLY claim bounties if  
-# they are tracking the bounty target.
-target-bounty-claim: false
+# Setting any parameter to 'true' means a new restriction applies.
+# Make sure you restart your server when changing one of these options.
+claim-restrictions:
+
+    # Players may not claim their own bounties.
+    own-bounties: true
+
+    # Players may not kill their (vanilla scoreboard)
+    # team mates to claim their bounties.
+    team-mates: true
+
+    # Players may not kill their friends to claim bounties. Supports:
+    # - BungeeFriends
+    # - PartyAndFriends
+    friends: true
+    
+    # Players may not kill members of the same town to claim bounties.
+    # Supports Towny.
+    town-members: true
+
+    # Players may ONLY claim bounties if
+    # they are tracking the bounty target.
+    targets-only: false
 
 # Commands sent by the console when a player claims a bounty.
 # {target} returns the target's name and {player} the claimer's
@@ -148,18 +168,5 @@ display-death-quote-on-title: false
 # Enables leveling rewards.
 enable-level-rewards: true
 
-# You can claim the bounties you create. This also lets
-# people target players using a bounty THEY created.
-# Warning: can be abused.
-own-bounty-claiming: true
-
 # Displayed formatted numbers (1,345B instead of 1,345,416,416).
 formatted-numbers: true
-
-# Enable/disable built-in plugin compatibility.
-# Make sure you reload/restart your server afting changing any of these values.
-plugin-compatibility:
-
-    # Can only be enabled when Towny is installed.
-    # When enabled, players within the same town can't claim each other's bounties.
-    towny-bounty-friendly-fire: true

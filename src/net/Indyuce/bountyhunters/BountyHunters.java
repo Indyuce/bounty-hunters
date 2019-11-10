@@ -40,6 +40,8 @@ import net.Indyuce.bountyhunters.comp.database.MySQLProvider;
 import net.Indyuce.bountyhunters.comp.database.YAMLDataProvider;
 import net.Indyuce.bountyhunters.comp.flags.ResidenceFlags;
 import net.Indyuce.bountyhunters.comp.flags.WorldGuardFlags;
+import net.Indyuce.bountyhunters.comp.friends.BungeeFriendsSupport;
+import net.Indyuce.bountyhunters.comp.friends.PartyAndFriendsSupport;
 import net.Indyuce.bountyhunters.comp.placeholder.BountyHuntersPlaceholders;
 import net.Indyuce.bountyhunters.comp.placeholder.DefaultParser;
 import net.Indyuce.bountyhunters.comp.placeholder.PlaceholderAPIParser;
@@ -183,9 +185,21 @@ public class BountyHunters extends JavaPlugin {
 			getLogger().log(Level.INFO, "Hooked onto PlaceholderAPI");
 		}
 
-		if (getServer().getPluginManager().getPlugin("Towny") != null && getConfig().getBoolean("plugin-compatibility.towny-bounty-friendly-fire")) {
+		if (getServer().getPluginManager().getPlugin("Towny") != null && getConfig().getBoolean("claim-restrictions.town-members")) {
 			Bukkit.getPluginManager().registerEvents(new TownySupport(), this);
 			getLogger().log(Level.INFO, "Hooked onto Towny");
+		}
+
+		if (getConfig().getBoolean("claim-restrictions.friends")) {
+			
+			if (Bukkit.getPluginManager().getPlugin("PartyAndFriends") != null) {
+				Bukkit.getPluginManager().registerEvents(new PartyAndFriendsSupport(), this);
+				getLogger().log(Level.INFO, "Hooked onto PartyAndFriends");
+				
+			} else if (Bukkit.getPluginManager().getPlugin("BungeeFriends") != null) {
+				Bukkit.getPluginManager().registerEvents(new BungeeFriendsSupport(), this);
+				getLogger().log(Level.INFO, "Hooked onto BungeeFriends");
+			}
 		}
 
 		if (wgFlags != null)
