@@ -67,7 +67,7 @@ public class AddBountyCommand implements CommandExecutor {
 				return true;
 			}
 
-			Message.BOUNTY_INDICATION.format("player", target.getName(), "reward", bounty.get().getReward()).send(sender);
+			Message.BOUNTY_INDICATION.format("player", target.getName(), "reward", new NumberFormat().format(bounty.get().getReward())).send(sender);
 			return true;
 		}
 
