@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.comp;
+package net.Indyuce.bountyhunters.comp.social;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
@@ -14,7 +14,7 @@ import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
 
 public class TownySupport implements Listener {
 
-	@EventHandler(priority = EventPriority.LOW)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void a(BountyClaimEvent event) {
 		if (event.getBounty().hasCreator() && inSameTown(event.getClaimer(), event.getBounty().getCreator()))
 			event.setCancelled(true);
@@ -23,7 +23,7 @@ public class TownySupport implements Listener {
 	/*
 	 * cancel bounty changes when players are in the same town
 	 */
-	@EventHandler(priority = EventPriority.LOW)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void b(BountyChangeEvent event) {
 		if (event.getBounty().hasCreator() && inSameTown(event.getPlayer(), event.getBounty().getCreator()))
 			event.setCancelled(true);
@@ -33,10 +33,11 @@ public class TownySupport implements Listener {
 		try {
 			Resident resident = TownyUniverse.getDataSource().getResident(player.getName());
 			return resident.hasTown() && resident.getTown().hasResident(player1.getName());
+
 		} catch (NotRegisteredException exception) {
 			/*
-			 * player who's claiming the bounty has no town, therefore there is no towny
-			 * restriction.
+			 * player who's claiming the bounty has no town, therefore there is
+			 * no towny restriction.
 			 */
 			return false;
 		}
