@@ -55,28 +55,27 @@ public class AddBountyCommand implements CommandExecutor {
 			Message.ERROR_PLAYER.format("arg", args[0]).send(sender);
 			return true;
 		}
-		if (sender instanceof Player && target.getName().equals(((Player) sender).getName())) {
-			Message.CANT_SET_BOUNTY_ON_YOURSELF.format().send(sender);
-			return true;
-		}
 
 		/*
 		 * check player's current bounty
 		 */
 		if (args.length < 2) {
-			
-			
+
 			Optional<Bounty> bounty = BountyHunters.getInstance().getBountyManager().getBounty(target);
 			if (!bounty.isPresent()) {
 				Message.NO_BOUNTY_INDICATION.format("player", target.getName()).send(sender);
 				return true;
 			}
-			
+
 			Message.BOUNTY_INDICATION.format("player", target.getName(), "reward", bounty.get().getReward()).send(sender);
 			return true;
 		}
-		
-		
+
+		if (sender instanceof Player && target.getName().equals(((Player) sender).getName())) {
+			Message.CANT_SET_BOUNTY_ON_YOURSELF.format().send(sender);
+			return true;
+		}
+
 		// permission
 		if (target.hasPermission("bountyhunters.immunity") && !sender.hasPermission("bountyhunters.immunity.bypass")) {
 			Message.BOUNTY_IMUN.format().send(sender);
@@ -117,7 +116,7 @@ public class AddBountyCommand implements CommandExecutor {
 			long left = BountyHunters.getInstance().getPlayerDataManager().get(player).getLastBounty() + restriction - System.currentTimeMillis();
 
 			if (left > 0) {
-				Message.BOUNTY_SET_RESTRICTION.format("left",  left / 1000, "s", left / 1000 > 1 ? "s" : "").send(sender);
+				Message.BOUNTY_SET_RESTRICTION.format("left", left / 1000, "s", left / 1000 > 1 ? "s" : "").send(sender);
 				return true;
 			}
 		}
