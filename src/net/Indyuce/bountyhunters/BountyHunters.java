@@ -51,6 +51,7 @@ import net.Indyuce.bountyhunters.gui.listener.GuiListener;
 import net.Indyuce.bountyhunters.listener.BountyClaim;
 import net.Indyuce.bountyhunters.listener.HuntListener;
 import net.Indyuce.bountyhunters.listener.PlayerListener;
+import net.Indyuce.bountyhunters.listener.RestrictionListener;
 import net.Indyuce.bountyhunters.listener.log.ClaimLog;
 import net.Indyuce.bountyhunters.listener.log.ExpireLog;
 import net.Indyuce.bountyhunters.listener.log.LevelUpLog;
@@ -156,6 +157,7 @@ public class BountyHunters extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new GuiListener(), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
 		Bukkit.getPluginManager().registerEvents(new HuntListener(), this);
+		Bukkit.getPluginManager().registerEvents(new RestrictionListener(), this);
 
 		if (getConfig().getBoolean("logging.bounty-claim"))
 			Bukkit.getPluginManager().registerEvents(new ClaimLog(), this);
@@ -179,27 +181,27 @@ public class BountyHunters extends JavaPlugin {
 
 		new Metrics(this);
 
-		placeholderParser = getServer().getPluginManager().getPlugin("PlaceholderAPI") != null ? new PlaceholderAPIParser() : new DefaultParser();
-		if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-			new BountyHuntersPlaceholders().register();
-			getLogger().log(Level.INFO, "Hooked onto PlaceholderAPI");
-		}
-
 		if (getServer().getPluginManager().getPlugin("Towny") != null && getConfig().getBoolean("claim-restrictions.town-members")) {
-			Bukkit.getPluginManager().registerEvents(new TownySupport(), this);
+			bountyManager.registerClaimRestriction(new TownySupport());
 			getLogger().log(Level.INFO, "Hooked onto Towny");
 		}
 
 		if (getConfig().getBoolean("claim-restrictions.friends")) {
-			
+
 			if (Bukkit.getPluginManager().getPlugin("PartyAndFriends") != null) {
-				Bukkit.getPluginManager().registerEvents(new PartyAndFriendsSupport(), this);
+				bountyManager.registerClaimRestriction(new PartyAndFriendsSupport());
 				getLogger().log(Level.INFO, "Hooked onto PartyAndFriends");
-				
+
 			} else if (Bukkit.getPluginManager().getPlugin("BungeeFriends") != null) {
-				Bukkit.getPluginManager().registerEvents(new BungeeFriendsSupport(), this);
+				bountyManager.registerClaimRestriction(new BungeeFriendsSupport());
 				getLogger().log(Level.INFO, "Hooked onto BungeeFriends");
 			}
+		}
+
+		placeholderParser = getServer().getPluginManager().getPlugin("PlaceholderAPI") != null ? new PlaceholderAPIParser() : new DefaultParser();
+		if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+			new BountyHuntersPlaceholders().register();
+			getLogger().log(Level.INFO, "Hooked onto PlaceholderAPI");
 		}
 
 		if (wgFlags != null)

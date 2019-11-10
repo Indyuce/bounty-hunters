@@ -1,8 +1,10 @@
 package net.Indyuce.bountyhunters.manager;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -12,17 +14,38 @@ import org.bukkit.entity.Player;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
+import net.Indyuce.bountyhunters.api.restriction.ClaimRestriction;
+import net.Indyuce.bountyhunters.api.restriction.TeamRestriction;
 import net.Indyuce.bountyhunters.gui.BountyEditor;
 import net.Indyuce.bountyhunters.manager.HuntManager.HunterData;
 
 public abstract class BountyManager {
 
 	/*
-	 * warning: bounty ID does NOT correspond to the target UUID! bounty ID used as
-	 * key to store bounties however bounty target uuid is stored inside the bounty
-	 * class instance
+	 * warning: bounty ID does NOT correspond to the target UUID! bounty ID used
+	 * as key to store bounties however bounty target uuid is stored inside the
+	 * bounty class instance
 	 */
 	private final LinkedHashMap<UUID, Bounty> bounties = new LinkedHashMap<>();
+
+	/*
+	 * list of bounty restrictions that must be verified when a bounty is
+	 * claimed. makes implementing plugin compatibility and extra options much
+	 * easier
+	 */
+	private final Set<ClaimRestriction> restrictions = new HashSet<>();
+
+	public BountyManager() {
+
+		if (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.targets-only"))
+			registerClaimRestriction((claimer, bounty) -> bounty.hasHunter(claimer));
+
+		if (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.own-bounties"))
+			registerClaimRestriction((claimer, bounty) -> !bounty.hasCreator(claimer));
+
+		if (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.team-mates"))
+			registerClaimRestriction(new TeamRestriction());
+	}
 
 	public void unregisterBounty(Bounty bounty) {
 		bounties.remove(bounty.getId());
@@ -35,12 +58,11 @@ public abstract class BountyManager {
 		});
 
 		/*
-		 * checks for online admins who opened the bounty editor for that specific
-		 * bounty and close GUIs
+		 * checks for online admins who opened the bounty editor for that
+		 * specific bounty and close GUIs
 		 */
 		for (Player online : Bukkit.getOnlinePlayers())
-			if (online.getOpenInventory() != null
-					&& online.getOpenInventory().getTopInventory().getHolder() instanceof BountyEditor)
+			if (online.getOpenInventory() != null && online.getOpenInventory().getTopInventory().getHolder() instanceof BountyEditor)
 				if (((BountyEditor) online.getOpenInventory().getTopInventory().getHolder()).getBounty().equals(bounty))
 					online.closeInventory();
 	}
@@ -55,12 +77,19 @@ public abstract class BountyManager {
 
 	public void registerBounty(Bounty bounty) {
 		if (bounties.containsKey(bounty.getId())) {
-			BountyHunters.getInstance().getLogger().log(Level.WARNING,
-					"Attempted to register bounty with duplicate ID " + bounty.getId());
+			BountyHunters.getInstance().getLogger().log(Level.WARNING, "Attempted to register bounty with duplicate ID " + bounty.getId());
 			return;
 		}
 
 		bounties.put(bounty.getId(), bounty);
+	}
+
+	public Set<ClaimRestriction> getClaimRestrictions() {
+		return restrictions;
+	}
+
+	public void registerClaimRestriction(ClaimRestriction restriction) {
+		restrictions.add(restriction);
 	}
 
 	public Collection<Bounty> getBounties() {
@@ -85,8 +114,7 @@ public abstract class BountyManager {
 	}
 
 	public Optional<Bounty> findByName(String name) {
-		return bounties.values().stream().filter(bounty -> bounty.getTarget().getName().equalsIgnoreCase(name))
-				.findAny();
+		return bounties.values().stream().filter(bounty -> bounty.getTarget().getName().equalsIgnoreCase(name)).findAny();
 	}
 
 	public abstract void saveBounties();

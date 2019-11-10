@@ -10,8 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
@@ -85,30 +83,9 @@ public class BountyClaim implements Listener {
 			return;
 
 		/*
-		 * option - prevent players from claiming a bounty if they are not
-		 * tracking the bounty target.
+		 * bukkit event check
 		 */
 		Bounty bounty = hasBounty.get();
-		if (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.targets-only") && !bounty.hasHunter(killer))
-			return;
-
-		/*
-		 * option - prevents the player from claiming the bounty if he is the
-		 * bounty creator & if the corresponding option is disabled
-		 */
-		if (bounty.hasCreator(killer) && BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.own-bounties"))
-			return;
-
-		/*
-		 * option - prevent players from claiming a bounty on a team member.
-		 */
-		if (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.team-mates") && sameTeam(killer, event.getEntity()))
-			return;
-
-		/*
-		 * create an event instance, call it and check if it is cancelled. if it
-		 * is not cancelled, send the corresponding allert
-		 */
 		BountyClaimEvent bountyEvent = new BountyClaimEvent(bounty, killer);
 		Bukkit.getPluginManager().callEvent(bountyEvent);
 		if (bountyEvent.isCancelled())
@@ -185,13 +162,5 @@ public class BountyClaim implements Listener {
 
 		// finally, unregister the bounty
 		BountyHunters.getInstance().getBountyManager().unregisterBounty(bounty);
-	}
-
-	private boolean sameTeam(Player player1, Player player2) {
-		Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-		Team team1 = scoreboard.getEntryTeam(player1.getName());
-		Team team2 = scoreboard.getEntryTeam(player2.getName());
-
-		return team1 == null ? team2 == null : team1.equals(team2);
 	}
 }

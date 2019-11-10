@@ -1,32 +1,20 @@
 package net.Indyuce.bountyhunters.comp.social;
 
 import org.bukkit.OfflinePlayer;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
+import org.bukkit.entity.Player;
 
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 
-import net.Indyuce.bountyhunters.api.event.BountyChangeEvent;
-import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
+import net.Indyuce.bountyhunters.api.Bounty;
+import net.Indyuce.bountyhunters.api.restriction.ClaimRestriction;
 
-public class TownySupport implements Listener {
+public class TownySupport implements ClaimRestriction {
 
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void a(BountyClaimEvent event) {
-		if (event.getBounty().hasCreator() && inSameTown(event.getClaimer(), event.getBounty().getCreator()))
-			event.setCancelled(true);
-	}
-
-	/*
-	 * cancel bounty changes when players are in the same town
-	 */
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void b(BountyChangeEvent event) {
-		if (event.getBounty().hasCreator() && inSameTown(event.getPlayer(), event.getBounty().getCreator()))
-			event.setCancelled(true);
+	@Override
+	public boolean canClaimBounty(Player claimer, Bounty bounty) {
+		return inSameTown(claimer, bounty.getTarget());
 	}
 
 	private boolean inSameTown(OfflinePlayer player, OfflinePlayer player1) {

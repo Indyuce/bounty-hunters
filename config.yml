@@ -54,6 +54,14 @@ claim-restrictions:
     # - PartyAndFriends
     friends: true
     
+    # Players cannot claim bounties on players who
+    # have close bed spawn points (most likely friends).
+    bed-spawn-point:
+        enabled: true
+        
+        # Radius in which 
+        radius: 100
+    
     # Players may not kill members of the same town to claim bounties.
     # Supports Towny.
     town-members: true
