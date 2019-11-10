@@ -49,6 +49,7 @@ import net.Indyuce.bountyhunters.comp.social.TownySupport;
 import net.Indyuce.bountyhunters.gui.PluginInventory;
 import net.Indyuce.bountyhunters.gui.listener.GuiListener;
 import net.Indyuce.bountyhunters.listener.BountyClaim;
+import net.Indyuce.bountyhunters.listener.HeadHunting;
 import net.Indyuce.bountyhunters.listener.HuntListener;
 import net.Indyuce.bountyhunters.listener.PlayerListener;
 import net.Indyuce.bountyhunters.listener.RestrictionListener;
@@ -165,6 +166,8 @@ public class BountyHunters extends JavaPlugin {
 			Bukkit.getPluginManager().registerEvents(new ExpireLog(), this);
 		if (getConfig().getBoolean("logging.level-up"))
 			Bukkit.getPluginManager().registerEvents(new LevelUpLog(), this);
+		if (getConfig().getBoolean("head-hunting.enabled"))
+			Bukkit.getPluginManager().registerEvents(new HeadHunting(), this);
 
 		if (getConfig().getBoolean("target-login-message.enabled"))
 			Bukkit.getServer().getPluginManager().registerEvents(new Listener() {

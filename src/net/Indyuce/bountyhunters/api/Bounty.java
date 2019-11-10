@@ -73,7 +73,7 @@ public class Bounty {
 	}
 
 	public boolean hasCreator(OfflinePlayer player) {
-		return hasCreator() && target.getUniqueId().equals(player.getUniqueId());
+		return hasCreator() && getCreator().getUniqueId().equals(player.getUniqueId());
 	}
 
 	public boolean hasTarget(OfflinePlayer player) {

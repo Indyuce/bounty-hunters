@@ -5,7 +5,6 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -90,6 +89,12 @@ public class BountyClaim implements Listener {
 			return;
 
 		/*
+		 * removes the death message
+		 */
+		if (BountyHunters.getInstance().getConfig().getBoolean("disable-death-message.bounty-claim"))
+			event.setDeathMessage(null);
+
+		/*
 		 * bukkit event check
 		 */
 		BountyClaimEvent bountyEvent = new BountyClaimEvent(bounty, killer);
@@ -97,24 +102,18 @@ public class BountyClaim implements Listener {
 		if (bountyEvent.isCancelled())
 			return;
 
-		/*
-		 * removes the death message
-		 */
-		if (BountyHunters.getInstance().getConfig().getBoolean("disable-death-message.bounty-claim"))
-			event.setDeathMessage(null);
-
 		bountyEvent.sendAllert();
 		setClaimed(bounty, killer, target);
 	}
 
-	public void setClaimed(Bounty bounty, Player killer, OfflinePlayer target) {
+	public void setClaimed(Bounty bounty, Player killer, Player target) {
 
 		/*
 		 * drops items at the target's location, best look with CHEST, REDSTONE
 		 * or GOLD_NUGGET. these items can't be picked up and only act as
 		 * cosmetics
 		 */
-		if (target instanceof Player && BountyHunters.getInstance().getConfig().getBoolean("bounty-effect.enabled"))
+		if (target != null && BountyHunters.getInstance().getConfig().getBoolean("bounty-effect.enabled"))
 			new BountyEffect(BountyHunters.getInstance().getConfig().getConfigurationSection("bounty-effect")).play(((Player) target).getLocation());
 
 		/*
@@ -125,8 +124,8 @@ public class BountyClaim implements Listener {
 		/*
 		 * drops the killed player's head
 		 */
-		if (target instanceof Player && BountyHunters.getInstance().getConfig().getBoolean("drop-head.killer.enabled") && random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("drop-head.killer.chance") / 100)
-			((Player) target).getWorld().dropItem(((Player) target).getLocation(), BountyHunters.getInstance().getVersionWrapper().getHead(target));
+		if (target != null && BountyHunters.getInstance().getConfig().getBoolean("drop-head.killer.enabled") && random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("drop-head.killer.chance") / 100)
+			target.getWorld().dropItem(target.getLocation(), BountyHunters.getInstance().getVersionWrapper().getHead(target));
 		if (BountyHunters.getInstance().getConfig().getBoolean("drop-head.creator.enabled") && random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("drop-head.creator.chance") / 100)
 			BountyHunters.getInstance().getPlayerDataManager().getOfflineData(bounty.getCreator()).givePlayerHead(target);
 
