@@ -29,7 +29,7 @@ public class HeadHunting implements Listener {
 		/*
 		 * head will be given to the bounty creator if he claims the bounty.
 		 */
-		if (event.isHeadHunting() || !event.getBounty().hasCreator() || event.getBounty().hasCreator(event.getClaimer()) || event.getBounty().hasTarget(event.getClaimer()))
+		if (event.isHeadHunting() || !event.getBounty().hasCreator() || event.getBounty().hasCreator(event.getClaimer()))
 			return;
 
 		event.setCancelled(true);
@@ -63,10 +63,13 @@ public class HeadHunting implements Listener {
 		if (!BountyHunters.getInstance().getBountyManager().hasBounty(id))
 			return;
 
+		Bounty bounty = BountyHunters.getInstance().getBountyManager().getBounty(id);
+		if (!bounty.hasCreator((Player) event.getRightClicked()) || bounty.hasTarget(event.getPlayer()))
+			return;
+
 		/*
 		 * cast event
 		 */
-		Bounty bounty = BountyHunters.getInstance().getBountyManager().getBounty(id);
 		BountyClaimEvent bountyEvent = new BountyClaimEvent(bounty, player, true);
 		Bukkit.getPluginManager().callEvent(bountyEvent);
 		if (bountyEvent.isCancelled())
