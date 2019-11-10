@@ -1,6 +1,5 @@
 package net.Indyuce.bountyhunters.listener;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -35,9 +34,8 @@ public class RestrictionListener implements Listener {
 
 	private boolean check(Player player, Bounty bounty) {
 		for (BountyRestriction restriction : BountyHunters.getInstance().getBountyManager().getClaimRestrictions())
-			if (!restriction.canClaimBounty(player, bounty)) {
-				Bukkit.broadcastMessage(""+restriction.getClass().getName());
-				return false;}
+			if (!restriction.canClaimBounty(player, bounty))
+				return false;
 		return true;
 	}
 }

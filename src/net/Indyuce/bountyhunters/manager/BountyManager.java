@@ -15,7 +15,6 @@ import org.bukkit.entity.Player;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.restriction.BountyRestriction;
-import net.Indyuce.bountyhunters.api.restriction.TeamRestriction;
 import net.Indyuce.bountyhunters.gui.BountyEditor;
 import net.Indyuce.bountyhunters.manager.HuntManager.HunterData;
 
@@ -37,8 +36,9 @@ public abstract class BountyManager {
 
 	public BountyManager() {
 
-		if (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.team-mates"))
-			registerClaimRestriction(new TeamRestriction());
+		// if
+		// (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.team-mates"))
+		// registerClaimRestriction(new TeamRestriction());
 	}
 
 	public void unregisterBounty(Bounty bounty) {

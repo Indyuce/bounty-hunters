@@ -45,10 +45,6 @@ claim-restrictions:
     # Players may not claim their own bounties.
     own-bounties: true
 
-    # Players may not kill their (vanilla scoreboard)
-    # team mates to claim their bounties.
-    team-mates: true
-
     # Players may not kill their friends to claim bounties. Supports:
     # - BungeeFriends
     # - PartyAndFriends
