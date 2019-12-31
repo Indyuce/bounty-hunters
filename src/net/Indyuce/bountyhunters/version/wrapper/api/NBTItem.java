@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.bountyhunters.BountyHunters;
 
 public abstract class NBTItem {
-	protected final ItemStack item;
+	private final ItemStack item;
 
 	public NBTItem(ItemStack item) {
 		this.item = item;
