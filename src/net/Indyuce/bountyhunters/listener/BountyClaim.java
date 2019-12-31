@@ -43,7 +43,14 @@ public class BountyClaim implements Listener {
 		if (!hasBounty.isPresent()) {
 			if (BountyHunters.getInstance().getConfig().getBoolean("auto-bounty.enabled") && random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("auto-bounty.chance") / 100) {
 
-				BountyEvent bountyEvent = BountyHunters.getInstance().getBountyManager().getBounty(killer).isPresent() ? new BountyChangeEvent(hasBounty.get(), null, BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward"), BountyChangeCause.AUTO_BOUNTY) : new BountyCreateEvent(new Bounty(killer, BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward")), killer, BountyCause.AUTO_BOUNTY);
+				/*
+				 * check for auto bounty increment
+				 */
+				Optional<Bounty> killerBounty = BountyHunters.getInstance().getBountyManager().getBounty(killer);
+				if (killerBounty.isPresent() && !BountyHunters.getInstance().getConfig().getBoolean("auto-bounty.increment"))
+					return;
+
+				BountyEvent bountyEvent = killerBounty.isPresent() ? new BountyChangeEvent(killerBounty.get(), null, BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward"), BountyChangeCause.AUTO_BOUNTY) : new BountyCreateEvent(new Bounty(killer, BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward")), null, BountyCause.AUTO_BOUNTY);
 				Bounty bounty = bountyEvent.getBounty();
 				Bukkit.getPluginManager().callEvent(bountyEvent);
 				if (bountyEvent.isCancelled())

@@ -100,6 +100,9 @@ auto-bounty:
     
     # Chance of applying
     chance: 100
+    
+    # If the auto bounty should keep increasing a bounty if it's already set
+    increment: true
 
 # Displays a different login message when a player
 # logs on with a bounty. Requires /reload when changed.
