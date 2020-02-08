@@ -16,7 +16,7 @@ import net.Indyuce.bountyhunters.manager.PlayerDataManager;
 public class MySQLProvider implements DataProvider {
 	private final Connection connection;
 
-	private final String host, database, username, password;
+	private final String host, database, username, password, args;
 	private final int port;
 
 	public MySQLProvider(ConfigurationSection config) throws SQLException {
@@ -24,9 +24,10 @@ public class MySQLProvider implements DataProvider {
 		Validate.notNull(database = config.getString("database"), "Could not load database name");
 		Validate.notNull(username = config.getString("username"), "Could not load username");
 		Validate.notNull(password = config.getString("password"), "Could not load password");
+		args = config.getString("extra-args");
 		port = config.getInt("port");
 
-		connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
+		connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database + args, username, password);
 	}
 
 	public String getDatabase() {
