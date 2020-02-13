@@ -31,9 +31,18 @@ public class MySQLPlayerDataManager extends PlayerDataManager {
 	private void initialize() {
 		try {
 			BountyHunters.getInstance().getLogger().log(Level.INFO, "Initializing player data..");
+
+			/*
+			 * check if the database has a playerData table, if not initialize
+			 * it
+			 */
 			if (!provider.prepareStatement("SELECT * FROM information_schema.tables WHERE TABLE_NAME = 'playerData'").executeQuery().next())
 				provider.prepareStatement("CREATE TABLE playerData(uuid VARCHAR(36), level INT, successful_bounties INT, claimed_bounties INT, illegal_kills INT, illegal_kill_streak INT, current_title TEXT, current_quote TEXT, redeem_heads JSON)").execute();
 
+			/*
+			 * check if the playerData table has a redeem_heads column. if not,
+			 * initialize the column
+			 */
 			if (!provider.prepareStatement("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" + provider.getDatabase() + "' AND TABLE_NAME = 'playerData' AND COLUMN_NAME = 'redeem_heads'").executeQuery().next())
 				provider.prepareStatement("ALTER TABLE playerData ADD COLUMN redeem_heads JSON").execute();
 

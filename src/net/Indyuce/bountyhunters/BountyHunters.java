@@ -65,7 +65,6 @@ import net.Indyuce.bountyhunters.version.SpigotPlugin;
 import net.Indyuce.bountyhunters.version.wrapper.VersionWrapper;
 import net.Indyuce.bountyhunters.version.wrapper.VersionWrapper_Reflection;
 import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.permission.Permission;
 
 public class BountyHunters extends JavaPlugin {
 	private static BountyHunters plugin;
@@ -77,7 +76,6 @@ public class BountyHunters extends JavaPlugin {
 	private WorldGuardFlags wgFlags;
 
 	private Economy economy;
-	private Permission permission;
 
 	private BountyManager bountyManager;
 	private HuntManager huntManager;
@@ -118,10 +116,8 @@ public class BountyHunters extends JavaPlugin {
 
 		// vault compatibility
 		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
-		RegisteredServiceProvider<Permission> permProvider = getServer().getServicesManager().getRegistration(Permission.class);
-		if (economyProvider != null && permProvider != null) {
+		if (economyProvider != null) {
 			economy = economyProvider.getProvider();
-			permission = permProvider.getProvider();
 		} else {
 			getLogger().log(Level.SEVERE, "Couldn't load Vault. Disabling...");
 			Bukkit.getPluginManager().disablePlugin(this);
@@ -318,10 +314,6 @@ public class BountyHunters extends JavaPlugin {
 
 	public Economy getEconomy() {
 		return economy;
-	}
-
-	public Permission getPermission() {
-		return permission;
 	}
 
 	public BountyManager getBountyManager() {
