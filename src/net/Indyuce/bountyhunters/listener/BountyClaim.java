@@ -14,8 +14,8 @@ import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.BountyCommands;
 import net.Indyuce.bountyhunters.api.BountyEffect;
-import net.Indyuce.bountyhunters.api.event.BountyChangeEvent;
-import net.Indyuce.bountyhunters.api.event.BountyChangeEvent.BountyChangeCause;
+import net.Indyuce.bountyhunters.api.event.BountyIncreaseEvent;
+import net.Indyuce.bountyhunters.api.event.BountyIncreaseEvent.BountyChangeCause;
 import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
@@ -50,7 +50,7 @@ public class BountyClaim implements Listener {
 				if (killerBounty.isPresent() && !BountyHunters.getInstance().getConfig().getBoolean("auto-bounty.increment"))
 					return;
 
-				BountyEvent bountyEvent = killerBounty.isPresent() ? new BountyChangeEvent(killerBounty.get(), null, BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward"), BountyChangeCause.AUTO_BOUNTY) : new BountyCreateEvent(new Bounty(killer, BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward")), null, BountyCause.AUTO_BOUNTY);
+				BountyEvent bountyEvent = killerBounty.isPresent() ? new BountyIncreaseEvent(killerBounty.get(), null, BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward"), BountyChangeCause.AUTO_BOUNTY) : new BountyCreateEvent(new Bounty(killer, BountyHunters.getInstance().getConfig().getDouble("auto-bounty.reward")), null, BountyCause.AUTO_BOUNTY);
 				Bounty bounty = bountyEvent.getBounty();
 				Bukkit.getPluginManager().callEvent(bountyEvent);
 				if (bountyEvent.isCancelled())
@@ -76,7 +76,7 @@ public class BountyClaim implements Listener {
 				 * increase the existing bounty amount
 				 */
 				else {
-					bounty.addReward(((BountyChangeEvent) bountyEvent).getAdded());
+					bounty.addReward(((BountyIncreaseEvent) bountyEvent).getAdded());
 					new BountyCommands("increase.auto-bounty", bounty, killer).send();
 				}
 

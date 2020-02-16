@@ -38,19 +38,21 @@ public class YAMLBountyManager extends BountyManager {
 		data.save();
 	}
 
-	public Bounty load(ConfigurationSection section) {
-		Validate.notNull(section, "Cuold not read bounty config");
+	public Bounty load(ConfigurationSection config) {
+		Validate.notNull(config, "Could not read bounty config");
 
-		String target = section.getString("target");
+		String target = config.getString("target");
 		Validate.notNull(target, "Could not read bounty target");
 
-		Bounty bounty = new Bounty(UUID.fromString(section.getName()), Bukkit.getOfflinePlayer(UUID.fromString(target)), section.getDouble("extra"));
+		Bounty bounty = new Bounty(UUID.fromString(config.getName()), Bukkit.getOfflinePlayer(UUID.fromString(target)), config.getDouble("extra"));
 
-		for (String key : section.getStringList("hunters"))
+		// default value allows for support for older plugin builds
+		bounty.setLastModified(config.getLong("last-modified", System.currentTimeMillis()));
+		for (String key : config.getStringList("hunters"))
 			bounty.addHunter(Bukkit.getOfflinePlayer(UUID.fromString(key)));
-		if (section.contains("up"))
-			for (String key : section.getConfigurationSection("up").getKeys(false))
-				bounty.addContribution(Bukkit.getOfflinePlayer(UUID.fromString(key)), section.getDouble("up." + key));
+		if (config.contains("up"))
+			for (String key : config.getConfigurationSection("up").getKeys(false))
+				bounty.addContribution(Bukkit.getOfflinePlayer(UUID.fromString(key)), config.getDouble("up." + key));
 
 		return bounty;
 	}
@@ -59,6 +61,7 @@ public class YAMLBountyManager extends BountyManager {
 		String key = bounty.getId().toString();
 		config.set(key + ".target", bounty.getTarget().getUniqueId().toString());
 		config.set(key + ".extra", bounty.getExtra());
+		config.set(key + ".last-modified", bounty.getLastModified());
 
 		config.set(key + ".hunters", bounty.getHunters().stream().map(uuid -> uuid.toString()).collect(Collectors.toList()));
 

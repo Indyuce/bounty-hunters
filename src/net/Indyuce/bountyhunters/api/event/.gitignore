@@ -11,3 +11,5 @@
 /BountyRemoveEvent$BountyExpireCause.class
 /BountyRemoveEvent.class
 /BountyRemoveEvent$BountyRemoveCause.class
+/BountyIncreaseEvent$BountyChangeCause.class
+/BountyIncreaseEvent.class

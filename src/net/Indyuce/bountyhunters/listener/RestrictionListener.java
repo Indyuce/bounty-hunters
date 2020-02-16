@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
-import net.Indyuce.bountyhunters.api.event.BountyChangeEvent;
+import net.Indyuce.bountyhunters.api.event.BountyIncreaseEvent;
 import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 import net.Indyuce.bountyhunters.api.restriction.BountyRestriction;
@@ -27,7 +27,7 @@ public class RestrictionListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-	public void c(BountyChangeEvent event) {
+	public void c(BountyIncreaseEvent event) {
 		if (!check(event.getPlayer(), event.getBounty()))
 			event.setCancelled(true);
 	}

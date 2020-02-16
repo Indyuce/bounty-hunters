@@ -41,7 +41,7 @@ public class BountyExpireEvent extends BountyEvent {
 		this(bounty, null, amount, BountyExpireCause.ADMIN);
 	}
 
-	private BountyExpireEvent(Bounty bounty, Player player, double amount, BountyExpireCause cause) {
+	public BountyExpireEvent(Bounty bounty, Player player, double amount, BountyExpireCause cause) {
 		super(bounty);
 
 		this.player = player;
@@ -95,15 +95,20 @@ public class BountyExpireEvent extends BountyEvent {
 	public enum BountyExpireCause {
 
 		/*
-		 * when an admin uses an admin command to remove the bounty or when the admin
-		 * removes a player's contribution
+		 * when an admin uses an admin command to remove the bounty or when the
+		 * admin removes a player's contribution
 		 */
 		ADMIN,
 
 		/*
-		 * when the creator takes away his contribution or when the bounty finally
-		 * expires
+		 * when the creator takes away his contribution or when the bounty
+		 * finally expires
 		 */
-		PLAYER;
+		PLAYER,
+
+		/*
+		 * when a bounty is removed due to inactivity
+		 */
+		INACTIVITY;
 	}
 }

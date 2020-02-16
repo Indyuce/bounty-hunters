@@ -15,8 +15,8 @@ import net.Indyuce.bountyhunters.BountyUtils;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.BountyCommands;
 import net.Indyuce.bountyhunters.api.NumberFormat;
-import net.Indyuce.bountyhunters.api.event.BountyChangeEvent;
-import net.Indyuce.bountyhunters.api.event.BountyChangeEvent.BountyChangeCause;
+import net.Indyuce.bountyhunters.api.event.BountyIncreaseEvent;
+import net.Indyuce.bountyhunters.api.event.BountyIncreaseEvent.BountyChangeCause;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
 import net.Indyuce.bountyhunters.api.language.Message;
@@ -141,7 +141,7 @@ public class AddBountyCommand implements CommandExecutor {
 
 			// API
 			Bounty bounty = currentBounty.get();
-			BountyChangeEvent bountyEvent = new BountyChangeEvent(bounty, sender instanceof Player ? (Player) sender : null, reward - taxed, sender instanceof Player ? BountyChangeCause.PLAYER : BountyChangeCause.CONSOLE);
+			BountyIncreaseEvent bountyEvent = new BountyIncreaseEvent(bounty, sender instanceof Player ? (Player) sender : null, reward - taxed, sender instanceof Player ? BountyChangeCause.PLAYER : BountyChangeCause.CONSOLE);
 			Bukkit.getPluginManager().callEvent(bountyEvent);
 			if (bountyEvent.isCancelled())
 				return true;

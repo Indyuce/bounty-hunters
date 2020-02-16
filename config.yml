@@ -39,6 +39,18 @@ disable-death-message:
     auto-bounty: true
     bounty-claim: true
 
+# Automatically remove bounties if they have been inactive for a long time.
+# Time is the amount of time in hours before a bounty is considered
+# inactive if it is not updated (either claimed or someone increases it).
+# 720 hours = 30 days, 360 hours = 15 days are good values
+# 
+# Bounties are checked every 2min. In order to reduce
+# chat spam, only 1 bounty can be removed every 5min.
+# Changing this option requires a reload.
+inactive-bounty-removal:
+    enabled: true
+    time: 720
+
 # Setting any parameter to 'true' means a new restriction applies.
 # Make sure you restart your server when changing one of these options.
 claim-restrictions:

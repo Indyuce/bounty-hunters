@@ -30,7 +30,7 @@ public enum Message {
 	BOUNTY_CLAIMED(new SoundReader(Sound.ENTITY_PLAYER_LEVELUP, 1, 1), "&6{killer} &eclaimed &6{target}&e's bounty: &6${reward}&e!"),
 	BOUNTY_CLAIMED_BY_YOU(new SoundReader(Sound.ENTITY_PLAYER_LEVELUP, 1, 1), "&eYou successfully claimed &6{target}&e's bounty: &6${reward}&e!"),
 	HEAD_DROPPED(new SoundReader(Sound.ENTITY_PLAYER_LEVELUP, 1, 1), "&eYou picked up &6{victim}&e's head, bring it to &6{creator}&e to claim the bounty."),
-	
+
 	ERROR_PLAYER("&cCouldn't find the player called {arg}."),
 	NOT_VALID_NUMBER("&c{arg} is not a valid number."),
 	NEW_HUNTER_ALERT(new SoundReader(VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 1, 0), "&c{hunter} now targets you."),
@@ -43,6 +43,7 @@ public enum Message {
 	TARGET_COOLDOWN("&cPlease wait another {remain} second{s} to target a player."),
 	CANT_SET_BOUNTY_ON_YOURSELF("&cYou can't set a bounty on yourself!"),
 	BOUNTY_EXPIRED(new SoundReader(Sound.ENTITY_VILLAGER_NO, 1, 2), "&eThe bounty on &6{target} &ehas expired."),
+	BOUNTY_EXPIRED_INACTIVITY("&eThe bounty on &6{target} &ehas expired due to inactivity."),
 	BOUNTY_DECREASED("&eBounty on &6{target} &ehas decreased from &6${old} &eto &6${new}&e."),
 	REWARD_MUST_BE_HIGHER("&cReward must be higher than ${min}!"),
 	REWARD_MUST_BE_LOWER("&cReward must be lower than ${max}!"),

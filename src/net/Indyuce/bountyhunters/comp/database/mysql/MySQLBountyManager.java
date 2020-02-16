@@ -31,7 +31,13 @@ public class MySQLBountyManager extends BountyManager {
 		try {
 
 			if (!provider.prepareStatement("SELECT * FROM information_schema.tables WHERE TABLE_NAME = 'bounties'").executeQuery().next())
-				provider.prepareStatement("CREATE TABLE bounties(id VARCHAR(36), target VARCHAR(36), extra DECIMAL, hunters TEXT, increased TEXT)").execute();
+				provider.prepareStatement("CREATE TABLE bounties(id VARCHAR(36), target VARCHAR(36), extra DECIMAL, last_updated BIGINT, hunters TEXT, increased TEXT)").execute();
+
+			/*
+			 * check if database has the 'last_updated' column added in 2.3.6
+			 */
+			if (!provider.prepareStatement("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" + provider.getDatabase() + "' AND TABLE_NAME = 'playerData' AND COLUMN_NAME = 'last_updated'").executeQuery().next())
+				provider.prepareStatement("ALTER TABLE playerData ADD COLUMN last_updated BIGINT").execute();
 
 			ResultSet result = provider.prepareStatement("SELECT * FROM bounties").executeQuery();
 
@@ -40,6 +46,9 @@ public class MySQLBountyManager extends BountyManager {
 				try {
 
 					Bounty bounty = new Bounty(UUID.fromString(result.getString("id")), Bukkit.getOfflinePlayer(UUID.fromString(result.getString("target"))), result.getDouble("extra"));
+					long time = result.getLong("last_updated");
+					time = time == 0 ? System.currentTimeMillis() : time;
+					bounty.setLastModified(time);
 
 					JsonObject increased = (JsonObject) new JsonParser().parse(result.getString("increased"));
 					increased.entrySet().forEach(entry -> bounty.addContribution(Bukkit.getOfflinePlayer(UUID.fromString(entry.getKey())), entry.getValue().getAsDouble()));
@@ -63,7 +72,7 @@ public class MySQLBountyManager extends BountyManager {
 		try {
 			provider.prepareStatement("TRUNCATE TABLE bounties").execute();
 
-			PreparedStatement save = provider.prepareStatement("INSERT INTO bounties VALUES (?,?,?,?,?)");
+			PreparedStatement save = provider.prepareStatement("INSERT INTO bounties VALUES (?,?,?,?,?,?)");
 			for (Bounty bounty : BountyHunters.getInstance().getBountyManager().getBounties()) {
 
 				JsonArray hunters = new JsonArray();
@@ -75,15 +84,16 @@ public class MySQLBountyManager extends BountyManager {
 				save.setString(1, bounty.getId().toString());
 				save.setString(2, bounty.getTarget().getUniqueId().toString());
 				save.setDouble(3, bounty.getExtra());
-				save.setString(4, hunters.toString());
-				save.setString(5, increased.toString());
+				save.setLong(4, bounty.getLastModified());
+				save.setString(5, hunters.toString());
+				save.setString(6, increased.toString());
 
 				save.addBatch();
 			}
 
 			save.executeBatch();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException exception) {
+			exception.printStackTrace();
 		}
 	}
 }

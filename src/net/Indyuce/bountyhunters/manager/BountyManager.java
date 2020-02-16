@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
+import net.Indyuce.bountyhunters.api.BountyInactivityRemoval;
 import net.Indyuce.bountyhunters.api.restriction.BountyRestriction;
 import net.Indyuce.bountyhunters.gui.BountyEditor;
 import net.Indyuce.bountyhunters.manager.HuntManager.HunterData;
@@ -39,10 +40,22 @@ public abstract class BountyManager {
 		// if
 		// (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.team-mates"))
 		// registerClaimRestriction(new TeamRestriction());
+
+		/*
+		 * checks for inactive bounties every 2min
+		 */
+		if (BountyHunters.getInstance().getConfig().getBoolean("inactive-bounty-removal.enabled"))
+			new BountyInactivityRemoval().runTaskTimerAsynchronously(BountyHunters.getInstance(), 20 * 5, 20 * 60 * 2);
 	}
 
+	/*
+	 * this method can be used even if the bounty is not in the map (the method
+	 * checks if the bounty is in the map before trying to remove it). this way,
+	 * it can be used inside an iterator.
+	 */
 	public void unregisterBounty(Bounty bounty) {
-		bounties.remove(bounty.getId());
+		if (bounties.containsKey(bounty.getId()))
+			bounties.remove(bounty.getId());
 		bounty.getHunters().forEach(hunter -> {
 			HunterData data = BountyHunters.getInstance().getHuntManager().getData(hunter);
 			if (data.isCompassActive())

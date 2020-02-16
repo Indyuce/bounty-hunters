@@ -21,6 +21,12 @@ public class Bounty {
 	private final LinkedHashMap<OfflinePlayer, Double> amount = new LinkedHashMap<>();
 	private double extra;
 
+	/*
+	 * changed everytime the bounty is updated, current time by default so newly
+	 * created bounties do not have to mind about this option
+	 */
+	private long lastUpdated = System.currentTimeMillis();
+
 	public Bounty(OfflinePlayer creator, OfflinePlayer target, double reward) {
 		Validate.notNull(target, "Target cannot be null");
 		Validate.notNull(creator, "Creator cannot be null");
@@ -92,6 +98,7 @@ public class Bounty {
 	}
 
 	public void setContribution(OfflinePlayer player, double value) {
+		lastUpdated = System.currentTimeMillis();
 		amount.put(player, value);
 	}
 
@@ -116,6 +123,14 @@ public class Bounty {
 
 	public void setExtra(double extra) {
 		this.extra = Math.max(0, extra);
+	}
+
+	public long getLastModified() {
+		return lastUpdated;
+	}
+
+	public void setLastModified(long lastModified) {
+		this.lastUpdated = lastModified;
 	}
 
 	public boolean isAutoBounty() {
