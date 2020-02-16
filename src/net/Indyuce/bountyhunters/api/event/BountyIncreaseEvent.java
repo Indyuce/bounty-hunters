@@ -8,7 +8,7 @@ import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.language.Message;
 
-public class BountyChangeEvent extends BountyEvent {
+public class BountyIncreaseEvent extends BountyEvent {
 	private final Player player;
 	private final BountyChangeCause cause;
 
@@ -21,7 +21,7 @@ public class BountyChangeEvent extends BountyEvent {
 	 * increases the bounty reward since he killed someone illegaly, or when a
 	 * player increases manually a player bounty by using the /bounty command
 	 */
-	public BountyChangeEvent(Bounty bounty, Player player, double newAmount, BountyChangeCause cause) {
+	public BountyIncreaseEvent(Bounty bounty, Player player, double newAmount, BountyChangeCause cause) {
 		super(bounty);
 
 		this.player = player;
