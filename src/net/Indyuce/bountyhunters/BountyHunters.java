@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -123,10 +120,6 @@ public class BountyHunters extends JavaPlugin {
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
-
-		List<UUID> test = new ArrayList<>();
-		for (int j = 0; j < 4; j++)
-			test.add(UUID.randomUUID());
 
 		new SpigotPlugin(72142, this).checkForUpdate();
 
