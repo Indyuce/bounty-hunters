@@ -34,7 +34,7 @@ public class RestrictionListener implements Listener {
 
 	private boolean check(Player player, Bounty bounty) {
 		for (BountyRestriction restriction : BountyHunters.getInstance().getBountyManager().getClaimRestrictions())
-			if (!restriction.canClaimBounty(player, bounty))
+			if (!restriction.canInteractWith(player, bounty))
 				return false;
 		return true;
 	}

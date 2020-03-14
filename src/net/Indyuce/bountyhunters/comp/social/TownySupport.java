@@ -13,8 +13,8 @@ import net.Indyuce.bountyhunters.api.restriction.BountyRestriction;
 public class TownySupport implements BountyRestriction {
 
 	@Override
-	public boolean canClaimBounty(Player claimer, Bounty bounty) {
-		return inSameTown(claimer, bounty.getTarget());
+	public boolean canInteractWith(Player claimer, Bounty bounty) {
+		return !inSameTown(claimer, bounty.getTarget());
 	}
 
 	private boolean inSameTown(OfflinePlayer player, OfflinePlayer player1) {
