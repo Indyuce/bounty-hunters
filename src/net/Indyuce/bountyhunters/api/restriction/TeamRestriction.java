@@ -10,7 +10,7 @@ import net.Indyuce.bountyhunters.api.Bounty;
 
 public class TeamRestriction implements BountyRestriction {
 	@Override
-	public boolean canClaimBounty(Player claimer, Bounty bounty) {
+	public boolean canInteractWith(Player claimer, Bounty bounty) {
 		return !sameTeam(claimer, bounty.getTarget());
 	}
 
