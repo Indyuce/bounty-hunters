@@ -66,7 +66,7 @@ claim-restrictions:
     # Players cannot claim bounties on players who
     # have close bed spawn points (most likely friends).
     bed-spawn-point:
-        enabled: true
+        enabled: false
         
         # Blocks threshold
         radius: 100
