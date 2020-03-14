@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.BountyInactivityRemoval;
+import net.Indyuce.bountyhunters.api.restriction.BedSpawnPoint;
 import net.Indyuce.bountyhunters.api.restriction.BountyRestriction;
 import net.Indyuce.bountyhunters.gui.BountyEditor;
 import net.Indyuce.bountyhunters.manager.HuntManager.HunterData;
@@ -37,9 +38,8 @@ public abstract class BountyManager {
 
 	public BountyManager() {
 
-		// if
-		// (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.team-mates"))
-		// registerClaimRestriction(new TeamRestriction());
+		if (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.bed-spawn-point.enabled"))
+			registerClaimRestriction(new BedSpawnPoint(BountyHunters.getInstance().getConfig().getConfigurationSection("claim-restrictions.bed-spawn-point")));
 
 		/*
 		 * checks for inactive bounties every 2min
