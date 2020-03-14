@@ -11,6 +11,6 @@ public class PartyAndFriendsSupport implements BountyRestriction {
 
 	@Override
 	public boolean canInteractWith(Player claimer, Bounty bounty) {
-		return manager.getPlayer(claimer.getUniqueId()).isAFriendOf(manager.getPlayer(bounty.getTarget().getUniqueId()));
+		return !manager.getPlayer(claimer.getUniqueId()).isAFriendOf(manager.getPlayer(bounty.getTarget().getUniqueId()));
 	}
 }
