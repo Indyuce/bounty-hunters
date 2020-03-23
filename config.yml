@@ -5,6 +5,7 @@
 update-notify: true
 
 # Use a MySQL database for bounty and player data.
+# Make sure you manually create the specified database.
 # Requires a server reload.
 my-sql:
     enabled: false
@@ -125,7 +126,6 @@ target-login-message:
 
 # When enabled, players have to bring the target's head back to the
 # bounty creator and right click him in order to claim the bounty.
-# Make sure you both disable 'drop-head.killer' and enable 'drop-head.creator'
 # Reload your server when changing this option.
 head-hunting:
     enabled: false
