@@ -1,10 +1,9 @@
 package net.Indyuce.bountyhunters.api.restriction;
 
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-
-import net.Indyuce.bountyhunters.api.Bounty;
 
 public class BedSpawnPoint implements BountyRestriction {
 	private final int radiusSquared;
@@ -14,9 +13,9 @@ public class BedSpawnPoint implements BountyRestriction {
 	}
 
 	@Override
-	public boolean canInteractWith(Player claimer, Bounty bounty) {
+	public boolean canInteractWith(Player claimer, OfflinePlayer target) {
 		Location loc = claimer.getBedSpawnLocation();
-		Location loc1 = bounty.getTarget().getBedSpawnLocation();
+		Location loc1 = target.getBedSpawnLocation();
 		return loc == null || loc1 == null || loc.distanceSquared(loc1) > radiusSquared;
 	}
 }

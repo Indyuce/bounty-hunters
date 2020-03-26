@@ -7,14 +7,13 @@ import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 
-import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.restriction.BountyRestriction;
 
 public class TownySupport implements BountyRestriction {
 
 	@Override
-	public boolean canInteractWith(Player claimer, Bounty bounty) {
-		return !inSameTown(claimer, bounty.getTarget());
+	public boolean canInteractWith(Player claimer, OfflinePlayer target) {
+		return !inSameTown(claimer, target);
 	}
 
 	private boolean inSameTown(OfflinePlayer player, OfflinePlayer player1) {
