@@ -37,7 +37,7 @@ public class MySQLBountyManager extends BountyManager {
 			 * check if database has the 'last_updated' column added in 2.3.6
 			 */
 			if (!provider.prepareStatement("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" + provider.getDatabase() + "' AND TABLE_NAME = 'bounties' AND COLUMN_NAME = 'last_updated'").executeQuery().next())
-				provider.prepareStatement("ALTER TABLE playerData ADD COLUMN last_updated BIGINT").execute();
+				provider.prepareStatement("ALTER TABLE bounties ADD COLUMN last_updated BIGINT").execute();
 
 			ResultSet result = provider.prepareStatement("SELECT * FROM bounties").executeQuery();
 
