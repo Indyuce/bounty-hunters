@@ -15,10 +15,10 @@ import org.bukkit.entity.Player;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.BountyInactivityRemoval;
+import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.api.restriction.BedSpawnPoint;
 import net.Indyuce.bountyhunters.api.restriction.BountyRestriction;
 import net.Indyuce.bountyhunters.gui.BountyEditor;
-import net.Indyuce.bountyhunters.manager.HuntManager.HunterData;
 
 public abstract class BountyManager {
 
@@ -39,7 +39,8 @@ public abstract class BountyManager {
 	public BountyManager() {
 
 		if (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.bed-spawn-point.enabled"))
-			registerClaimRestriction(new BedSpawnPoint(BountyHunters.getInstance().getConfig().getConfigurationSection("claim-restrictions.bed-spawn-point")));
+			registerClaimRestriction(
+					new BedSpawnPoint(BountyHunters.getInstance().getConfig().getConfigurationSection("claim-restrictions.bed-spawn-point")));
 
 		/*
 		 * checks for inactive bounties every 2min
@@ -57,10 +58,9 @@ public abstract class BountyManager {
 		if (bounties.containsKey(bounty.getId()))
 			bounties.remove(bounty.getId());
 		bounty.getHunters().forEach(hunter -> {
-			HunterData data = BountyHunters.getInstance().getHuntManager().getData(hunter);
-			if (data.isCompassActive())
-				data.hideParticles();
-			BountyHunters.getInstance().getHuntManager().stopHunting(hunter);
+			PlayerData data = BountyHunters.getInstance().getPlayerDataManager().get(hunter);
+			if (data.isHunting())
+				data.stopHunting();
 		});
 
 		/*
