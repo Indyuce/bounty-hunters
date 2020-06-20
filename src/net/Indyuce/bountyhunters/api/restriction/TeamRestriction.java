@@ -6,12 +6,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import net.Indyuce.bountyhunters.api.Bounty;
-
 public class TeamRestriction implements BountyRestriction {
 	@Override
-	public boolean canInteractWith(Player claimer, Bounty bounty) {
-		return !sameTeam(claimer, bounty.getTarget());
+	public boolean canInteractWith(Player claimer, OfflinePlayer target) {
+		return !sameTeam(claimer, target);
 	}
 
 	private boolean sameTeam(OfflinePlayer player1, OfflinePlayer player2) {

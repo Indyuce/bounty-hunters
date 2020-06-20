@@ -54,7 +54,6 @@ import net.Indyuce.bountyhunters.listener.log.ClaimLog;
 import net.Indyuce.bountyhunters.listener.log.ExpireLog;
 import net.Indyuce.bountyhunters.listener.log.LevelUpLog;
 import net.Indyuce.bountyhunters.manager.BountyManager;
-import net.Indyuce.bountyhunters.manager.HuntManager;
 import net.Indyuce.bountyhunters.manager.LevelManager;
 import net.Indyuce.bountyhunters.manager.PlayerDataManager;
 import net.Indyuce.bountyhunters.version.PluginVersion;
@@ -75,7 +74,6 @@ public class BountyHunters extends JavaPlugin {
 	private Economy economy;
 
 	private BountyManager bountyManager;
-	private HuntManager huntManager;
 	private LevelManager levelManager;
 	private PlayerDataManager playerDataManager;
 
@@ -87,7 +85,8 @@ public class BountyHunters extends JavaPlugin {
 
 		try {
 			version = new PluginVersion(Bukkit.getServer().getClass());
-			wrapper = (VersionWrapper) Class.forName("net.Indyuce.bountyhunters.version.wrapper.VersionWrapper_" + version.toString().substring(1)).newInstance();
+			wrapper = (VersionWrapper) Class.forName("net.Indyuce.bountyhunters.version.wrapper.VersionWrapper_" + version.toString().substring(1))
+					.newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException exception) {
 			getLogger().log(Level.INFO, "Your server version is handled via reflection.");
 			wrapper = new VersionWrapper_Reflection();
@@ -128,7 +127,8 @@ public class BountyHunters extends JavaPlugin {
 		 */
 		saveDefaultConfig();
 		try {
-			dataProvider = getConfig().getBoolean("my-sql.enabled") ? new MySQLProvider(getConfig().getConfigurationSection("my-sql")) : new YAMLDataProvider();
+			dataProvider = getConfig().getBoolean("my-sql.enabled") ? new MySQLProvider(getConfig().getConfigurationSection("my-sql"))
+					: new YAMLDataProvider();
 		} catch (SQLException | IllegalArgumentException exception) {
 			getLogger().log(Level.SEVERE, "Database error: " + exception.getMessage());
 			Bukkit.getPluginManager().disablePlugin(this);
@@ -138,7 +138,6 @@ public class BountyHunters extends JavaPlugin {
 		/*
 		 * bounties must be loaded after hunt manager is initialized
 		 */
-		huntManager = new HuntManager();
 		bountyManager = dataProvider.provideBounties();
 		playerDataManager = dataProvider.providePlayerData();
 
@@ -160,14 +159,16 @@ public class BountyHunters extends JavaPlugin {
 
 		if (getConfig().getBoolean("target-login-message.enabled"))
 			Bukkit.getServer().getPluginManager().registerEvents(new Listener() {
-				private final String message = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("target-login-message.format"));
+				private final String message = ChatColor.translateAlternateColorCodes('&',
+						plugin.getConfig().getString("target-login-message.format"));
 
 				@EventHandler(priority = EventPriority.HIGH)
 				public void a(PlayerJoinEvent event) {
 					Player player = event.getPlayer();
 					Optional<Bounty> bounty = bountyManager.getBounty(player);
 					if (bounty.isPresent())
-						event.setJoinMessage(message.replace("{player}", player.getName()).replace("{bounty}", new NumberFormat().format(bounty.get().getReward())));
+						event.setJoinMessage(message.replace("{player}", player.getName()).replace("{bounty}",
+								new NumberFormat().format(bounty.get().getReward())));
 				}
 			}, this);
 
@@ -315,10 +316,6 @@ public class BountyHunters extends JavaPlugin {
 
 	public PlayerDataManager getPlayerDataManager() {
 		return playerDataManager;
-	}
-
-	public HuntManager getHuntManager() {
-		return huntManager;
 	}
 
 	public LevelManager getLevelManager() {

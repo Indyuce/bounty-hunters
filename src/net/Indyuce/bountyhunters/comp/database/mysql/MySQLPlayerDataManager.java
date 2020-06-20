@@ -46,6 +46,13 @@ public class MySQLPlayerDataManager extends PlayerDataManager {
 			if (!provider.prepareStatement("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" + provider.getDatabase() + "' AND TABLE_NAME = 'playerData' AND COLUMN_NAME = 'redeem_heads'").executeQuery().next())
 				provider.prepareStatement("ALTER TABLE playerData ADD COLUMN redeem_heads JSON").execute();
 
+			/*
+			 * check if the playerData table has a last_updated column. if so,
+			 * remove the column
+			 */
+			if (provider.prepareStatement("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" + provider.getDatabase() + "' AND TABLE_NAME = 'playerData' AND COLUMN_NAME = 'last_updated'").executeQuery().next())
+				provider.prepareStatement("ALTER TABLE playerData DROP COLUMN last_updated").execute();
+
 		} catch (SQLException exception) {
 			BountyHunters.getInstance().getLogger().log(Level.SEVERE, "Could not initialize database for player data: " + exception.getMessage());
 		}

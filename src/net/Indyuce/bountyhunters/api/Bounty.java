@@ -10,7 +10,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.OfflinePlayer;
 
 import net.Indyuce.bountyhunters.BountyHunters;
-import net.Indyuce.bountyhunters.manager.HuntManager;
+import net.Indyuce.bountyhunters.api.player.PlayerData;
 
 public class Bounty {
 	private final UUID id;
@@ -150,17 +150,17 @@ public class Bounty {
 
 	public void addHunter(OfflinePlayer player) {
 
-		HuntManager huntManager = BountyHunters.getInstance().getHuntManager();
-		if (huntManager.isHunting(player))
-			huntManager.getTargetBounty(player).removeHunter(player);
+		PlayerData data = BountyHunters.getInstance().getPlayerDataManager().get(player);
+		if (data.isHunting())
+			data.getHunting().getBounty().removeHunter(player);
 
-		huntManager.setHunting(player, this);
+		data.setHunting(this);
 		hunters.add(player);
 	}
 
 	public void removeHunter(OfflinePlayer player) {
 		if (hasHunter(player)) {
-			BountyHunters.getInstance().getHuntManager().stopHunting(player);
+			BountyHunters.getInstance().getPlayerDataManager().get(player).stopHunting();
 			hunters.remove(player);
 		}
 	}

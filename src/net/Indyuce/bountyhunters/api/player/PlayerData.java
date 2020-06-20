@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.AltChar;
+import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.event.HunterLevelUpEvent;
@@ -40,28 +42,14 @@ public class PlayerData implements OfflinePlayerData {
 	 * temp stuff that is not being saved when the server closes
 	 */
 	private long lastBounty, lastTarget, lastSelect;
+	private PlayerHunting hunting;
 
 	public PlayerData(OfflinePlayer player) {
 		this.offline = player;
 	}
 
-	@Deprecated
-	public static boolean isLoaded(UUID uuid) {
-		return BountyHunters.getInstance().getPlayerDataManager().isLoaded(uuid);
-	}
-
 	public OfflinePlayer getOfflinePlayer() {
 		return offline;
-	}
-
-	/*
-	 * CAREFUL! this method does NOT save any of the player data. you MUST save
-	 * the player data using saveFile() before unloading the player data from
-	 * the map!
-	 */
-	@Deprecated
-	public void unload() {
-		BountyHunters.getInstance().getPlayerDataManager().unload(getUniqueId());
 	}
 
 	public long getLastBounty() {
@@ -120,7 +108,10 @@ public class PlayerData implements OfflinePlayerData {
 
 		String title = hasTitle() ? getTitle().format() : Language.NO_TITLE.format();
 		for (int j = 0; j < profileLore.size(); j++)
-			profileLore.set(j, profileLore.get(j).replace("{level_progress}", getLevelProgressBar()).replace("{claimed_bounties}", "" + getClaimedBounties()).replace("{successful_bounties}", "" + getSuccessfulBounties()).replace("{current_title}", title).replace("{level}", "" + getLevel()));
+			profileLore.set(j,
+					profileLore.get(j).replace("{level_progress}", getLevelProgressBar()).replace("{claimed_bounties}", "" + getClaimedBounties())
+							.replace("{successful_bounties}", "" + getSuccessfulBounties()).replace("{current_title}", title)
+							.replace("{level}", "" + getLevel()));
 
 		meta.setLore(profileLore);
 		profile.setItemMeta(meta);
@@ -275,7 +266,8 @@ public class PlayerData implements OfflinePlayerData {
 
 		// send commands
 		if (BountyHunters.getInstance().getLevelManager().hasCommands(nextLevel))
-			BountyHunters.getInstance().getLevelManager().getCommands(nextLevel).forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), BountyHunters.getInstance().getPlaceholderParser().parse(player, cmd)));
+			BountyHunters.getInstance().getLevelManager().getCommands(nextLevel).forEach(
+					cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), BountyHunters.getInstance().getPlaceholderParser().parse(player, cmd)));
 
 		// money
 		double money = BountyHunters.getInstance().getLevelManager().calculateLevelMoney(nextLevel);
@@ -285,10 +277,33 @@ public class PlayerData implements OfflinePlayerData {
 		String jsonList = money > 0 ? "\n" + Language.LEVEL_UP_REWARD_MONEY.format("amount", new NumberFormat().format(money)) : "";
 		for (String s : chatDisplay)
 			jsonList += "\n" + Language.LEVEL_UP_REWARD.format("reward", AltChar.apply(s));
-		BountyHunters.getInstance().getVersionWrapper().sendJson(player, "{\"text\":\"" + ChatColor.YELLOW + Language.LEVEL_UP_REWARDS.format() + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1) + "\"}}}");
+		BountyHunters.getInstance().getVersionWrapper().sendJson(player, "{\"text\":\"" + ChatColor.YELLOW + Language.LEVEL_UP_REWARDS.format()
+				+ "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + jsonList.substring(1) + "\"}}}");
 
 		setLevel(nextLevel);
 		return true;
+	}
+
+	public boolean isHunting() {
+		return hunting != null;
+	}
+
+	public PlayerHunting getHunting() {
+		return hunting;
+	}
+
+	public void setHunting(Bounty bounty) {
+		Validate.notNull(bounty, "Bounty cannot be null");
+		Validate.isTrue(!isHunting(), "Player is already hunting");
+
+		hunting = new PlayerHunting(bounty);
+	}
+
+	public void stopHunting() {
+		Validate.notNull(hunting, "Player was not hunting");
+
+		hunting.hideParticles();
+		hunting = null;
 	}
 
 	@Override
@@ -298,7 +313,9 @@ public class PlayerData implements OfflinePlayerData {
 
 	@Override
 	public String toString() {
-		return "{Level=" + level + ", ClaimedBounties=" + claimed + ", SuccessfulBounties=" + successful + ", IllegalKills=" + illegalKills + ", IllegalKillStreak=" + illegalStreak + (hasTitle() ? ", Title=" + title.getId() : "") + (hasQuote() ? ", Quote=" + quote.getId() : "") + ", RedeemHeads=" + redeemHeads.toString() + "}";
+		return "{Level=" + level + ", ClaimedBounties=" + claimed + ", SuccessfulBounties=" + successful + ", IllegalKills=" + illegalKills
+				+ ", IllegalKillStreak=" + illegalStreak + (hasTitle() ? ", Title=" + title.getId() : "")
+				+ (hasQuote() ? ", Quote=" + quote.getId() : "") + ", RedeemHeads=" + redeemHeads.toString() + "}";
 	}
 
 	@Deprecated
@@ -314,5 +331,20 @@ public class PlayerData implements OfflinePlayerData {
 	@Deprecated
 	public static void load(OfflinePlayer player) {
 		BountyHunters.getInstance().getPlayerDataManager().load(player);
+	}
+
+	@Deprecated
+	public static boolean isLoaded(UUID uuid) {
+		return BountyHunters.getInstance().getPlayerDataManager().isLoaded(uuid);
+	}
+
+	/*
+	 * CAREFUL! this method does NOT save any of the player data. you MUST save
+	 * the player data using saveFile() before unloading the player data from
+	 * the map!
+	 */
+	@Deprecated
+	public void unload() {
+		BountyHunters.getInstance().getPlayerDataManager().unload(getUniqueId());
 	}
 }

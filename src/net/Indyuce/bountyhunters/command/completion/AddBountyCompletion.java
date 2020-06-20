@@ -9,6 +9,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.MetadataValue;
 
 public class AddBountyCompletion implements TabCompleter {
 	@Override
@@ -16,9 +17,19 @@ public class AddBountyCompletion implements TabCompleter {
 		List<String> list = new ArrayList<>();
 
 		if (args.length == 1)
-			for (Player online : Bukkit.getOnlinePlayers())
-				list.add(online.getName());
+			Bukkit.getOnlinePlayers().stream().filter(player -> !isVanished(player)).forEach(player -> list.add(player.getName()));
 
-		return args[args.length - 1].isEmpty() ? list : list.stream().filter(string -> string.toLowerCase().startsWith(args[args.length - 1].toLowerCase())).collect(Collectors.toList());
+		return args[args.length - 1].isEmpty() ? list
+				: list.stream().filter(string -> string.toLowerCase().startsWith(args[args.length - 1].toLowerCase())).collect(Collectors.toList());
+	}
+
+	/*
+	 * SuperVanish support
+	 */
+	private boolean isVanished(Player player) {
+		for (MetadataValue meta : player.getMetadata("vanished"))
+			if (meta.asBoolean())
+				return true;
+		return false;
 	}
 }

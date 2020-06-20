@@ -10,19 +10,30 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.language.Message;
-import net.Indyuce.bountyhunters.manager.HuntManager.HunterData;
+import net.Indyuce.bountyhunters.api.player.PlayerData;
+import net.Indyuce.bountyhunters.api.player.PlayerHunting;
 import net.Indyuce.bountyhunters.version.VersionSound;
 
 public class HuntListener implements Listener {
-	@EventHandler
+
+	@EventHandler(ignoreCancelled = true)
 	public void a(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK || !BountyHunters.getInstance().getHuntManager().isHunting(player) || !CustomItem.BOUNTY_COMPASS.loreMatches(event.getItem()))
+
+		if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK
+				|| !CustomItem.BOUNTY_COMPASS.loreMatches(event.getItem()))
 			return;
 
-		HunterData data = BountyHunters.getInstance().getHuntManager().getData(player);
-		Player hunted = data.getHunted().getPlayer();
-		if (!data.getHunted().isOnline() || !hunted.getWorld().equals(player.getWorld())) {
+		// heavy checks afterwards
+		PlayerData data = BountyHunters.getInstance().getPlayerDataManager().get(player);
+		if (!data.isHunting())
+			return;
+
+		PlayerHunting hunt = data.getHunting();
+		if (hunt.isCompassActive())
+			return;
+
+		if (!hunt.getHunted().isOnline() || !hunt.getHunted().getPlayer().getWorld().equals(player.getWorld())) {
 			player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
 			return;
 		}
@@ -32,9 +43,7 @@ public class HuntListener implements Listener {
 			return;
 		}
 
-		if (!data.isCompassActive()) {
-			player.playSound(player.getLocation(), VersionSound.BLOCK_NOTE_BLOCK_HAT.toSound(), 1, 1);
-			data.showParticles(player);
-		}
+		player.playSound(player.getLocation(), VersionSound.BLOCK_NOTE_BLOCK_HAT.toSound(), 1, 1);
+		hunt.showParticles(player);
 	}
 }
