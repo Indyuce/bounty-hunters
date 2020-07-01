@@ -46,7 +46,7 @@ public abstract class BountyManager {
 		 * checks for inactive bounties every 2min
 		 */
 		if (BountyHunters.getInstance().getConfig().getBoolean("inactive-bounty-removal.enabled"))
-			new BountyInactivityRemoval().runTaskTimerAsynchronously(BountyHunters.getInstance(), 20 * 5, 20 * 60 * 2);
+			new BountyInactivityRemoval().runTaskTimer(BountyHunters.getInstance(), 20 * 5, 20 * 60 * 2);
 	}
 
 	/*
