@@ -1,9 +1,9 @@
 package net.Indyuce.bountyhunters.version.wrapper;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -22,35 +22,27 @@ public class VersionWrapper_Reflection implements VersionWrapper {
 
 	@Override
 	public boolean matchesMaterial(ItemStack item, ItemStack item1) {
-		return item.getType() == item1.getType() ;
+		return item.getType() == item1.getType();
 	}
 
 	@Override
 	public void sendTitle(Player player, String title, String subtitle, int fadeIn, int ticks, int fadeOut) {
-		try {
-			Class<?> chatSerializer = nms("IChatBaseComponent.ChatSerializer").getDeclaredClasses()[0];
-			Object chatTitle = chatSerializer.getMethod("a", String.class).invoke(null, "{\"text\": \"" + title + "\"}");
-			Object chatSubtitle = chatSerializer.getMethod("a", String.class).invoke(null, "{\"text\": \"" + subtitle + "\"}");
-
-			Class<?> enumTitleAction = nms("PacketPlayOutTitle").getDeclaredClasses()[0];
-			Constructor<?> cons = nms("PacketPlayOutTitle").getConstructor(enumTitleAction, nms("IChatBaseComponent"), int.class, int.class, int.class);
-			Object titlePacket = cons.newInstance(enumTitleAction.getField("TITLE").get(null), chatTitle, fadeIn, ticks, fadeOut);
-			Object subtitlePacket = cons.newInstance(enumTitleAction.getField("SUBTITLE").get(null), chatSubtitle, fadeIn, ticks, fadeOut);
-
-			sendPacket(player, titlePacket);
-			sendPacket(player, subtitlePacket);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		player.sendTitle(title, subtitle, fadeIn, ticks, fadeOut);
 	}
 
+	/*
+	 * cannot use spigot() methods because of other bukkit forks? this method
+	 * works anyways
+	 */
 	@Override
 	public void sendJson(Player player, String message) {
 		try {
 			Object chatMsg = nms("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, message);
-			Object titlePacket = nms("PacketPlayOutChat").getConstructor(nms("IChatBaseComponent")).newInstance(chatMsg);
+			Object titlePacket = nms("PacketPlayOutChat").getConstructor(nms("IChatBaseComponent"), nms("ChatMessageType"), UUID.class)
+					.newInstance(chatMsg, nms("ChatMessageType").getDeclaredField("CHAT").get(null), UUID.randomUUID());
 			sendPacket(player, titlePacket);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException | NoSuchMethodException | ClassNotFoundException e) {
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException
+				| NoSuchMethodException | ClassNotFoundException | NoSuchFieldException e) {
 			e.printStackTrace();
 		}
 	}
@@ -60,7 +52,8 @@ public class VersionWrapper_Reflection implements VersionWrapper {
 			Object handle = player.getClass().getMethod("getHandle").invoke(player);
 			Object connection = handle.getClass().getDeclaredField("playerConnection").get(handle);
 			connection.getClass().getMethod("sendPacket", nms("Packet")).invoke(connection, packet);
-		} catch (ClassNotFoundException | IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException | InvocationTargetException | NoSuchMethodException e) {
+		} catch (ClassNotFoundException | IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException
+				| InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
 		}
 	}
@@ -99,6 +92,9 @@ public class VersionWrapper_Reflection implements VersionWrapper {
 		return new NBTItem_Reflection(item);
 	}
 
+	/*
+	 * TODO change it to PersistentDataContainer
+	 */
 	public class NBTItem_Reflection extends NBTItem {
 		private Object nms, compound;
 		private Class<?> craftItemStack;
@@ -109,8 +105,10 @@ public class VersionWrapper_Reflection implements VersionWrapper {
 			try {
 				craftItemStack = obc("inventory.CraftItemStack");
 				nms = craftItemStack.getMethod("asNMSCopy", ItemStack.class).invoke(craftItemStack, item);
-				compound = (boolean) nms.getClass().getMethod("hasTag").invoke(nms) ? nms.getClass().getMethod("getTag").invoke(nms) : nms("NBTTagCompound").getConstructor().newInstance();
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | ClassNotFoundException | InstantiationException e) {
+				compound = (boolean) nms.getClass().getMethod("hasTag").invoke(nms) ? nms.getClass().getMethod("getTag").invoke(nms)
+						: nms("NBTTagCompound").getConstructor().newInstance();
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException
+					| ClassNotFoundException | InstantiationException e) {
 				e.printStackTrace();
 			}
 		}
@@ -177,7 +175,8 @@ public class VersionWrapper_Reflection implements VersionWrapper {
 						compound.getClass().getMethod("setString", String.class, String.class).invoke(compound, tag.getPath(), tag.getValue());
 					else if (tag.getValue() instanceof Integer)
 						compound.getClass().getMethod("setInt", String.class, Integer.TYPE).invoke(compound, tag.getPath(), tag.getValue());
-				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+						| SecurityException e) {
 					e.printStackTrace();
 				}
 			});
@@ -189,7 +188,8 @@ public class VersionWrapper_Reflection implements VersionWrapper {
 			for (String path : paths)
 				try {
 					compound.getClass().getMethod("remove", String.class).invoke(compound, path);
-				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+						| SecurityException e) {
 					e.printStackTrace();
 				}
 			return this;

@@ -21,8 +21,6 @@ import net.minecraft.server.v1_16_R1.ChatMessageType;
 import net.minecraft.server.v1_16_R1.IChatBaseComponent.ChatSerializer;
 import net.minecraft.server.v1_16_R1.NBTTagCompound;
 import net.minecraft.server.v1_16_R1.PacketPlayOutChat;
-import net.minecraft.server.v1_16_R1.PacketPlayOutTitle;
-import net.minecraft.server.v1_16_R1.PacketPlayOutTitle.EnumTitleAction;
 
 public class VersionWrapper_1_16_R1 implements VersionWrapper {
 
@@ -39,9 +37,7 @@ public class VersionWrapper_1_16_R1 implements VersionWrapper {
 
 	@Override
 	public void sendTitle(Player player, String title, String subtitle, int fadeIn, int ticks, int fadeOut) {
-		((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutTitle(EnumTitleAction.TITLE, ChatSerializer.a("{\"text\": \"" + title + "\"}")));
-		((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutTitle(EnumTitleAction.SUBTITLE, ChatSerializer.a("{\"text\": \"" + subtitle + "\"}")));
-		((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutTitle(EnumTitleAction.TIMES, null, fadeIn, ticks, fadeOut));
+		player.sendTitle(title, subtitle, fadeIn, ticks, fadeOut);
 	}
 
 	@Override

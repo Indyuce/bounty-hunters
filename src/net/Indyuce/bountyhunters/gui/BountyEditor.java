@@ -127,9 +127,7 @@ public class BountyEditor extends PluginInventory {
 		return bounty;
 	}
 
-	/*
-	 * literally useless
-	 */
+	// almost pointless formatting
 	private String genetive(String str) {
 		return str + (str.endsWith("s") || str.endsWith("z") || str.endsWith("x") ? "' " : "'s ");
 	}
@@ -139,7 +137,7 @@ public class BountyEditor extends PluginInventory {
 
 		if (!BountyUtils.hasItemMeta(item, false))
 			return;
-		
+
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Previous")) {
 			player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1, 2);
 			offset = (offset - 1) % slots.length;
@@ -184,7 +182,8 @@ public class BountyEditor extends PluginInventory {
 					Validate.isTrue(d > 0);
 
 					OfflinePlayer contributor = Bukkit.getOfflinePlayer(UUID.fromString(tag));
-					player.sendMessage(ChatColor.GREEN + "> Contribution of " + contributor.getName() + " successfully set to $" + new NumberFormat().format(d) + ".");
+					player.sendMessage(ChatColor.GREEN + "> Contribution of " + contributor.getName() + " successfully set to $"
+							+ new NumberFormat().format(d) + ".");
 					player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 2);
 					bounty.setContribution(contributor, d);
 					return true;
