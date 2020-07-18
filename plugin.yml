@@ -32,6 +32,10 @@ permissions:
     bountyhunters.leaderboard:
         default: op
     
+    # Access to tracking compass
+    bountyhunters.compass:
+        default: op
+    
     # Grants access to /addbounty
     bountyhunters.add:
         default: op

@@ -128,7 +128,7 @@ public class BountyList extends PluginInventory {
 				return;
 			}
 
-			if (!player.hasPermission(BountyHunters.getInstance().getConfig().getString("player-tracking.permission"))) {
+			if (!player.hasPermission("bountyhunters.compass")) {
 				Message.NOT_ENOUGH_PERMS.format().send(player);
 				return;
 			}

@@ -154,10 +154,6 @@ drop-head:
 player-tracking:
     enabled: true
     
-    # Permission needed to track a
-    # player and to buy the compass.
-    permission: ''
-    
     # Also displays particles around the
     # target when holding the compass.
     target-particles: true
