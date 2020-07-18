@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.Indyuce</groupId>
 	<artifactId>bountyhunters</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>2.3.10</version>
 	<name>Bounty Hunters</name>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
