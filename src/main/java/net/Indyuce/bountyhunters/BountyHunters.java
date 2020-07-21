@@ -22,6 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.ConfigFile;
 import net.Indyuce.bountyhunters.api.CustomItem;
+import net.Indyuce.bountyhunters.api.HunterLeaderboard;
 import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.account.BankAccount;
 import net.Indyuce.bountyhunters.api.account.PlayerBankAccount;
@@ -79,7 +80,7 @@ public class BountyHunters extends JavaPlugin {
 	private LevelManager levelManager;
 	private PlayerDataManager playerDataManager;
 
-	private ConfigFile leaderboard;
+	private HunterLeaderboard leaderboard;
 	private BankAccount taxBankAccount;
 	public boolean formattedNumbers;
 
@@ -247,7 +248,7 @@ public class BountyHunters extends JavaPlugin {
 			userdataFolder.mkdir();
 
 		new ConfigFile("data").setup();
-		leaderboard = new ConfigFile("/cache", "leaderboard");
+		leaderboard = new HunterLeaderboard(new ConfigFile("/cache", "leaderboard"));
 
 		/*
 		 * load player data from all online players in case of /reload
@@ -317,8 +318,8 @@ public class BountyHunters extends JavaPlugin {
 		return version;
 	}
 
-	public FileConfiguration getCachedLeaderboard() {
-		return leaderboard.getConfig();
+	public HunterLeaderboard getHunterLeaderboard() {
+		return leaderboard;
 	}
 
 	public PlaceholderParser getPlaceholderParser() {

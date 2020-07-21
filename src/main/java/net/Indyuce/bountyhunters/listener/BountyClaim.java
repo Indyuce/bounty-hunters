@@ -14,14 +14,13 @@ import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.BountyCommands;
 import net.Indyuce.bountyhunters.api.BountyEffect;
-import net.Indyuce.bountyhunters.api.event.BountyIncreaseEvent;
-import net.Indyuce.bountyhunters.api.event.BountyIncreaseEvent.BountyChangeCause;
 import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
 import net.Indyuce.bountyhunters.api.event.BountyEvent;
+import net.Indyuce.bountyhunters.api.event.BountyIncreaseEvent;
+import net.Indyuce.bountyhunters.api.event.BountyIncreaseEvent.BountyChangeCause;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
-import net.Indyuce.bountyhunters.gui.Leaderboard;
 
 public class BountyClaim implements Listener {
 	private static final Random random = new Random();
@@ -149,7 +148,7 @@ public class BountyClaim implements Listener {
 		playerData.addClaimedBounties(1);
 		if (BountyHunters.getInstance().getLevelManager().isEnabled())
 			playerData.refreshLevel(killer);
-		Leaderboard.updateCachedLeaderboard(killer.getUniqueId(), playerData.getClaimedBounties());
+		BountyHunters.getInstance().getHunterLeaderboard().update(killer.getUniqueId(), playerData.getClaimedBounties());
 
 		/*
 		 * adds 1 to the bounty creator's successful-bounties stat

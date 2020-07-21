@@ -1,7 +1,9 @@
 package net.Indyuce.bountyhunters.comp.placeholder;
 
 import java.util.Optional;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -27,6 +29,18 @@ public class BountyHuntersPlaceholders extends PlaceholderExpansion {
 	}
 
 	public String onPlaceholderRequest(Player player, String identifier) {
+
+		if (identifier.startsWith("top_")) {
+			int index = Integer.parseInt(identifier.substring(4));
+			UUID found = BountyHunters.getInstance().getHunterLeaderboard().getPosition(index);
+			return found == null ? "-" : Bukkit.getOfflinePlayer(found).getName();
+		}
+		if (identifier.startsWith("topb_")) {
+			int index = Integer.parseInt(identifier.substring(5));
+			UUID found = BountyHunters.getInstance().getHunterLeaderboard().getPosition(index);
+			return found == null ? "0" : "" + BountyHunters.getInstance().getHunterLeaderboard().getScore(found);
+		}
+
 		PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(player);
 		switch (identifier) {
 		case "level":
