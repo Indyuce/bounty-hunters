@@ -5,7 +5,7 @@
 	<groupId>net.Indyuce</groupId>
 	<artifactId>bountyhunters</artifactId>
 	<version>2.3.10</version>
-	<name>Bounty Hunters</name>
+	<name>BountyHunters</name>
 	<build>
 		<resources>
 			<resource>
