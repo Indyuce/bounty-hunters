@@ -16,6 +16,6 @@ public class BedSpawnPoint implements BountyRestriction {
 	public boolean canInteractWith(Player claimer, OfflinePlayer target) {
 		Location loc = claimer.getBedSpawnLocation();
 		Location loc1 = target.getBedSpawnLocation();
-		return loc == null || loc1 == null || loc.distanceSquared(loc1) > radiusSquared;
+		return loc == null || loc1 == null || !loc.getWorld().equals(loc1.getWorld()) || loc.distanceSquared(loc1) > radiusSquared;
 	}
 }
