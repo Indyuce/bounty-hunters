@@ -132,7 +132,8 @@ public class AddBountyCommand implements CommandExecutor {
 		 * right now, bounty will be registered if the event is not cancelled.
 		 * calculate tax and update reward
 		 */
-		double tax = sender.hasPermission("bountyhunters.admin") && arguments.noTax ? 0 : Math.max(0, Math.min(1, BountyHunters.getInstance().getConfig().getDouble("bounty-tax.bounty-creation") / 100));
+		double tax = sender.hasPermission("bountyhunters.admin") && arguments.noTax ? 0
+				: Math.max(0, Math.min(1, BountyHunters.getInstance().getConfig().getDouble("bounty-tax.bounty-creation") / 100));
 		double taxed = BountyUtils.truncate(reward * tax, 1);
 
 		// add to existing bounty
@@ -141,7 +142,8 @@ public class AddBountyCommand implements CommandExecutor {
 
 			// API
 			Bounty bounty = currentBounty.get();
-			BountyIncreaseEvent bountyEvent = new BountyIncreaseEvent(bounty, sender instanceof Player ? (Player) sender : null, reward - taxed, sender instanceof Player ? BountyChangeCause.PLAYER : BountyChangeCause.CONSOLE);
+			BountyIncreaseEvent bountyEvent = new BountyIncreaseEvent(bounty, sender instanceof Player ? (Player) sender : null, reward - taxed,
+					sender instanceof Player ? BountyChangeCause.PLAYER : BountyChangeCause.CONSOLE);
 			Bukkit.getPluginManager().callEvent(bountyEvent);
 			if (bountyEvent.isCancelled())
 				return true;
@@ -163,7 +165,8 @@ public class AddBountyCommand implements CommandExecutor {
 
 		// API
 		Bounty bounty = new Bounty(sender instanceof Player ? (Player) sender : null, target, reward);
-		BountyCreateEvent bountyEvent = new BountyCreateEvent(bounty, sender instanceof Player ? (Player) sender : null, sender instanceof Player ? BountyCause.PLAYER : BountyCause.CONSOLE);
+		BountyCreateEvent bountyEvent = new BountyCreateEvent(bounty, sender instanceof Player ? (Player) sender : null,
+				sender instanceof Player ? BountyCause.PLAYER : BountyCause.CONSOLE);
 		Bukkit.getPluginManager().callEvent(bountyEvent);
 		if (bountyEvent.isCancelled())
 			return true;
@@ -175,6 +178,10 @@ public class AddBountyCommand implements CommandExecutor {
 			BountyHunters.getInstance().getPlayerDataManager().get((Player) sender).setLastBounty();
 		}
 
+		// handle tax
+		if (taxed > 0 && BountyHunters.getInstance().getTaxBankAccount() != null)
+			BountyHunters.getInstance().getTaxBankAccount().deposit(taxed);
+
 		new BountyCommands("place." + bountyEvent.getCause().name().toLowerCase().replace("_", "-"), bounty, sender).send();
 		BountyHunters.getInstance().getBountyManager().registerBounty(bounty);
 		bountyEvent.sendAllert();
@@ -185,7 +192,7 @@ public class AddBountyCommand implements CommandExecutor {
 	}
 
 	public class CommandArguments {
-		final boolean bypassMinMax, noTax;
+		private final boolean bypassMinMax, noTax;
 
 		public CommandArguments(String[] args) {
 			bypassMinMax = has(args, "bmm");

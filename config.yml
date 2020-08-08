@@ -23,6 +23,16 @@ logging:
     bounty-expire: true
     level-up: false
 
+# If 'name' is left blank, taxes will be taken and will disappear.
+# If you specify an account or player, the bounty creation taxes
+# will be deposited in a specific bank account.
+#
+# If you use 'player', please specify the player UUID that you
+# can easily find online using sites like https://mcuuid.net/
+tax-bank-account:
+    type: 'account' # 'player' or 'account'
+    name: ''
+
 # When enabled, drops some purely cosmetic
 # items whenever someone's bounty is claimed.
 # Looks cool with CHEST, GOLD_NUGGET, REDSTONE...
