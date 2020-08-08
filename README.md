@@ -15,4 +15,4 @@ Bug reports and feature suggestions keep the project alive too!
 
 **External libraries used to compile the jar:**
 
-![](https://i.imgur.com/bshLdeV.png)
+![](https://i.imgur.com/svoqz4L.png)
