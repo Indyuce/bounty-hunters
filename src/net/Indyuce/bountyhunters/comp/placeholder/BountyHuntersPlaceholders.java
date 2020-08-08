@@ -1,8 +1,10 @@
 package net.Indyuce.bountyhunters.comp.placeholder;
 
 import java.util.Optional;
+import java.util.UUID;
 
-import org.bukkit.entity.Player;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.Indyuce.bountyhunters.BountyHunters;
@@ -11,6 +13,7 @@ import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
 
 public class BountyHuntersPlaceholders extends PlaceholderExpansion {
+
 	@Override
 	public String getAuthor() {
 		return "Indyuce";
@@ -23,10 +26,24 @@ public class BountyHuntersPlaceholders extends PlaceholderExpansion {
 
 	@Override
 	public String getVersion() {
-		return "1.0";
+		return BountyHunters.getInstance().getDescription().getVersion();
 	}
 
-	public String onPlaceholderRequest(Player player, String identifier) {
+	@Override
+	public String onRequest(OfflinePlayer player, String identifier) {
+
+		// leaderboard placeholders
+		if (identifier.startsWith("top_")) {
+			int index = Integer.parseInt(identifier.substring(4));
+			UUID found = BountyHunters.getInstance().getHunterLeaderboard().getPosition(index);
+			return found == null ? "-" : Bukkit.getOfflinePlayer(found).getName();
+		}
+		if (identifier.startsWith("topb_")) {
+			int index = Integer.parseInt(identifier.substring(5));
+			UUID found = BountyHunters.getInstance().getHunterLeaderboard().getPosition(index);
+			return found == null ? "0" : "" + BountyHunters.getInstance().getHunterLeaderboard().getScore(found);
+		}
+
 		PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(player);
 		switch (identifier) {
 		case "level":

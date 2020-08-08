@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -21,7 +22,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.ConfigFile;
 import net.Indyuce.bountyhunters.api.CustomItem;
+import net.Indyuce.bountyhunters.api.HunterLeaderboard;
 import net.Indyuce.bountyhunters.api.NumberFormat;
+import net.Indyuce.bountyhunters.api.account.BankAccount;
+import net.Indyuce.bountyhunters.api.account.PlayerBankAccount;
+import net.Indyuce.bountyhunters.api.account.SimpleBankAccount;
 import net.Indyuce.bountyhunters.api.language.Language;
 import net.Indyuce.bountyhunters.api.language.Message;
 import net.Indyuce.bountyhunters.command.AddBountyCommand;
@@ -77,7 +82,8 @@ public class BountyHunters extends JavaPlugin {
 	private LevelManager levelManager;
 	private PlayerDataManager playerDataManager;
 
-	private ConfigFile leaderboard;
+	private HunterLeaderboard leaderboard;
+	private BankAccount taxBankAccount;
 	public boolean formattedNumbers;
 
 	public void onLoad() {
@@ -256,7 +262,7 @@ public class BountyHunters extends JavaPlugin {
 			userdataFolder.mkdir();
 
 		new ConfigFile("data").setup();
-		leaderboard = new ConfigFile("/cache", "leaderboard");
+		leaderboard = new HunterLeaderboard(new ConfigFile("/cache", "leaderboard"));
 
 		/*
 		 * load player data from all online players in case of /reload
@@ -326,8 +332,11 @@ public class BountyHunters extends JavaPlugin {
 		return version;
 	}
 
-	public FileConfiguration getCachedLeaderboard() {
-		return leaderboard.getConfig();
+	public BankAccount getTaxBankAccount() {
+		return taxBankAccount;
+	}
+	public HunterLeaderboard getHunterLeaderboard() {
+		return leaderboard;
 	}
 
 	public PlaceholderParser getPlaceholderParser() {
@@ -336,6 +345,16 @@ public class BountyHunters extends JavaPlugin {
 
 	public void reloadConfigFiles() {
 		formattedNumbers = getConfig().getBoolean("formatted-numbers");
+
+		if (!getConfig().getString("tax-bank-account.name").isEmpty())
+			try {
+				String type = getConfig().getString("tax-bank-account.type"), name = getConfig().getString("tax-bank-account.name");
+				taxBankAccount = type.equalsIgnoreCase("player") ? new PlayerBankAccount(name)
+						: type.equalsIgnoreCase("account") ? new SimpleBankAccount(name) : null;
+				Validate.notNull(taxBankAccount, "Account type must be either 'player' or 'account'");
+			} catch (IllegalArgumentException exception) {
+				getLogger().log(Level.WARNING, "Could not load tax bank account: " + exception.getMessage());
+			}
 
 		FileConfiguration messages = new ConfigFile("/language", "messages").getConfig();
 		for (Message message : Message.values())
