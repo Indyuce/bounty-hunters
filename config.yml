@@ -1,0 +1,189 @@
+
+# Notifies players with the 'bountyhunters.update-notify' perm 
+# node when they join the server if a new update is available
+# for download. Requires a server reload when changed.
+update-notify: true
+
+# Use a MySQL database for bounty and player data.
+# Make sure you manually create the specified database.
+# Requires a server reload.
+my-sql:
+    enabled: false
+    host: 127.0.0.1
+    port: 3306
+    database: database_name
+    extra-args: ''
+    username: username
+    password: password
+
+# Enable/disable plugin logging;
+# requires a server reload when changed.
+logging:
+    bounty-claim: true
+    bounty-expire: true
+    level-up: false
+
+# When enabled, drops some purely cosmetic
+# items whenever someone's bounty is claimed.
+# Looks cool with CHEST, GOLD_NUGGET, REDSTONE...
+bounty-effect:
+    enabled: true
+    material: GOLD_NUGGET
+
+# Time players have to wait to do /bounty twice.
+# In seconds.
+bounty-set-restriction: 120
+
+# When toggled on, claiming a bounty or killing a
+# player illegaly will not longer display a death message.
+disable-death-message:
+    auto-bounty: true
+    bounty-claim: true
+
+# Automatically remove bounties if they have been inactive for a long time.
+# Time is the amount of time in hours before a bounty is considered
+# inactive if it is not updated (either claimed or someone increases it).
+# 720 hours = 30 days, 360 hours = 15 days are good values
+# 
+# Bounties are checked every 2min. In order to reduce
+# chat spam, only 1 bounty can be removed every 5min.
+# Changing this option requires a reload.
+inactive-bounty-removal:
+    enabled: true
+    time: 720
+
+# Setting any parameter to 'true' means a new restriction applies.
+# Make sure you restart your server when changing one of these options.
+claim-restrictions:
+
+    # Players may not claim their own bounties.
+    own-bounties: true
+
+    # Players may not kill their friends to claim bounties. Supports:
+    # - BungeeFriends
+    # - PartyAndFriends
+    friends: true
+    
+    # Players cannot claim bounties on players who
+    # have close bed spawn points (most likely friends).
+    bed-spawn-point:
+        enabled: false
+        
+        # Blocks threshold
+        radius: 100
+    
+    # Players may not kill members of the same town to claim bounties.
+    # Supports Towny.
+    town-members: true
+
+    # Players may ONLY claim bounties if
+    # they are tracking the bounty target.
+    targets-only: false
+
+# Commands sent by the console when a player claims a bounty.
+# {target} returns the target's name and {player} the claimer's
+# name. Commands support PlaceholderAPI placeholders.
+bounty-commands:
+
+    # When a player claims a bounty.
+    claim: []
+#   - '/give {player} minecraft:diamond 10'
+#   - '/tell {target} Someone claimed your bounty.'
+
+    # When a bounty is placed. {reward}
+    place:
+        player: []
+        console: []
+        # When a player kills another player illegaly.
+        auto-bounty: []
+    
+    # When a bounty is increased by {amount}
+    increase:
+        player: []
+        console: []
+        # When a player kills another player illegaly.
+        auto-bounty: []
+
+# When enabled, it will automaticaly place a bounty onto any
+# player who kills a player with no bounty on him (illegal kill).
+auto-bounty:
+    enabled: false
+    
+    # Bounty reward
+    reward: 100
+    
+    # Chance of applying
+    chance: 100
+    
+    # If the auto bounty should keep increasing a bounty if it's already set
+    increment: true
+
+# Displays a different login message when a player
+# logs on with a bounty. Requires /reload when changed.
+target-login-message:
+    format: '&e{player} joined the game with a &6${bounty}&e bounty!'
+    enabled: true
+
+# When enabled, players have to bring the target's head back to the
+# bounty creator and right click him in order to claim the bounty.
+# Make sure you both disable 'drop-head.killer' and 'drop-head.creator'
+# Reload your server when changing this option.
+head-hunting:
+    enabled: false
+
+# Drops the player head when claming a bounty
+# or give the head to the bounty creator.
+drop-head:
+
+    # Drops the head on the ground.
+    killer:
+        enabled: false
+        chance: 100
+    
+    # Give the head to the bounty creator or
+    # saves it in the bounty head GUI that 
+    # can be opened using /redeembountyheads
+    creator:
+        enabled: false
+        chance: 100
+
+# Player tracking lets player use a tracking compass to hunt
+# down their bounty target. On the one hand, it gives an
+# advantage to the hunters because they can find the player, but
+# it also lets the target know how many players are tracking him.
+player-tracking:
+    enabled: true
+    
+    # Also displays particles around the
+    # target when holding the compass.
+    target-particles: true
+    
+    # Price of the tracking compass.
+    price: 1000
+    
+    # Cooldowns players need to wait before tracking a player.
+    cooldown: 240
+
+# Min and max bounty rewards.
+# Set max to 0 to remove the max restriction.
+min-reward: 0
+max-reward: 0
+
+bounty-tax:
+    # Tax taken when creating a bounty (to fight abuse).
+    # In % of the money reward. Must be between 0 and 100.
+    bounty-creation: 15
+    
+    # Tax taken when a player removes the bounty he set.
+    # Default is 17.8% because it corresponds to 30% of the
+    # initial amount when taking into account bounty creation tax
+    bounty-removal: 17.8
+
+# Enables the display of death quotes when claiming a bounty.
+display-death-quote-on-title: false
+  
+# Enables leveling rewards.
+enable-level-rewards: true
+
+# Displayed formatted numbers (1,345B instead of 1,345,416,416).
+formatted-numbers: true
