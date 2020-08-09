@@ -32,7 +32,7 @@ public class LevelManager {
 		quotes.clear();
 		titles.clear();
 		commands.clear();
-		
+
 		enabled = BountyHunters.getInstance().getConfig().getBoolean("enable-level-rewards");
 		if (!isEnabled())
 			return;
@@ -46,7 +46,7 @@ public class LevelManager {
 				Title title = new Title(config.getConfigurationSection("reward.title." + key));
 				titles.put(title.getId(), title);
 			} catch (IllegalArgumentException exception) {
-				BountyHunters.getInstance().getLogger().log(Level.WARNING, "Could not load title " + key);
+				BountyHunters.getInstance().getLogger().log(Level.WARNING, "Could not load title '" + key + "': " + exception.getMessage());
 			}
 
 		for (String key : config.getConfigurationSection("reward.quote").getKeys(false))
@@ -54,7 +54,7 @@ public class LevelManager {
 				DeathQuote quote = new DeathQuote(config.getConfigurationSection("reward.quote." + key));
 				quotes.put(quote.getId(), quote);
 			} catch (IllegalArgumentException exception) {
-				BountyHunters.getInstance().getLogger().log(Level.WARNING, "Could not load quote " + key);
+				BountyHunters.getInstance().getLogger().log(Level.WARNING, "Could not load quote '" + key + "': " + exception.getMessage());
 			}
 
 		for (String key : config.getConfigurationSection("reward.commands").getKeys(false))
@@ -62,10 +62,10 @@ public class LevelManager {
 				int level = Integer.parseInt(key);
 				List<String> commands = config.getStringList("reward.commands." + key);
 
-				Validate.notNull(commands);
+				Validate.notNull(commands, "Could not find command list");
 				this.commands.put(level, commands);
 			} catch (IllegalArgumentException exception) {
-				BountyHunters.getInstance().getLogger().log(Level.WARNING, "Could not load command list " + key);
+				BountyHunters.getInstance().getLogger().log(Level.WARNING, "Could not load command list '" + key + "': " + exception.getMessage());
 			}
 	}
 
@@ -114,8 +114,8 @@ public class LevelManager {
 	}
 
 	public abstract class LevelUpItem {
-		private String id, format;
-		private int unlock;
+		private final String id, format;
+		private final int unlock;
 
 		private LevelUpItem(String id, String format, int unlock) {
 			Validate.notNull(id, "Item ID must not be null");
