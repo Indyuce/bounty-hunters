@@ -9,20 +9,20 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Particle;
-import org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_16_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_16_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_16_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import net.Indyuce.bountyhunters.version.wrapper.api.ItemTag;
 import net.Indyuce.bountyhunters.version.wrapper.api.NBTItem;
-import net.minecraft.server.v1_16_R1.ChatMessageType;
-import net.minecraft.server.v1_16_R1.IChatBaseComponent.ChatSerializer;
-import net.minecraft.server.v1_16_R1.NBTTagCompound;
-import net.minecraft.server.v1_16_R1.PacketPlayOutChat;
+import net.minecraft.server.v1_16_R2.ChatMessageType;
+import net.minecraft.server.v1_16_R2.IChatBaseComponent.ChatSerializer;
+import net.minecraft.server.v1_16_R2.NBTTagCompound;
+import net.minecraft.server.v1_16_R2.PacketPlayOutChat;
 
-public class VersionWrapper_1_16_R1 implements VersionWrapper {
+public class VersionWrapper_1_16_R2 implements VersionWrapper {
 
 	@Override
 	public boolean matchesMaterial(ItemStack item, ItemStack item1) {
@@ -63,14 +63,14 @@ public class VersionWrapper_1_16_R1 implements VersionWrapper {
 
 	@Override
 	public NBTItem getNBTItem(org.bukkit.inventory.ItemStack item) {
-		return new NBTItem_v1_16_R1(item);
+		return new NBTItem_v1_16_R2(item);
 	}
 
-	public class NBTItem_v1_16_R1 extends NBTItem {
-		private final net.minecraft.server.v1_16_R1.ItemStack nms;
+	public class NBTItem_v1_16_R2 extends NBTItem {
+		private final net.minecraft.server.v1_16_R2.ItemStack nms;
 		private final NBTTagCompound compound;
 
-		public NBTItem_v1_16_R1(org.bukkit.inventory.ItemStack item) {
+		public NBTItem_v1_16_R2(org.bukkit.inventory.ItemStack item) {
 			super(item);
 
 			nms = CraftItemStack.asNMSCopy(item);
