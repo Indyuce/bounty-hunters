@@ -22,9 +22,16 @@ public class BountyClaimEvent extends BountyEvent {
 		this(bounty, player, false);
 	}
 
-	/*
-	 * this event is called whenever a player claims a bounty by killing the bounty
-	 * target
+	/**
+	 * Called whenever a player claims a bounty by killing the bounty target or
+	 * by giving the target's head to the bounty creator
+	 * 
+	 * @param bounty
+	 *            Bounty claimed
+	 * @param player
+	 *            Player claiming the bounty
+	 * @param headHunting
+	 *            If the player is doing head hunting
 	 */
 	public BountyClaimEvent(Bounty bounty, Player player, boolean headHunting) {
 		super(bounty);
@@ -53,18 +60,15 @@ public class BountyClaimEvent extends BountyEvent {
 
 		// message to player
 		String reward = new NumberFormat().format(getBounty().getReward());
-		Message.BOUNTY_CLAIMED_BY_YOU.format("target", getBounty().getTarget().getName(), "reward", reward)
-				.send(player);
+		Message.BOUNTY_CLAIMED_BY_YOU.format("target", getBounty().getTarget().getName(), "reward", reward).send(player);
 
 		// message to server
 		PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(player);
-		String title = playerData.hasTitle()
-				? ChatColor.LIGHT_PURPLE + "[" + playerData.getTitle().format() + ChatColor.LIGHT_PURPLE + "] "
-				: "";
+		String title = playerData.hasTitle() ? ChatColor.LIGHT_PURPLE + "[" + playerData.getTitle().format() + ChatColor.LIGHT_PURPLE + "] " : "";
 		for (Player online : Bukkit.getOnlinePlayers())
 			if (online != player)
-				Message.BOUNTY_CLAIMED.format("reward", new NumberFormat().format(getBounty().getReward()), "killer",
-						title + player.getName(), "target", getBounty().getTarget().getName()).send(online);
+				Message.BOUNTY_CLAIMED.format("reward", new NumberFormat().format(getBounty().getReward()), "killer", title + player.getName(),
+						"target", getBounty().getTarget().getName()).send(online);
 	}
 
 	public HandlerList getHandlers() {

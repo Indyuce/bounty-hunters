@@ -9,8 +9,13 @@ public class HunterLevelUpEvent extends PlayerEvent {
 
 	private static final HandlerList handlers = new HandlerList();
 
-	/*
-	 * this event is called when a player levels up (cannot be cancelled)
+	/**
+	 * Called when a player levels up which cannot be cancelled
+	 * 
+	 * @param player
+	 *            Hunter leveling up
+	 * @param newLevel
+	 *            Level reached
 	 */
 	public HunterLevelUpEvent(Player player, int newLevel) {
 		super(player);

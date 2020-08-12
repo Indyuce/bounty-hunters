@@ -12,30 +12,39 @@ public class BountyExpireEvent extends BountyEvent {
 	private final BountyExpireCause cause;
 	private final Player player;
 	private final double amount;
-
-	/*
-	 * if the bounty expires after this event is called.
-	 */
 	private final boolean expiring;
 
 	private static final HandlerList handlers = new HandlerList();
 
-	/*
-	 * called when a bounty disappears
+	/**
+	 * When a bounty expires
+	 * 
+	 * @param bounty
+	 *            Bounty expiring
 	 */
 	public BountyExpireEvent(Bounty bounty) {
 		this(bounty, bounty.getReward());
 	}
 
-	/*
-	 * called when a player takes away his contribution from the bounty
+	/**
+	 * Called when a player takes away his contribution from the bounty
+	 * 
+	 * @param bounty
+	 *            Bounty expiring
+	 * @param player
+	 *            Player taking away his contribution
 	 */
 	public BountyExpireEvent(Bounty bounty, Player player) {
 		this(bounty, player, bounty.getContribution(player), BountyExpireCause.PLAYER);
 	}
 
-	/*
-	 * called when an admin removes some extra bounty reward
+	/**
+	 * Called when an admin removes some extra bounty reward
+	 * 
+	 * @param bounty
+	 *            Bounty expiring
+	 * @param amount
+	 *            Amount removed
 	 */
 	public BountyExpireEvent(Bounty bounty, double amount) {
 		this(bounty, null, amount, BountyExpireCause.ADMIN);
@@ -58,8 +67,8 @@ public class BountyExpireEvent extends BountyEvent {
 		return amount;
 	}
 
-	/*
-	 * if bounty disappears
+	/**
+	 * @return If the bounty should disappear after the event is called
 	 */
 	public boolean isExpiring() {
 		return expiring;
@@ -78,9 +87,10 @@ public class BountyExpireEvent extends BountyEvent {
 			Message.BOUNTY_EXPIRED.format("target", getBounty().getTarget().getName()).send(Bukkit.getOnlinePlayers());
 		else {
 			double reward = getBounty().getReward();
-			Message.BOUNTY_DECREASED.format("target", getBounty().getTarget().getName(), "old",
-					new NumberFormat().format(reward), "new", new NumberFormat().format(reward - amount), "player",
-					player.getName(), "amount", new NumberFormat().format(amount)).send(Bukkit.getOnlinePlayers());
+			Message.BOUNTY_DECREASED
+					.format("target", getBounty().getTarget().getName(), "old", new NumberFormat().format(reward), "new",
+							new NumberFormat().format(reward - amount), "player", player.getName(), "amount", new NumberFormat().format(amount))
+					.send(Bukkit.getOnlinePlayers());
 		}
 	}
 
@@ -94,20 +104,20 @@ public class BountyExpireEvent extends BountyEvent {
 
 	public enum BountyExpireCause {
 
-		/*
-		 * when an admin uses an admin command to remove the bounty or when the
+		/**
+		 * When an admin uses an admin command to remove the bounty or when the
 		 * admin removes a player's contribution
 		 */
 		ADMIN,
 
-		/*
-		 * when the creator takes away his contribution or when the bounty
+		/**
+		 * When the creator takes away his contribution or when the bounty
 		 * finally expires
 		 */
 		PLAYER,
 
-		/*
-		 * when a bounty is removed due to inactivity
+		/**
+		 * When a bounty is removed due to inactivity
 		 */
 		INACTIVITY;
 	}

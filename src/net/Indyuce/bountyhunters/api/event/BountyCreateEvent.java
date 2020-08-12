@@ -15,8 +15,8 @@ public class BountyCreateEvent extends BountyEvent {
 
 	private static final HandlerList handlers = new HandlerList();
 
-	/*
-	 * this event is called whenever a player sets a bounty onto another player,
+	/**
+	 * This event is called whenever a player sets a bounty onto another player,
 	 * or when the auto-bounty automatically sets a new bounty on a player since
 	 * he killed someone illegaly
 	 */
@@ -42,15 +42,23 @@ public class BountyCreateEvent extends BountyEvent {
 	public void sendAllert() {
 		String reward = new NumberFormat().format(getBounty().getReward());
 
-		PlayerMessage toOnline = (cause == BountyCause.PLAYER ? Message.NEW_BOUNTY_ON_PLAYER : cause == BountyCause.AUTO_BOUNTY ? Message.NEW_BOUNTY_ON_PLAYER_ILLEGAL : Message.NEW_BOUNTY_ON_PLAYER_UNDEFINED).format("creator", getBounty().hasCreator() ? getBounty().getCreator().getName() : "null", "target", getBounty().getTarget().getName(), "reward", reward);
+		PlayerMessage toOnline = (cause == BountyCause.PLAYER ? Message.NEW_BOUNTY_ON_PLAYER
+				: cause == BountyCause.AUTO_BOUNTY ? Message.NEW_BOUNTY_ON_PLAYER_ILLEGAL : Message.NEW_BOUNTY_ON_PLAYER_UNDEFINED).format("creator",
+						getBounty().hasCreator() ? getBounty().getCreator().getName() : "null", "target", getBounty().getTarget().getName(), "reward",
+						reward);
 
 		for (Player player : Bukkit.getOnlinePlayers()) {
 
 			if (getBounty().hasTarget(player))
-				(cause == BountyCause.PLAYER ? Message.NEW_BOUNTY_ON_YOU : cause == BountyCause.AUTO_BOUNTY ? Message.NEW_BOUNTY_ON_YOU_ILLEGAL : Message.NEW_BOUNTY_ON_YOU_UNDEFINED).format("creator", getBounty().hasCreator() ? getBounty().getCreator().getName() : "null", "target", getBounty().getTarget().getName(), "reward", reward).send(player);
+				(cause == BountyCause.PLAYER ? Message.NEW_BOUNTY_ON_YOU
+						: cause == BountyCause.AUTO_BOUNTY ? Message.NEW_BOUNTY_ON_YOU_ILLEGAL : Message.NEW_BOUNTY_ON_YOU_UNDEFINED)
+								.format("creator", getBounty().hasCreator() ? getBounty().getCreator().getName() : "null", "target",
+										getBounty().getTarget().getName(), "reward", reward)
+								.send(player);
 
 			else if (getBounty().hasCreator(player))
-				Message.BOUNTY_CREATED.format("creator", getBounty().hasCreator() ? getBounty().getCreator().getName() : "null", "target", getBounty().getTarget().getName(), "reward", reward).send(player);
+				Message.BOUNTY_CREATED.format("creator", getBounty().hasCreator() ? getBounty().getCreator().getName() : "null", "target",
+						getBounty().getTarget().getName(), "reward", reward).send(player);
 
 			else
 				toOnline.send(player);
@@ -67,26 +75,26 @@ public class BountyCreateEvent extends BountyEvent {
 
 	public enum BountyCause {
 
-		/*
-		 * when a player sets a bounty onto another player's head
+		/**
+		 * When a player sets a bounty onto another player's head
 		 */
 		PLAYER,
 
-		/*
-		 * when a non-player entity (console/command block) sets a bounty on a
+		/**
+		 * When a non-player entity (console/command block) sets a bounty on a
 		 * player's head
 		 */
 		CONSOLE,
 
-		/*
-		 * when the auto bounty sets a bounty on a player since he killed
+		/**
+		 * When the auto bounty sets a bounty on a player since he killed
 		 * someone illegaly (illegaly = the player did not have any bounty on
 		 * him, which makes it an illegal kill)
 		 */
 		AUTO_BOUNTY,
 
-		/*
-		 * extra bounty cause that is not used in the vanilla BountyHunters but
+		/**
+		 * Extra bounty cause that is not used in the vanilla BountyHunters but
 		 * that can be used by other plugins
 		 */
 		PLUGIN;

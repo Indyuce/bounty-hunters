@@ -6,8 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Level;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -74,10 +74,7 @@ public abstract class BountyManager {
 	}
 
 	public void registerBounty(Bounty bounty) {
-		if (bounties.containsKey(bounty.getId())) {
-			BountyHunters.getInstance().getLogger().log(Level.WARNING, "Attempted to register bounty with duplicate ID " + bounty.getId());
-			return;
-		}
+		Validate.isTrue(!bounties.containsKey(bounty.getId()), "Attempted to register bounty with duplicate ID '" + bounty.getId() + "'");
 
 		bounties.put(bounty.getId(), bounty);
 	}
