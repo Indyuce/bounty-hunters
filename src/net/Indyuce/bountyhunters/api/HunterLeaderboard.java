@@ -1,6 +1,7 @@
 package net.Indyuce.bountyhunters.api;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class HunterLeaderboard {
 		return position < cached.size() ? cached.get(position) : null;
 	}
 
-	public List<UUID> getCachedLeaderboard() {
+	public List<UUID> getCached() {
 		return cached;
 	}
 
@@ -68,6 +69,7 @@ public class HunterLeaderboard {
 		 */
 		if (mapped.containsKey(uuid) || mapped.size() < 16) {
 			mapped.put(uuid, bounties);
+			updateCached();
 			return;
 		}
 
@@ -90,13 +92,13 @@ public class HunterLeaderboard {
 		if (bounties >= leastValue) {
 			mapped.remove(leastKey);
 			mapped.put(uuid, bounties);
+			updateCached();
 		}
-
-		updateCached();
 	}
 
 	private void updateCached() {
 		cached = new ArrayList<>(mapped.entrySet()).stream().sorted(Entry.comparingByValue()).map(entry -> entry.getKey())
 				.collect(Collectors.toList());
+		Collections.reverse(cached);
 	}
 }

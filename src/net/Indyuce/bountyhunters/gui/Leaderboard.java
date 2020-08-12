@@ -29,7 +29,7 @@ public class Leaderboard extends PluginInventory {
 		Inventory inv = Bukkit.createInventory(this, 54, Language.LEADERBOARD_GUI_NAME.format());
 
 		int slot = 0;
-		for (UUID uuid : BountyHunters.getInstance().getHunterLeaderboard().getCachedLeaderboard()) {
+		for (UUID uuid : BountyHunters.getInstance().getHunterLeaderboard().getCached()) {
 			if (slot > slots.length)
 				break;
 
