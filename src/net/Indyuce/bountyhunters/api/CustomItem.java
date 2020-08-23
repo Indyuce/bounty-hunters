@@ -21,18 +21,21 @@ import net.Indyuce.bountyhunters.version.VersionMaterial;
 public enum CustomItem {
 	NEXT_PAGE(new ItemStack(Material.ARROW), "Next"),
 	PREVIOUS_PAGE(new ItemStack(Material.ARROW), "Previous"),
-	GUI_PLAYER_HEAD(VersionMaterial.PLAYER_HEAD.toItem(), "{target}", "", "{noCreator}&cThis player is a thug!", "{isCreator}&7You set this bounty.", "{extraCreator}&7Set by &f{creator}&7.",
-			"&7" + AltChar.listDash + " The reward is &f${reward}&7.", "&7" + AltChar.listDash + " &f{contributors} &7player(s) have contributed.", "&7" + AltChar.listDash + " There are &f{hunters} &7player(s) tracking him.", "", "{isTarget}&cDon't let them kill you.",
-			"{isCreator}&eRight click to take away your contribution.", "{isExtra}&eKill him to claim the bounty!", "{isHunter}&7" + AltChar.listDash + " Click to &euntarget &7him.",
-			"{!isHunter}&7" + AltChar.listDash + " Click to &ctarget &7him."),
-	LB_PLAYER_DATA(VersionMaterial.PLAYER_HEAD.toItem(), "[{rank}] {name}", "&8-----------------------------", "Claimed Bounties: &f{bounties}", "Head Collection: &f{successful_bounties}",
-			"Current Title: &f{title}", "Level: &f{level}", "&8-----------------------------"),
-	PROFILE(VersionMaterial.PLAYER_HEAD.toItem(), "[{level}] {name}", "&8--------------------------------", "Claimed Bounties: &f{claimed_bounties}", "Head Collection: &f{successful_bounties}",
-			"Level: &f{level}", "Level Progress: {level_progress}", "", "Current Title: &f{current_title}", "", "Type /bounties titles to manage your title.",
-			"Type /bounties quotes to manage your quote.", "&8--------------------------------"),
-	SET_BOUNTY(VersionMaterial.WRITABLE_BOOK.toItem(), "How to create a bounty?", "Use /bounty <player> <reward>", "to create a bounty on a player.", "",
-			"&aHow to increase a bounty?", "Use /bounty <player> <amount>", "to increase a bounty.", "", "&aHow to remove a bounty?", "You can remove a bounty as the",
-			"bounty creator by right clicking", "it in this menu."),
+	GUI_PLAYER_HEAD(VersionMaterial.PLAYER_HEAD.toItem(), "{target}", "", "{noCreator}&cThis player is a thug!", "{isCreator}&7You set this bounty.",
+			"{extraCreator}&7Set by &f{creator}&7.", "&7" + AltChar.listDash + " The reward is &f${reward}&7.",
+			"&7" + AltChar.listDash + " &f{contributors} &7player(s) have contributed.",
+			"&7" + AltChar.listDash + " There are &f{hunters} &7player(s) tracking him.", "", "{isTarget}&cDon't let them kill you.",
+			"{isCreator}&eRight click to take away your contribution.", "{isExtra}&eKill him to claim the bounty!",
+			"{isHunter}&7" + AltChar.listDash + " Click to &euntarget &7him.", "{!isHunter}&7" + AltChar.listDash + " Click to &ctarget &7him."),
+	LB_PLAYER_DATA(VersionMaterial.PLAYER_HEAD.toItem(), "[{rank}] {name}", "&8-----------------------------", "Claimed Bounties: &f{bounties}",
+			"Head Collection: &f{successful_bounties}", "Current Title: &f{title}", "Level: &f{level}", "&8-----------------------------"),
+	PROFILE(VersionMaterial.PLAYER_HEAD.toItem(), "[{level}] {name}", "&8--------------------------------", "Claimed Bounties: &f{claimed_bounties}",
+			"Head Collection: &f{successful_bounties}", "Level: &f{level}", "Level Progress: {level_progress}", "",
+			"Current Title: &f{current_title}", "", "Type /bounties titles to manage your title.", "Type /bounties quotes to manage your quote.",
+			"&8--------------------------------"),
+	SET_BOUNTY(VersionMaterial.WRITABLE_BOOK.toItem(), "How to create a bounty?", "Use /bounty <player> <reward>", "to create a bounty on a player.",
+			"", "&aHow to increase a bounty?", "Use /bounty <player> <amount>", "to increase a bounty.", "", "&aHow to remove a bounty?",
+			"You can remove a bounty as the", "bounty creator by right clicking", "it in this menu."),
 	BOUNTY_COMPASS(new ItemStack(Material.COMPASS), "Bounty Compass", "Allows you to see at which", "distance your target is."),
 
 	;
@@ -40,8 +43,6 @@ public enum CustomItem {
 	private ItemStack item;
 	private String name;
 	private List<String> lore;
-
-	private static final String conditionPrefix = ChatColor.GRAY + "{";
 
 	private CustomItem(ItemStack item, String name, String... lore) {
 		this.item = item;
@@ -84,9 +85,11 @@ public enum CustomItem {
 		return new Builder();
 	}
 
-	/*
-	 * allows to format the item lore based on boolean conditions, also applies
-	 * placeholders
+	/**
+	 * Used to format the item lore based on boolean conditions and easily apply
+	 * lore placeholders
+	 * 
+	 * @author cympe
 	 */
 	public class Builder {
 		private final Map<String, Boolean> conditions = new HashMap<>();
@@ -101,7 +104,7 @@ public enum CustomItem {
 		}
 
 		public Builder applyConditions(String[] conditions, boolean[] values) {
-			for (int j = 0; j < conditions.length && j < values.length; j++)
+			for (int j = 0; j < Math.min(conditions.length, values.length); j++)
 				this.conditions.put(conditions[j], values[j]);
 			return this;
 		}
@@ -115,7 +118,7 @@ public enum CustomItem {
 			 */
 			String next;
 			for (Iterator<String> iterator = lore.iterator(); iterator.hasNext();)
-				if ((next = iterator.next()).startsWith(conditionPrefix)) {
+				if ((next = iterator.next()).startsWith(ChatColor.GRAY + "{")) {
 					String condition = next.substring(3).split("\\}")[0];
 					if (conditions.containsKey(condition) && !conditions.get(condition))
 						iterator.remove();
@@ -131,10 +134,15 @@ public enum CustomItem {
 		}
 
 		private String format(String str) {
-			if (str.startsWith(conditionPrefix) && str.contains("}"))
+
+			// remove condition
+			if (str.startsWith(ChatColor.GRAY + "{") && str.contains("}"))
 				str = str.substring(str.indexOf("}") + 1);
+
+			// apply placeholders
 			for (Placeholder placeholder : placeholders)
 				str = str.replace("{" + placeholder.placeholder + "}", placeholder.replacement);
+
 			return str;
 		}
 

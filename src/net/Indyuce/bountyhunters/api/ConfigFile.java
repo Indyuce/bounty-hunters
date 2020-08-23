@@ -13,7 +13,6 @@ import net.Indyuce.bountyhunters.BountyHunters;
 public class ConfigFile {
 	private final Plugin plugin;
 	private final String path, name;
-
 	private final FileConfiguration config;
 
 	public ConfigFile(String name) {
@@ -39,8 +38,8 @@ public class ConfigFile {
 	public void save() {
 		try {
 			config.save(new File(plugin.getDataFolder() + path, name + ".yml"));
-		} catch (IOException e2) {
-			plugin.getLogger().log(Level.SEVERE, "Could not save " + name + ".yml");
+		} catch (IOException exception) {
+			plugin.getLogger().log(Level.SEVERE, "Could not save " + name + ".yml: " + exception.getMessage());
 		}
 	}
 
@@ -57,8 +56,8 @@ public class ConfigFile {
 		if (!new File(plugin.getDataFolder() + path, name + ".yml").exists())
 			try {
 				new File(plugin.getDataFolder() + path, name + ".yml").createNewFile();
-			} catch (IOException e) {
-				plugin.getLogger().log(Level.SEVERE, "Could not generate " + name + ".yml");
+			} catch (IOException exception) {
+				plugin.getLogger().log(Level.SEVERE, "Could not generate " + name + ".yml: " + exception.getMessage());
 			}
 	}
 }
