@@ -48,7 +48,7 @@ public class PlayerHunting {
 				// update compass display name based on distance
 				ItemMeta meta = compass.getItemMeta();
 				meta.setDisplayName(Language.COMPASS_FORMAT.format("blocks",
-						new NumberFormat().thousands().format(bounty.getTarget().getPlayer().getLocation().distance(player.getLocation()))));
+						new NumberFormat(true).format(bounty.getTarget().getPlayer().getLocation().distance(player.getLocation()))));
 				compass.setItemMeta(meta);
 
 				// draw vector
