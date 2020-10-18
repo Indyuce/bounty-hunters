@@ -35,6 +35,7 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public void c(PlayerDeathEvent event) {
-		BountyHunters.getInstance().getPlayerDataManager().get(event.getEntity()).setIllegalKillStreak(0);
+		if (!event.getEntity().hasMetadata("NPC"))
+			BountyHunters.getInstance().getPlayerDataManager().get(event.getEntity()).setIllegalKillStreak(0);
 	}
 }

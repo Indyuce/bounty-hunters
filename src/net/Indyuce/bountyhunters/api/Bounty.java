@@ -64,9 +64,8 @@ public class Bounty {
 	}
 
 	public OfflinePlayer getCreator() {
-		if (amount.size() != 0)
-			for (OfflinePlayer player : amount.keySet())
-				return player;
+		for (OfflinePlayer player : amount.keySet())
+			return player;
 		return null;
 	}
 
