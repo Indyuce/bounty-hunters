@@ -22,13 +22,13 @@ public class RestrictionListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void b(BountyCreateEvent event) {
-		if (!check(event.getCreator(), event.getBounty().getTarget()))
+		if (event.hasCreator() && !check(event.getCreator(), event.getBounty().getTarget()))
 			event.setCancelled(true);
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void c(BountyIncreaseEvent event) {
-		if (!check(event.getPlayer(), event.getBounty().getTarget()))
+		if (event.hasPlayer() && !check(event.getPlayer(), event.getBounty().getTarget()))
 			event.setCancelled(true);
 	}
 
