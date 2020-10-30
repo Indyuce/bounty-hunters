@@ -208,8 +208,8 @@ public class AddBountyCommand implements CommandExecutor {
 		private final boolean bypassMinMax, noTax;
 
 		public CommandArguments(String[] args) {
-			bypassMinMax = has(args, "bmm");
-			noTax = has(args, "nt");
+			bypassMinMax = has(args, "any");
+			noTax = has(args, "notax");
 		}
 
 		private boolean has(String[] args, String arg) {
