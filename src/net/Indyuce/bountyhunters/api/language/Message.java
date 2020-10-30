@@ -48,6 +48,7 @@ public enum Message {
 	REWARD_MUST_BE_HIGHER("&cReward must be higher than ${min}!"),
 	REWARD_MUST_BE_LOWER("&cReward must be lower than ${max}!"),
 	NOT_ENOUGH_MONEY("&cYou don't have enough money."),
+	TOO_MANY_BOUNTIES("&cYou have created too many bounties."),
 	BOUNTY_SET_RESTRICTION("&cYou must wait {left} more second{s} before creating a bounty."),
 	TARGET_SET("&eTarget set."),
 	TARGET_REMOVED("&eTarget removed."),

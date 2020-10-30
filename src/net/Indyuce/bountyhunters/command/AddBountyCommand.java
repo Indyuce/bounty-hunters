@@ -15,10 +15,10 @@ import net.Indyuce.bountyhunters.BountyUtils;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.BountyCommands;
 import net.Indyuce.bountyhunters.api.NumberFormat;
-import net.Indyuce.bountyhunters.api.event.BountyIncreaseEvent;
-import net.Indyuce.bountyhunters.api.event.BountyIncreaseEvent.BountyChangeCause;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent.BountyCause;
+import net.Indyuce.bountyhunters.api.event.BountyIncreaseEvent;
+import net.Indyuce.bountyhunters.api.event.BountyIncreaseEvent.BountyChangeCause;
 import net.Indyuce.bountyhunters.api.language.Message;
 import net.Indyuce.bountyhunters.gui.BountyList;
 
@@ -71,7 +71,7 @@ public class AddBountyCommand implements CommandExecutor {
 			return true;
 		}
 
-		if (sender instanceof Player && target.getName().equals(((Player) sender).getName())) {
+		if (sender instanceof Player && target.equals(sender)) {
 			Message.CANT_SET_BOUNTY_ON_YOURSELF.format().send(sender);
 			return true;
 		}
@@ -128,10 +128,7 @@ public class AddBountyCommand implements CommandExecutor {
 				return true;
 			}
 
-		/*
-		 * right now, bounty will be registered if the event is not cancelled.
-		 * calculate tax and update reward
-		 */
+		// tax calculation
 		double tax = sender.hasPermission("bountyhunters.admin") && arguments.noTax ? 0
 				: Math.max(0, Math.min(1, BountyHunters.getInstance().getConfig().getDouble("bounty-tax.bounty-creation") / 100));
 		double taxed = BountyUtils.truncate(reward * tax, 1);
@@ -140,8 +137,16 @@ public class AddBountyCommand implements CommandExecutor {
 		Optional<Bounty> currentBounty = BountyHunters.getInstance().getBountyManager().getBounty(target);
 		if (currentBounty.isPresent()) {
 
-			// API
+			// amount restriction
 			Bounty bounty = currentBounty.get();
+			int maxAmount = BountyHunters.getInstance().getConfig().getInt("bounty-amount-restriction");
+			if (maxAmount > 0 && sender instanceof Player && !bounty.hasContributed((Player) sender)
+					&& BountyHunters.getInstance().getBountyManager().getContributions((Player) sender).size() >= maxAmount) {
+				Message.TOO_MANY_BOUNTIES.format().send(sender);
+				return true;
+			}
+
+			// API
 			BountyIncreaseEvent bountyEvent = new BountyIncreaseEvent(bounty, sender instanceof Player ? (Player) sender : null, reward - taxed,
 					sender instanceof Player ? BountyChangeCause.PLAYER : BountyChangeCause.CONSOLE);
 			Bukkit.getPluginManager().callEvent(bountyEvent);
@@ -160,6 +165,14 @@ public class AddBountyCommand implements CommandExecutor {
 			else
 				bounty.addReward(bountyEvent.getAdded());
 			bountyEvent.sendAllert();
+			return true;
+		}
+
+		// amount restriction
+		int maxAmount = BountyHunters.getInstance().getConfig().getInt("bounty-amount-restriction");
+		if (maxAmount > 0 && sender instanceof Player
+				&& BountyHunters.getInstance().getBountyManager().getContributions((Player) sender).size() >= maxAmount) {
+			Message.TOO_MANY_BOUNTIES.format().send(sender);
 			return true;
 		}
 
@@ -201,7 +214,7 @@ public class AddBountyCommand implements CommandExecutor {
 
 		private boolean has(String[] args, String arg) {
 			for (String checked : args)
-				if (checked.equalsIgnoreCase("-" + "arg"))
+				if (checked.equalsIgnoreCase("-" + arg))
 					return true;
 			return false;
 		}

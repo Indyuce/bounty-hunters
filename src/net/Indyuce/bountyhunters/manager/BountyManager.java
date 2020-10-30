@@ -20,7 +20,6 @@ import net.Indyuce.bountyhunters.api.BountyInactivityRemoval;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.api.restriction.BedSpawnPoint;
 import net.Indyuce.bountyhunters.api.restriction.BountyRestriction;
-import net.Indyuce.bountyhunters.api.restriction.MaxBountyAmount;
 import net.Indyuce.bountyhunters.gui.BountyEditor;
 
 public abstract class BountyManager {
@@ -44,9 +43,6 @@ public abstract class BountyManager {
 		if (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.bed-spawn-point.enabled"))
 			registerClaimRestriction(
 					new BedSpawnPoint(BountyHunters.getInstance().getConfig().getConfigurationSection("claim-restrictions.bed-spawn-point")));
-
-		if (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.max-amount.enabled"))
-			registerClaimRestriction(new MaxBountyAmount(BountyHunters.getInstance().getConfig().getInt("claim-restrictions.max-amount.max")));
 
 		/*
 		 * checks for inactive bounties every 2min

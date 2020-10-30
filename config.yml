@@ -44,6 +44,10 @@ bounty-effect:
 # In seconds.
 bounty-set-restriction: 120
 
+# Maximum amount of bounties created/increased by one player.
+# Set to 0 for no restriction
+bounty-amount-restriction: 5
+
 # When toggled on, claiming a bounty or killing a
 # player illegaly will not longer display a death message.
 disable-death-message:
