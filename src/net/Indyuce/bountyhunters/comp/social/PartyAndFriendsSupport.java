@@ -10,7 +10,7 @@ public class PartyAndFriendsSupport implements BountyRestriction {
 	private final PAFPlayerManager manager = PAFPlayerManager.getInstance();
 
 	@Override
-	public boolean canInteractWith(Player claimer, OfflinePlayer target) {
+	public boolean canInteractWith(InteractionType interaction, Player claimer, OfflinePlayer target) {
 		return !manager.getPlayer(claimer.getUniqueId()).isAFriendOf(manager.getPlayer(target.getUniqueId()));
 	}
 }

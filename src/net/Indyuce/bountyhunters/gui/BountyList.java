@@ -222,7 +222,7 @@ public class BountyList extends PluginInventory {
 			BountyHunters.getInstance().getEconomy().depositPlayer(player, bountyEvent.getAmountRemoved() * (1 - tax));
 
 			if (bountyEvent.isExpiring())
-				BountyHunters.getInstance().getBountyManager().unregisterBounty(bounty);
+				BountyHunters.getInstance().getBountyManager().unregisterBounty(bounty, true);
 			bounty.removeContribution(player);
 			bountyEvent.sendAllert();
 

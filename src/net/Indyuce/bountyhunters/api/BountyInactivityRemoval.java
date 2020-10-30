@@ -13,7 +13,8 @@ import net.Indyuce.bountyhunters.api.event.BountyExpireEvent.BountyExpireCause;
 import net.Indyuce.bountyhunters.api.language.Message;
 
 public class BountyInactivityRemoval extends BukkitRunnable {
-	private final long timeout = (long) (1000d * 3600d * Math.max(1, BountyHunters.getInstance().getConfig().getDouble("inactive-bounty-removal.time")));
+	private final long timeout = (long) (1000d * 3600d
+			* Math.max(1, BountyHunters.getInstance().getConfig().getDouble("inactive-bounty-removal.time")));
 
 	@Override
 	public void run() {
@@ -37,7 +38,8 @@ public class BountyInactivityRemoval extends BukkitRunnable {
 					try {
 						BountyHunters.getInstance().getEconomy().depositPlayer(contributor, bounty.getContribution(contributor));
 					} catch (Exception exception) {
-						BountyHunters.getInstance().getLogger().log(Level.WARNING, "An error occured while attempting to transfer " + bounty.getContribution(contributor) + "$ to " + contributor.getName() + " during bounty inactivity removal.");
+						BountyHunters.getInstance().getLogger().log(Level.WARNING, "An error occured while attempting to transfer "
+								+ bounty.getContribution(contributor) + "$ to " + contributor.getName() + " during bounty inactivity removal.");
 					}
 
 				Bukkit.getPluginManager().callEvent(new BountyExpireEvent(bounty, null, bounty.getReward(), BountyExpireCause.INACTIVITY));
@@ -54,7 +56,7 @@ public class BountyInactivityRemoval extends BukkitRunnable {
 				 * unregister bounty after removing it from the map so no
 				 * iterator error is thrown
 				 */
-				BountyHunters.getInstance().getBountyManager().unregisterBounty(bounty);
+				BountyHunters.getInstance().getBountyManager().unregisterBounty(bounty, false);
 				break;
 			}
 		}

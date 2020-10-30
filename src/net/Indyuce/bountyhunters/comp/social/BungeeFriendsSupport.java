@@ -11,7 +11,7 @@ public class BungeeFriendsSupport implements BountyRestriction {
 	private final Main plugin = (Main) Bukkit.getPluginManager().getPlugin("BungeeFriends");
 
 	@Override
-	public boolean canInteractWith(Player claimer, OfflinePlayer target) {
+	public boolean canInteractWith(InteractionType interaction, Player claimer, OfflinePlayer target) {
 		return !plugin.getFriendManager().getPlayer(claimer.getUniqueId()).isFriend(target.getUniqueId());
 	}
 }

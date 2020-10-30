@@ -172,6 +172,6 @@ public class BountyClaim implements Listener {
 		}
 
 		// finally, unregister the bounty
-		BountyHunters.getInstance().getBountyManager().unregisterBounty(bounty);
+		BountyHunters.getInstance().getBountyManager().unregisterBounty(bounty, true);
 	}
 }

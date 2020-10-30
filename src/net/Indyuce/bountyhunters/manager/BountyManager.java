@@ -3,9 +3,11 @@ package net.Indyuce.bountyhunters.manager;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -18,6 +20,7 @@ import net.Indyuce.bountyhunters.api.BountyInactivityRemoval;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.api.restriction.BedSpawnPoint;
 import net.Indyuce.bountyhunters.api.restriction.BountyRestriction;
+import net.Indyuce.bountyhunters.api.restriction.MaxBountyAmount;
 import net.Indyuce.bountyhunters.gui.BountyEditor;
 
 public abstract class BountyManager {
@@ -42,6 +45,9 @@ public abstract class BountyManager {
 			registerClaimRestriction(
 					new BedSpawnPoint(BountyHunters.getInstance().getConfig().getConfigurationSection("claim-restrictions.bed-spawn-point")));
 
+		if (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.max-amount.enabled"))
+			registerClaimRestriction(new MaxBountyAmount(BountyHunters.getInstance().getConfig().getInt("claim-restrictions.max-amount.max")));
+
 		/*
 		 * checks for inactive bounties every 2min
 		 */
@@ -49,13 +55,17 @@ public abstract class BountyManager {
 			new BountyInactivityRemoval().runTaskTimer(BountyHunters.getInstance(), 20 * 5, 20 * 60 * 2);
 	}
 
-	/*
-	 * this method can be used even if the bounty is not in the map (the method
-	 * checks if the bounty is in the map before trying to remove it). this way,
-	 * it can be used inside an iterator.
+	/**
+	 * Unregisters a bounty. It removes the bounty from the map, stops player
+	 * trackings and closes bounty editors
+	 * 
+	 * @param remove
+	 *            If the bounty should be removed from the bounty map
+	 * @param bounty
+	 *            Bounty to unregister
 	 */
-	public void unregisterBounty(Bounty bounty) {
-		if (bounties.containsKey(bounty.getId()))
+	public void unregisterBounty(Bounty bounty, boolean remove) {
+		if (remove)
 			bounties.remove(bounty.getId());
 		bounty.getHunters().forEach(hunter -> {
 			PlayerData data = BountyHunters.getInstance().getPlayerDataManager().get(hunter);
@@ -73,6 +83,13 @@ public abstract class BountyManager {
 					online.closeInventory();
 	}
 
+	/**
+	 * Registers a bounty. Throws an IAE if there is already a bounty with the
+	 * same bounty identifier
+	 * 
+	 * @param bounty
+	 *            Bounty to register
+	 */
 	public void registerBounty(Bounty bounty) {
 		Validate.isTrue(!bounties.containsKey(bounty.getId()), "Attempted to register bounty with duplicate ID '" + bounty.getId() + "'");
 
@@ -83,33 +100,97 @@ public abstract class BountyManager {
 		return restrictions;
 	}
 
+	/**
+	 * Registers a bounty restriction. Bounty restrictions apply when
+	 * creating/increasing/claiming a bounty. If some restriction says two
+	 * player's can't interact because they are in the same town/whatever
+	 * reason, the bounty event is cancelled
+	 * 
+	 * @param restriction
+	 *            Restriction to register
+	 */
 	public void registerClaimRestriction(BountyRestriction restriction) {
 		restrictions.add(restriction);
 	}
 
+	/**
+	 * @return Currently active player bounties
+	 */
 	public Collection<Bounty> getBounties() {
 		return bounties.values();
 	}
 
+	/**
+	 * @param player
+	 *            Given player
+	 * @return Find all the bounties the given player contributed in
+	 */
+	public List<Bounty> getContributions(Player player) {
+		return bounties.values().stream().filter(bounty -> bounty.hasContributed(player)).collect(Collectors.toList());
+	}
+
+	/**
+	 * Checks for a bounty on a player
+	 * 
+	 * @deprecated Use getBounty() to retrieve the bounty and check for its
+	 *             existence at the same time
+	 * @param player
+	 *            The bounty target
+	 * @return If the given player has a bounty on his head
+	 */
 	@Deprecated
 	public boolean hasBounty(OfflinePlayer player) {
 		return getBounty(player).isPresent();
 	}
 
+	/**
+	 * Checks for a bounty using a bounty ID
+	 * 
+	 * @param bountyId
+	 *            The bounty identifier
+	 * @return If there is a bounty wouch
+	 */
 	public boolean hasBounty(UUID bountyId) {
 		return bounties.containsKey(bountyId);
 	}
 
+	/**
+	 * Find a player's bounty
+	 * 
+	 * @param target
+	 *            Bounty target
+	 * @return The player bounty
+	 */
 	public Optional<Bounty> getBounty(OfflinePlayer target) {
-		return bounties.values().stream().filter(bounty -> bounty.hasTarget(target)).findAny();
+		for (Bounty bounty : bounties.values())
+			if (bounty.hasTarget(target))
+				return Optional.of(bounty);
+		return Optional.empty();
 	}
 
+	/**
+	 * Find a bounty by bounty ID
+	 * 
+	 * @param bountyId
+	 *            The bounty unique identifier
+	 * @return The corresponding bounty
+	 */
 	public Bounty getBounty(UUID bountyId) {
 		return bounties.get(bountyId);
 	}
 
+	/**
+	 * Find a bounty by player name
+	 * 
+	 * @param name
+	 *            The target player's name
+	 * @return Bounty found or none
+	 */
 	public Optional<Bounty> findByName(String name) {
-		return bounties.values().stream().filter(bounty -> bounty.getTarget().getName().equalsIgnoreCase(name)).findAny();
+		for (Bounty bounty : bounties.values())
+			if (bounty.getTarget().getName().equalsIgnoreCase(name))
+				return Optional.of(bounty);
+		return Optional.empty();
 	}
 
 	public abstract void saveBounties();

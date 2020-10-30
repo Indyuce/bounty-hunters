@@ -12,7 +12,7 @@ import net.Indyuce.bountyhunters.api.restriction.BountyRestriction;
 public class TownySupport implements BountyRestriction {
 
 	@Override
-	public boolean canInteractWith(Player claimer, OfflinePlayer target) {
+	public boolean canInteractWith(InteractionType interaction, Player claimer, OfflinePlayer target) {
 		return !inSameTown(claimer, target);
 	}
 
@@ -21,11 +21,11 @@ public class TownySupport implements BountyRestriction {
 			Resident resident = TownyUniverse.getDataSource().getResident(player.getName());
 			return resident.hasTown() && resident.getTown().hasResident(player1.getName());
 
-		} catch (NotRegisteredException exception) {
 			/*
-			 * player who's claiming the bounty has no town, therefore there is
+			 * Player who's claiming the bounty has no town, therefore there is
 			 * no towny restriction.
 			 */
+		} catch (NotRegisteredException exception) {
 			return false;
 		}
 	}

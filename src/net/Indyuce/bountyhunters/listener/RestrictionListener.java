@@ -11,30 +11,31 @@ import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 import net.Indyuce.bountyhunters.api.event.BountyIncreaseEvent;
 import net.Indyuce.bountyhunters.api.restriction.BountyRestriction;
+import net.Indyuce.bountyhunters.api.restriction.BountyRestriction.InteractionType;
 
 public class RestrictionListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void a(BountyClaimEvent event) {
-		if (!check(event.getClaimer(), event.getTarget()))
+		if (!check(InteractionType.CLAIM, event.getClaimer(), event.getTarget()))
 			event.setCancelled(true);
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void b(BountyCreateEvent event) {
-		if (event.hasCreator() && !check(event.getCreator(), event.getBounty().getTarget()))
+		if (event.hasCreator() && !check(InteractionType.CREATE, event.getCreator(), event.getBounty().getTarget()))
 			event.setCancelled(true);
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void c(BountyIncreaseEvent event) {
-		if (event.hasPlayer() && !check(event.getPlayer(), event.getBounty().getTarget()))
+		if (event.hasPlayer() && !check(InteractionType.INCREASE, event.getPlayer(), event.getBounty().getTarget()))
 			event.setCancelled(true);
 	}
 
-	private boolean check(Player player, OfflinePlayer target) {
+	private boolean check(InteractionType interaction, Player player, OfflinePlayer target) {
 		for (BountyRestriction restriction : BountyHunters.getInstance().getBountyManager().getClaimRestrictions())
-			if (!restriction.canInteractWith(player, target))
+			if (!restriction.canInteractWith(interaction, player, target))
 				return false;
 		return true;
 	}

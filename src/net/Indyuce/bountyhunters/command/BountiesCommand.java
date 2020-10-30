@@ -117,7 +117,7 @@ public class BountiesCommand implements CommandExecutor {
 			if (bountyEvent.isCancelled())
 				return true;
 
-			BountyHunters.getInstance().getBountyManager().unregisterBounty(bounty.get());
+			BountyHunters.getInstance().getBountyManager().unregisterBounty(bounty.get(), true);
 		}
 
 		// choose title

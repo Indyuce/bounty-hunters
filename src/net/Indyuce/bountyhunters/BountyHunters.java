@@ -335,6 +335,7 @@ public class BountyHunters extends JavaPlugin {
 	public BankAccount getTaxBankAccount() {
 		return taxBankAccount;
 	}
+
 	public HunterLeaderboard getHunterLeaderboard() {
 		return leaderboard;
 	}
