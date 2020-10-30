@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.language.Language;
-import net.Indyuce.bountyhunters.api.player.PlayerData;
+import net.Indyuce.bountyhunters.api.player.LeaderboardProfile;
 import net.Indyuce.bountyhunters.version.VersionMaterial;
 
 public class Leaderboard extends PluginInventory {
@@ -33,7 +33,7 @@ public class Leaderboard extends PluginInventory {
 			if (slot > slots.length)
 				break;
 
-			PlayerData data = BountyHunters.getInstance().getPlayerDataManager().get(uuid);
+			LeaderboardProfile data = BountyHunters.getInstance().getHunterLeaderboard().getData(uuid);
 			ItemStack skull = CustomItem.LB_PLAYER_DATA.toItemStack();
 			SkullMeta meta = (SkullMeta) skull.getItemMeta();
 
@@ -68,16 +68,13 @@ public class Leaderboard extends PluginInventory {
 	public void whenClicked(ItemStack item, InventoryAction action, int slot) {
 	}
 
-	private String applyPlaceholders(String str, PlayerData playerData, int rank) {
-		String title = playerData.hasTitle() ? playerData.getTitle().format() : Language.NO_TITLE.format();
-
-		str = str.replace("{level}", "" + playerData.getLevel());
-		str = str.replace("{bounties}", "" + playerData.getClaimedBounties());
-		str = str.replace("{successful_bounties}", "" + playerData.getSuccessfulBounties());
-		str = str.replace("{title}", title);
-		str = str.replace("{name}", playerData.getOfflinePlayer().getName());
+	private String applyPlaceholders(String str, LeaderboardProfile data, int rank) {
+		str = str.replace("{level}", "" + data.getLevel());
+		str = str.replace("{bounties}", "" + data.getClaimedBounties());
+		str = str.replace("{successful_bounties}", "" + data.getSuccessfulBounties());
+		str = str.replace("{title}", data.getTitle());
+		str = str.replace("{name}", data.getName());
 		str = str.replace("{rank}", "" + rank);
-
 		return str;
 	}
 }

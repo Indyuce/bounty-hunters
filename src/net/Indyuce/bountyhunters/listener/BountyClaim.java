@@ -148,7 +148,7 @@ public class BountyClaim implements Listener {
 		playerData.addClaimedBounties(1);
 		if (BountyHunters.getInstance().getLevelManager().isEnabled())
 			playerData.refreshLevel(killer);
-		BountyHunters.getInstance().getHunterLeaderboard().update(killer.getUniqueId(), playerData.getClaimedBounties());
+		BountyHunters.getInstance().getHunterLeaderboard().update(playerData);
 
 		/*
 		 * adds 1 to the bounty creator's successful-bounties stat

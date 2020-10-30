@@ -2,19 +2,26 @@ package net.Indyuce.bountyhunters.api;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.ConfigurationSection;
+
 import net.Indyuce.bountyhunters.BountyHunters;
+import net.Indyuce.bountyhunters.api.player.LeaderboardProfile;
+import net.Indyuce.bountyhunters.api.player.PlayerData;
 
 public class HunterLeaderboard {
 	private final ConfigFile configFile;
-	private final Map<UUID, Integer> mapped = new HashMap<>();
+	private final Map<UUID, LeaderboardProfile> mapped = new HashMap<>();
 
 	private List<UUID> cached;
 
@@ -23,7 +30,8 @@ public class HunterLeaderboard {
 
 		for (String key : configFile.getConfig().getKeys(false))
 			try {
-				mapped.put(UUID.fromString(key), configFile.getConfig().getInt(key));
+				Validate.isTrue(configFile.getConfig().get(key) instanceof ConfigurationSection, "Outdated leaderboard data type");
+				mapped.put(UUID.fromString(key), new LeaderboardProfile(configFile.getConfig().getConfigurationSection(key)));
 			} catch (IllegalArgumentException exception) {
 				BountyHunters.getInstance().getLogger().log(Level.INFO, "Could not load leaderboard key '" + key + "': " + exception.getMessage());
 			}
@@ -31,22 +39,38 @@ public class HunterLeaderboard {
 		updateCached();
 	}
 
-	public Map<UUID, Integer> mapLeaderboard() {
-		return mapped;
-	}
-
-	public int getScore(UUID uuid) {
+	/**
+	 * @param uuid
+	 *            The player UUID
+	 * @return Cached data of a specific player in the leaderboard
+	 */
+	public LeaderboardProfile getData(UUID uuid) {
 		return mapped.get(uuid);
 	}
 
-	public UUID getPosition(int position) {
-		return position < cached.size() ? cached.get(position) : null;
+	/**
+	 * @param position
+	 *            Leaderboard rank
+	 * @return Find a player with a specific rank, or empty optional if none
+	 */
+	public Optional<LeaderboardProfile> getPosition(int position) {
+		Validate.isTrue(position > 0, "Position must be greater than 0");
+
+		return position - 1 < cached.size() ? Optional.of(mapped.get(cached.get(position - 1))) : Optional.empty();
 	}
 
+	/**
+	 * @return The ordered list of UUIDs which corresponds to the leaderboard.
+	 *         This list is updated everytime a player claims a bounty and makes
+	 *         retrieving leaderboard positions easier
+	 */
 	public List<UUID> getCached() {
 		return cached;
 	}
 
+	/**
+	 * Empties old leaderboard save file and caches newest leaderboard profiles
+	 */
 	public void save() {
 
 		// reset previous keys
@@ -54,21 +78,28 @@ public class HunterLeaderboard {
 			configFile.getConfig().set(key, null);
 
 		// apply new keys
-		mapped.forEach((uuid, value) -> configFile.getConfig().set(uuid.toString(), value));
+		mapped.values().forEach(profile -> profile.save(configFile.getConfig()));
 
 		// save file
 		configFile.save();
 	}
 
-	public void update(UUID uuid, int bounties) {
+	/**
+	 * Method called when a player claims a bounty and needs to update his
+	 * position in the leaderboard
+	 * 
+	 * @param player
+	 *            Player who claimed a bounty
+	 */
+	public void update(PlayerData player) {
 
 		/*
 		 * if the leaderboard already contains that player, just add one to the
 		 * bounties counter; if there is still not at least 16 players in the
 		 * cached leaderboard, just add it to the keys and that's all
 		 */
-		if (mapped.containsKey(uuid) || mapped.size() < 16) {
-			mapped.put(uuid, bounties);
+		if (mapped.containsKey(player.getUniqueId()) || mapped.size() < 16) {
+			mapped.put(player.getUniqueId(), new LeaderboardProfile(player));
 			updateCached();
 			return;
 		}
@@ -82,23 +113,32 @@ public class HunterLeaderboard {
 		int leastValue = Integer.MAX_VALUE;
 
 		for (UUID key : mapped.keySet()) {
-			int value = mapped.get(key);
-			if (value < leastValue) {
+			LeaderboardProfile data = mapped.get(key);
+			if (data.getClaimedBounties() < leastValue) {
 				leastKey = key;
-				leastValue = value;
+				leastValue = data.getClaimedBounties();
 			}
 		}
 
-		if (bounties >= leastValue) {
+		if (player.getClaimedBounties() >= leastValue) {
 			mapped.remove(leastKey);
-			mapped.put(uuid, bounties);
+			mapped.put(player.getUniqueId(), new LeaderboardProfile(player));
 			updateCached();
 		}
 	}
 
+	/**
+	 * Updates the leaderboard position list
+	 */
 	private void updateCached() {
-		cached = new ArrayList<>(mapped.entrySet()).stream().sorted(Entry.comparingByValue()).map(entry -> entry.getKey())
-				.collect(Collectors.toList());
+		cached = new ArrayList<>(mapped.entrySet()).stream().sorted(Entry.comparingByValue(new Comparator<LeaderboardProfile>() {
+
+			@Override
+			public int compare(LeaderboardProfile o1, LeaderboardProfile o2) {
+				return Integer.compare(o1.getClaimedBounties(), o2.getClaimedBounties());
+			}
+
+		})).map(entry -> entry.getKey()).collect(Collectors.toList());
 		Collections.reverse(cached);
 	}
 }

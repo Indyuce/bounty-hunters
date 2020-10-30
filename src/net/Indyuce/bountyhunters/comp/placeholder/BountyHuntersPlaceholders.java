@@ -1,15 +1,14 @@
 package net.Indyuce.bountyhunters.comp.placeholder;
 
 import java.util.Optional;
-import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.NumberFormat;
+import net.Indyuce.bountyhunters.api.player.LeaderboardProfile;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
 
 public class BountyHuntersPlaceholders extends PlaceholderExpansion {
@@ -33,15 +32,25 @@ public class BountyHuntersPlaceholders extends PlaceholderExpansion {
 	public String onRequest(OfflinePlayer player, String identifier) {
 
 		// leaderboard placeholders
-		if (identifier.startsWith("top_")) {
-			int index = Integer.parseInt(identifier.substring(4));
-			UUID found = BountyHunters.getInstance().getHunterLeaderboard().getPosition(index);
-			return found == null ? "-" : Bukkit.getOfflinePlayer(found).getName();
+		if (identifier.startsWith("top_name_")) {
+			int index = Integer.parseInt(identifier.substring("top_name_".length()));
+			Optional<LeaderboardProfile> found = BountyHunters.getInstance().getHunterLeaderboard().getPosition(index);
+			return found.isPresent() ? found.get().getName() : "-";
 		}
-		if (identifier.startsWith("topb_")) {
-			int index = Integer.parseInt(identifier.substring(5));
-			UUID found = BountyHunters.getInstance().getHunterLeaderboard().getPosition(index);
-			return found == null ? "0" : "" + BountyHunters.getInstance().getHunterLeaderboard().getScore(found);
+		if (identifier.startsWith("top_bounties_")) {
+			int index = Integer.parseInt(identifier.substring("top_bounties_".length()));
+			Optional<LeaderboardProfile> found = BountyHunters.getInstance().getHunterLeaderboard().getPosition(index);
+			return found.isPresent() ? "" + found.get().getClaimedBounties() : "-";
+		}
+		if (identifier.startsWith("top_heads_")) {
+			int index = Integer.parseInt(identifier.substring("top_heads_".length()));
+			Optional<LeaderboardProfile> found = BountyHunters.getInstance().getHunterLeaderboard().getPosition(index);
+			return found.isPresent() ? "" + found.get().getSuccessfulBounties() : "-";
+		}
+		if (identifier.startsWith("top_level_")) {
+			int index = Integer.parseInt(identifier.substring("top_level_".length()));
+			Optional<LeaderboardProfile> found = BountyHunters.getInstance().getHunterLeaderboard().getPosition(index);
+			return found.isPresent() ? "" + found.get().getLevel() : "-";
 		}
 
 		PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(player);

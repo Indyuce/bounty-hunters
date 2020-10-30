@@ -5,3 +5,5 @@
 /BountySafeChecks.class
 /BedSpawnPoint.class
 /RestrictionListener.class
+/RestrictionListener$InteractionType.class
+/.gitignore
