@@ -66,13 +66,19 @@ public class Bounty {
 	public OfflinePlayer getCreator() {
 		for (OfflinePlayer player : amount.keySet())
 			return player;
-		return null;
+		throw new NullPointerException("Bounty has no contributor");
 	}
 
 	public OfflinePlayer getTarget() {
 		return target;
 	}
 
+	/*
+	 * TODO Save ONE boolean field to know if the bounty was created by the
+	 * console or by a player. That way the creator is simply the first key of
+	 * the 'amount' map. ATM there's no way to tell which entity created the
+	 * bounty, only which entity contributed last to it
+	 */
 	public boolean hasCreator() {
 		return amount.size() > 0;
 	}
@@ -130,10 +136,6 @@ public class Bounty {
 
 	public void setLastModified(long lastModified) {
 		this.lastUpdated = lastModified;
-	}
-
-	public boolean isAutoBounty() {
-		return !hasCreator();
 	}
 
 	public List<OfflinePlayer> getHunters() {

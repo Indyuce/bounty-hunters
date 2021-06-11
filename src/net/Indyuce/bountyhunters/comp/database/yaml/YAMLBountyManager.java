@@ -2,7 +2,6 @@ package net.Indyuce.bountyhunters.comp.database.yaml;
 
 import java.util.UUID;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -16,10 +15,21 @@ import net.Indyuce.bountyhunters.api.ConfigFile;
 import net.Indyuce.bountyhunters.manager.BountyManager;
 
 public class YAMLBountyManager extends BountyManager {
+	private final String path;
+
 	public YAMLBountyManager() {
+		this("data");
+	}
+
+	/**
+	 * @param path Data file path
+	 */
+	public YAMLBountyManager(String path) {
+
+		this.path = path;
 
 		// load bounties in the map
-		FileConfiguration data = new ConfigFile("data").getConfig();
+		FileConfiguration data = new ConfigFile(path).getConfig();
 		for (String key : data.getKeys(false))
 			try {
 				registerBounty(load(data.getConfigurationSection(key)));
@@ -30,7 +40,7 @@ public class YAMLBountyManager extends BountyManager {
 
 	@Override
 	public void saveBounties() {
-		ConfigFile data = new ConfigFile("data");
+		ConfigFile data = new ConfigFile(path);
 
 		data.getConfig().getKeys(false).forEach(key -> data.getConfig().set(key, null));
 		getBounties().forEach(bounty -> save(bounty, data.getConfig()));
@@ -48,8 +58,8 @@ public class YAMLBountyManager extends BountyManager {
 
 		// default value allows for support for older plugin builds
 		bounty.setLastModified(config.getLong("last-modified", System.currentTimeMillis()));
-		for (String key : config.getStringList("hunters"))
-			bounty.addHunter(Bukkit.getOfflinePlayer(UUID.fromString(key)));
+//		for (String key : config.getStringList("hunters"))
+//			bounty.addHunter(Bukkit.getOfflinePlayer(UUID.fromString(key)));
 		if (config.contains("up"))
 			for (String key : config.getConfigurationSection("up").getKeys(false))
 				bounty.addContribution(Bukkit.getOfflinePlayer(UUID.fromString(key)), config.getDouble("up." + key));
@@ -63,7 +73,7 @@ public class YAMLBountyManager extends BountyManager {
 		config.set(key + ".extra", bounty.getExtra());
 		config.set(key + ".last-modified", bounty.getLastModified());
 
-		config.set(key + ".hunters", bounty.getHunters().stream().map(uuid -> uuid.toString()).collect(Collectors.toList()));
+//		config.set(key + ".hunters", bounty.getHunters().stream().map(hunter -> hunter.getUniqueId().toString()).collect(Collectors.toList()));
 
 		config.createSection(key + ".up");
 		for (OfflinePlayer increase : bounty.getContributors())

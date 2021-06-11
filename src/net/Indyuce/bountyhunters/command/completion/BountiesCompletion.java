@@ -30,6 +30,7 @@ public class BountiesCompletion implements TabCompleter {
 			if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit"))
 				BountyHunters.getInstance().getBountyManager().getBounties().forEach(bounty -> list.add(bounty.getTarget().getName()));
 
-		return args[args.length - 1].isEmpty() ? list : list.stream().filter(string -> string.toLowerCase().startsWith(args[args.length - 1].toLowerCase())).collect(Collectors.toList());
+		return args[args.length - 1].isEmpty() ? list
+				: list.stream().filter(string -> string.toLowerCase().startsWith(args[args.length - 1].toLowerCase())).collect(Collectors.toList());
 	}
 }

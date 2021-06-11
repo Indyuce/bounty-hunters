@@ -55,9 +55,14 @@ public class BountyList extends PluginInventory {
 
 			Bounty bounty = bounties.get(j);
 			Builder builder = CustomItem.GUI_PLAYER_HEAD.newBuilder();
-			boolean isTarget = bounty.hasTarget(player), isCreator = bounty.hasCreator(player), isHunter = bounty.hasHunter(player), noCreator = !bounty.hasCreator();
-			builder.applyConditions(new String[] { "noCreator", "isCreator", "extraCreator", "isExtra", "isTarget", "isHunter", "!isHunter" }, new boolean[] { !bounty.hasCreator(), isCreator, !noCreator && !isCreator, !isTarget && !isCreator, isTarget, !isTarget && isHunter, !isTarget && !isHunter });
-			builder.applyPlaceholders("target", bounty.getTarget().getName(), "creator", bounty.hasCreator() ? bounty.getCreator().getName() : "Server", "reward", new NumberFormat().format(bounty.getReward()), "contributors", bounty.getContributors().size(), "hunters", bounty.getHunters().size());
+			boolean isTarget = bounty.hasTarget(player), isCreator = bounty.hasCreator(player), isHunter = bounty.hasHunter(player),
+					noCreator = !bounty.hasCreator();
+			builder.applyConditions(new String[] { "noCreator", "isCreator", "extraCreator", "isExtra", "isTarget", "isHunter", "!isHunter" },
+					new boolean[] { !bounty.hasCreator(), isCreator, !noCreator && !isCreator, !isTarget && !isCreator, isTarget,
+							!isTarget && isHunter, !isTarget && !isHunter });
+			builder.applyPlaceholders("target", bounty.getTarget().getName(), "creator",
+					bounty.hasCreator() ? bounty.getCreator().getName() : "Server", "reward", new NumberFormat().format(bounty.getReward()),
+					"contributors", bounty.getContributors().size(), "hunters", bounty.getHunters().size());
 			ItemStack item = NBTItem.get(builder.build()).addTag(new ItemTag("bountyId", bounty.getId().toString())).toItem();
 
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
@@ -74,7 +79,8 @@ public class BountyList extends PluginInventory {
 			ItemMeta compassMeta = compass.getItemMeta();
 			List<String> compassLore = compassMeta.getLore();
 			compassLore.add("");
-			compassLore.add(Language.CLICK_BUY_COMPASS.format("price", new NumberFormat().format(BountyHunters.getInstance().getConfig().getDouble("player-tracking.price"))));
+			compassLore.add(Language.CLICK_BUY_COMPASS.format("price",
+					new NumberFormat().format(BountyHunters.getInstance().getConfig().getDouble("player-tracking.price"))));
 			compassMeta.setLore(compassLore);
 			compass.setItemMeta(compassMeta);
 
@@ -170,7 +176,7 @@ public class BountyList extends PluginInventory {
 					 * check the player who wants to hunt the bounty target has
 					 * not created the bounty.
 					 */
-					if (bounty.hasCreator(player) && !BountyHunters.getInstance().getConfig().getBoolean("own-bounty-claiming")) {
+					if (bounty.hasCreator(player) && !BountyHunters.getInstance().getConfig().getBoolean("player-tracking.can-track-own-bounties")) {
 						Message.CANT_TRACK_CREATOR.format().send(player);
 						return;
 					}
@@ -180,7 +186,8 @@ public class BountyList extends PluginInventory {
 						return;
 
 					// check for target cooldown
-					long remain = (long) (data.getLastTarget() + BountyHunters.getInstance().getConfig().getDouble("player-tracking.cooldown") * 1000 - System.currentTimeMillis()) / 1000;
+					long remain = (long) (data.getLastTarget() + BountyHunters.getInstance().getConfig().getDouble("player-tracking.cooldown") * 1000
+							- System.currentTimeMillis()) / 1000;
 					if (remain > 0) {
 						Message.TARGET_COOLDOWN.format("remain", remain, "s", remain >= 2 ? "s" : "").send(player);
 						return;

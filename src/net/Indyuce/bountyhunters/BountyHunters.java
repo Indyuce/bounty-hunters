@@ -86,6 +86,7 @@ public class BountyHunters extends JavaPlugin {
 	private BankAccount taxBankAccount;
 	public boolean formattedNumbers;
 
+	@SuppressWarnings("deprecation")
 	public void onLoad() {
 		plugin = this;
 
@@ -142,10 +143,12 @@ public class BountyHunters extends JavaPlugin {
 		}
 
 		/*
-		 * bounties must be loaded after hunt manager is initialized
+		 * Bounties must be loaded after player datas as registering hunters
+		 * requires PlayerDatas to be initiliazed
 		 */
-		bountyManager = dataProvider.provideBounties();
 		playerDataManager = dataProvider.providePlayerData();
+		Bukkit.getOnlinePlayers().forEach(player -> playerDataManager.load(player));
+		bountyManager = dataProvider.provideBounties();
 
 		// listeners
 		Bukkit.getPluginManager().registerEvents(new BountyClaim(), this);
@@ -263,11 +266,6 @@ public class BountyHunters extends JavaPlugin {
 
 		new ConfigFile("data").setup();
 		leaderboard = new HunterLeaderboard(new ConfigFile("/cache", "leaderboard"));
-
-		/*
-		 * load player data from all online players in case of /reload
-		 */
-		Bukkit.getOnlinePlayers().forEach(player -> playerDataManager.load(player));
 
 		/*
 		 * only reload config files after levels.yml is loaded or else it can't
