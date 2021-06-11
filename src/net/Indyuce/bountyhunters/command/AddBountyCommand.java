@@ -177,7 +177,7 @@ public class AddBountyCommand implements CommandExecutor {
 		}
 
 		// API
-		Bounty bounty = new Bounty(sender instanceof Player ? (Player) sender : null, target, reward);
+		Bounty bounty = new Bounty(sender instanceof Player ? (Player) sender : null, target, reward - taxed);
 		BountyCreateEvent bountyEvent = new BountyCreateEvent(bounty, sender instanceof Player ? (Player) sender : null,
 				sender instanceof Player ? BountyCause.PLAYER : BountyCause.CONSOLE);
 		Bukkit.getPluginManager().callEvent(bountyEvent);
