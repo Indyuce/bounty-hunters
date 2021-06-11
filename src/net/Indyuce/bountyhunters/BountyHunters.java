@@ -64,7 +64,6 @@ import net.Indyuce.bountyhunters.manager.PlayerDataManager;
 import net.Indyuce.bountyhunters.version.PluginVersion;
 import net.Indyuce.bountyhunters.version.SpigotPlugin;
 import net.Indyuce.bountyhunters.version.wrapper.VersionWrapper;
-import net.Indyuce.bountyhunters.version.wrapper.VersionWrapper_Reflection;
 import net.milkbowl.vault.economy.Economy;
 
 public class BountyHunters extends JavaPlugin {
@@ -95,8 +94,11 @@ public class BountyHunters extends JavaPlugin {
 			wrapper = (VersionWrapper) Class.forName("net.Indyuce.bountyhunters.version.wrapper.VersionWrapper_" + version.toString().substring(1))
 					.newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException exception) {
-			getLogger().log(Level.INFO, "Your server version is handled via reflection.");
-			wrapper = new VersionWrapper_Reflection();
+			getLogger().log(Level.INFO, "Your server version is not supported.");
+//			wrapper = new VersionWrapper_Reflection();
+			
+			Bukkit.getPluginManager().disablePlugin(this);
+			return;
 		}
 
 		try {

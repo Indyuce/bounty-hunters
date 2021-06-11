@@ -2,12 +2,14 @@ package net.Indyuce.bountyhunters.version.wrapper;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Particle;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -16,6 +18,9 @@ import org.bukkit.inventory.meta.SkullMeta;
 import net.Indyuce.bountyhunters.version.wrapper.api.ItemTag;
 import net.Indyuce.bountyhunters.version.wrapper.api.NBTItem;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.chat.ChatMessageType;
+import net.minecraft.network.chat.IChatBaseComponent.ChatSerializer;
+import net.minecraft.network.protocol.game.PacketPlayOutChat;
 
 public class VersionWrapper_1_17_R1 implements VersionWrapper {
 
@@ -26,7 +31,7 @@ public class VersionWrapper_1_17_R1 implements VersionWrapper {
 
 	@Override
 	public void sendJson(Player player, String message) {
-		player.sendRawMessage(message);
+		((CraftPlayer) player).getHandle().b.sendPacket(new PacketPlayOutChat(ChatSerializer.a(message), ChatMessageType.a, UUID.randomUUID()));
 	}
 
 	@Override

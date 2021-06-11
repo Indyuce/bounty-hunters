@@ -3,7 +3,6 @@ package net.Indyuce.bountyhunters.version.wrapper;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -36,27 +35,20 @@ public class VersionWrapper_Reflection implements VersionWrapper {
 	 */
 	@Override
 	public void sendJson(Player player, String message) {
-		try {
-			Object chatMsg = nms("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, message);
-			Object titlePacket = nms("PacketPlayOutChat").getConstructor(nms("IChatBaseComponent"), nms("ChatMessageType"), UUID.class)
-					.newInstance(chatMsg, nms("ChatMessageType").getDeclaredField("CHAT").get(null), UUID.randomUUID());
-			sendPacket(player, titlePacket);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException
-				| NoSuchMethodException | ClassNotFoundException | NoSuchFieldException e) {
-			e.printStackTrace();
-		}
+//		player.spigot().sendMessage(ChatMessageType.CHAT, component);
+//		player.sendRawMessage(message);
 	}
 
-	private void sendPacket(Player player, Object packet) {
-		try {
-			Object handle = player.getClass().getMethod("getHandle").invoke(player);
-			Object connection = handle.getClass().getDeclaredField("playerConnection").get(handle);
-			connection.getClass().getMethod("sendPacket", nms("Packet")).invoke(connection, packet);
-		} catch (ClassNotFoundException | IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException
-				| InvocationTargetException | NoSuchMethodException e) {
-			e.printStackTrace();
-		}
-	}
+//	private void sendPacket(Player player, Object packet) {
+//		try {
+//			Object handle = player.getClass().getMethod("getHandle").invoke(player);
+//			Object connection = handle.getClass().getDeclaredField("playerConnection").get(handle);
+//			connection.getClass().getMethod("sendPacket", nms("Packet")).invoke(connection, packet);
+//		} catch (ClassNotFoundException | IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException
+//				| InvocationTargetException | NoSuchMethodException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	private Class<?> nms(String str) throws ClassNotFoundException {
 		return Class.forName("net.minecraft.server." + BountyHunters.getInstance().getVersion().toString() + "." + str);
