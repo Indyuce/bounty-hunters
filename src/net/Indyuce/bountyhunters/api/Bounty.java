@@ -29,6 +29,7 @@ public class Bounty {
 
 	public Bounty(OfflinePlayer creator, OfflinePlayer target, double reward) {
 		Validate.notNull(target, "Target cannot be null");
+		Validate.notNull(target.getName(), "Couldn't find target");
 		Validate.notNull(creator, "Creator cannot be null");
 
 		id = UUID.randomUUID();
