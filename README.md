@@ -26,7 +26,7 @@ Bug reports and feature suggestions keep the project alive too!
     <dependency>
         <groupId>com.github.Indyuce</groupId>
         <artifactId>bounty-hunters</artifactId>
-        <version>Latest commit id</version>
+        <version>master-SNAPSHOT</version>
     </dependency>
 </dependencies>
 
