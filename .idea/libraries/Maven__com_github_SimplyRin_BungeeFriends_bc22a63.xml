@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.github.SimplyRin:BungeeFriends:bc22a63">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/SimplyRin/BungeeFriends/bc22a63/BungeeFriends-bc22a63.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/SimplyRin/BungeeFriends/bc22a63/BungeeFriends-bc22a63-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/SimplyRin/BungeeFriends/bc22a63/BungeeFriends-bc22a63-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

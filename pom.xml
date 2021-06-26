@@ -34,6 +34,11 @@
     <repositories>
 
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+
+        <repository>
             <id>bungeecord-repo</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
@@ -41,11 +46,6 @@
         <repository>
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-        </repository>
-
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
         </repository>
 
         <repository>
@@ -193,6 +193,24 @@
             <scope>provided</scope>
         </dependency>
 
+        <!--<dependency>
+            <groupId>com.github.simonsator</groupId>
+            <artifactId>BungeecordPartyAndFriends</artifactId>
+            <version>e9ff8a3</version>
+        </dependency>-->
+
+        <dependency>
+            <groupId>com.github.TownyAdvanced</groupId>
+            <artifactId>Towny</artifactId>
+            <version>0.96.7.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.SimplyRin</groupId>
+            <artifactId>BungeeFriends</artifactId>
+            <version>bc22a63</version>
+        </dependency>
+
         <!-- Local libs -->
         <dependency>
             <groupId>com.github.Zrips</groupId>
@@ -203,27 +221,11 @@
         </dependency>
 
         <dependency>
-            <groupId>com.palmergames.bukkit</groupId>
-            <artifactId>Towny</artifactId>
-            <version>0.93.0.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Towny.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>de.simonsator</groupId>
-            <artifactId>PartyAndFriends</artifactId>
+            <groupId>com.github.simonsator</groupId>
+            <artifactId>BungeecordPartyAndFriends</artifactId>
             <version>1.4.6</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/Party-and-Friends-MySQL-Edition-Spigot-API-1.4.6.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>net.simplyrin</groupId>
-            <artifactId>BungeeFriends</artifactId>
-            <version>1.6.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/BungeeFriends-1.6.1.jar</systemPath>
         </dependency>
 
     </dependencies>
