@@ -1,0 +1,79 @@
+name: BountyHunters
+version: 2.3.15
+main: net.Indyuce.bountyhunters.BountyHunters
+author: Indyuce
+api-version: 1.13
+depend: [Vault]
+softdepend: [WorldGuard,Residence,PartyAndFriends,BungeeFriends,Towny,PlaceholderAPI]
+
+commands:
+    addbounty:
+        description: Set a bounty on a player.
+        aliases: [bounty, setbounty]
+    bounties:
+        description: See all the active bounties.
+    hunters:
+        description: Opens the hunter leaderboard.
+        aliases: [hunterleaderboard,hunterlb]
+    redeembountyheads:
+        description: Redeem your player heads.
+
+permissions:
+    
+    # Access to admin commands
+    bountyhunters.admin:
+        default: op
+    
+    # Access to the bounty list
+    bountyhunters.list:
+        default: op
+    
+    # Access to the hunter leaderboard
+    bountyhunters.leaderboard:
+        default: op
+    
+    # Access to tracking compass
+    bountyhunters.compass:
+        default: op
+    
+    # Grants access to /addbounty
+    bountyhunters.add:
+        default: op
+    
+    # Access to level up perks
+    bountyhunters.title:
+        default: op
+    bountyhunters.quote:
+        default: op
+    
+    # Perm to use /redeembountyheads.
+    bountyhunters.redeem-heads:
+        default: op
+    
+    # Perm to claim the bounty.
+    bountyhunters.claim:
+        default: op
+    
+    # Perm to remove your bounty part.
+    bountyhunters.remove:
+        default: op
+    
+    # Admin perm, players can't set a bounty on you
+    bountyhunters.immunity:
+        default: false
+    
+    # Bypasses previous permission
+    bountyhunters.immunity.bypass:
+        default: false
+    
+    # You cannot be targeted
+    bountyhunters.untargetable:
+        default: false
+    
+    # Bypasses previous permission
+    bountyhunters.untargetable.bypass:
+        default: false
+    
+    # Be notified on join when an update is available
+    bountyhunters.update-notify:
+        default: op
