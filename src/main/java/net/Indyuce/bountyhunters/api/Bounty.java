@@ -1,16 +1,11 @@
 package net.Indyuce.bountyhunters.api;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
+import net.Indyuce.bountyhunters.BountyHunters;
+import net.Indyuce.bountyhunters.api.player.PlayerData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.OfflinePlayer;
 
-import net.Indyuce.bountyhunters.BountyHunters;
-import net.Indyuce.bountyhunters.api.player.PlayerData;
+import java.util.*;
 
 public class Bounty {
 	private final UUID id;
@@ -27,9 +22,16 @@ public class Bounty {
 	 */
 	private long lastUpdated = System.currentTimeMillis();
 
+	/**
+	 * Used to create a player-generated bounty. The result bounty will have a random UUID
+	 *
+	 * @param creator Bounty creator
+	 * @param target  Bounty target
+	 * @param reward  Bounty base reward. Can be increased later
+	 */
 	public Bounty(OfflinePlayer creator, OfflinePlayer target, double reward) {
 		Validate.notNull(target, "Target cannot be null");
-		Validate.notNull(target.getName(), "Couldn't find target");
+		Validate.notNull(target.getName(), "Target cannot be null");
 		Validate.notNull(creator, "Creator cannot be null");
 
 		id = UUID.randomUUID();
@@ -37,10 +39,24 @@ public class Bounty {
 		amount.put(creator, reward);
 	}
 
+	/**
+	 * Used to create a console/plugin-generated bounty. Result bounty will
+	 * have a random UUID
+	 *
+	 * @param target Bounty target
+	 * @param reward Bounty base reward. Can be increased later
+	 */
 	public Bounty(OfflinePlayer target, double reward) {
 		this(UUID.randomUUID(), target, reward);
 	}
 
+	/**
+	 * Used to load bounties from config files.
+	 *
+	 * @param id     Bounty ID
+	 * @param target Bounty target
+	 * @param reward Bounty base reward. Can be increased later
+	 */
 	public Bounty(UUID id, OfflinePlayer target, double reward) {
 		Validate.notNull(target, "Target cannot be null");
 
