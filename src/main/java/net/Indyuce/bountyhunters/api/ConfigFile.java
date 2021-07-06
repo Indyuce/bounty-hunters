@@ -1,15 +1,22 @@
 package net.Indyuce.bountyhunters.api;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-
+import net.Indyuce.bountyhunters.BountyHunters;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
-import net.Indyuce.bountyhunters.BountyHunters;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
 
+/**
+ * Helps manipulating configuration files. Create a ConfigFile instance,
+ * modify the config file using {@link ConfigFile#getConfig()} and then
+ * save the config using {@link ConfigFile#save()}.
+ * <p>
+ * Make sure the config root folder and file exists before loading
+ * the config, using {@link ConfigFile#setup()}.
+ */
 public class ConfigFile {
 	private final Plugin plugin;
 	private final String path, name;
@@ -35,16 +42,16 @@ public class ConfigFile {
 		config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + path, name + ".yml"));
 	}
 
+	public FileConfiguration getConfig() {
+		return config;
+	}
+
 	public void save() {
 		try {
 			config.save(new File(plugin.getDataFolder() + path, name + ".yml"));
 		} catch (IOException exception) {
 			plugin.getLogger().log(Level.SEVERE, "Could not save " + name + ".yml: " + exception.getMessage());
 		}
-	}
-
-	public FileConfiguration getConfig() {
-		return config;
 	}
 
 	public void setup() {

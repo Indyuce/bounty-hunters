@@ -4,6 +4,12 @@ public class ItemTag {
 	private final String path;
 	private final Object value;
 
+	/**
+	 * Used to store NBTTags in items
+	 *
+	 * @param path  Item tag path
+	 * @param value Must be a Boolean, String, Integer or Double
+	 */
 	public ItemTag(String path, Object value) {
 		this.path = path;
 		this.value = value;

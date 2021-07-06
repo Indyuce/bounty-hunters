@@ -8,7 +8,14 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 
+/**
+ * Interface which helps manipulating an item's NBT tags
+ */
 public abstract class NBTItem {
+
+	/**
+	 * Initial item
+	 */
 	private final ItemStack item;
 
 	public NBTItem(ItemStack item) {

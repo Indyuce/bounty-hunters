@@ -1,15 +1,5 @@
 package net.Indyuce.bountyhunters.command;
 
-import java.util.Optional;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.ConfigFile;
@@ -18,10 +8,19 @@ import net.Indyuce.bountyhunters.api.event.BountyExpireEvent;
 import net.Indyuce.bountyhunters.api.language.Language;
 import net.Indyuce.bountyhunters.api.language.Message;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
+import net.Indyuce.bountyhunters.api.player.reward.DeathQuote;
+import net.Indyuce.bountyhunters.api.player.reward.Title;
 import net.Indyuce.bountyhunters.gui.BountyEditor;
 import net.Indyuce.bountyhunters.gui.BountyList;
-import net.Indyuce.bountyhunters.manager.LevelManager.DeathQuote;
-import net.Indyuce.bountyhunters.manager.LevelManager.Title;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import java.util.Optional;
 
 public class BountiesCommand implements CommandExecutor {
 	@Override

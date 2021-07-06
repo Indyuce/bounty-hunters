@@ -1,19 +1,5 @@
 package net.Indyuce.bountyhunters.api.player;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
-import java.util.logging.Level;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
-
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.AltChar;
 import net.Indyuce.bountyhunters.api.Bounty;
@@ -22,9 +8,22 @@ import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.event.HunterLevelUpEvent;
 import net.Indyuce.bountyhunters.api.language.Language;
 import net.Indyuce.bountyhunters.api.language.Message;
-import net.Indyuce.bountyhunters.manager.LevelManager.DeathQuote;
-import net.Indyuce.bountyhunters.manager.LevelManager.LevelUpItem;
-import net.Indyuce.bountyhunters.manager.LevelManager.Title;
+import net.Indyuce.bountyhunters.api.player.reward.DeathQuote;
+import net.Indyuce.bountyhunters.api.player.reward.LevelUpItem;
+import net.Indyuce.bountyhunters.api.player.reward.Title;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Level;
 
 public class PlayerData implements OfflinePlayerData {
 
