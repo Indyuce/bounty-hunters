@@ -1,21 +1,22 @@
 package net.Indyuce.bountyhunters.version.wrapper;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Set;
-
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Particle;
+import net.Indyuce.bountyhunters.BountyHunters;
+import net.Indyuce.bountyhunters.version.wrapper.api.ItemTag;
+import net.Indyuce.bountyhunters.version.wrapper.api.NBTItem;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.chat.ChatMessageType;
+import net.minecraft.network.chat.IChatBaseComponent;
+import net.minecraft.network.protocol.game.PacketPlayOutChat;
+import net.minecraft.server.network.PlayerConnection;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import net.Indyuce.bountyhunters.BountyHunters;
-import net.Indyuce.bountyhunters.version.wrapper.api.ItemTag;
-import net.Indyuce.bountyhunters.version.wrapper.api.NBTItem;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class VersionWrapper_Reflection implements VersionWrapper {
 
@@ -35,23 +36,20 @@ public class VersionWrapper_Reflection implements VersionWrapper {
 	 */
 	@Override
 	public void sendJson(Player player, String message) {
-//		player.spigot().sendMessage(ChatMessageType.CHAT, component);
-//		player.sendRawMessage(message);
+		getConnection(player).sendPacket(new PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a(message), ChatMessageType.a, UUID.randomUUID()));
 	}
 
-//	private void sendPacket(Player player, Object packet) {
-//		try {
-//			Object handle = player.getClass().getMethod("getHandle").invoke(player);
-//			Object connection = handle.getClass().getDeclaredField("playerConnection").get(handle);
-//			connection.getClass().getMethod("sendPacket", nms("Packet")).invoke(connection, packet);
-//		} catch (ClassNotFoundException | IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException
-//				| InvocationTargetException | NoSuchMethodException e) {
-//			e.printStackTrace();
-//		}
-//	}
+	/**
+	 * @return Object required to send packets
+	 */
+	private PlayerConnection getConnection(Player player) {
+		try {
+			Object handle = player.getClass().getMethod("getHandle").invoke(player);
+			return (PlayerConnection) handle.getClass().getDeclaredField("b").get(handle);
 
-	private Class<?> nms(String str) throws ClassNotFoundException {
-		return Class.forName("net.minecraft.server." + BountyHunters.getInstance().getVersion().toString() + "." + str);
+		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | NoSuchFieldException exception) {
+			throw new RuntimeException("Reflection issue: " + exception.getMessage());
+		}
 	}
 
 	private Class<?> obc(String str) throws ClassNotFoundException {
@@ -84,93 +82,59 @@ public class VersionWrapper_Reflection implements VersionWrapper {
 		return new NBTItem_Reflection(item);
 	}
 
-	/*
-	 * TODO change it to PersistentDataContainer
-	 */
 	public class NBTItem_Reflection extends NBTItem {
-		private Object nms, compound;
-		private Class<?> craftItemStack;
+		private final net.minecraft.world.item.ItemStack nms;
+		private final NBTTagCompound compound;
 
 		public NBTItem_Reflection(ItemStack item) {
 			super(item);
 
 			try {
-				craftItemStack = obc("inventory.CraftItemStack");
-				nms = craftItemStack.getMethod("asNMSCopy", ItemStack.class).invoke(craftItemStack, item);
-				compound = (boolean) nms.getClass().getMethod("hasTag").invoke(nms) ? nms.getClass().getMethod("getTag").invoke(nms)
-						: nms("NBTTagCompound").getConstructor().newInstance();
+				nms = (net.minecraft.world.item.ItemStack) obc("inventory.CraftItemStack").getMethod("asNMSCopy", ItemStack.class).invoke(null, item);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException
-					| ClassNotFoundException | InstantiationException e) {
-				e.printStackTrace();
+					| ClassNotFoundException exception) {
+				throw new RuntimeException("Reflection issue: " + exception.getMessage());
 			}
+
+			compound = nms.hasTag() ? nms.getTag() : new NBTTagCompound();
 		}
 
 		@Override
 		public String getString(String path) {
-			try {
-				return (String) compound.getClass().getMethod("getString", String.class).invoke(compound, path);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-				e.printStackTrace();
-				return null;
-			}
+			return compound.getString(path);
 		}
 
 		@Override
 		public boolean hasTag(String path) {
-			try {
-				return (boolean) compound.getClass().getMethod("hasKey", String.class).invoke(compound, path);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-				e.printStackTrace();
-				return false;
-			}
+			return compound.hasKey(path);
 		}
 
 		@Override
 		public boolean getBoolean(String path) {
-			try {
-				return (boolean) compound.getClass().getMethod("getBoolean", String.class).invoke(compound, path);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-				e.printStackTrace();
-				return false;
-			}
+			return compound.getBoolean(path);
 		}
 
 		@Override
 		public double getDouble(String path) {
-			try {
-				return (double) compound.getClass().getMethod("getDouble", String.class).invoke(compound, path);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-				e.printStackTrace();
-				return 0;
-			}
+			return compound.getDouble(path);
 		}
 
 		@Override
 		public int getInteger(String path) {
-			try {
-				return (int) compound.getClass().getMethod("getInt", String.class).invoke(compound, path);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-				e.printStackTrace();
-				return 0;
-			}
+			return compound.getInt(path);
 		}
 
 		@Override
 		public NBTItem addTag(List<ItemTag> tags) {
 			tags.forEach(tag -> {
-				try {
-					if (tag.getValue() instanceof Boolean)
-						compound.getClass().getMethod("setBoolean", String.class, Boolean.TYPE).invoke(compound, tag.getPath(), tag.getValue());
-					else if (tag.getValue() instanceof Double)
-						compound.getClass().getMethod("setDouble", String.class, Double.TYPE).invoke(compound, tag.getPath(), tag.getValue());
-					else if (tag.getValue() instanceof String)
-						compound.getClass().getMethod("setString", String.class, String.class).invoke(compound, tag.getPath(), tag.getValue());
-					else if (tag.getValue() instanceof Integer)
-						compound.getClass().getMethod("setInt", String.class, Integer.TYPE).invoke(compound, tag.getPath(), tag.getValue());
-				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-						| SecurityException e) {
-					e.printStackTrace();
-				}
+				if (tag.getValue() instanceof Boolean)
+					compound.setBoolean(tag.getPath(), (boolean) tag.getValue());
+				else if (tag.getValue() instanceof Double)
+					compound.setDouble(tag.getPath(), (double) tag.getValue());
+				else if (tag.getValue() instanceof String)
+					compound.setString(tag.getPath(), (String) tag.getValue());
+				else if (tag.getValue() instanceof Integer)
+					compound.setInt(tag.getPath(), (int) tag.getValue());
 			});
 			return this;
 		}
@@ -178,34 +142,23 @@ public class VersionWrapper_Reflection implements VersionWrapper {
 		@Override
 		public NBTItem removeTag(String... paths) {
 			for (String path : paths)
-				try {
-					compound.getClass().getMethod("remove", String.class).invoke(compound, path);
-				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-						| SecurityException e) {
-					e.printStackTrace();
-				}
+				compound.remove(path);
 			return this;
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public Set<String> getTags() {
-			try {
-				return (Set<String>) compound.getClass().getMethod("getKeys").invoke(compound);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-				e.printStackTrace();
-				return null;
-			}
+			return compound.getKeys();
 		}
 
 		@Override
 		public ItemStack toItem() {
+			nms.setTag(compound);
+
 			try {
-				nms.getClass().getMethod("setTag", compound.getClass()).invoke(nms, compound);
-				return (ItemStack) craftItemStack.getMethod("asBukkitCopy", nms.getClass()).invoke(craftItemStack, nms);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-				e.printStackTrace();
-				return null;
+				return (ItemStack) obc("inventory.CraftItemStack").getMethod("asBukkitCopy", nms.getClass()).invoke(null, nms);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | ClassNotFoundException exception) {
+				throw new RuntimeException("Reflection issue: " + exception.getMessage());
 			}
 		}
 	}

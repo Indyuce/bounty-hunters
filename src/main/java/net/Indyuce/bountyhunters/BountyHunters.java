@@ -1,29 +1,6 @@
 package net.Indyuce.bountyhunters;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.sql.SQLException;
-import java.util.Optional;
-import java.util.logging.Level;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import net.Indyuce.bountyhunters.api.Bounty;
-import net.Indyuce.bountyhunters.api.ConfigFile;
-import net.Indyuce.bountyhunters.api.CustomItem;
-import net.Indyuce.bountyhunters.api.HunterLeaderboard;
-import net.Indyuce.bountyhunters.api.NumberFormat;
+import net.Indyuce.bountyhunters.api.*;
 import net.Indyuce.bountyhunters.api.account.BankAccount;
 import net.Indyuce.bountyhunters.api.account.PlayerBankAccount;
 import net.Indyuce.bountyhunters.api.account.SimpleBankAccount;
@@ -50,11 +27,7 @@ import net.Indyuce.bountyhunters.comp.social.PartyAndFriendsSupport;
 import net.Indyuce.bountyhunters.comp.social.TownySupport;
 import net.Indyuce.bountyhunters.gui.PluginInventory;
 import net.Indyuce.bountyhunters.gui.listener.GuiListener;
-import net.Indyuce.bountyhunters.listener.BountyClaim;
-import net.Indyuce.bountyhunters.listener.HeadHunting;
-import net.Indyuce.bountyhunters.listener.HuntListener;
-import net.Indyuce.bountyhunters.listener.PlayerListener;
-import net.Indyuce.bountyhunters.listener.RestrictionListener;
+import net.Indyuce.bountyhunters.listener.*;
 import net.Indyuce.bountyhunters.listener.log.ClaimLog;
 import net.Indyuce.bountyhunters.listener.log.ExpireLog;
 import net.Indyuce.bountyhunters.listener.log.LevelUpLog;
@@ -64,7 +37,26 @@ import net.Indyuce.bountyhunters.manager.PlayerDataManager;
 import net.Indyuce.bountyhunters.version.PluginVersion;
 import net.Indyuce.bountyhunters.version.SpigotPlugin;
 import net.Indyuce.bountyhunters.version.wrapper.VersionWrapper;
+import net.Indyuce.bountyhunters.version.wrapper.VersionWrapper_Reflection;
 import net.milkbowl.vault.economy.Economy;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.sql.SQLException;
+import java.util.Optional;
+import java.util.logging.Level;
 
 public class BountyHunters extends JavaPlugin {
 	private static BountyHunters plugin;
@@ -94,10 +86,8 @@ public class BountyHunters extends JavaPlugin {
 			wrapper = (VersionWrapper) Class.forName("net.Indyuce.bountyhunters.version.wrapper.VersionWrapper_" + version.toString().substring(1))
 					.newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException exception) {
-			getLogger().log(Level.INFO, "Your server version is not supported.");
-//			wrapper = new VersionWrapper_Reflection();
-			
-			Bukkit.getPluginManager().disablePlugin(this);
+			getLogger().log(Level.INFO, "Your server version is not natively supported.");
+			wrapper = new VersionWrapper_Reflection();
 			return;
 		}
 
