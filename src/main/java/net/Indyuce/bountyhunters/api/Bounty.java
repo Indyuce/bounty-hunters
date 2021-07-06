@@ -6,6 +6,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.OfflinePlayer;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Bounty {
 	private final UUID id;
@@ -181,5 +182,21 @@ public class Bounty {
 			BountyHunters.getInstance().getPlayerDataManager().get(player).stopHunting();
 			hunters.remove(player);
 		}
+	}
+
+	@Override
+	public String toString() {
+
+		String amountToString = amount.keySet().stream()
+				.map(key -> key + "=" + amount.get(key))
+				.collect(Collectors.joining(", ", "{", "}"));
+
+		return "Bounty{" +
+				"id=" + id +
+				", target=" + target.getUniqueId() +
+				", amount=" + amountToString +
+				", extra=" + extra +
+				", lastUpdated=" + lastUpdated +
+				'}';
 	}
 }

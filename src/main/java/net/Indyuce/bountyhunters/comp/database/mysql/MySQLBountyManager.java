@@ -67,6 +67,7 @@ public class MySQLBountyManager extends BountyManager {
 					registerBounty(bounty);
 				} catch (IllegalArgumentException exception) {
 					BountyHunters.getInstance().getLogger().log(Level.WARNING, "Could not load bounty from database: " + exception.getMessage());
+					BountyHunters.getInstance().getLogger().log(Level.WARNING, "Parsed bounty data: " + exception.getMessage());
 				}
 			}
 
