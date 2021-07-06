@@ -1,18 +1,16 @@
 package net.Indyuce.bountyhunters.manager;
 
+import net.Indyuce.bountyhunters.BountyHunters;
+import net.Indyuce.bountyhunters.api.player.reward.DeathQuote;
+import net.Indyuce.bountyhunters.api.player.reward.Title;
+import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.file.FileConfiguration;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-
-import net.Indyuce.bountyhunters.BountyHunters;
-import net.Indyuce.bountyhunters.api.AltChar;
-import net.Indyuce.bountyhunters.api.player.PlayerData;
 
 public class LevelManager {
 	private final Map<String, DeathQuote> quotes = new HashMap<>();
@@ -111,60 +109,5 @@ public class LevelManager {
 
 	public double calculateLevelMoney(int level) {
 		return moneyBase + level * moneyPerLevel;
-	}
-
-	public abstract class LevelUpItem {
-		private final String id, format;
-		private final int unlock;
-
-		private LevelUpItem(String id, String format, int unlock) {
-			Validate.notNull(id, "Item ID must not be null");
-			Validate.notNull(format, "Item format must not be null");
-
-			this.id = id;
-			this.format = format;
-			this.unlock = unlock;
-		}
-
-		public String getId() {
-			return id;
-		}
-
-		public int getUnlockLevel() {
-			return unlock;
-		}
-
-		public boolean hasUnlocked(PlayerData data) {
-			return data.getLevel() > unlock;
-		}
-
-		public String format() {
-			return AltChar.apply(format);
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			return obj != null && obj instanceof LevelUpItem && ((LevelUpItem) obj).id.equals(id);
-		}
-	}
-
-	public class Title extends LevelUpItem {
-		private Title(ConfigurationSection config) {
-			this(config.getName().toUpperCase().replace("-", "_"), config.getString("format"), config.getInt("unlock"));
-		}
-
-		private Title(String id, String format, int unlock) {
-			super(id, format, unlock);
-		}
-	}
-
-	public class DeathQuote extends LevelUpItem {
-		private DeathQuote(ConfigurationSection config) {
-			this(config.getName().toUpperCase().replace("-", "_"), config.getString("format"), config.getInt("unlock"));
-		}
-
-		private DeathQuote(String id, String format, int unlock) {
-			super(id, format, unlock);
-		}
 	}
 }
