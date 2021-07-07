@@ -37,27 +37,25 @@ public class PlayerHunting {
 
 			public void run() {
 
-				/*
-				 * cancel runnable if any of the conditions is missing.
-				 */
+				// Cancel runnable if any of the conditions is missing.
 				if (!check()) {
 					hideParticles();
 					return;
 				}
 
-				// update compass display name based on distance
+				// Update compass display name based on distance
 				ItemMeta meta = compass.getItemMeta();
 				meta.setDisplayName(Language.COMPASS_FORMAT.format("blocks",
 						new NumberFormat(true).format(bounty.getTarget().getPlayer().getLocation().distance(player.getLocation()))));
 				compass.setItemMeta(meta);
 
-				// draw vector
+				// Draw vector
 				Location src = player.getLocation().add(0, 1.3, 0).add(player.getEyeLocation().getDirection().setY(0).normalize());
 				Vector vec = bounty.getTarget().getPlayer().getLocation().subtract(src.clone().add(0, -1.3, 0)).toVector().normalize().multiply(.2);
 				for (int j = 0; j < 9; j++)
 					BountyHunters.getInstance().getVersionWrapper().spawnParticle(Particle.REDSTONE, src.add(vec), player, Color.RED);
 
-				// draw circle around target
+				// Draw circle around target
 				if (circle && (ti = (ti + 1) % 20) < 3) {
 					Location loc = bounty.getTarget().getPlayer().getLocation();
 					for (double j = 0; j < Math.PI * 2; j += Math.PI / 16)

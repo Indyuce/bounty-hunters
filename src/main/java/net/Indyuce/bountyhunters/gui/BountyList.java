@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import net.Indyuce.bountyhunters.BountyHunters;
-import net.Indyuce.bountyhunters.BountyUtils;
+import net.Indyuce.bountyhunters.api.Utils;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.CustomItem;
 import net.Indyuce.bountyhunters.api.CustomItem.Builder;
@@ -110,7 +110,7 @@ public class BountyList extends PluginInventory {
 	@Override
 	public void whenClicked(ItemStack item, InventoryAction action, int slot) {
 
-		if (!BountyUtils.hasItemMeta(item, false))
+		if (!Utils.hasItemMeta(item, false))
 			return;
 
 		// next page

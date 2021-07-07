@@ -64,7 +64,7 @@ public class MySQLPlayerDataManager extends PlayerDataManager {
 			String redeemHeads = data.getRedeemableHeads().stream().map(uuid -> "'" + uuid.toString() + "'").collect(Collectors.toList()).toString();
 			redeemHeads = redeemHeads.substring(1, redeemHeads.length() - 1);
 
-			provider.prepareStatement("UPDATE playerData SET level = " + data.getLevel() + ", successful_bounties = " + data.getSuccessfulBounties() + ", claimed_bounties = " + data.getClaimedBounties() + ", illegal_kills = " + data.getIllegalKills() + ", illegal_kill_streak = " + data.getIllegalKillStreak() + ", current_title = " + (data.hasTitle() ? "'" + data.getTitle().getId() + "'" : "NULL") + ", current_quote = " + (data.hasQuote() ? "'" + data.getQuote().getId() + "'" : "NULL") + ", redeem_heads = JSON_ARRAY(" + redeemHeads + ") WHERE uuid = '" + data.getUniqueId().toString() + "'").execute();
+			provider.prepareStatement("UPDATE playerData SET level = " + data.getLevel() + ", successful_bounties = " + data.getSuccessfulBounties() + ", claimed_bounties = " + data.getClaimedBounties() + ", illegal_kills = " + data.getIllegalKills() + ", illegal_kill_streak = " + data.getIllegalKillStreak() + ", current_title = " + (data.hasTitle() ? "'" + data.getTitle().getId() + "'" : "NULL") + ", current_quote = " + (data.hasAnimation() ? "'" + data.getAnimation().getId() + "'" : "NULL") + ", redeem_heads = JSON_ARRAY(" + redeemHeads + ") WHERE uuid = '" + data.getUniqueId().toString() + "'").execute();
 
 		} catch (SQLException exception) {
 			BountyHunters.getInstance().getLogger().log(Level.SEVERE, "Could not save player data of " + data.getOfflinePlayer().getName() + ": " + exception.getMessage());
@@ -110,8 +110,8 @@ public class MySQLPlayerDataManager extends PlayerDataManager {
 			String quoteFormat = set.getString("current_quote");
 			if (quoteFormat != null)
 				try {
-					Validate.isTrue(levelManager.hasQuote(quoteFormat), "Could not load quote from " + data.getOfflinePlayer().getName());
-					data.setQuote(levelManager.getQuote(quoteFormat));
+					Validate.isTrue(levelManager.hasAnimation(quoteFormat), "Could not load quote from " + data.getOfflinePlayer().getName());
+					data.setAnimation(levelManager.getQuote(quoteFormat));
 				} catch (IllegalArgumentException exception) {
 					data.log(exception.getMessage());
 				}

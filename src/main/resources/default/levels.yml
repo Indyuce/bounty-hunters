@@ -11,52 +11,69 @@ reward:
     # It can also be obtained using a placeholder.
     title:
         HEAD_HUNTER:
-            format: Head Hunter
+            format: 'Head Hunter'
             unlock: 1
         HEAD_COLLECTOR:
-            format: Head Collector
+            format: 'Head Collector'
             unlock: 2
         EXPERIENCED_HUNTER:
-            format: Experienced Hunter
+            format: 'Experienced Hunter'
             unlock: 3
         GREEDY_HUNTER:
-            format: Greedy Hunter
+            format: 'Greedy Hunter'
             unlock: 4
         DEAD_OR_ALIVE:
-            format: Dead or Alive
+            format: 'Dead or Alive'
             unlock: 5
         BLOODTHIRSTY:
-            format: Bloodthirsty
+            format: 'Thirsty for Blood'
             unlock: 6
         BOUNTY_HUNTER:
             format: '{star} Bounty Hunter {star}'
             unlock: 8
         LEGENDARY_HUNTER:
-            format: '{star} Bounty Hunter {star}'
+            format: '{star} Legendary Hunter {star}'
             unlock: 15
         THE_LEGEND:
             format: '{diamond} The Legend {diamond}'
             unlock: 25
-            
-    # 'Death quotes' are displayed in the chat
-    # and on the title when a player claims a bounty.
-    # It can also be obtained with a placeholder.
-    quote:
+
+    # 'Bounty Animations' display a message in the chat
+    # and play a particle effect around the killed player
+    # when claiming a bounty.
+    #
+    # For no particle effect, remove the
+    # 'effect: ..' line or leave it to NONE.
+    #
+    # For head hunting, the animation plays when killing
+    # the player and collecting the head.
+    #
+    # You can access the bounty quote using a PAPI placeholder.
+    animation:
         MAY_DEATH:
             format: 'May Death welcome you...'
             unlock: 3
+            effect: NONE
         DIAMOND:
             format: 'You better not steal that diamond again.'
             unlock: 6
+            effect: GOLD
         TRY_ME:
             format: 'Try me'
             unlock: 10
+            effect: TOTEM
+        SHEEP:
+            format: 'Watch as I turn him into a sheep!'
+            unlock: 12
+            effect: METAMORPHOSE
         GIT_GUD:
             format: 'Git gud'
             unlock: 15
-        GET_REKT:
-            format: 'G3t r3kt'
+            effect: FLAME_VORTEX
+        CENA:
+            format: 'You can''t see me!!'
             unlock: 20
+            effect: METEOR
   
     # Commands sent when leveling up.
     commands:
@@ -64,7 +81,7 @@ reward:
         - "say {player} reached level 1!"
         
     # Currency earned when leveling up.
-    # cash earned = <base> + ( <per-level> * <player level> )
+    # Cash earned = <base> + ( <per-level> * <player level> )
     money:
         base: 50
         per-level: 6

@@ -1,13 +1,8 @@
 package net.Indyuce.bountyhunters.api;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import net.Indyuce.bountyhunters.version.VersionMaterial;
+import net.Indyuce.bountyhunters.version.wrapper.api.ItemTag;
+import net.Indyuce.bountyhunters.version.wrapper.api.NBTItem;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,8 +10,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.bountyhunters.BountyUtils;
-import net.Indyuce.bountyhunters.version.VersionMaterial;
+import java.util.*;
 
 public enum CustomItem {
 	NEXT_PAGE(new ItemStack(Material.ARROW), "Next"),
@@ -71,14 +65,40 @@ public enum CustomItem {
 		if (lore != null)
 			meta.setLore(lore);
 		item.setItemMeta(meta);
+
+		item = NBTItem.get(item).addTag(new ItemTag("BountyHuntersItemId", name())).toItem();
 	}
 
 	public ItemStack toItemStack() {
 		return item.clone();
 	}
 
+	/**
+	 * @return If the given item has the same lore as config item.
+	 * @deprecated Rather use NBTTags to check for an item. This does
+	 * not some with major performance loss, is much easier and the item
+	 * lore can actually be changed in the config without breaking all previously generated items.
+	 */
+	@Deprecated
 	public boolean loreMatches(ItemStack item) {
-		return BountyUtils.hasItemMeta(item, true) && item.getItemMeta().getLore().equals(lore);
+		return Utils.hasItemMeta(item, true) && item.getItemMeta().getLore().equals(lore);
+	}
+
+	/**
+	 * Checks for lore and NBTTags.
+	 *
+	 * @return If the item matches the config item
+	 */
+	public boolean matches(ItemStack item) {
+		if (item == null || item.getType() == Material.AIR)
+			return false;
+
+		NBTItem nbt = NBTItem.get(item);
+		if (nbt.getString("BountyHuntersItemId").equals(name()))
+			return true;
+
+		// Purely for backwards compatibility
+		return loreMatches(item);
 	}
 
 	public Builder newBuilder() {
@@ -86,10 +106,10 @@ public enum CustomItem {
 	}
 
 	/**
-	 * Used to format the item lore based on boolean conditions and easily apply
-	 * lore placeholders
-	 * 
-	 * @author cympe
+	 * Used to format the item lore based on boolean
+	 * conditions and easily apply lore placeholders
+	 *
+	 * @author indyuce
 	 */
 	public class Builder {
 		private final Map<String, Boolean> conditions = new HashMap<>();

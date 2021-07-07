@@ -1,19 +1,18 @@
 package net.Indyuce.bountyhunters.api.event;
 
+import net.Indyuce.bountyhunters.api.Bounty;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
-
-import net.Indyuce.bountyhunters.api.Bounty;
 
 public abstract class BountyEvent extends Event implements Cancellable {
 	private final Bounty bounty;
 
 	private boolean cancelled = false;
 
-	/*
-	 * every event involving a bounty is cancellable. this allows not to specify
-	 * an empty handlers list, not to have the event class always implement the
-	 * cancellable interface, and the getBounty() method in an inheritance
+	/**
+	 * Every event involving a bounty is cancellable. Saves some methods
+	 * like the ones inherited from the Cancellable interface as
+	 * well as {@link #getBounty()}.
 	 */
 	public BountyEvent(Bounty bounty) {
 		this.bounty = bounty;

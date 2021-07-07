@@ -8,6 +8,13 @@ public abstract class LevelUpItem {
     private final String id, format;
     private final int unlock;
 
+    /**
+     * Public constructor for items acquired when leveling up
+     *
+     * @param id     Item ID, has to be different from all the others
+     * @param format Title format or claim quote for bounty animations
+     * @param unlock Level at which item is unlocked
+     */
     public LevelUpItem(String id, String format, int unlock) {
         Validate.notNull(id, "Item ID must not be null");
         Validate.notNull(format, "Item format must not be null");

@@ -8,8 +8,8 @@ import net.Indyuce.bountyhunters.api.event.BountyExpireEvent;
 import net.Indyuce.bountyhunters.api.language.Language;
 import net.Indyuce.bountyhunters.api.language.Message;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
-import net.Indyuce.bountyhunters.api.player.reward.DeathQuote;
-import net.Indyuce.bountyhunters.api.player.reward.Title;
+import net.Indyuce.bountyhunters.api.player.reward.BountyAnimation;
+import net.Indyuce.bountyhunters.api.player.reward.HunterTitle;
 import net.Indyuce.bountyhunters.gui.BountyEditor;
 import net.Indyuce.bountyhunters.gui.BountyList;
 import org.bukkit.Bukkit;
@@ -56,7 +56,7 @@ public class BountiesCommand implements CommandExecutor {
 			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounties" + ChatColor.WHITE + " shows current bounties.");
 			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/hunters" + ChatColor.WHITE + " opens the hunter leaderboard.");
 			sender.sendMessage("");
-			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounties quotes" + ChatColor.WHITE + " lists available quotes.");
+			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounties animations" + ChatColor.WHITE + " lists available animations.");
 			sender.sendMessage(ChatColor.LIGHT_PURPLE + "/bounties titles" + ChatColor.WHITE + " lists available titles.");
 			sender.sendMessage("");
 			sender.sendMessage(ChatColor.GRAY + "" + ChatColor.BOLD + "Admin");
@@ -139,7 +139,7 @@ public class BountiesCommand implements CommandExecutor {
 			if (!playerData.canSelectItem())
 				return true;
 
-			Title item = BountyHunters.getInstance().getLevelManager().getTitle(args[1]);
+			HunterTitle item = BountyHunters.getInstance().getLevelManager().getTitle(args[1]);
 			if (!playerData.hasUnlocked(item))
 				return true;
 
@@ -149,32 +149,32 @@ public class BountiesCommand implements CommandExecutor {
 		}
 
 		// choose quote
-		if (args[0].equalsIgnoreCase("quote") && args.length > 1) {
+		if (args[0].equalsIgnoreCase("animation") && args.length > 1) {
 			if (!(sender instanceof Player)) {
 				sender.sendMessage(ChatColor.RED + "This command is for players only.");
 				return true;
 			}
 
 			Player player = (Player) sender;
-			if (!player.hasPermission("bountyhunters.quote")) {
+			if (!player.hasPermission("bountyhunters.animation")) {
 				Message.NOT_ENOUGH_PERMS.format().send(sender);
 				return true;
 			}
 
-			if (!BountyHunters.getInstance().getLevelManager().hasQuote(args[1]))
+			if (!BountyHunters.getInstance().getLevelManager().hasAnimation(args[1]))
 				return true;
 
 			PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(player);
 			if (!playerData.canSelectItem())
 				return true;
 
-			DeathQuote item = BountyHunters.getInstance().getLevelManager().getQuote(args[1]);
+			BountyAnimation item = BountyHunters.getInstance().getLevelManager().getQuote(args[1]);
 			if (!playerData.hasUnlocked(item))
 				return true;
 
-			playerData.setQuote(item);
+			playerData.setAnimation(item);
 			playerData.setLastSelect();
-			Message.SUCCESSFULLY_SELECTED.format("item", playerData.getQuote().format()).send(sender);
+			Message.SUCCESSFULLY_SELECTED.format("item", playerData.getAnimation().format()).send(sender);
 		}
 
 		// choose title
@@ -193,31 +193,30 @@ public class BountiesCommand implements CommandExecutor {
 			Message.UNLOCKED_TITLES.format().send(player);
 
 			PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(player);
-			for (Title title : BountyHunters.getInstance().getLevelManager().getTitles())
+			for (HunterTitle title : BountyHunters.getInstance().getLevelManager().getTitles())
 				if (playerData.hasUnlocked(title))
 					BountyHunters.getInstance().getVersionWrapper().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + title.format() + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties title " + title.getId() + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Language.CLICK_SELECT.format() + "\",\"color\":\"white\"}]}}}");
 		}
 
-		// quotes list
-		if (args[0].equalsIgnoreCase("quotes")) {
+		// animations list
+		if (args[0].equalsIgnoreCase("animations")) {
 			if (!(sender instanceof Player)) {
 				sender.sendMessage(ChatColor.RED + "This command is for players only.");
 				return true;
 			}
 
 			Player player = (Player) sender;
-			if (!player.hasPermission("bountyhunters.quote")) {
+			if (!player.hasPermission("bountyhunters.animation")) {
 				Message.NOT_ENOUGH_PERMS.format().send(player);
 				return true;
 			}
 
-			Message.UNLOCKED_QUOTES.format().send(player);
+			Message.UNLOCKED_ANIMATIONS.format().send(player);
 
 			PlayerData playerData = BountyHunters.getInstance().getPlayerDataManager().get(player);
-			for (DeathQuote quote : BountyHunters.getInstance().getLevelManager().getQuotes())
-				if (playerData.hasUnlocked(quote))
-					BountyHunters.getInstance().getVersionWrapper().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + quote.format() + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties quote " + quote.getId() + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Language.CLICK_SELECT.format() + "\",\"color\":\"white\"}]}}}");
-
+			for (BountyAnimation anim : BountyHunters.getInstance().getLevelManager().getAnimations())
+				if (playerData.hasUnlocked(anim))
+					BountyHunters.getInstance().getVersionWrapper().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + anim.format() + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties animation " + anim.getId() + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Language.CLICK_SELECT.format() + "\",\"color\":\"white\"}]}}}");
 		}
 
 		// reload plugin
@@ -240,5 +239,4 @@ public class BountiesCommand implements CommandExecutor {
 
 		return false;
 	}
-
 }

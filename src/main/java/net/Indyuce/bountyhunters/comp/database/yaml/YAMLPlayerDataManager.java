@@ -27,7 +27,7 @@ public class YAMLPlayerDataManager extends PlayerDataManager {
 		config.getConfig().set("illegal-kills", data.getIllegalKills());
 		config.getConfig().set("illegal-kill-streak", data.getIllegalKillStreak());
 		config.getConfig().set("current-title", data.hasTitle() ? data.getTitle().getId() : null);
-		config.getConfig().set("current-quote", data.hasQuote() ? data.getQuote().getId() : null);
+		config.getConfig().set("current-anim", data.hasAnimation() ? data.getAnimation().getId() : null);
 		config.getConfig().set("redeem-heads", data.getRedeemableHeads().stream().map(uuid -> uuid.toString()).collect(Collectors.toList()));
 
 		config.save();
@@ -48,10 +48,10 @@ public class YAMLPlayerDataManager extends PlayerDataManager {
 
 		LevelManager levelManager = BountyHunters.getInstance().getLevelManager();
 
-		if (config.contains("current-quote"))
+		if (config.contains("current-anim"))
 			try {
-				Validate.isTrue(levelManager.hasQuote(config.getString("current-quote")), "Could not load quote from " + data.getOfflinePlayer().getName());
-				data.setQuote(levelManager.getQuote(config.getString("current-quote")));
+				Validate.isTrue(levelManager.hasAnimation(config.getString("current-anim")), "Could not load animation from " + data.getOfflinePlayer().getName());
+				data.setAnimation(levelManager.getQuote(config.getString("current-anim")));
 			} catch (IllegalArgumentException exception) {
 				data.log(exception.getMessage());
 			}

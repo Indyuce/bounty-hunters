@@ -1,16 +1,16 @@
 package net.Indyuce.bountyhunters.api;
 
+import net.Indyuce.bountyhunters.BountyHunters;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-
-import net.Indyuce.bountyhunters.BountyHunters;
 
 public class NumberFormat {
 	private final boolean thousands;
 
 	private static final DecimalFormat digit1 = new DecimalFormat("0.#"), digit3 = new DecimalFormat("0.###");
-	private static final String[] prefixes = { "M", "B", "Tril", "Quad", "Quin", "Sext", "Sept", "Octi", "Noni", "Deci" };
-	private static final String[] prefixesk = { "K", "M", "B", "Tril", "Quad", "Quin", "Sext", "Sept", "Octi", "Noni", "Deci" };
+	private static final String[] prefixes = {"M", "B", "Tril", "Quad", "Quin", "Sext", "Sept", "Octi", "Noni", "Deci"};
+	private static final String[] prefixesk = {"K", "M", "B", "Tril", "Quad", "Quin", "Sext", "Sept", "Octi", "Noni", "Deci"};
 
 	static {
 		DecimalFormatSymbols symbols = digit1.getDecimalFormatSymbols();
@@ -19,6 +19,11 @@ public class NumberFormat {
 		digit3.setDecimalFormatSymbols(symbols);
 	}
 
+	/**
+	 * Formats a number (either 105.379M or 105379137.2 depending on the config
+	 * option value). The highest power it can handle is 10^35 ie 100 decillion.
+	 * Any number higher will display as 1000+ nonillion.
+	 */
 	public NumberFormat() {
 		this(false);
 	}
@@ -26,8 +31,8 @@ public class NumberFormat {
 	/**
 	 * Formats a number (either 105.379M or 105379137.2 depending on the config
 	 * option value). The highest power it can handle is 10^35 ie 100 decillion.
-	 * Any number higher will display as 1000+ nonillion
-	 * 
+	 * Any number higher will display as 1000+ nonillion.
+	 *
 	 * @param thousands
 	 *            If set to true, it will display 15.022K instead of 15022.
 	 *            Whatever value it is set to, millions and higher will be

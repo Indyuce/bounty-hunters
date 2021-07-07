@@ -1,8 +1,8 @@
 package net.Indyuce.bountyhunters.manager;
 
 import net.Indyuce.bountyhunters.BountyHunters;
-import net.Indyuce.bountyhunters.api.player.reward.DeathQuote;
-import net.Indyuce.bountyhunters.api.player.reward.Title;
+import net.Indyuce.bountyhunters.api.player.reward.BountyAnimation;
+import net.Indyuce.bountyhunters.api.player.reward.HunterTitle;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.logging.Level;
 
 public class LevelManager {
-	private final Map<String, DeathQuote> quotes = new HashMap<>();
-	private final Map<String, Title> titles = new HashMap<>();
+	private final Map<String, BountyAnimation> animations = new HashMap<>();
+	private final Map<String, HunterTitle> titles = new HashMap<>();
 	private final Map<Integer, List<String>> commands = new HashMap<>();
 
 	private int bountiesPerLevel;
@@ -27,7 +27,7 @@ public class LevelManager {
 	}
 
 	public void reload(FileConfiguration config) {
-		quotes.clear();
+		animations.clear();
 		titles.clear();
 		commands.clear();
 
@@ -41,18 +41,18 @@ public class LevelManager {
 
 		for (String key : config.getConfigurationSection("reward.title").getKeys(false))
 			try {
-				Title title = new Title(config.getConfigurationSection("reward.title." + key));
+				HunterTitle title = new HunterTitle(config.getConfigurationSection("reward.title." + key));
 				titles.put(title.getId(), title);
 			} catch (IllegalArgumentException exception) {
 				BountyHunters.getInstance().getLogger().log(Level.WARNING, "Could not load title '" + key + "': " + exception.getMessage());
 			}
 
-		for (String key : config.getConfigurationSection("reward.quote").getKeys(false))
+		for (String key : config.getConfigurationSection("reward.animation").getKeys(false))
 			try {
-				DeathQuote quote = new DeathQuote(config.getConfigurationSection("reward.quote." + key));
-				quotes.put(quote.getId(), quote);
+				BountyAnimation anim = new BountyAnimation(config.getConfigurationSection("reward.animation." + key));
+				animations.put(anim.getId(), anim);
 			} catch (IllegalArgumentException exception) {
-				BountyHunters.getInstance().getLogger().log(Level.WARNING, "Could not load quote '" + key + "': " + exception.getMessage());
+				BountyHunters.getInstance().getLogger().log(Level.WARNING, "Could not load animation '" + key + "': " + exception.getMessage());
 			}
 
 		for (String key : config.getConfigurationSection("reward.commands").getKeys(false))
@@ -71,11 +71,11 @@ public class LevelManager {
 		return enabled;
 	}
 
-	public DeathQuote getQuote(String id) {
-		return quotes.get(id);
+	public BountyAnimation getQuote(String id) {
+		return animations.get(id);
 	}
 
-	public Title getTitle(String id) {
+	public HunterTitle getTitle(String id) {
 		return titles.get(id);
 	}
 
@@ -83,8 +83,8 @@ public class LevelManager {
 		return commands.get(level);
 	}
 
-	public boolean hasQuote(String id) {
-		return quotes.containsKey(id);
+	public boolean hasAnimation(String id) {
+		return animations.containsKey(id);
 	}
 
 	public boolean hasTitle(String id) {
@@ -95,11 +95,11 @@ public class LevelManager {
 		return commands.containsKey(level);
 	}
 
-	public Collection<DeathQuote> getQuotes() {
-		return quotes.values();
+	public Collection<BountyAnimation> getAnimations() {
+		return animations.values();
 	}
 
-	public Collection<Title> getTitles() {
+	public Collection<HunterTitle> getTitles() {
 		return titles.values();
 	}
 

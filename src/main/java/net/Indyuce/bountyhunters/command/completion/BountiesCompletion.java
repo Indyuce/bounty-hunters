@@ -17,7 +17,7 @@ public class BountiesCompletion implements TabCompleter {
 
 		if (args.length == 1) {
 			list.add("titles");
-			list.add("quotes");
+			list.add("animations");
 			if (sender.hasPermission("bountyhunters.admin")) {
 				list.add("edit");
 				list.add("remove");

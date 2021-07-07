@@ -43,7 +43,7 @@ permissions:
     # Access to level up perks
     bountyhunters.title:
         default: op
-    bountyhunters.quote:
+    bountyhunters.animation:
         default: op
     
     # Perm to use /redeembountyheads.

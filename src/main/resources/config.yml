@@ -33,13 +33,6 @@ tax-bank-account:
     type: 'account' # 'player' or 'account'
     name: ''
 
-# When enabled, drops some purely cosmetic
-# items whenever someone's bounty is claimed.
-# Looks cool with CHEST, GOLD_NUGGET, REDSTONE...
-bounty-effect:
-    enabled: true
-    material: GOLD_NUGGET
-
 # Time players have to wait to do /bounty twice.
 # In seconds.
 bounty-set-restriction: 120
@@ -192,9 +185,6 @@ bounty-tax:
     # Default is 17.8% because it corresponds to 30% of the
     # initial amount when taking into account bounty creation tax
     bounty-removal: 17.8
-
-# Enables the display of death quotes when claiming a bounty.
-display-death-quote-on-title: false
   
 # Enables leveling rewards.
 enable-level-rewards: true

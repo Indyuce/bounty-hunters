@@ -31,7 +31,7 @@ public class BountyHuntersPlaceholders extends PlaceholderExpansion {
 	@Override
 	public String onRequest(OfflinePlayer player, String identifier) {
 
-		// leaderboard placeholders
+		// Leaderboard placeholders
 		if (identifier.startsWith("top_name_")) {
 			int index = Integer.parseInt(identifier.substring("top_name_".length()));
 			Optional<LeaderboardProfile> found = BountyHunters.getInstance().getHunterLeaderboard().getPosition(index);
@@ -69,8 +69,8 @@ public class BountyHuntersPlaceholders extends PlaceholderExpansion {
 			Optional<Bounty> bounty = BountyHunters.getInstance().getBountyManager().getBounty(player);
 			return bounty.isPresent() ? new NumberFormat().format(bounty.get().getReward()) : "0";
 		}
-		case "quote":
-			return playerData.hasQuote() ? playerData.getQuote().format() : "";
+		/*case "quote":
+			return playerData.hasQuote() ? playerData.getQuote().format() : "";*/
 		case "title":
 			return playerData.hasTitle() ? playerData.getTitle().format() : "";
 		case "progress":

@@ -8,9 +8,10 @@ import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.event.HunterLevelUpEvent;
 import net.Indyuce.bountyhunters.api.language.Language;
 import net.Indyuce.bountyhunters.api.language.Message;
-import net.Indyuce.bountyhunters.api.player.reward.DeathQuote;
+import net.Indyuce.bountyhunters.api.player.reward.BountyAnimation;
+import net.Indyuce.bountyhunters.api.player.reward.HunterTitle;
 import net.Indyuce.bountyhunters.api.player.reward.LevelUpItem;
-import net.Indyuce.bountyhunters.api.player.reward.Title;
+import net.Indyuce.bountyhunters.manager.PlayerDataManager;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -29,17 +30,13 @@ public class PlayerData implements OfflinePlayerData {
 
 	private final OfflinePlayer offline;
 
-	/*
-	 * player data that must be saved when the server shuts down
-	 */
+	// Player data that must be saved when the server shuts down
 	private int level, successful, claimed, illegalStreak, illegalKills;
-	private DeathQuote quote;
-	private Title title;
+	private BountyAnimation animation;
+	private HunterTitle title;
 	private final List<UUID> redeemHeads = new ArrayList<>();
 
-	/*
-	 * temp stuff that is not being saved when the server closes
-	 */
+	// Temp stuff that is not being saved when the server closes
 	private long lastBounty, lastTarget, lastSelect;
 	private PlayerHunting hunting;
 
@@ -75,11 +72,11 @@ public class PlayerData implements OfflinePlayerData {
 		return claimed;
 	}
 
-	public DeathQuote getQuote() {
-		return quote;
+	public BountyAnimation getAnimation() {
+		return animation;
 	}
 
-	public Title getTitle() {
+	public HunterTitle getTitle() {
 		return title;
 	}
 
@@ -130,8 +127,8 @@ public class PlayerData implements OfflinePlayerData {
 		return level >= item.getUnlockLevel();
 	}
 
-	public boolean hasQuote() {
-		return quote != null;
+	public boolean hasAnimation() {
+		return animation != null;
 	}
 
 	public boolean hasTitle() {
@@ -179,11 +176,11 @@ public class PlayerData implements OfflinePlayerData {
 		illegalStreak = Math.max(0, value);
 	}
 
-	public void setQuote(DeathQuote quote) {
-		this.quote = quote;
+	public void setAnimation(BountyAnimation animation) {
+		this.animation = animation;
 	}
 
-	public void setTitle(Title title) {
+	public void setTitle(HunterTitle title) {
 		this.title = title;
 	}
 
@@ -254,14 +251,14 @@ public class PlayerData implements OfflinePlayerData {
 		List<String> chatDisplay = new ArrayList<>();
 
 		// titles
-		for (Title title : BountyHunters.getInstance().getLevelManager().getTitles())
+		for (HunterTitle title : BountyHunters.getInstance().getLevelManager().getTitles())
 			if (nextLevel == title.getUnlockLevel())
 				chatDisplay.add(title.format());
 
-		// death quotes
-		for (DeathQuote quote : BountyHunters.getInstance().getLevelManager().getQuotes())
-			if (nextLevel == quote.getUnlockLevel())
-				chatDisplay.add(quote.format());
+		// death anims
+		for (BountyAnimation anim : BountyHunters.getInstance().getLevelManager().getAnimations())
+			if (nextLevel == anim.getUnlockLevel())
+				chatDisplay.add(anim.format());
 
 		// send commands
 		if (BountyHunters.getInstance().getLevelManager().hasCommands(nextLevel))
@@ -314,33 +311,47 @@ public class PlayerData implements OfflinePlayerData {
 	public String toString() {
 		return "{Level=" + level + ", ClaimedBounties=" + claimed + ", SuccessfulBounties=" + successful + ", IllegalKills=" + illegalKills
 				+ ", IllegalKillStreak=" + illegalStreak + (hasTitle() ? ", Title=" + title.getId() : "")
-				+ (hasQuote() ? ", Quote=" + quote.getId() : "") + ", RedeemHeads=" + redeemHeads.toString() + "}";
+				+ (hasAnimation() ? ", Quote=" + animation.getId() : "") + ", RedeemHeads=" + redeemHeads.toString() + "}";
 	}
 
+	/**
+	 * @deprecated Use {@link PlayerDataManager#getLoaded()} instead
+	 */
 	@Deprecated
 	public static Collection<PlayerData> getLoaded() {
 		return BountyHunters.getInstance().getPlayerDataManager().getLoaded();
 	}
 
+	/**
+	 * @deprecated Use {@link PlayerDataManager#get(UUID)} instead
+	 */
 	@Deprecated
 	public static PlayerData get(OfflinePlayer player) {
 		return BountyHunters.getInstance().getPlayerDataManager().get(player.getUniqueId());
 	}
 
+	/**
+	 * @deprecated Use {@link PlayerDataManager#load(OfflinePlayer)} instead
+	 */
 	@Deprecated
 	public static void load(OfflinePlayer player) {
 		BountyHunters.getInstance().getPlayerDataManager().load(player);
 	}
 
+	/**
+	 * @deprecated Use {@link PlayerDataManager#isLoaded(UUID)} instead
+	 */
 	@Deprecated
 	public static boolean isLoaded(UUID uuid) {
 		return BountyHunters.getInstance().getPlayerDataManager().isLoaded(uuid);
 	}
 
-	/*
-	 * CAREFUL! this method does NOT save any of the player data. you MUST save
+	/**
+	 * Caution: this method does NOT save any of the player data. You MUST save
 	 * the player data using saveFile() before unloading the player data from
-	 * the map!
+	 * the map.
+	 *
+	 * @deprecated Use {@link PlayerDataManager#unload(UUID)} instead
 	 */
 	@Deprecated
 	public void unload() {

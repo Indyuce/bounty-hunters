@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.Indyuce.bountyhunters.BountyHunters;
-import net.Indyuce.bountyhunters.BountyUtils;
+import net.Indyuce.bountyhunters.api.Utils;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.BountyCommands;
 import net.Indyuce.bountyhunters.api.NumberFormat;
@@ -90,7 +90,7 @@ public class AddBountyCommand implements CommandExecutor {
 			Message.NOT_VALID_NUMBER.format("arg", args[1]).send(sender);
 			return true;
 		}
-		reward = BountyUtils.truncate(reward, 1);
+		reward = Utils.truncate(reward, 1);
 
 		/*
 		 * minimum and maximum checks do not apply for console.
@@ -131,7 +131,7 @@ public class AddBountyCommand implements CommandExecutor {
 		// tax calculation
 		double tax = sender.hasPermission("bountyhunters.admin") && arguments.noTax ? 0
 				: Math.max(0, Math.min(1, BountyHunters.getInstance().getConfig().getDouble("bounty-tax.bounty-creation") / 100));
-		double taxed = BountyUtils.truncate(reward * tax, 1);
+		double taxed = Utils.truncate(reward * tax, 1);
 
 		// add to existing bounty
 		Optional<Bounty> currentBounty = BountyHunters.getInstance().getBountyManager().getBounty(target);

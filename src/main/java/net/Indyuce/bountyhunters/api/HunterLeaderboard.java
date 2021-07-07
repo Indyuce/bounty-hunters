@@ -73,14 +73,14 @@ public class HunterLeaderboard {
 	 */
 	public void save() {
 
-		// reset previous keys
+		// Reset previous keys
 		for (String key : configFile.getConfig().getKeys(false))
 			configFile.getConfig().set(key, null);
 
-		// apply new keys
+		// Apply new keys
 		mapped.values().forEach(profile -> profile.save(configFile.getConfig()));
 
-		// save file
+		// Save file
 		configFile.save();
 	}
 
@@ -94,7 +94,7 @@ public class HunterLeaderboard {
 	public void update(PlayerData player) {
 
 		/*
-		 * if the leaderboard already contains that player, just add one to the
+		 * If the leaderboard already contains that player, just add one to the
 		 * bounties counter; if there is still not at least 16 players in the
 		 * cached leaderboard, just add it to the keys and that's all
 		 */
@@ -105,7 +105,7 @@ public class HunterLeaderboard {
 		}
 
 		/*
-		 * if there is more than 16 players in the leaderboard, the plugin will
+		 * If there is more than 16 players in the leaderboard, the plugin will
 		 * have to remove the player that has the least bounties and will
 		 * replace it by the newer one IF the newer one has more bounties
 		 */
