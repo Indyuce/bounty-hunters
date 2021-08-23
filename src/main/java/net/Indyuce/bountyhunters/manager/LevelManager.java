@@ -71,7 +71,7 @@ public class LevelManager {
 		return enabled;
 	}
 
-	public BountyAnimation getQuote(String id) {
+	public BountyAnimation getAnimation(String id) {
 		return animations.get(id);
 	}
 

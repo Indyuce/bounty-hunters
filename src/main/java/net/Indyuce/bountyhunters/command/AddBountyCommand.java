@@ -134,18 +134,19 @@ public class AddBountyCommand implements CommandExecutor {
 
         // add to existing bounty
         Optional<Bounty> currentBounty = BountyHunters.getInstance().getBountyManager().getBounty(target);
+
+        // Maximum amount of contributions per player
+        int maxAmount = BountyHunters.getInstance().getConfig().getInt("bounty-amount-restriction");
+        if (maxAmount > 0 && sender instanceof Player && (!currentBounty.isPresent() || !currentBounty.get().hasContributed((Player) sender))
+                && BountyHunters.getInstance().getBountyManager().getContributions((Player) sender).size() >= maxAmount) {
+            Message.TOO_MANY_BOUNTIES.format().send(sender);
+            return true;
+        }
+
         if (currentBounty.isPresent()) {
 
-            // amount restriction
-            Bounty bounty = currentBounty.get();
-            int maxAmount = BountyHunters.getInstance().getConfig().getInt("bounty-amount-restriction");
-            if (maxAmount > 0 && sender instanceof Player && !bounty.hasContributed((Player) sender)
-                    && BountyHunters.getInstance().getBountyManager().getContributions((Player) sender).size() >= maxAmount) {
-                Message.TOO_MANY_BOUNTIES.format().send(sender);
-                return true;
-            }
-
             // API
+            Bounty bounty = currentBounty.get();
             BountyIncreaseEvent bountyEvent = new BountyIncreaseEvent(bounty, sender instanceof Player ? (Player) sender : null, reward - taxed,
                     sender instanceof Player ? BountyChangeCause.PLAYER : BountyChangeCause.CONSOLE);
             Bukkit.getPluginManager().callEvent(bountyEvent);
@@ -164,14 +165,6 @@ public class AddBountyCommand implements CommandExecutor {
             else
                 bounty.addReward(bountyEvent.getAdded());
             bountyEvent.sendAllert();
-            return true;
-        }
-
-        // amount restriction
-        int maxAmount = BountyHunters.getInstance().getConfig().getInt("bounty-amount-restriction");
-        if (maxAmount > 0 && sender instanceof Player
-                && BountyHunters.getInstance().getBountyManager().getContributions((Player) sender).size() >= maxAmount) {
-            Message.TOO_MANY_BOUNTIES.format().send(sender);
             return true;
         }
 

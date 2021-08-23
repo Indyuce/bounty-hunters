@@ -168,7 +168,7 @@ public class BountiesCommand implements CommandExecutor {
 			if (!playerData.canSelectItem())
 				return true;
 
-			BountyAnimation item = BountyHunters.getInstance().getLevelManager().getQuote(args[1]);
+			BountyAnimation item = BountyHunters.getInstance().getLevelManager().getAnimation(args[1]);
 			if (!playerData.hasUnlocked(item))
 				return true;
 

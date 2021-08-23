@@ -51,7 +51,7 @@ public class YAMLPlayerDataManager extends PlayerDataManager {
 		if (config.contains("current-anim"))
 			try {
 				Validate.isTrue(levelManager.hasAnimation(config.getString("current-anim")), "Could not load animation from " + data.getOfflinePlayer().getName());
-				data.setAnimation(levelManager.getQuote(config.getString("current-anim")));
+				data.setAnimation(levelManager.getAnimation(config.getString("current-anim")));
 			} catch (IllegalArgumentException exception) {
 				data.log(exception.getMessage());
 			}
