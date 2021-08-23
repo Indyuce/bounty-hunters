@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.comp.database;
+package net.Indyuce.bountyhunters.compat.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,8 +8,8 @@ import java.sql.SQLException;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
-import net.Indyuce.bountyhunters.comp.database.mysql.MySQLBountyManager;
-import net.Indyuce.bountyhunters.comp.database.mysql.MySQLPlayerDataManager;
+import net.Indyuce.bountyhunters.compat.database.mysql.MySQLBountyManager;
+import net.Indyuce.bountyhunters.compat.database.mysql.MySQLPlayerDataManager;
 import net.Indyuce.bountyhunters.manager.BountyManager;
 import net.Indyuce.bountyhunters.manager.PlayerDataManager;
 

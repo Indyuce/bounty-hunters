@@ -1,10 +1,10 @@
-package net.Indyuce.bountyhunters.comp.database.mysql;
+package net.Indyuce.bountyhunters.compat.database.mysql;
 
 import com.google.gson.JsonParser;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.player.OfflinePlayerData;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
-import net.Indyuce.bountyhunters.comp.database.MySQLProvider;
+import net.Indyuce.bountyhunters.compat.database.MySQLProvider;
 import net.Indyuce.bountyhunters.manager.LevelManager;
 import net.Indyuce.bountyhunters.manager.PlayerDataManager;
 import org.apache.commons.lang.Validate;

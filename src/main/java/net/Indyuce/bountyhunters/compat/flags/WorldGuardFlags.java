@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.comp.flags;
+package net.Indyuce.bountyhunters.compat.flags;
 
 import java.util.HashMap;
 import java.util.Map;

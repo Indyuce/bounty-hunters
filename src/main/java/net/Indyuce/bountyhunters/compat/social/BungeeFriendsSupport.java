@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.comp.social;
+package net.Indyuce.bountyhunters.compat.social;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

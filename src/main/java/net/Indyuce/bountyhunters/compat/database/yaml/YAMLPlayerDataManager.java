@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.comp.database.yaml;
+package net.Indyuce.bountyhunters.compat.database.yaml;
 
 import java.util.ArrayList;
 import java.util.List;

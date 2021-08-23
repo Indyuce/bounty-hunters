@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.comp;
+package net.Indyuce.bountyhunters.compat;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;

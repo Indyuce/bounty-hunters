@@ -1,7 +1,7 @@
-package net.Indyuce.bountyhunters.comp.database;
+package net.Indyuce.bountyhunters.compat.database;
 
-import net.Indyuce.bountyhunters.comp.database.yaml.YAMLBountyManager;
-import net.Indyuce.bountyhunters.comp.database.yaml.YAMLPlayerDataManager;
+import net.Indyuce.bountyhunters.compat.database.yaml.YAMLBountyManager;
+import net.Indyuce.bountyhunters.compat.database.yaml.YAMLPlayerDataManager;
 import net.Indyuce.bountyhunters.manager.BountyManager;
 import net.Indyuce.bountyhunters.manager.PlayerDataManager;
 

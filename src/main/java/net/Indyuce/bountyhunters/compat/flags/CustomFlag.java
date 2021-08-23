@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.comp.flags;
+package net.Indyuce.bountyhunters.compat.flags;
 
 public enum CustomFlag {
 	CLAIM_BOUNTIES,

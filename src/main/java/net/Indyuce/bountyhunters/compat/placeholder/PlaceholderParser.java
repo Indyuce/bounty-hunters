@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.comp.placeholder;
+package net.Indyuce.bountyhunters.compat.placeholder;
 
 import org.bukkit.OfflinePlayer;
 

@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.comp.database.mysql;
+package net.Indyuce.bountyhunters.compat.database.mysql;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,8 +14,8 @@ import com.google.gson.JsonParser;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
-import net.Indyuce.bountyhunters.comp.database.MySQLProvider;
-import net.Indyuce.bountyhunters.comp.database.yaml.YAMLBountyManager;
+import net.Indyuce.bountyhunters.compat.database.MySQLProvider;
+import net.Indyuce.bountyhunters.compat.database.yaml.YAMLBountyManager;
 import net.Indyuce.bountyhunters.manager.BountyManager;
 
 public class MySQLBountyManager extends BountyManager {
