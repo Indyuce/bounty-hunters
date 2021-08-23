@@ -45,6 +45,10 @@ permissions:
         default: op
     bountyhunters.animation:
         default: op
+
+    # Players can put bounties on themselves
+    bountyhunters.self:
+        default: op
     
     # Perm to use /redeembountyheads.
     bountyhunters.redeem-heads:
