@@ -81,7 +81,7 @@ public class HeadHunting implements Listener {
 		item.setAmount(item.getAmount() - 1);
 
 		bountyEvent.sendAllert();
-		new BountyClaim().setClaimed(bounty, player, null);
+		new BountyClaim().handleBountyClaim(bounty, player, null);
 	}
 
 	@EventHandler(ignoreCancelled = true)

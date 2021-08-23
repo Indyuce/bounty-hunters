@@ -12,7 +12,7 @@ public class Bounty {
 	private final UUID id;
 
 	private final OfflinePlayer target;
-	private final List<OfflinePlayer> hunters = new ArrayList<>();
+	private final Set<OfflinePlayer> hunters = new HashSet<>();
 
 	private final LinkedHashMap<OfflinePlayer, Double> amount = new LinkedHashMap<>();
 	private double extra;
@@ -156,7 +156,7 @@ public class Bounty {
 		this.lastUpdated = lastModified;
 	}
 
-	public List<OfflinePlayer> getHunters() {
+	public Set<OfflinePlayer> getHunters() {
 		return hunters;
 	}
 

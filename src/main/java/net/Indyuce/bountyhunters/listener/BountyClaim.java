@@ -10,6 +10,7 @@ import net.Indyuce.bountyhunters.api.event.BountyEvent;
 import net.Indyuce.bountyhunters.api.event.BountyIncreaseEvent;
 import net.Indyuce.bountyhunters.api.event.BountyIncreaseEvent.BountyChangeCause;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
+import net.Indyuce.bountyhunters.leaderboard.profile.HunterProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -95,10 +96,10 @@ public class BountyClaim implements Listener {
 			return;
 
 		bountyEvent.sendAllert();
-		setClaimed(bounty, killer, target);
+		handleBountyClaim(bounty, killer, target);
 	}
 
-	public void setClaimed(Bounty bounty, Player killer, Player target) {
+	public void handleBountyClaim(Bounty bounty, Player killer, Player target) {
 
 		// Send bounty commands
 		new BountyCommands("claim", bounty, killer).send();
@@ -120,7 +121,6 @@ public class BountyClaim implements Listener {
 		playerData.addClaimedBounties(1);
 		if (BountyHunters.getInstance().getLevelManager().isEnabled())
 			playerData.refreshLevel(killer);
-		BountyHunters.getInstance().getHunterLeaderboard().update(playerData);
 
 		// Adds 1 to the bounty creator's successful-bounties stat
 		if (bounty.hasCreator())
@@ -136,5 +136,8 @@ public class BountyClaim implements Listener {
 
 		// Finally, unregister the bounty
 		BountyHunters.getInstance().getBountyManager().unregisterBounty(bounty, true);
+
+		// Update leaderboards after the bounty was unregistered
+		BountyHunters.getInstance().getHunterLeaderboard().update(new HunterProfile(playerData));
 	}
 }
