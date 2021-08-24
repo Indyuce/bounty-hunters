@@ -10,8 +10,8 @@ import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 import net.Indyuce.bountyhunters.api.event.BountyIncreaseEvent;
-import net.Indyuce.bountyhunters.api.restriction.BountyRestriction;
-import net.Indyuce.bountyhunters.api.restriction.BountyRestriction.InteractionType;
+import net.Indyuce.bountyhunters.compat.interaction.InteractionRestriction;
+import net.Indyuce.bountyhunters.compat.interaction.InteractionRestriction.InteractionType;
 
 public class RestrictionListener implements Listener {
 
@@ -34,7 +34,7 @@ public class RestrictionListener implements Listener {
 	}
 
 	private boolean check(InteractionType interaction, Player player, OfflinePlayer target) {
-		for (BountyRestriction restriction : BountyHunters.getInstance().getBountyManager().getClaimRestrictions())
+		for (InteractionRestriction restriction : BountyHunters.getInstance().getBountyManager().getClaimRestrictions())
 			if (!restriction.canInteractWith(interaction, player, target))
 				return false;
 		return true;

@@ -4,8 +4,8 @@ import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.BountyInactivityRemoval;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
-import net.Indyuce.bountyhunters.api.restriction.BedSpawnPoint;
-import net.Indyuce.bountyhunters.api.restriction.BountyRestriction;
+import net.Indyuce.bountyhunters.compat.interaction.BedSpawnPoint;
+import net.Indyuce.bountyhunters.compat.interaction.InteractionRestriction;
 import net.Indyuce.bountyhunters.gui.BountyEditor;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -29,7 +29,7 @@ public abstract class BountyManager {
      * claimed. Makes implementing plugin compatibility and extra options much
      * easier
      */
-    private final Set<BountyRestriction> restrictions = new HashSet<>();
+    private final Set<InteractionRestriction> restrictions = new HashSet<>();
 
     public BountyManager() {
 
@@ -82,7 +82,7 @@ public abstract class BountyManager {
         bounties.put(bounty.getId(), bounty);
     }
 
-    public Set<BountyRestriction> getClaimRestrictions() {
+    public Set<InteractionRestriction> getClaimRestrictions() {
         return restrictions;
     }
 
@@ -94,7 +94,7 @@ public abstract class BountyManager {
      *
      * @param restriction Restriction to register
      */
-    public void registerClaimRestriction(BountyRestriction restriction) {
+    public void registerClaimRestriction(InteractionRestriction restriction) {
         restrictions.add(restriction);
     }
 

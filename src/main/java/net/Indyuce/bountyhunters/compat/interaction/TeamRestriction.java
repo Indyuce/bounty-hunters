@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.api.restriction;
+package net.Indyuce.bountyhunters.compat.interaction;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-public class TeamRestriction implements BountyRestriction {
+public class TeamRestriction implements InteractionRestriction {
 
 	@Override
 	public boolean canInteractWith(InteractionType interaction, Player claimer, OfflinePlayer target) {

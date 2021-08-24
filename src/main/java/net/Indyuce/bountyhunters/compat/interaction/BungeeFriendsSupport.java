@@ -1,13 +1,12 @@
-package net.Indyuce.bountyhunters.compat.social;
+package net.Indyuce.bountyhunters.compat.interaction;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import net.Indyuce.bountyhunters.api.restriction.BountyRestriction;
 import net.simplyrin.bungeefriends.Main;
 
-public class BungeeFriendsSupport implements BountyRestriction {
+public class BungeeFriendsSupport implements InteractionRestriction {
 	private final Main plugin = (Main) Bukkit.getPluginManager().getPlugin("BungeeFriends");
 
 	@Override

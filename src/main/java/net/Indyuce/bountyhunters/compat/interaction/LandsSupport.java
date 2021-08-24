@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.compat.restriction;
+package net.Indyuce.bountyhunters.compat.interaction;
 
 import me.angeschossen.lands.api.integration.LandsIntegration;
 import me.angeschossen.lands.api.land.Land;

@@ -42,6 +42,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.spigotmc.spigot-src:src-1.9.4:1.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.spigotmc.spigot-src:src-1.9.2:1.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: me.clip:placeholderapi:2.9.2" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.angeschossen:LandsAPI:5.13.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.MilkBowl:VaultAPI:1.7" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.bukkit:bukkit:1.13.1-R0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: commons-lang:commons-lang:2.6" level="project" />

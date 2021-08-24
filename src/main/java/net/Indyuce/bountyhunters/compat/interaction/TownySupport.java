@@ -1,4 +1,4 @@
-package net.Indyuce.bountyhunters.compat.social;
+package net.Indyuce.bountyhunters.compat.interaction;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -7,9 +7,7 @@ import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 
-import net.Indyuce.bountyhunters.api.restriction.BountyRestriction;
-
-public class TownySupport implements BountyRestriction {
+public class TownySupport implements InteractionRestriction {
 
 	@Override
 	public boolean canInteractWith(InteractionType interaction, Player claimer, OfflinePlayer target) {

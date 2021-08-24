@@ -1,9 +1,12 @@
-package net.Indyuce.bountyhunters.api.restriction;
+package net.Indyuce.bountyhunters.compat.interaction;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-public interface BountyRestriction {
+/**
+ * This interface is used to check
+ */
+public interface InteractionRestriction {
 
     /**
      * @param interaction The interaction type (bounty creation/increase/claim)
@@ -12,9 +15,9 @@ public interface BountyRestriction {
      * @return If the player can claim, increase or
      *         create a bounty with given target
      */
-    public boolean canInteractWith(InteractionType interaction, Player claimer, OfflinePlayer target);
+     boolean canInteractWith(InteractionType interaction, Player claimer, OfflinePlayer target);
 
-    public enum InteractionType {
+     enum InteractionType {
 
         /**
          * Bounty creation

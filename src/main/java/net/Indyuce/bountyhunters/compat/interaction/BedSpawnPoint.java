@@ -1,11 +1,11 @@
-package net.Indyuce.bountyhunters.api.restriction;
+package net.Indyuce.bountyhunters.compat.interaction;
 
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-public class BedSpawnPoint implements BountyRestriction {
+public class BedSpawnPoint implements InteractionRestriction {
 	private final int radiusSquared;
 
 	public BedSpawnPoint(ConfigurationSection config) {
