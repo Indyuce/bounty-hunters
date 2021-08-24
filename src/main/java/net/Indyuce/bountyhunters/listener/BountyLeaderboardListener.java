@@ -3,6 +3,7 @@ package net.Indyuce.bountyhunters.listener;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
 import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
+import net.Indyuce.bountyhunters.api.event.BountyExpireEvent;
 import net.Indyuce.bountyhunters.api.event.BountyIncreaseEvent;
 import net.Indyuce.bountyhunters.leaderboard.profile.BountyProfile;
 import org.bukkit.Bukkit;
@@ -25,5 +26,10 @@ public class BountyLeaderboardListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void c(BountyClaimEvent event) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(BountyHunters.getInstance(), () -> BountyHunters.getInstance().getBountyLeaderboard().remove(event.getTarget()));
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void d(BountyExpireEvent event) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(BountyHunters.getInstance(), () -> BountyHunters.getInstance().getBountyLeaderboard().update(new BountyProfile(event.getBounty().getTarget())));
     }
 }
