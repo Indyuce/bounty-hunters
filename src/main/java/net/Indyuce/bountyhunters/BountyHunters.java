@@ -25,9 +25,10 @@ import net.Indyuce.bountyhunters.compat.placeholder.BountyHuntersPlaceholders;
 import net.Indyuce.bountyhunters.compat.placeholder.DefaultParser;
 import net.Indyuce.bountyhunters.compat.placeholder.PlaceholderAPIParser;
 import net.Indyuce.bountyhunters.compat.placeholder.PlaceholderParser;
-import net.Indyuce.bountyhunters.compat.social.BungeeFriendsSupport;
-import net.Indyuce.bountyhunters.compat.social.PartyAndFriendsSupport;
-import net.Indyuce.bountyhunters.compat.social.TownySupport;
+import net.Indyuce.bountyhunters.compat.restriction.BungeeFriendsSupport;
+import net.Indyuce.bountyhunters.compat.restriction.LandsSupport;
+import net.Indyuce.bountyhunters.compat.restriction.PartyAndFriendsSupport;
+import net.Indyuce.bountyhunters.compat.restriction.TownySupport;
 import net.Indyuce.bountyhunters.gui.PluginInventory;
 import net.Indyuce.bountyhunters.gui.listener.GuiListener;
 import net.Indyuce.bountyhunters.leaderboard.BountyLeaderboard;
@@ -185,6 +186,11 @@ public class BountyHunters extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin("Towny") != null && getConfig().getBoolean("claim-restrictions.town-members")) {
             bountyManager.registerClaimRestriction(new TownySupport());
             getLogger().log(Level.INFO, "Hooked onto Towny");
+        }
+
+        if (getServer().getPluginManager().getPlugin("Lands") != null && getConfig().getBoolean("claim-restrictions.lands")) {
+            bountyManager.registerClaimRestriction(new LandsSupport());
+            getLogger().log(Level.INFO, "Hooked onto Lands");
         }
 
         if (getConfig().getBoolean("claim-restrictions.friends")) {
