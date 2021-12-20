@@ -6,235 +6,31 @@
 
     <groupId>io.github.Indyuce</groupId>
     <artifactId>bounty-hunters</artifactId>
-    <version>2.4.1</version>
+    <packaging>pom</packaging>
+    <version>${revision}</version>
+    <modules>
+        <module>bounty-hunters-plugin</module>
+        <module>bounty-hunters-v1_9_R1</module>
+        <module>bounty-hunters-v1_9_R2</module>
+        <module>bounty-hunters-v1_10_R1</module>
+        <module>bounty-hunters-v1_11_R1</module>
+        <module>bounty-hunters-v1_12_R1</module>
+        <module>bounty-hunters-v1_13_R1</module>
+        <module>bounty-hunters-v1_13_R2</module>
+        <module>bounty-hunters-v1_14_R1</module>
+        <module>bounty-hunters-v1_15_R1</module>
+        <module>bounty-hunters-v1_16_R1</module>
+        <module>bounty-hunters-v1_16_R2</module>
+        <module>bounty-hunters-v1_16_R3</module>
+        <module>bounty-hunters-v1_17_R1</module>
+        <module>bounty-hunters-v1_18_R1</module>
+        <module>bounty-hunters-dist</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
+        <revision>2.4.1</revision>
     </properties>
-
-    <build>
-        <finalName>${project.name}-${project.version}</finalName>
-        <resources>
-            <resource>
-                <filtering>true</filtering>
-                <directory>${basedir}/src/main/resources/</directory>
-            </resource>
-        </resources>
-
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-            </plugin>
-        </plugins>
-    </build>
-
-    <repositories>
-
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-
-        <repository>
-            <id>bungeecord-repo</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </repository>
-
-        <repository>
-            <id>placeholderapi</id>
-            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-        </repository>
-
-        <repository>
-            <id>sk89q-repo</id>
-            <url>https://maven.enginehub.org/repo/</url>
-        </repository>
-
-    </repositories>
-
-    <dependencies>
-
-        <!-- BungeeCord API -->
-        <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>1.16-R0.5-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- (Local) Spigot API -->
-        <dependency>
-            <groupId>org.spigotmc.spigot-src</groupId>
-            <artifactId>src-1.17</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.spigotmc.spigot-src</groupId>
-            <artifactId>src-1.16.5</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.spigotmc.spigot-src</groupId>
-            <artifactId>src-1.16.3</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.spigotmc.spigot-src</groupId>
-            <artifactId>src-1.16.1</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.spigotmc.spigot-src</groupId>
-            <artifactId>src-1.15.2</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.spigotmc.spigot-src</groupId>
-            <artifactId>src-1.14.4</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.spigotmc.spigot-src</groupId>
-            <artifactId>src-1.13.2</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.spigotmc.spigot-src</groupId>
-            <artifactId>src-1.13</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.spigotmc.spigot-src</groupId>
-            <artifactId>src-1.12.2</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.spigotmc.spigot-src</groupId>
-            <artifactId>src-1.11.2</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.spigotmc.spigot-src</groupId>
-            <artifactId>src-1.10.2</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.spigotmc.spigot-src</groupId>
-            <artifactId>src-1.9.4</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.spigotmc.spigot-src</groupId>
-            <artifactId>src-1.9.2</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <!-- Public repos -->
-        <dependency>
-            <groupId>me.clip</groupId>
-            <artifactId>placeholderapi</artifactId>
-            <version>2.9.2</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.angeschossen</groupId>
-            <artifactId>LandsAPI</artifactId>
-            <version>5.13.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.MilkBowl</groupId>
-            <artifactId>VaultAPI</artifactId>
-            <version>1.7</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.sk89q.worldguard</groupId>
-            <artifactId>worldguard-bukkit</artifactId>
-            <version>7.0.2-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!--<dependency>
-            <groupId>com.github.simonsator</groupId>
-            <artifactId>BungeecordPartyAndFriends</artifactId>
-            <version>e9ff8a3</version>
-        </dependency>-->
-
-        <dependency>
-            <groupId>com.github.TownyAdvanced</groupId>
-            <artifactId>Towny</artifactId>
-            <version>0.96.7.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.SimplyRin</groupId>
-            <artifactId>BungeeFriends</artifactId>
-            <version>bc22a63</version>
-        </dependency>
-
-        <!-- Local libs -->
-        <dependency>
-            <groupId>com.github.Zrips</groupId>
-            <artifactId>Residence</artifactId>
-            <version>4.9.0.5</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Residence-4.9.0.5.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.simonsator</groupId>
-            <artifactId>BungeecordPartyAndFriends</artifactId>
-            <version>1.4.6</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Party-and-Friends-MySQL-Edition-Spigot-API-1.4.6.jar</systemPath>
-        </dependency>
-
-    </dependencies>
 
 </project>
