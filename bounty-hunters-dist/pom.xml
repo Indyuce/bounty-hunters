@@ -37,7 +37,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <finalName>MythicLib-${revision}</finalName>
+                    <finalName>BountyHunters-${revision}</finalName>
                     <outputDirectory>../target</outputDirectory>
                 </configuration>
             </plugin>
@@ -46,6 +46,40 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
+            </plugin>
+
+            <!-- This plugin makes sure that there are no placeholders in the final
+           pom.xml version string because having ${revision} would cause issues when
+           using MythicLib-dist as a dependency
+
+           The flatten plugin must run AFTER the shade plugin, otherwise an issue pops up.
+           To do that, run the flatten plugin on the 'package' phase
+
+           https://stackoverflow.com/questions/52552329/use-maven-flatten-plugin-and-maven-shade-plugin-at-the-same-time
+           -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.2.2</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
