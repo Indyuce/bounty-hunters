@@ -16,6 +16,21 @@
         <maven.compiler.target>16</maven.compiler.target>
     </properties>
 
+    <build>
+        <resources>
+            <resource>
+                <targetPath>.</targetPath>
+                <filtering>true</filtering>
+                <directory>${basedir}/src/main/resources</directory>
+                <includes>
+                    <include>plugin.yml</include>
+                    <include>config.yml</include>
+                    <include>readme.txt</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
     <repositories>
 
         <repository>
