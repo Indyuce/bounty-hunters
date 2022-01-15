@@ -20,8 +20,8 @@ public class Bounty {
 	private final LinkedHashMap<OfflinePlayer, Double> amount = new LinkedHashMap<>();
 	private double extra;
 
-	/*
-	 * changed everytime the bounty is updated, current time by default so newly
+	/**
+	 * Changed everytime the bounty is updated, current time by default so newly
 	 * created bounties do not have to mind about this option
 	 */
 	private long lastUpdated = System.currentTimeMillis();
@@ -94,12 +94,18 @@ public class Bounty {
 		return target;
 	}
 
-	/*
-	 * TODO Save ONE boolean field to know if the bounty was created by the
-	 * console or by a player. That way the creator is simply the first key of
-	 * the 'amount' map. ATM there's no way to tell which entity created the
-	 * bounty, only which entity contributed last to it
+	/**
+	 * Current implementation of the bounty creator is bad
+	 * because it does not support bounties created by console.
+	 * <p>
+	 * This method just takes the first input from the contribution map
+	 * and calls it done. However that contribution map is empty when the
+	 * bounty is created from the console, which means the first player
+	 * to contribute in the bounty will be chosen as the bounty creator.
+	 *
+	 * @return Bounty creator*
 	 */
+	@Deprecated
 	public boolean hasCreator() {
 		return amount.size() > 0;
 	}
@@ -116,8 +122,9 @@ public class Bounty {
 		setExtra(extra + value);
 	}
 
-	/*
-	 * ADDS given value the mapped value; does NOT replace it
+	/**
+	 * Adds some contribution from the given player. It does not
+	 * erase the previous contribution value
 	 */
 	public void addContribution(OfflinePlayer player, double value) {
 		setContribution(player, getContribution(player) + value);
