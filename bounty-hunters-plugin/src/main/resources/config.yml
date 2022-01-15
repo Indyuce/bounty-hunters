@@ -169,6 +169,10 @@ player-tracking:
   # target when holding the compass.
   target-particles: true
 
+  # Set to true if you want players able to target bounties
+  # which they contributed in
+  can-track-own-bounties: true
+
   # Price of the tracking compass.
   price: 1000
 
