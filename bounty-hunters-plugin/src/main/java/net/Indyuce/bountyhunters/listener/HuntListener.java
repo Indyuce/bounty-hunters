@@ -6,6 +6,7 @@ import net.Indyuce.bountyhunters.api.language.Message;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.api.player.PlayerHunting;
 import net.Indyuce.bountyhunters.version.VersionSound;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,11 +16,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class HuntListener implements Listener {
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler
 	public void a(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 
-		if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK
+		if ((event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
 				|| !CustomItem.BOUNTY_COMPASS.matches(event.getItem()))
 			return;
 
