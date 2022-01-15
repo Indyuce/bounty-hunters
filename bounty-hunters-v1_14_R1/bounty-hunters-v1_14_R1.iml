@@ -11,25 +11,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="bounty-hunters-plugin" scope="PROVIDED" />
-    <orderEntry type="module-library">
-      <library name="Maven: com.github.Zrips:Residence:4.9.0.5">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Residence-4.9.0.5.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: com.github.simonsator:BungeecordPartyAndFriends:1.4.6">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Party-and-Friends-MySQL-Edition-Spigot-API-1.4.6.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.github.Indyuce:bounty-hunters-plugin:2.4.1-b" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.spigotmc.spigot-src:src-1.14.4:1.0" level="project" />
   </component>
 </module>
