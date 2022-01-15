@@ -73,12 +73,12 @@ public class PlayerHunting {
         if (!player.isOnline() || !bounty.getTarget().isOnline() || !bounty.getTarget().getPlayer().getWorld().equals(player.getWorld()))
             return false;
 
-        if (CustomItem.BOUNTY_COMPASS.loreMatches(player.getInventory().getItemInMainHand())) {
+        if (CustomItem.BOUNTY_COMPASS.matches(player.getInventory().getItemInMainHand())) {
             compass = player.getInventory().getItemInMainHand();
             return true;
         }
 
-        if (CustomItem.BOUNTY_COMPASS.loreMatches(player.getInventory().getItemInOffHand())) {
+        if (CustomItem.BOUNTY_COMPASS.matches(player.getInventory().getItemInOffHand())) {
             compass = player.getInventory().getItemInOffHand();
             return true;
         }

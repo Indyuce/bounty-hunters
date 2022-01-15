@@ -20,7 +20,7 @@ public class HuntListener implements Listener {
 		Player player = event.getPlayer();
 
 		if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK
-				|| !CustomItem.BOUNTY_COMPASS.loreMatches(event.getItem()))
+				|| !CustomItem.BOUNTY_COMPASS.matches(event.getItem()))
 			return;
 
 		// heavy checks afterwards
