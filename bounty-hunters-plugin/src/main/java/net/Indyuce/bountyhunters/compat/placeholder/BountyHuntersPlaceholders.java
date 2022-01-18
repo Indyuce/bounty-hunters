@@ -20,7 +20,7 @@ public class BountyHuntersPlaceholders extends PlaceholderExpansion {
 
     @Override
     public String getIdentifier() {
-        return "net/Indyuce/bountyhunters";
+        return "bountyhunters";
     }
 
     @Override
