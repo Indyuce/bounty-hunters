@@ -7,6 +7,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
+import java.util.Objects;
+
 public class BountyExpireEvent extends BountyEvent {
     private final BountyExpireCause cause;
     private final Player player;
@@ -16,12 +18,12 @@ public class BountyExpireEvent extends BountyEvent {
     private static final HandlerList handlers = new HandlerList();
 
     /**
-     * When a bounty expires
+     * When a bounty expires due to an admin
      *
      * @param bounty Bounty expiring
      */
     public BountyExpireEvent(Bounty bounty) {
-        this(bounty, bounty.getReward());
+        this(bounty, null, bounty.getReward(), BountyExpireCause.ADMIN);
     }
 
     /**
@@ -32,16 +34,6 @@ public class BountyExpireEvent extends BountyEvent {
      */
     public BountyExpireEvent(Bounty bounty, Player player) {
         this(bounty, player, bounty.getContribution(player), BountyExpireCause.PLAYER);
-    }
-
-    /**
-     * Called when an admin removes some extra bounty reward
-     *
-     * @param bounty Bounty expiring
-     * @param amount Amount removed
-     */
-    public BountyExpireEvent(Bounty bounty, double amount) {
-        this(bounty, null, amount, BountyExpireCause.ADMIN);
     }
 
     public BountyExpireEvent(Bounty bounty, Player player, double amount, BountyExpireCause cause) {
@@ -73,7 +65,7 @@ public class BountyExpireEvent extends BountyEvent {
     }
 
     public Player getPlayer() {
-        return player;
+        return Objects.requireNonNull(player, "No player caused that event");
     }
 
     public void sendAllert() {

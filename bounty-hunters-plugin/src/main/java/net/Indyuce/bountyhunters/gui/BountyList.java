@@ -150,72 +150,68 @@ public class BountyList extends PluginInventory {
             return;
         }
 
-        // target someone
-        if (action == InventoryAction.PICKUP_ALL && BountyHunters.getInstance().getConfig().getBoolean("player-tracking.enabled"))
-            if (slot < 35 && VersionMaterial.PLAYER_HEAD.matches(item)) {
-                String tag = NBTItem.get(item).getString("bountyId");
-                if (tag == null || tag.equals(""))
+        // Interact with bounty
+        String tag = NBTItem.get(item).getString("bountyId");
+        if (tag == null || tag.isEmpty())
+            return;
+
+        Bounty bounty = BountyHunters.getInstance().getBountyManager().getBounty(UUID.fromString(tag));
+
+        // Target someone
+        if (action == InventoryAction.PICKUP_ALL && BountyHunters.getInstance().getConfig().getBoolean("player-tracking.enabled")) {
+            OfflinePlayer target = bounty.getTarget();
+
+            if (bounty.hasHunter(player)) {
+                bounty.removeHunter(player);
+                Message.TARGET_REMOVED.format().send(player);
+            } else {
+
+                // permission check
+                if (player.hasPermission("bountyhunters.untargetable") && !player.hasPermission("bountyhunters.untargetable.bypass")) {
+                    Message.TRACK_IMUN.format().send(player);
                     return;
-
-                Bounty bounty = BountyHunters.getInstance().getBountyManager().getBounty(UUID.fromString(tag));
-                OfflinePlayer target = bounty.getTarget();
-
-                if (bounty.hasHunter(player)) {
-                    bounty.removeHunter(player);
-                    Message.TARGET_REMOVED.format().send(player);
-                } else {
-
-                    // permission check
-                    if (player.hasPermission("bountyhunters.untargetable") && !player.hasPermission("bountyhunters.untargetable.bypass")) {
-                        Message.TRACK_IMUN.format().send(player);
-                        return;
-                    }
-
-                    /*
-                     * check the player who wants to hunt the bounty target has
-                     * not created the bounty.
-                     */
-                    if (bounty.hasCreator(player) && !BountyHunters.getInstance().getConfig().getBoolean("player-tracking.can-track-own-bounties")) {
-                        Message.CANT_TRACK_CREATOR.format().send(player);
-                        return;
-                    }
-
-                    // player can't track himself
-                    if (bounty.hasTarget(player))
-                        return;
-
-                    // check for target cooldown
-                    long remain = (long) (data.getLastTarget() + BountyHunters.getInstance().getConfig().getDouble("player-tracking.cooldown") * 1000
-                            - System.currentTimeMillis()) / 1000;
-                    if (remain > 0) {
-                        Message.TARGET_COOLDOWN.format("remain", remain, "s", remain >= 2 ? "s" : "").send(player);
-                        return;
-                    }
-
-                    // event check
-                    HunterTargetEvent hunterEvent = new HunterTargetEvent(player, target);
-                    Bukkit.getPluginManager().callEvent(hunterEvent);
-                    if (hunterEvent.isCancelled())
-                        return;
-
-                    data.setLastTarget();
-
-                    bounty.addHunter(player);
-                    if (target.isOnline())
-                        hunterEvent.sendAllert(target.getPlayer());
-                    Message.TARGET_SET.format().send(player);
                 }
 
-                open();
+                /*
+                 * check the player who wants to hunt the bounty target has
+                 * not created the bounty.
+                 */
+                if (bounty.hasCreator(player) && !BountyHunters.getInstance().getConfig().getBoolean("player-tracking.can-track-own-bounties")) {
+                    Message.CANT_TRACK_CREATOR.format().send(player);
+                    return;
+                }
+
+                // player can't track himself
+                if (bounty.hasTarget(player))
+                    return;
+
+                // check for target cooldown
+                long remain = (long) (data.getLastTarget() + BountyHunters.getInstance().getConfig().getDouble("player-tracking.cooldown") * 1000
+                        - System.currentTimeMillis()) / 1000;
+                if (remain > 0) {
+                    Message.TARGET_COOLDOWN.format("remain", remain, "s", remain >= 2 ? "s" : "").send(player);
+                    return;
+                }
+
+                // event check
+                HunterTargetEvent hunterEvent = new HunterTargetEvent(player, target);
+                Bukkit.getPluginManager().callEvent(hunterEvent);
+                if (hunterEvent.isCancelled())
+                    return;
+
+                data.setLastTarget();
+
+                bounty.addHunter(player);
+                if (target.isOnline())
+                    hunterEvent.sendAllert(target.getPlayer());
+                Message.TARGET_SET.format().send(player);
             }
 
-        // remove bounty
-        if (action == InventoryAction.PICKUP_HALF && slot < 35 && VersionMaterial.PLAYER_HEAD.matches(item)) {
-            String tag = NBTItem.get(item).getString("bountyId");
-            if (tag == null || tag.equals(""))
-                return;
+            open();
+        }
 
-            Bounty bounty = BountyHunters.getInstance().getBountyManager().getBounty(UUID.fromString(tag));
+        // Remove bounty
+        if (action == InventoryAction.PICKUP_HALF) {
             if (!bounty.hasContributed(player) || !player.hasPermission("bountyhunters.remove"))
                 return;
 

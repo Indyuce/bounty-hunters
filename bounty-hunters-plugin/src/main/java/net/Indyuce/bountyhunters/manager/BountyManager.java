@@ -119,7 +119,7 @@ public abstract class BountyManager {
      * @param player The bounty target
      * @return If the given player has a bounty on his head
      * @deprecated Use getBounty() to retrieve the bounty and check for its
-     *         existence at the same time
+     * existence at the same time
      */
     @Deprecated
     public boolean hasBounty(OfflinePlayer player) {
@@ -160,12 +160,12 @@ public abstract class BountyManager {
     }
 
     /**
-     * Find a bounty by player name
+     * Find the first bounty that has a specific target
      *
-     * @param name The target player's name
+     * @param name The target player name
      * @return Bounty found or none
      */
-    public Optional<Bounty> findByName(String name) {
+    public Optional<Bounty> findFirstByName(String name) {
         for (Bounty bounty : bounties.values())
             if (bounty.getTarget().getName().equalsIgnoreCase(name))
                 return Optional.of(bounty);

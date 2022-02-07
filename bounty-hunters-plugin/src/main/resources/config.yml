@@ -35,6 +35,18 @@ tax-bank-account:
   type: 'account' # 'player' or 'account'
   name: ''
 
+# When disabled, using /bounty will NOT increase the player's
+# current bounty but will rather create one new bounty with the
+# very same target.
+#
+# This option does not change anything in terms of gameplay. It
+# just displays all the contributors of a given bounty using multiple
+# items in the bounty list to make it look like there are more bounties
+# running in the server.
+#
+# It gives the impression that there is more bounty activity.
+bounty-stacking: true
+
 # Time players have to wait to do /bounty twice.
 # In seconds.
 bounty-set-restriction: 120

@@ -84,6 +84,8 @@ public class BountyHunters extends JavaPlugin {
     private BankAccount taxBankAccount;
     public boolean formattedNumbers;
 
+    private boolean ENABLED;
+
     @SuppressWarnings("deprecation")
     public void onLoad() {
         plugin = this;
@@ -287,15 +289,14 @@ public class BountyHunters extends JavaPlugin {
 
         getCommand("addbounty").setTabCompleter(new AddBountyCompletion());
         getCommand("bounties").setTabCompleter(new BountiesCompletion());
+
+        ENABLED = true;
     }
 
     public void onDisable() {
 
-        /*
-         * must not be performed when the plugin disables after a startup error
-         * occurs otherwise an additional error will prompt
-         */
-        if (bountyManager == null)
+        // Doesn't do anything if the plugin did not enable properly
+        if (!ENABLED)
             return;
 
         bountyManager.saveBounties();
