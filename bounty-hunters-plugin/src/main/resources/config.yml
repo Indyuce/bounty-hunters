@@ -11,6 +11,9 @@ my-sql:
   host: 127.0.0.1
   port: 3306
   database: database_name
+  table-name:
+    player-data:
+    bounty-data: bounties
   extra-args: ''
   username: username
   password: password
