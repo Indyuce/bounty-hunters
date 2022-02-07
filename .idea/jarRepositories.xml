@@ -12,9 +12,19 @@
       <option name="url" value="https://jitpack.io" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="lumine" />
+      <option name="name" value="lumine" />
+      <option name="url" value="https://mvn.lumine.io/repository/maven/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="spigot-repo" />
       <option name="name" value="spigot-repo" />
       <option name="url" value="https://hub.spigotmc.org/nexus/content/repositories/snapshots/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="lumine-snapshots" />
+      <option name="name" value="lumine-snapshots" />
+      <option name="url" value="https://mvn.lumine.io/repository/maven-snapshots/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />
@@ -30,6 +40,11 @@
       <option name="id" value="jboss.community" />
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="lumine-test" />
+      <option name="name" value="lumine-test" />
+      <option name="url" value="https://mvn.lumine.io/repository/maven-test/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="bungeecord-repo" />
