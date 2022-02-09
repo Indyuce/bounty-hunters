@@ -20,6 +20,8 @@ public class MySQLBountyManager extends BountyManager {
     private final MySQLProvider provider;
 
     public MySQLBountyManager(MySQLProvider provider) {
+        super(true);
+
         this.provider = provider;
 
         Bukkit.getScheduler().runTaskAsynchronously(BountyHunters.getInstance(), () -> loadBounties());
@@ -106,7 +108,7 @@ public class MySQLBountyManager extends BountyManager {
              * In case MySQL can't save bounty data, everything is saved in a
              * backup file instead
              */
-            YAMLBountyManager temp = new YAMLBountyManager("backup-data");
+            YAMLBountyManager temp = new YAMLBountyManager("backup-data", false);
             temp.saveBounties();
 
             BountyHunters.getInstance().getLogger().log(Level.SEVERE,

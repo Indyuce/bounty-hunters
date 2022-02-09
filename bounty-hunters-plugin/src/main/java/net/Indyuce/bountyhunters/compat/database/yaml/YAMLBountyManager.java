@@ -3,6 +3,7 @@ package net.Indyuce.bountyhunters.compat.database.yaml;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.ConfigFile;
+import net.Indyuce.bountyhunters.compat.database.mysql.MySQLBountyManager;
 import net.Indyuce.bountyhunters.manager.BountyManager;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -16,14 +17,22 @@ import java.util.logging.Level;
 public class YAMLBountyManager extends BountyManager {
 	private final String path;
 
+	/**
+	 * YAML bounty manager with default config folder setup
+	 */
 	public YAMLBountyManager() {
-		this("data");
+		this("data", true);
 	}
 
 	/**
-	 * @param path Data file path
+	 * @param path    Data file path
+	 * @param startup Whether or not it should register listeners
+	 *                on server startup. See how {@link MySQLBountyManager#saveBounties()}
+	 *                uses a YAMLBountyManager to save backup data in case BH fails
+	 *                at saving bounty data
 	 */
-	public YAMLBountyManager(String path) {
+	public YAMLBountyManager(String path, boolean startup) {
+		super(startup);
 
 		this.path = path;
 
