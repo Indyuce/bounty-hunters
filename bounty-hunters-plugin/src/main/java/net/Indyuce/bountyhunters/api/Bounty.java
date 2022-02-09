@@ -162,6 +162,17 @@ public class Bounty {
 		return lastUpdated;
 	}
 
+    /**
+     * Method does not return anything relevant if the
+     * inactivity bounty removal option is toggled off.
+     *
+     * @return Time in millis before the bounty expires
+     */
+    public long getExpireDelay() {
+        long timeOut = BountyHunters.getInstance().getConfig().getLong("inactive-bounty-removal.time") * 60 * 60 * 1000;
+        return Math.max(0, lastUpdated + timeOut - System.currentTimeMillis());
+    }
+
 	public void setLastModified(long lastModified) {
 		this.lastUpdated = lastModified;
 	}

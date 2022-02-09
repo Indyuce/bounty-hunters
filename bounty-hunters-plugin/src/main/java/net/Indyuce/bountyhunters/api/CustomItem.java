@@ -23,6 +23,7 @@ public enum CustomItem {
             "&7" + AltChar.listDash + " The reward is &f${reward}&7.",
             "&7" + AltChar.listDash + " &f{contributors} &7player(s) have contributed.",
             "&7" + AltChar.listDash + " &f{hunters} &7player(s) are tracking him.",
+            "&7" + AltChar.listDash + " Time before expiration: &f{expire_delay}&7.",
             "",
             "{isTarget}&cDon't let them kill you.",
             "{isCreator}&eRight click to take away your contribution.",

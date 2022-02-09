@@ -61,7 +61,8 @@ public class BountyList extends PluginInventory {
                     "reward", new NumberFormat().format(bounty.getReward()),
                     "contributors", bounty.getContributors().size(),
                     "hunters", bounty.getHunters().size(),
-                    "target_tax", new NumberFormat().format(new LinearTax(BountyHunters.getInstance().getConfig().getConfigurationSection("bounty-tax.target-set")).getTax(bounty.getReward())));
+                    "target_tax", new NumberFormat().format(new LinearTax(BountyHunters.getInstance().getConfig().getConfigurationSection("bounty-tax.target-set")).getTax(bounty.getReward())),
+                    "expire_delay", Utils.formatDelay(bounty.getExpireDelay()));
             ItemStack item = NBTItem.get(builder.build()).addTag(new ItemTag("bountyId", bounty.getId().toString())).toItem();
 
             SkullMeta meta = (SkullMeta) item.getItemMeta();
