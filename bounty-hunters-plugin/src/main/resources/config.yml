@@ -157,8 +157,9 @@ target-login-message:
 head-hunting:
   enabled: false
 
-# Drops the player head when claming a bounty
-# or give the head to the bounty creator.
+# Drops the player head when claming a bounty or give the head to
+# the bounty creator. Make sure you disable both of these options
+# when enabling Head Hunting or you will have dupe issues.
 drop-head:
 
   # Drops the head on the ground.
@@ -200,14 +201,24 @@ min-reward: 0
 max-reward: 0
 
 bounty-tax:
+
   # Tax taken when creating a bounty (to fight abuse).
-  # In % of the money reward. Must be between 0 and 100.
-  bounty-creation: 15
+  # In % of the money reward + a flat tax amount
+  bounty-creation:
+    flat: 0
+    scale: 15
 
   # Tax taken when a player removes the bounty he set.
-  # Default is 17.8% because it corresponds to 30% of the
+  # Default is 17.8% + $0 because it corresponds to 30% of the
   # initial amount when taking into account bounty creation tax
-  bounty-removal: 17.8
+  bounty-removal:
+    flat: 0
+    scale: 17.8
+
+  # Tax when targeting a player
+  target-set:
+    flat: 0
+    scale: 10 # Scales on the bounty amount
 
 # Enables leveling rewards.
 enable-level-rewards: true

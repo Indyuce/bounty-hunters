@@ -1,17 +1,13 @@
 package net.Indyuce.bountyhunters.gui;
 
 import net.Indyuce.bountyhunters.BountyHunters;
-import net.Indyuce.bountyhunters.api.Bounty;
-import net.Indyuce.bountyhunters.api.CustomItem;
+import net.Indyuce.bountyhunters.api.*;
 import net.Indyuce.bountyhunters.api.CustomItem.Builder;
-import net.Indyuce.bountyhunters.api.NumberFormat;
-import net.Indyuce.bountyhunters.api.Utils;
 import net.Indyuce.bountyhunters.api.event.BountyExpireEvent;
 import net.Indyuce.bountyhunters.api.event.HunterTargetEvent;
 import net.Indyuce.bountyhunters.api.language.Language;
 import net.Indyuce.bountyhunters.api.language.Message;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
-import net.Indyuce.bountyhunters.version.VersionMaterial;
 import net.Indyuce.bountyhunters.version.wrapper.api.ItemTag;
 import net.Indyuce.bountyhunters.version.wrapper.api.NBTItem;
 import org.bukkit.Bukkit;
@@ -59,9 +55,13 @@ public class BountyList extends PluginInventory {
             builder.applyConditions(new String[]{"noCreator", "isCreator", "extraCreator", "isExtra", "isTarget", "isHunter", "!isHunter"},
                     new boolean[]{!bounty.hasCreator(), isCreator, !noCreator && !isCreator, !isTarget && !isCreator, isTarget,
                             !isTarget && isHunter, !isTarget && !isHunter});
-            builder.applyPlaceholders("target", bounty.getTarget().getName(), "creator",
-                    bounty.hasCreator() ? bounty.getCreator().getName() : "Server", "reward", new NumberFormat().format(bounty.getReward()),
-                    "contributors", bounty.getContributors().size(), "hunters", bounty.getHunters().size());
+            builder.applyPlaceholders(
+                    "target", bounty.getTarget().getName(),
+                    "creator", bounty.hasCreator() ? bounty.getCreator().getName() : "Server",
+                    "reward", new NumberFormat().format(bounty.getReward()),
+                    "contributors", bounty.getContributors().size(),
+                    "hunters", bounty.getHunters().size(),
+                    "target_tax", new NumberFormat().format(new LinearTax(BountyHunters.getInstance().getConfig().getConfigurationSection("bounty-tax.target-set")).getTax(bounty.getReward())));
             ItemStack item = NBTItem.get(builder.build()).addTag(new ItemTag("bountyId", bounty.getId().toString())).toItem();
 
             SkullMeta meta = (SkullMeta) item.getItemMeta();
@@ -166,14 +166,14 @@ public class BountyList extends PluginInventory {
                 Message.TARGET_REMOVED.format().send(player);
             } else {
 
-                // permission check
+                // Permission check
                 if (player.hasPermission("bountyhunters.untargetable") && !player.hasPermission("bountyhunters.untargetable.bypass")) {
                     Message.TRACK_IMUN.format().send(player);
                     return;
                 }
 
                 /*
-                 * check the player who wants to hunt the bounty target has
+                 * Check the player who wants to hunt the bounty target has
                  * not created the bounty.
                  */
                 if (bounty.hasCreator(player) && !BountyHunters.getInstance().getConfig().getBoolean("player-tracking.can-track-own-bounties")) {
@@ -181,11 +181,18 @@ public class BountyList extends PluginInventory {
                     return;
                 }
 
-                // player can't track himself
+                // Player can't track himself
                 if (bounty.hasTarget(player))
                     return;
 
-                // check for target cooldown
+                // Check for tax
+                double taxed = new LinearTax(BountyHunters.getInstance().getConfig().getConfigurationSection("bounty-tax.target-set")).getTax(bounty.getReward());
+                if (!BountyHunters.getInstance().getEconomy().has(player, taxed)) {
+                    Message.NOT_ENOUGH_MONEY.format().send(player);
+                    return;
+                }
+
+                // Check for target cooldown
                 long remain = (long) (data.getLastTarget() + BountyHunters.getInstance().getConfig().getDouble("player-tracking.cooldown") * 1000
                         - System.currentTimeMillis()) / 1000;
                 if (remain > 0) {
@@ -193,7 +200,7 @@ public class BountyList extends PluginInventory {
                     return;
                 }
 
-                // event check
+                // Event check
                 HunterTargetEvent hunterEvent = new HunterTargetEvent(player, target);
                 Bukkit.getPluginManager().callEvent(hunterEvent);
                 if (hunterEvent.isCancelled())

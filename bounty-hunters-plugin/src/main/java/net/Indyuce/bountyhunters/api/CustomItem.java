@@ -28,7 +28,7 @@ public enum CustomItem {
             "{isCreator}&eRight click to take away your contribution.",
             "{isExtra}&eKill him to claim the bounty!",
             "{isHunter}&7" + AltChar.listDash + " Click to &euntarget &7him.",
-            "{!isHunter}&7" + AltChar.listDash + " Click to &ctarget &7him."),
+            "{!isHunter}&7" + AltChar.listDash + " Click to &ctarget &7him for ${target_tax}."),
     LB_PLAYER_DATA(VersionMaterial.PLAYER_HEAD.toItem(), "[{rank}] {name}",
             "&8-----------------------------",
             "Claimed Bounties: &f{bounties}",
