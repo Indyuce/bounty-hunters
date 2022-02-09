@@ -25,9 +25,7 @@ public class HeadHunting implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void a(BountyClaimEvent event) {
 
-		/*
-		 * head will be given to the bounty creator if he claims the bounty.
-		 */
+		// Head will be given to the bounty creator if he claims the bounty.
 		if (event.isHeadHunting() || !event.getBounty().hasCreator() || event.getBounty().hasCreator(event.getClaimer()))
 			return;
 
@@ -45,9 +43,7 @@ public class HeadHunting implements Listener {
 		if (!(event.getRightClicked() instanceof Player))
 			return;
 
-		/*
-		 * check for head in player's held item slots
-		 */
+		// Check for item in hand
 		Player player = event.getPlayer();
 		ItemStack item = event.getHand() == EquipmentSlot.HAND ? player.getInventory().getItemInMainHand() : player.getInventory().getItemInOffHand();
 		if (item == null || !VersionMaterial.PLAYER_HEAD.matches(item))
@@ -66,21 +62,17 @@ public class HeadHunting implements Listener {
 		if (!bounty.hasCreator((Player) event.getRightClicked()) || bounty.hasTarget(event.getPlayer()))
 			return;
 
-		/*
-		 * cast event
-		 */
+		// Cast Bukkit event
 		BountyClaimEvent bountyEvent = new BountyClaimEvent(bounty, player, true);
 		Bukkit.getPluginManager().callEvent(bountyEvent);
 		if (bountyEvent.isCancelled())
 			return;
 
-		/*
-		 * take head away from player
-		 */
+		// Take head away from bounty claimer
 		item.setAmount(item.getAmount() - 1);
 
 		bountyEvent.sendAllert();
-		new BountyClaim().handleBountyClaim(bounty, player, null);
+		new BountyClaim().handleBountyClaim(bounty, player, null, (Player) event.getRightClicked());
 	}
 
 	@EventHandler(ignoreCancelled = true)

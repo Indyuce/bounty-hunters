@@ -158,8 +158,8 @@ head-hunting:
   enabled: false
 
 # Drops the player head when claming a bounty or give the head to
-# the bounty creator. Make sure you disable both of these options
-# when enabling Head Hunting or you will have dupe issues.
+# the bounty creator. Make sure you disable the 'drop-head.killer'
+# option when toggling on.
 drop-head:
 
   # Drops the head on the ground.
@@ -167,9 +167,9 @@ drop-head:
     enabled: false
     chance: 100
 
-  # Give the head to the bounty creator or
-  # saves it in the bounty head GUI that
-  # can be opened using /redeembountyheads
+  # Give the head to the bounty creator or saves it in the bounty head
+  # GUI that can be opened using /redeembountyheads. This option can also
+  # be used with Head Hunting to give the head to the right clicked player.
   creator:
     enabled: false
     chance: 100
