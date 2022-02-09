@@ -120,14 +120,14 @@ public class BountyList extends PluginInventory {
                 open();
             }
 
-        // prev page
+        // Previous page
         if (item.getItemMeta().getDisplayName().equals(CustomItem.PREVIOUS_PAGE.toItemStack().getItemMeta().getDisplayName()))
             if (page > 1) {
                 page--;
                 open();
             }
 
-        // buy bounty compass
+        // Buy bounty compass
         if (item.getItemMeta().getDisplayName().equals(CustomItem.BOUNTY_COMPASS.toItemStack().getItemMeta().getDisplayName())) {
             if (player.getInventory().firstEmpty() <= -1) {
                 Message.EMPTY_INV_FIRST.format().send(player);

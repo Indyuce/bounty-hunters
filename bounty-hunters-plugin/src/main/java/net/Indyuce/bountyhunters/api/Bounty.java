@@ -120,6 +120,8 @@ public class Bounty {
 
 	public void addReward(double value) {
 		setExtra(extra + value);
+
+		setLastModified(System.currentTimeMillis());
 	}
 
 	/**
@@ -131,8 +133,9 @@ public class Bounty {
 	}
 
 	public void setContribution(OfflinePlayer player, double value) {
-		lastUpdated = System.currentTimeMillis();
 		amount.put(player, value);
+
+		setLastModified(System.currentTimeMillis());
 	}
 
 	public void removeContribution(OfflinePlayer player) {
