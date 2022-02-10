@@ -18,7 +18,7 @@ public class ExpireLog implements Listener {
 			if (event.getCause() == BountyExpireCause.ADMIN)
 				BountyHunters.getInstance().getLogger().log(Level.INFO, "Bounty on " + event.getBounty().getTarget().getName() + " expired due to admin activity.");
 			else
-				BountyHunters.getInstance().getLogger().log(Level.INFO, "Bounty on " + event.getBounty().getTarget().getName() + " expired as " + event.getPlayer().getName() + " removed his contribution of " + event.getBounty().getContribution(event.getPlayer()) + ".");
+				BountyHunters.getInstance().getLogger().log(Level.INFO, "Bounty on " + event.getBounty().getTarget().getName() + " expired as " + event.getPlayer().getName() + " removed their contribution of " + event.getBounty().getContribution(event.getPlayer()) + ".");
 		}
 
 		else {

@@ -17,7 +17,7 @@ public class BountyCreateEvent extends BountyEvent {
 	/**
 	 * This event is called whenever a player sets a bounty onto another player,
 	 * or when the auto-bounty automatically sets a new bounty on a player since
-	 * he killed someone illegaly
+	 * they killed someone illegaly
 	 */
 	public BountyCreateEvent(Bounty bounty, Player creator, BountyCause cause) {
 		super(bounty);
@@ -88,7 +88,7 @@ public class BountyCreateEvent extends BountyEvent {
 		/**
 		 * When the auto bounty sets a bounty on a player since he killed
 		 * someone illegaly (illegaly = the player did not have any bounty on
-		 * him, which makes it an illegal kill)
+		 * them, which makes it an illegal kill)
 		 */
 		AUTO_BOUNTY,
 

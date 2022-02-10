@@ -80,7 +80,7 @@ public abstract class Leaderboard<T extends LeaderboardProfile> {
 
     /**
      * Called when a player claims a bounty and the claimer needs
-     * to update his position.
+     * to update their position.
      * <p>
      * Called when a bounty changes and the bounty leaderboard
      * has to be updated globally.

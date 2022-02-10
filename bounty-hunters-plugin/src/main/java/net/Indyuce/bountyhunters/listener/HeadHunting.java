@@ -26,7 +26,7 @@ public class HeadHunting implements Listener {
 	public void a(BountyClaimEvent event) {
 
 		/*
-		 * head will be given to the bounty creator if he claims the bounty.
+		 * Head will be given to the bounty creator if they claim the bounty.
 		 */
 		if (event.isHeadHunting() || !event.getBounty().hasCreator() || event.getBounty().hasCreator(event.getClaimer()))
 			return;

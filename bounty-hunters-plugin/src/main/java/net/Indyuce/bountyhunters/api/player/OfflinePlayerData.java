@@ -12,7 +12,7 @@ public interface OfflinePlayerData {
 
 	/**
 	 * Used to give a player head to an online player or save it in the head GUI
-	 * which he can open later.
+	 * which they can open later.
 	 */
 	public void givePlayerHead(OfflinePlayer owner);
 }
