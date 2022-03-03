@@ -14,6 +14,7 @@ public class ExpireLog implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void a(BountyExpireEvent event) {
 
+
         if (event.isExpiring()) {
             if (event.hasPlayer())
                 BountyHunters.getInstance().getLogger().log(Level.INFO, "Bounty on " + event.getBounty().getTarget().getName() + " expired as " + event.getPlayer().getName() + " removed his contribution of $" + event.getBounty().getContribution(event.getPlayer()));

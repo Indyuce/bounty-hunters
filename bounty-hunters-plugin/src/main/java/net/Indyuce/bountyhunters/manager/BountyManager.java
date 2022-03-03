@@ -125,7 +125,7 @@ public abstract class BountyManager {
      * Checks for a bounty on a player
      *
      * @param player The bounty target
-     * @return If the given player has a bounty on his head
+     * @return If the given player has a bounty on their head
      * @deprecated Use getBounty() to retrieve the bounty and check for its
      * existence at the same time
      */

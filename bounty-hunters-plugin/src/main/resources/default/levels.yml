@@ -63,7 +63,7 @@ reward:
             unlock: 10
             effect: TOTEM
         SHEEP:
-            format: 'Watch as I turn him into a sheep!'
+            format: 'Watch as I turn them into a sheep!'
             unlock: 12
             effect: METAMORPHOSE
         GIT_GUD:

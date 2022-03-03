@@ -18,9 +18,9 @@ public enum Message {
 	NEW_BOUNTY_ON_YOU(new SoundReader(VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 1, 0), "&6{creator} &ejust set a &6${reward}&e bounty on you!"),
 	NEW_BOUNTY_ON_YOU_ILLEGAL(new SoundReader(VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 1, 0), "&eYou killed a man illegally! A ${reward} bounty was set on you!"),
 	NEW_BOUNTY_ON_YOU_UNDEFINED(new SoundReader(VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 1, 0), "&eSomeone just set a ${reward} bounty on you!"),
-	NEW_BOUNTY_ON_PLAYER(new SoundReader(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1), "&6{creator} &eset a bounty on &6{target}&e! Kill him to get &6${reward}&e!"),
-	NEW_BOUNTY_ON_PLAYER_ILLEGAL(new SoundReader(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1), "&6{target}&e killed a player illegally: a bounty was set on him! Kill him to get &6${reward}&e!"),
-	NEW_BOUNTY_ON_PLAYER_UNDEFINED(new SoundReader(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1), "&eSomeone set a bounty on &6{target}&e! Kill him to get &6${reward}&e!"),
+	NEW_BOUNTY_ON_PLAYER(new SoundReader(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1), "&6{creator} &eset a bounty on &6{target}&e! Kill them to get &6${reward}&e!"),
+	NEW_BOUNTY_ON_PLAYER_ILLEGAL(new SoundReader(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1), "&6{target}&e killed a player illegally: a bounty was set on them! Kill them to get &6${reward}&e!"),
+	NEW_BOUNTY_ON_PLAYER_UNDEFINED(new SoundReader(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1), "&eSomeone set a bounty on &6{target}&e! Kill them to get &6${reward}&e!"),
 	BOUNTY_CHANGE(new SoundReader(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1), "&6{player}&e's bounty is now &6${reward}&e."),
 
 	/*
@@ -38,7 +38,7 @@ public enum Message {
 	COMMAND_USAGE("&cUsage: {command}"),
 	BOUNTY_IMUN("&cYou can't set a bounty on this player."),
 	TRACK_IMUN("&cYou can't track this player."),
-	CANT_TRACK_CREATOR("&cYou created this bounty, you can't target him."),
+	CANT_TRACK_CREATOR("&cYou created this bounty, you can't target them."),
 	TARGET_COOLDOWN("&cPlease wait another {remain} second{s} to target a player."),
 	CANT_SET_BOUNTY_ON_YOURSELF("&cYou can't set a bounty on yourself!"),
 	BOUNTY_EXPIRED(new SoundReader(Sound.ENTITY_VILLAGER_NO, 1, 2), "&eThe bounty on &6{target} &ehas expired."),

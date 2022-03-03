@@ -38,7 +38,7 @@ public class BountyClaim implements Listener {
 		/*
 		 * Auto bounty: killing a player on whom there was no bounty makes the
 		 * kill illegal. When a kill is illegal, the killer has a chance to have
-		 * a bounty drop onto him
+		 * a bounty drop onto them
 		 */
 		Optional<Bounty> hasBounty = BountyHunters.getInstance().getBountyManager().getBounty(target);
 		if (!hasBounty.isPresent()) {
