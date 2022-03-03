@@ -30,6 +30,24 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.github.simonsator:Kingdoms:1.4.6">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Kingdoms-1.11.16.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.github.simonsator:SimpleClans:1.4.6">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/SimpleClans.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.spigotmc.spigot-src:src-1.15.2:1.0" level="project" />
   </component>
 </module>

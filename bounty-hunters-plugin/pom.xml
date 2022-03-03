@@ -153,5 +153,23 @@
             <scope>system</scope>
             <systemPath>${basedir}/lib/Party-and-Friends-MySQL-Edition-Spigot-API-1.4.6.jar</systemPath>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.simonsator</groupId>
+            <artifactId>Kingdoms</artifactId>
+            <version>1.4.6</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/Kingdoms-1.11.16.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.simonsator</groupId>
+            <artifactId>SimpleClans</artifactId>
+            <version>1.4.6</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/SimpleClans.jar</systemPath>
+        </dependency>
+
+
     </dependencies>
 </project>

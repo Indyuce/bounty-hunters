@@ -1,0 +1,13 @@
+- factionsuuid
+- guilds
+- ultimateclans
+- kingdomsx
+- dungeons
+- dungeonsXL
+- mcMMO party
+** residence
+** PAF
+** towny
+** lands
+** bungeefriends
+- Parties
