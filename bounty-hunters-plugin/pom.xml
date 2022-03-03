@@ -57,6 +57,11 @@
             <id>bungeecord-repo</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
+             
+        <repository>
+            <id>glaremasters repo</id>
+            <url>https://repo.glaremasters.me/repository/towny/</url>
+        </repository>
 
     </repositories>
 
@@ -124,9 +129,9 @@
         </dependency>-->
 
         <dependency>
-            <groupId>com.github.TownyAdvanced</groupId>
-            <artifactId>Towny</artifactId>
-            <version>0.96.7.0</version>
+            <groupId>com.palmergames.bukkit.towny</groupId>
+            <artifactId>towny</artifactId>
+            <version>0.98.0.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -153,5 +158,23 @@
             <scope>system</scope>
             <systemPath>${basedir}/lib/Party-and-Friends-MySQL-Edition-Spigot-API-1.4.6.jar</systemPath>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.simonsator</groupId>
+            <artifactId>Kingdoms</artifactId>
+            <version>1.4.6</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/Kingdoms-1.11.16.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.simonsator</groupId>
+            <artifactId>SimpleClans</artifactId>
+            <version>1.4.6</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/SimpleClans.jar</systemPath>
+        </dependency>
+
+
     </dependencies>
 </project>

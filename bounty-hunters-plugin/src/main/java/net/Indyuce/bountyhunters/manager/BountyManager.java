@@ -4,6 +4,7 @@ import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
 import net.Indyuce.bountyhunters.api.BountyInactivityRemoval;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
+import net.Indyuce.bountyhunters.compat.database.mysql.MySQLBountyManager;
 import net.Indyuce.bountyhunters.compat.interaction.BedSpawnPoint;
 import net.Indyuce.bountyhunters.compat.interaction.InteractionRestriction;
 import net.Indyuce.bountyhunters.gui.BountyEditor;
@@ -31,15 +32,22 @@ public abstract class BountyManager {
      */
     private final Set<InteractionRestriction> restrictions = new HashSet<>();
 
-    public BountyManager() {
+    /**
+     * @param startup Whether or not it should register listeners
+     *                on server startup. See how {@link MySQLBountyManager#saveBounties()}
+     *                uses a YAMLBountyManager to save backup data in case BH fails
+     *                at saving bounty data
+     */
+    public BountyManager(boolean startup) {
+
+        if (!startup)
+            return;
 
         if (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.bed-spawn-point.enabled"))
             registerClaimRestriction(
                     new BedSpawnPoint(BountyHunters.getInstance().getConfig().getConfigurationSection("claim-restrictions.bed-spawn-point")));
 
-        /*
-         * checks for inactive bounties every 2min
-         */
+        // Checks for inactive bounties every 2min
         if (BountyHunters.getInstance().getConfig().getBoolean("inactive-bounty-removal.enabled"))
             new BountyInactivityRemoval().runTaskTimer(BountyHunters.getInstance(), 20 * 5, 20 * 60 * 2);
     }
@@ -119,7 +127,7 @@ public abstract class BountyManager {
      * @param player The bounty target
      * @return If the given player has a bounty on their head
      * @deprecated Use getBounty() to retrieve the bounty and check for its
-     *         existence at the same time
+     * existence at the same time
      */
     @Deprecated
     public boolean hasBounty(OfflinePlayer player) {
@@ -160,12 +168,12 @@ public abstract class BountyManager {
     }
 
     /**
-     * Find a bounty by player name
+     * Find the first bounty that has a specific target
      *
-     * @param name The target player's name
+     * @param name The target player name
      * @return Bounty found or none
      */
-    public Optional<Bounty> findByName(String name) {
+    public Optional<Bounty> findFirstByName(String name) {
         for (Bounty bounty : bounties.values())
             if (bounty.getTarget().getName().equalsIgnoreCase(name))
                 return Optional.of(bounty);

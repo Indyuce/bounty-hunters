@@ -11,6 +11,9 @@ my-sql:
   host: 127.0.0.1
   port: 3306
   database: database_name
+  table-name:
+    player-data:
+    bounty-data: bounties
   extra-args: ''
   username: username
   password: password
@@ -31,6 +34,18 @@ logging:
 tax-bank-account:
   type: 'account' # 'player' or 'account'
   name: ''
+
+# When disabled, using /bounty will NOT increase the player's
+# current bounty but will rather create one new bounty with the
+# very same target.
+#
+# This option does not change anything in terms of gameplay. It
+# just displays all the contributors of a given bounty using multiple
+# items in the bounty list to make it look like there are more bounties
+# running in the server.
+#
+# It gives the impression that there is more bounty activity.
+bounty-stacking: true
 
 # Time players have to wait to do /bounty twice.
 # In seconds.
@@ -142,8 +157,9 @@ target-login-message:
 head-hunting:
   enabled: false
 
-# Drops the player head when claming a bounty
-# or give the head to the bounty creator.
+# Drops the player head when claming a bounty or give the head to
+# the bounty creator. Make sure you disable the 'drop-head.killer'
+# option when toggling on.
 drop-head:
 
   # Drops the head on the ground.
@@ -151,9 +167,9 @@ drop-head:
     enabled: false
     chance: 100
 
-  # Give the head to the bounty creator or
-  # saves it in the bounty head GUI that
-  # can be opened using /redeembountyheads
+  # Give the head to the bounty creator or saves it in the bounty head
+  # GUI that can be opened using /redeembountyheads. This option can also
+  # be used with Head Hunting to give the head to the right clicked player.
   creator:
     enabled: false
     chance: 100
@@ -185,14 +201,24 @@ min-reward: 0
 max-reward: 0
 
 bounty-tax:
-  # Tax taken when creating a bounty (to fight abuse).
-  # In % of the money reward. Must be between 0 and 100.
-  bounty-creation: 15
 
-  # Tax taken when a player removes the bounty they set.
-  # Default is 17.8% because it corresponds to 30% of the
+  # Tax taken when creating a bounty (to fight abuse).
+  # In % of the money reward + a flat tax amount
+  bounty-creation:
+    flat: 0
+    scale: 15
+
+  # Tax taken when a player removes the bounty he set.
+  # Default is 17.8% + $0 because it corresponds to 30% of the
   # initial amount when taking into account bounty creation tax
-  bounty-removal: 17.8
+  bounty-removal:
+    flat: 0
+    scale: 17.8
+
+  # Tax when targeting a player
+  target-set:
+    flat: 0
+    scale: 10 # Scales on the bounty amount
 
 # Enables leveling rewards.
 enable-level-rewards: true

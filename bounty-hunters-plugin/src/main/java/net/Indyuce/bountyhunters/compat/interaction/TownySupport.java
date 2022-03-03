@@ -2,7 +2,7 @@ package net.Indyuce.bountyhunters.compat.interaction;
 
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Resident;
-import com.palmergames.bukkit.towny.object.TownyUniverse;
+import com.palmergames.bukkit.towny.TownyUniverse;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -15,7 +15,7 @@ public class TownySupport implements InteractionRestriction {
 
 	private boolean inSameTown(OfflinePlayer player, OfflinePlayer player1) {
 		try {
-			Resident resident = TownyUniverse.getDataSource().getResident(player.getName());
+			Resident resident = TownyUniverse.getInstance().getResident(player.getName());
 			return resident.hasTown() && resident.getTown().hasResident(player1.getName());
 
 			/*

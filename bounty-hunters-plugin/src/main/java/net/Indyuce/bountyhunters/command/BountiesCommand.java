@@ -20,6 +20,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.Iterator;
 import java.util.Optional;
 
 public class BountiesCommand implements CommandExecutor {
@@ -67,10 +68,15 @@ public class BountiesCommand implements CommandExecutor {
 			return true;
 		}
 
-		// remove bounty
+		// Edit bounty
 		if (args[0].equalsIgnoreCase("edit")) {
 			if (!sender.hasPermission("bountyhunters.admin")) {
 				Message.NOT_ENOUGH_PERMS.format().send(sender);
+				return true;
+			}
+
+			if (!BountyHunters.getInstance().getConfig().getBoolean("bounty-stacking")) {
+				sender.sendMessage(ChatColor.RED + "This command is not available while bounty stacking is disabled.");
 				return true;
 			}
 
@@ -84,7 +90,7 @@ public class BountiesCommand implements CommandExecutor {
 				return true;
 			}
 
-			Optional<Bounty> bounty = BountyHunters.getInstance().getBountyManager().findByName(args[1]);
+			Optional<Bounty> bounty = BountyHunters.getInstance().getBountyManager().findFirstByName(args[1]);
 			if (!bounty.isPresent()) {
 				sender.sendMessage(ChatColor.RED + "Couldn't find a bounty on " + args[1] + ".");
 				return true;
@@ -93,7 +99,7 @@ public class BountiesCommand implements CommandExecutor {
 			new BountyEditor((Player) sender, bounty.get()).open();
 		}
 
-		// remove bounty
+		// Remove bounty
 		if (args[0].equalsIgnoreCase("remove")) {
 			if (!sender.hasPermission("bountyhunters.admin")) {
 				Message.NOT_ENOUGH_PERMS.format().send(sender);
@@ -103,21 +109,26 @@ public class BountiesCommand implements CommandExecutor {
 			if (args.length < 2) {
 				sender.sendMessage(ChatColor.RED + "Usage: /bounties remove <player>");
 				return true;
-			}
+            }
 
-			Optional<Bounty> bounty = BountyHunters.getInstance().getBountyManager().findByName(args[1]);
-			if (!bounty.isPresent()) {
-				sender.sendMessage(ChatColor.RED + "Couldn't find a bounty on " + args[1] + ".");
-				return true;
-			}
+            int removed = 0;
+            Iterator<Bounty> ite = BountyHunters.getInstance().getBountyManager().getBounties().iterator();
+            while (ite.hasNext()) {
+                Bounty next = ite.next();
+                if (next.getTarget().getName().equals(args[1])) {
+                    BountyExpireEvent bountyEvent = new BountyExpireEvent(next);
+                    Bukkit.getPluginManager().callEvent(bountyEvent);
+                    if (bountyEvent.isCancelled())
+                        continue;
 
-			BountyExpireEvent bountyEvent = new BountyExpireEvent(bounty.get());
-			Bukkit.getPluginManager().callEvent(bountyEvent);
-			if (bountyEvent.isCancelled())
-				return true;
+                    ite.remove();
+                    BountyHunters.getInstance().getBountyManager().unregisterBounty(next, false);
+                    removed++;
+                }
+            }
 
-			BountyHunters.getInstance().getBountyManager().unregisterBounty(bounty.get(), true);
-		}
+            sender.sendMessage(ChatColor.RED + "Unregistered a total of " + removed + " bounties on " + args[1] + ".");
+        }
 
 		// choose title
 		if (args[0].equalsIgnoreCase("title") && args.length > 1) {

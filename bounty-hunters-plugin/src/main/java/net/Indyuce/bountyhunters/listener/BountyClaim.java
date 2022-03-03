@@ -11,6 +11,7 @@ import net.Indyuce.bountyhunters.api.event.BountyIncreaseEvent;
 import net.Indyuce.bountyhunters.api.event.BountyIncreaseEvent.BountyChangeCause;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.leaderboard.profile.HunterProfile;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -18,6 +19,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
+import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 
@@ -96,19 +99,25 @@ public class BountyClaim implements Listener {
 			return;
 
 		bountyEvent.sendAllert();
-		handleBountyClaim(bounty, killer, target);
+		handleBountyClaim(bounty, killer, target, null);
 	}
 
-	public void handleBountyClaim(Bounty bounty, Player killer, Player target) {
+    /**
+     * @param bounty Bounty being claimed
+     * @param killer Player claiming the bounty
+     * @param target Bounty target
+     * @param author Bounty author (used for Head Hunting)
+     */
+    public void handleBountyClaim(@NotNull Bounty bounty, @NotNull Player killer, @Nullable Player target, @Nullable Player author) {
 
-		// Send bounty commands
+        // Send bounty commands
 		new BountyCommands("claim", bounty, killer).send();
 
-		// Drops the killed player's head
-		if (target != null && BountyHunters.getInstance().getConfig().getBoolean("drop-head.killer.enabled") && random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("drop-head.killer.chance") / 100)
-			target.getWorld().dropItem(target.getLocation(), BountyHunters.getInstance().getVersionWrapper().getHead(target));
-		if (BountyHunters.getInstance().getConfig().getBoolean("drop-head.creator.enabled") && random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("drop-head.creator.chance") / 100)
-			BountyHunters.getInstance().getPlayerDataManager().getOfflineData(bounty.getCreator()).givePlayerHead(target);
+        // Drops the killed player's head
+        if (target != null && BountyHunters.getInstance().getConfig().getBoolean("drop-head.killer.enabled") && random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("drop-head.killer.chance") / 100)
+            target.getWorld().dropItem(target.getLocation(), BountyHunters.getInstance().getVersionWrapper().getHead(target));
+        if (BountyHunters.getInstance().getConfig().getBoolean("drop-head.creator.enabled") && random.nextDouble() <= BountyHunters.getInstance().getConfig().getDouble("drop-head.creator.chance") / 100)
+            BountyHunters.getInstance().getPlayerDataManager().getOfflineData(Objects.requireNonNullElse(author, bounty.getCreator())).givePlayerHead(target);
 
 		// Give the money to the player who claimed the bounty
 		BountyHunters.getInstance().getEconomy().depositPlayer(killer, bounty.getReward());

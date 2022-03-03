@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class MySQLProvider implements DataProvider {
 	private final Connection connection;
 
-	private final String host, database, username, password, args;
+	private final String host, database, username, password, args, playerDataTable, bountyDataTable;
 	private final int port;
 
 	public MySQLProvider(ConfigurationSection config) throws SQLException {
@@ -25,6 +25,8 @@ public class MySQLProvider implements DataProvider {
 		Validate.notNull(password = config.getString("password"), "Could not load password");
 		args = config.getString("extra-args");
 		port = config.getInt("port");
+		playerDataTable = config.getString("table-name.player-data");
+		bountyDataTable = config.getString("table-name.bounty-data");
 
 		connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database + args, username, password);
 	}
@@ -35,6 +37,14 @@ public class MySQLProvider implements DataProvider {
 
 	public PreparedStatement prepareStatement(String query) throws SQLException {
 		return connection.prepareStatement(query);
+	}
+
+	public String getPlayerDataTable() {
+		return playerDataTable;
+	}
+
+	public String getBountyDataTable() {
+		return bountyDataTable;
 	}
 
 	@Override

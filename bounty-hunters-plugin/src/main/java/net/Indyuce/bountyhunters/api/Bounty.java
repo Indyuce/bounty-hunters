@@ -120,6 +120,8 @@ public class Bounty {
 
 	public void addReward(double value) {
 		setExtra(extra + value);
+
+		setLastModified(System.currentTimeMillis());
 	}
 
 	/**
@@ -131,8 +133,9 @@ public class Bounty {
 	}
 
 	public void setContribution(OfflinePlayer player, double value) {
-		lastUpdated = System.currentTimeMillis();
 		amount.put(player, value);
+
+		setLastModified(System.currentTimeMillis());
 	}
 
 	public void removeContribution(OfflinePlayer player) {
@@ -161,6 +164,17 @@ public class Bounty {
 	public long getLastModified() {
 		return lastUpdated;
 	}
+
+    /**
+     * Method does not return anything relevant if the
+     * inactivity bounty removal option is toggled off.
+     *
+     * @return Time in millis before the bounty expires
+     */
+    public long getExpireDelay() {
+        long timeOut = BountyHunters.getInstance().getConfig().getLong("inactive-bounty-removal.time") * 60 * 60 * 1000;
+        return Math.max(0, lastUpdated + timeOut - System.currentTimeMillis());
+    }
 
 	public void setLastModified(long lastModified) {
 		this.lastUpdated = lastModified;

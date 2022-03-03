@@ -17,102 +17,104 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 public class MySQLBountyManager extends BountyManager {
-	private final MySQLProvider provider;
+    private final MySQLProvider provider;
 
-	public MySQLBountyManager(MySQLProvider provider) {
-		this.provider = provider;
+    public MySQLBountyManager(MySQLProvider provider) {
+        super(true);
 
-		Bukkit.getScheduler().runTaskAsynchronously(BountyHunters.getInstance(), () -> loadBounties());
-	}
+        this.provider = provider;
 
-	private void loadBounties() {
+        Bukkit.getScheduler().runTaskAsynchronously(BountyHunters.getInstance(), () -> loadBounties());
+    }
 
-		try {
+    private void loadBounties() {
 
-			if (!provider.prepareStatement("SELECT * FROM information_schema.tables WHERE TABLE_NAME = 'bounties'").executeQuery().next())
-				provider.prepareStatement(
-						"CREATE TABLE bounties(id VARCHAR(36), target VARCHAR(36), extra DECIMAL, last_updated BIGINT, hunters TEXT, increased TEXT)")
-						.execute();
+        try {
 
-			/*
-			 * check if database has the 'last_updated' column added in 2.3.6
-			 */
-			if (!provider.prepareStatement("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" + provider.getDatabase()
-					+ "' AND TABLE_NAME = 'bounties' AND COLUMN_NAME = 'last_updated'").executeQuery().next())
-				provider.prepareStatement("ALTER TABLE bounties ADD COLUMN last_updated BIGINT").execute();
+            if (!provider.prepareStatement("SELECT * FROM information_schema.tables WHERE TABLE_NAME = '" + provider.getBountyDataTable() + "'").executeQuery().next())
+                provider.prepareStatement(
+                        "CREATE TABLE " + provider.getBountyDataTable() + "(id VARCHAR(36), target VARCHAR(36), extra DECIMAL, last_updated BIGINT, hunters TEXT, increased TEXT)")
+                        .execute();
 
-			ResultSet result = provider.prepareStatement("SELECT * FROM bounties").executeQuery();
+            /*
+             * check if database has the 'last_updated' column added in 2.3.6
+             */
+            if (!provider.prepareStatement("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" + provider.getDatabase()
+                    + "' AND TABLE_NAME = '" + provider.getBountyDataTable() + "' AND COLUMN_NAME = 'last_updated'").executeQuery().next())
+                provider.prepareStatement("ALTER TABLE " + provider.getBountyDataTable() + " ADD COLUMN last_updated BIGINT").execute();
 
-			while (result.next()) {
+            ResultSet result = provider.prepareStatement("SELECT * FROM " + provider.getBountyDataTable()).executeQuery();
 
-				try {
+            while (result.next()) {
 
-					Bounty bounty = new Bounty(UUID.fromString(result.getString("id")),
-							Bukkit.getOfflinePlayer(UUID.fromString(result.getString("target"))), result.getDouble("extra"));
-					long time = result.getLong("last_updated");
-					time = time == 0 ? System.currentTimeMillis() : time;
-					bounty.setLastModified(time);
+                try {
 
-					JsonObject increased = (JsonObject) new JsonParser().parse(result.getString("increased"));
-					increased.entrySet().forEach(entry -> bounty.addContribution(Bukkit.getOfflinePlayer(UUID.fromString(entry.getKey())),
-							entry.getValue().getAsDouble()));
+                    Bounty bounty = new Bounty(UUID.fromString(result.getString("id")),
+                            Bukkit.getOfflinePlayer(UUID.fromString(result.getString("target"))), result.getDouble("extra"));
+                    long time = result.getLong("last_updated");
+                    time = time == 0 ? System.currentTimeMillis() : time;
+                    bounty.setLastModified(time);
 
-					// JsonArray hunters = (JsonArray) new
-					// JsonParser().parse(result.getString("hunters"));
-					// hunters.forEach(key ->
-					// bounty.addHunter(Bukkit.getOfflinePlayer(UUID.fromString(key.getAsString()))));
+                    JsonObject increased = (JsonObject) new JsonParser().parse(result.getString("increased"));
+                    increased.entrySet().forEach(entry -> bounty.addContribution(Bukkit.getOfflinePlayer(UUID.fromString(entry.getKey())),
+                            entry.getValue().getAsDouble()));
 
-					registerBounty(bounty);
-				} catch (IllegalArgumentException exception) {
-					BountyHunters.getInstance().getLogger().log(Level.WARNING, "Could not load bounty from database: " + exception.getMessage());
-					BountyHunters.getInstance().getLogger().log(Level.WARNING, "Parsed bounty data: " + exception.getMessage());
-				}
-			}
+                    // JsonArray hunters = (JsonArray) new
+                    // JsonParser().parse(result.getString("hunters"));
+                    // hunters.forEach(key ->
+                    // bounty.addHunter(Bukkit.getOfflinePlayer(UUID.fromString(key.getAsString()))));
 
-		} catch (SQLException exception) {
-			BountyHunters.getInstance().getLogger().log(Level.SEVERE, "Could not load bounty data from database: " + exception.getMessage());
-		}
-	}
+                    registerBounty(bounty);
+                } catch (IllegalArgumentException exception) {
+                    BountyHunters.getInstance().getLogger().log(Level.WARNING, "Could not load bounty from database: " + exception.getMessage());
+                    BountyHunters.getInstance().getLogger().log(Level.WARNING, "Parsed bounty data: " + exception.getMessage());
+                }
+            }
 
-	@Override
-	public void saveBounties() {
-		try {
-			provider.prepareStatement("TRUNCATE TABLE bounties").execute();
+        } catch (SQLException exception) {
+            BountyHunters.getInstance().getLogger().log(Level.SEVERE, "Could not load bounty data from database: " + exception.getMessage());
+        }
+    }
 
-			PreparedStatement save = provider.prepareStatement("INSERT INTO bounties VALUES (?,?,?,?,?,?)");
-			for (Bounty bounty : BountyHunters.getInstance().getBountyManager().getBounties()) {
+    @Override
+    public void saveBounties() {
+        try {
+            provider.prepareStatement("TRUNCATE TABLE " + provider.getBountyDataTable()).execute();
 
-				JsonArray hunters = new JsonArray();
-				// bounty.getHunters().forEach(uuid ->
-				// hunters.add(uuid.toString()));
+            PreparedStatement save = provider.prepareStatement("INSERT INTO " + provider.getBountyDataTable() + " VALUES (?,?,?,?,?,?)");
+            for (Bounty bounty : BountyHunters.getInstance().getBountyManager().getBounties()) {
 
-				JsonObject increased = new JsonObject();
-				bounty.getContributors().forEach(key -> increased.addProperty(key.getUniqueId().toString(), bounty.getContribution(key)));
+                JsonArray hunters = new JsonArray();
+                // bounty.getHunters().forEach(uuid ->
+                // hunters.add(uuid.toString()));
 
-				save.setString(1, bounty.getId().toString());
-				save.setString(2, bounty.getTarget().getUniqueId().toString());
-				save.setDouble(3, bounty.getExtra());
-				save.setLong(4, bounty.getLastModified());
-				save.setString(5, hunters.toString());
-				save.setString(6, increased.toString());
+                JsonObject increased = new JsonObject();
+                bounty.getContributors().forEach(key -> increased.addProperty(key.getUniqueId().toString(), bounty.getContribution(key)));
 
-				save.addBatch();
-			}
+                save.setString(1, bounty.getId().toString());
+                save.setString(2, bounty.getTarget().getUniqueId().toString());
+                save.setDouble(3, bounty.getExtra());
+                save.setLong(4, bounty.getLastModified());
+                save.setString(5, hunters.toString());
+                save.setString(6, increased.toString());
 
-			save.executeBatch();
-		} catch (SQLException exception) {
+                save.addBatch();
+            }
 
-			/*
-			 * In case MySQL can't save bounty data, everything is saved in a
-			 * backup file instead
-			 */
-			YAMLBountyManager temp = new YAMLBountyManager("backup-data");
-			temp.saveBounties();
+            save.executeBatch();
+        } catch (SQLException exception) {
 
-			BountyHunters.getInstance().getLogger().log(Level.SEVERE,
-					"Could not save bounty data using MySQL. Temporarily saving data to 'backup-data.yml'! Do copy this file and save it somewhere else not to lose your data.");
+            /*
+             * In case MySQL can't save bounty data, everything is saved in a
+             * backup file instead
+             */
+            YAMLBountyManager temp = new YAMLBountyManager("backup-data", false);
+            temp.saveBounties();
 
-			exception.printStackTrace();
-		}
-	}
+            BountyHunters.getInstance().getLogger().log(Level.SEVERE,
+                    "Could not save bounty data using MySQL. Temporarily saving data to 'backup-data.yml'! Do copy this file and save it somewhere else not to lose your data.");
+
+            exception.printStackTrace();
+        }
+    }
 }

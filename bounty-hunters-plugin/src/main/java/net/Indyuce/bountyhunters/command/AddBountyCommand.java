@@ -27,7 +27,7 @@ public class AddBountyCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-        // open bounties menu
+        // Open bounties menu
         if (args.length < 1) {
             if (!(sender instanceof Player)) {
                 sender.sendMessage(ChatColor.RED + "This command is for players only.");
@@ -48,16 +48,14 @@ public class AddBountyCommand implements CommandExecutor {
             return true;
         }
 
-        // check for player
+        // Check for player
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null || !target.isOnline()) {
             Message.ERROR_PLAYER.format("arg", args[0]).send(sender);
             return true;
         }
 
-        /*
-         * check player's current bounty
-         */
+        // Check player's current bounty
         if (args.length < 2) {
 
             Optional<Bounty> bounty = BountyHunters.getInstance().getBountyManager().getBounty(target);
@@ -75,13 +73,13 @@ public class AddBountyCommand implements CommandExecutor {
             return true;
         }
 
-        // permission
+        // Permission
         if (target.hasPermission("bountyhunters.immunity") && !sender.hasPermission("bountyhunters.immunity.bypass")) {
             Message.BOUNTY_IMUN.format().send(sender);
             return true;
         }
 
-        // reward
+        // Reward
         double reward = 0;
         try {
             reward = Double.parseDouble(args[1]);
@@ -91,9 +89,7 @@ public class AddBountyCommand implements CommandExecutor {
         }
         reward = Utils.truncate(reward, 1);
 
-        /*
-         * minimum and maximum checks do not apply for console.
-         */
+        // Minimum and maximum checks do not apply for console.
         CommandArguments arguments = new CommandArguments(args);
         if (!sender.hasPermission("bountyhunters.admin") || !arguments.bypassMinMax) {
             double min = BountyHunters.getInstance().getConfig().getDouble("min-reward");
@@ -108,7 +104,7 @@ public class AddBountyCommand implements CommandExecutor {
             }
         }
 
-        // set restriction
+        // Set restriction
         if (sender instanceof Player) {
             Player player = (Player) sender;
             long restriction = BountyHunters.getInstance().getConfig().getInt("bounty-set-restriction") * 1000;
@@ -120,19 +116,19 @@ public class AddBountyCommand implements CommandExecutor {
             }
         }
 
-        // money restriction
+        // Money restriction
         if (sender instanceof Player)
             if (!BountyHunters.getInstance().getEconomy().has((Player) sender, reward)) {
                 Message.NOT_ENOUGH_MONEY.format().send(sender);
                 return true;
             }
 
-        // tax calculation
+        // Tax calculation
         double tax = sender.hasPermission("bountyhunters.admin") && arguments.noTax ? 0
                 : Math.max(0, Math.min(1, BountyHunters.getInstance().getConfig().getDouble("bounty-tax.bounty-creation") / 100));
         double taxed = Utils.truncate(reward * tax, 1);
 
-        // add to existing bounty
+        // Add to existing bounty
         Optional<Bounty> currentBounty = BountyHunters.getInstance().getBountyManager().getBounty(target);
 
         // Maximum amount of contributions per player
@@ -143,7 +139,7 @@ public class AddBountyCommand implements CommandExecutor {
             return true;
         }
 
-        if (currentBounty.isPresent()) {
+        if (currentBounty.isPresent() && BountyHunters.getInstance().getConfig().getBoolean("bounty-stacking")) {
 
             // API
             Bounty bounty = currentBounty.get();
@@ -153,7 +149,7 @@ public class AddBountyCommand implements CommandExecutor {
             if (bountyEvent.isCancelled())
                 return true;
 
-            // remove balance, refresh bounty cooldown
+            // Remove balance, refresh bounty cooldown
             if (sender instanceof Player) {
                 BountyHunters.getInstance().getEconomy().withdrawPlayer((Player) sender, reward);
                 BountyHunters.getInstance().getPlayerDataManager().get((Player) sender).setLastBounty();
@@ -176,14 +172,13 @@ public class AddBountyCommand implements CommandExecutor {
         if (bountyEvent.isCancelled())
             return true;
 
-        // remove balance
-        // set last bounty value
+        // Remove balance and register last bounty
         if (sender instanceof Player) {
             BountyHunters.getInstance().getEconomy().withdrawPlayer((Player) sender, reward);
             BountyHunters.getInstance().getPlayerDataManager().get((Player) sender).setLastBounty();
         }
 
-        // handle tax
+        // Handle tax
         if (taxed > 0 && BountyHunters.getInstance().getTaxBankAccount() != null)
             BountyHunters.getInstance().getTaxBankAccount().deposit(taxed);
 

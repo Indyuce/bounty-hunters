@@ -26,6 +26,27 @@ public class Utils {
         return item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName() && (!checkLore || item.getItemMeta().hasLore());
     }
 
+    private final static char[] DELAY_CHARACTERS = {'m', 'h', 'd', 'm', 'y'};
+    private final static long[] DELAY_AMOUNTS = {60, 60 * 60, 60 * 60 * 24, 60 * 60 * 24 * 30, 60 * 60 * 24 * 30 * 365};
+
+    public static String formatDelay(long millis) {
+
+        if (millis < 1000 * 60)
+            return "1m";
+
+        String format = "";
+        for (int j = DELAY_CHARACTERS.length - 1; j >= 0; j--) {
+            long divisor = DELAY_AMOUNTS[j] * 1000;
+            if (millis < divisor)
+                continue;
+
+            format = (millis / divisor) + DELAY_CHARACTERS[j] + " " + format;
+            millis = millis % divisor;
+        }
+
+        return format;
+    }
+
     /**
      * @param x Number to truncate
      * @param n Amount of  decimal places kept
