@@ -1,10 +1,12 @@
 - factionsuuid
 - guilds
 - ultimateclans
+
+- mcMMO party
 - kingdomsx
 - dungeons
 - dungeonsXL
-- mcMMO party
+
 ** residence
 ** PAF
 ** towny
