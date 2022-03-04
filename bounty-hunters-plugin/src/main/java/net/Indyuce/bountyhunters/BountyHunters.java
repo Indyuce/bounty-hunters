@@ -21,10 +21,7 @@ import net.Indyuce.bountyhunters.compat.database.MySQLProvider;
 import net.Indyuce.bountyhunters.compat.database.YAMLDataProvider;
 import net.Indyuce.bountyhunters.compat.flags.ResidenceFlags;
 import net.Indyuce.bountyhunters.compat.flags.WorldGuardFlags;
-import net.Indyuce.bountyhunters.compat.interaction.BungeeFriendsSupport;
-import net.Indyuce.bountyhunters.compat.interaction.LandsSupport;
-import net.Indyuce.bountyhunters.compat.interaction.PartyAndFriendsSupport;
-import net.Indyuce.bountyhunters.compat.interaction.TownySupport;
+import net.Indyuce.bountyhunters.compat.interaction.external.*;
 import net.Indyuce.bountyhunters.compat.placeholder.BountyHuntersPlaceholders;
 import net.Indyuce.bountyhunters.compat.placeholder.DefaultParser;
 import net.Indyuce.bountyhunters.compat.placeholder.PlaceholderAPIParser;
@@ -84,7 +81,7 @@ public class BountyHunters extends JavaPlugin {
     private BankAccount taxBankAccount;
     public boolean formattedNumbers;
 
-    private boolean ENABLED;
+    private boolean hasSuccessfullyEnabled;
 
     @SuppressWarnings("deprecation")
     public void onLoad() {
@@ -195,6 +192,11 @@ public class BountyHunters extends JavaPlugin {
             getLogger().log(Level.INFO, "Hooked onto Lands");
         }
 
+        if (getServer().getPluginManager().getPlugin("Parties") != null) {
+            bountyManager.registerClaimRestriction(new PartiesSupport());
+            getLogger().log(Level.INFO, "Hooked onto Parties");
+        }
+
         if (getConfig().getBoolean("claim-restrictions.friends")) {
 
             if (Bukkit.getPluginManager().getPlugin("PartyAndFriends") != null) {
@@ -290,13 +292,13 @@ public class BountyHunters extends JavaPlugin {
         getCommand("addbounty").setTabCompleter(new AddBountyCompletion());
         getCommand("bounties").setTabCompleter(new BountiesCompletion());
 
-        ENABLED = true;
+        hasSuccessfullyEnabled = true;
     }
 
     public void onDisable() {
 
         // Doesn't do anything if the plugin did not enable properly
-        if (!ENABLED)
+        if (!hasSuccessfullyEnabled)
             return;
 
         bountyManager.saveBounties();

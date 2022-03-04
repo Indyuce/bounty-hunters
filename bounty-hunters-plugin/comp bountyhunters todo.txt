@@ -10,4 +10,4 @@
 ** towny
 ** lands
 ** bungeefriends
-- Parties
+** Parties

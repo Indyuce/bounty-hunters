@@ -1,8 +1,9 @@
-package net.Indyuce.bountyhunters.compat.interaction;
+package net.Indyuce.bountyhunters.compat.interaction.external;
 
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.TownyUniverse;
+import net.Indyuce.bountyhunters.compat.interaction.InteractionRestriction;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 

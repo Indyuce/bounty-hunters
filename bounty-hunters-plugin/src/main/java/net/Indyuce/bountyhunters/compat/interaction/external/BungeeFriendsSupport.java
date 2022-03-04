@@ -1,5 +1,6 @@
-package net.Indyuce.bountyhunters.compat.interaction;
+package net.Indyuce.bountyhunters.compat.interaction.external;
 
+import net.Indyuce.bountyhunters.compat.interaction.InteractionRestriction;
 import net.simplyrin.bungeefriends.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

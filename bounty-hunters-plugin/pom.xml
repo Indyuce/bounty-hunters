@@ -152,6 +152,14 @@
         </dependency>
 
         <dependency>
+            <groupId>no.idea</groupId>
+            <artifactId>Parties</artifactId>
+            <version>3.1.14</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/Parties-3.1.14.jar</systemPath>
+        </dependency>
+
+        <dependency>
             <groupId>com.github.simonsator</groupId>
             <artifactId>BungeecordPartyAndFriends</artifactId>
             <version>1.4.6</version>
