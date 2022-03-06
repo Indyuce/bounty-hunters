@@ -44,7 +44,6 @@ public class VersionWrapper_Reflection implements VersionWrapper {
     /**
      * @return Object required to send packets
      */
-
     private Class<?> obc(String str) throws ClassNotFoundException {
         return Class.forName("org.bukkit.craftbukkit." + BountyHunters.getInstance().getVersion().toString() + "." + str);
     }
