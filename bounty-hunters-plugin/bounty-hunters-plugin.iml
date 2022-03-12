@@ -147,6 +147,24 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
+      <library name="Maven: no.idea:Factions:1.6.9.5">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/Factions-1.6.9.5-2.9.8-RC.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: no.idea:Guilds:3.5.6.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/Guilds-3.5.6.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
       <library name="Maven: no.idea:Kingdoms:1.12.3">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/Kingdoms-1.12.3.jar!/" />

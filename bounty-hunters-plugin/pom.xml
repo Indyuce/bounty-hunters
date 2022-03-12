@@ -160,7 +160,7 @@
             <systemPath>${basedir}/lib/DungeonsXL-0.18-PRE-02.jar</systemPath>
         </dependency>
 
-        <!--<dependency>
+       <dependency>
            <groupId>no.idea</groupId>
            <artifactId>Factions</artifactId>
            <version>1.6.9.5</version>
@@ -168,13 +168,13 @@
            <systemPath>${basedir}/lib/Factions-1.6.9.5-2.9.8-RC.jar</systemPath>
        </dependency>
 
-       <dependency>
+        <dependency>
            <groupId>no.idea</groupId>
            <artifactId>Guilds</artifactId>
            <version>3.5.6.0</version>
            <scope>system</scope>
            <systemPath>${basedir}/lib/Guilds-3.5.6.0.jar</systemPath>
-       </dependency>-->
+       </dependency>
 
         <dependency>
             <groupId>no.idea</groupId>

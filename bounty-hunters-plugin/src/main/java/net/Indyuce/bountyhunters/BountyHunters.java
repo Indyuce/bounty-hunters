@@ -197,9 +197,19 @@ public class BountyHunters extends JavaPlugin {
             getLogger().log(Level.INFO, "Hooked onto SimpleClans");
         }
 
-        if (getServer().getPluginManager().getPlugin("mcMMO") != null && getConfig().getBoolean("claim-restrictions.mcmmo")) {
+        if (getServer().getPluginManager().getPlugin("mcMMO") != null) {
             bountyManager.registerClaimRestriction(new mcMMOSupport());
             getLogger().log(Level.INFO, "Hooked onto mcMMO");
+        }
+
+        if (getServer().getPluginManager().getPlugin("Factions") != null && getConfig().getBoolean("claim-restrictions.factions")) {
+            bountyManager.registerClaimRestriction(new FactionsSupport());
+            getLogger().log(Level.INFO, "Hooked onto Factions");
+        }
+
+        if (getServer().getPluginManager().getPlugin("Guilds") != null && getConfig().getBoolean("claim-restrictions.guilds")) {
+            bountyManager.registerClaimRestriction(new GuildsSupport());
+            getLogger().log(Level.INFO, "Hooked onto Guilds");
         }
 
         if (getServer().getPluginManager().getPlugin("UltimateClans") != null && getConfig().getBoolean("claim-restrictions.ultimate-clans")) {
@@ -210,6 +220,11 @@ public class BountyHunters extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin("Parties") != null) {
             bountyManager.registerClaimRestriction(new PartiesSupport());
             getLogger().log(Level.INFO, "Hooked onto Parties");
+        }
+
+        if (getServer().getPluginManager().getPlugin("DungeonsXL") != null) {
+            bountyManager.registerClaimRestriction(new DungeonsXLSupport());
+            getLogger().log(Level.INFO, "Hooked onto DungeonsXL");
         }
 
         if (getConfig().getBoolean("claim-restrictions.friends")) {
