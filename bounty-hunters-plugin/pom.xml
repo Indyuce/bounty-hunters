@@ -160,21 +160,36 @@
             <systemPath>${basedir}/lib/DungeonsXL-0.18-PRE-02.jar</systemPath>
         </dependency>
 
-       <dependency>
-           <groupId>no.idea</groupId>
-           <artifactId>Factions</artifactId>
-           <version>1.6.9.5</version>
-           <scope>system</scope>
-           <systemPath>${basedir}/lib/Factions-1.6.9.5-2.9.8-RC.jar</systemPath>
-       </dependency>
+        <dependency>
+            <groupId>no.idea</groupId>
+            <artifactId>Factions</artifactId>
+            <version>1.6.9.5</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/Factions-1.6.9.5-2.9.8-RC.jar</systemPath>
+        </dependency>
+
+        <!-- Somehow necessary for the Factions plugin -->
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <artifactId>MassiveCore</artifactId>
+            <version>2.14.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/MassiveCore.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.22</version>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
-           <groupId>no.idea</groupId>
-           <artifactId>Guilds</artifactId>
-           <version>3.5.6.0</version>
-           <scope>system</scope>
-           <systemPath>${basedir}/lib/Guilds-3.5.6.0.jar</systemPath>
-       </dependency>
+            <groupId>no.idea</groupId>
+            <artifactId>Guilds</artifactId>
+            <version>3.5.6.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/Guilds-3.5.6.0.jar</systemPath>
+        </dependency>
 
         <dependency>
             <groupId>no.idea</groupId>
@@ -185,12 +200,12 @@
         </dependency>
 
         <dependency>
-           <groupId>com.gmail.nossr50</groupId>
-           <artifactId>mcMMO</artifactId>
-           <version>2.1.209</version>
-           <scope>system</scope>
-           <systemPath>${basedir}/lib/mcMMO-2.1.209.jar</systemPath>
-       </dependency>
+            <groupId>com.gmail.nossr50</groupId>
+            <artifactId>mcMMO</artifactId>
+            <version>2.1.209</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/mcMMO-2.1.209.jar</systemPath>
+        </dependency>
 
         <dependency>
             <groupId>no.idea</groupId>
@@ -224,7 +239,7 @@
             <systemPath>${basedir}/lib/SimpleClans.jar</systemPath>
         </dependency>
 
-       <dependency>
+        <dependency>
             <groupId>com.github.simonsator</groupId>
             <artifactId>UltimateClans</artifactId>
             <version>4.6.3</version>

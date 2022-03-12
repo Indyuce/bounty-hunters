@@ -32,6 +32,15 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
+      <library name="Maven: com.massivecraft:MassiveCore:2.14.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/MassiveCore.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
       <library name="Maven: no.idea:Guilds:3.5.6.0">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Guilds-3.5.6.0.jar!/" />

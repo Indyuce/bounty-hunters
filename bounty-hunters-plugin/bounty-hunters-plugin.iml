@@ -156,6 +156,16 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
+      <library name="Maven: com.massivecraft:MassiveCore:2.14.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/MassiveCore.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.projectlombok:lombok:1.18.22" level="project" />
+    <orderEntry type="module-library">
       <library name="Maven: no.idea:Guilds:3.5.6.0">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/Guilds-3.5.6.0.jar!/" />
