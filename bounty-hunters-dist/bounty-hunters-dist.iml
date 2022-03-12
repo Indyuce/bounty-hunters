@@ -12,74 +12,20 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="bounty-hunters-plugin" />
-    <orderEntry type="module-library">
-      <library name="Maven: no.idea:DungeonsXL:0.18">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/DungeonsXL-0.18-PRE-02.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: no.idea:Kingdoms:1.12.3">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Kingdoms-1.12.3.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: no.idea:Parties:3.1.14">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Parties-3.1.14.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: com.github.simonsator:BungeecordPartyAndFriends:1.4.6">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Party-and-Friends-MySQL-Edition-Spigot-API-1.4.6.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: com.github.Zrips:Residence:4.9.0.5">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Residence-4.9.0.5.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: com.github.simonsator:SimpleClans:1.4.6">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/SimpleClans.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module" module-name="bounty-hunters-v1_9_R1" />
-    <orderEntry type="module" module-name="bounty-hunters-v1_9_R2" />
-    <orderEntry type="module" module-name="bounty-hunters-v1_10_R1" />
-    <orderEntry type="module" module-name="bounty-hunters-v1_11_R1" />
-    <orderEntry type="module" module-name="bounty-hunters-v1_12_R1" />
-    <orderEntry type="module" module-name="bounty-hunters-v1_13_R1" />
-    <orderEntry type="module" module-name="bounty-hunters-v1_13_R2" />
-    <orderEntry type="module" module-name="bounty-hunters-v1_14_R1" />
-    <orderEntry type="module" module-name="bounty-hunters-v1_15_R1" />
-    <orderEntry type="module" module-name="bounty-hunters-v1_16_R1" />
-    <orderEntry type="module" module-name="bounty-hunters-v1_16_R2" />
-    <orderEntry type="module" module-name="bounty-hunters-v1_16_R3" />
-    <orderEntry type="module" module-name="bounty-hunters-v1_17_R1" />
-    <orderEntry type="module" module-name="bounty-hunters-v1_18_R1" />
+    <orderEntry type="library" name="Maven: io.github.Indyuce:bounty-hunters-v1_9_R1:2.4.2" level="project" />
+    <orderEntry type="library" name="Maven: io.github.Indyuce:bounty-hunters-v1_9_R2:2.4.2" level="project" />
+    <orderEntry type="library" name="Maven: io.github.Indyuce:bounty-hunters-v1_10_R1:2.4.2" level="project" />
+    <orderEntry type="library" name="Maven: io.github.Indyuce:bounty-hunters-v1_11_R1:2.4.2" level="project" />
+    <orderEntry type="library" name="Maven: io.github.Indyuce:bounty-hunters-v1_12_R1:2.4.2" level="project" />
+    <orderEntry type="library" name="Maven: io.github.Indyuce:bounty-hunters-v1_13_R1:2.4.2" level="project" />
+    <orderEntry type="library" name="Maven: io.github.Indyuce:bounty-hunters-v1_13_R2:2.4.2" level="project" />
+    <orderEntry type="library" name="Maven: io.github.Indyuce:bounty-hunters-v1_14_R1:2.4.2" level="project" />
+    <orderEntry type="library" name="Maven: io.github.Indyuce:bounty-hunters-v1_15_R1:2.4.2" level="project" />
+    <orderEntry type="library" name="Maven: io.github.Indyuce:bounty-hunters-v1_16_R1:2.4.2" level="project" />
+    <orderEntry type="library" name="Maven: io.github.Indyuce:bounty-hunters-v1_16_R2:2.4.2" level="project" />
+    <orderEntry type="library" name="Maven: io.github.Indyuce:bounty-hunters-v1_16_R3:2.4.2" level="project" />
+    <orderEntry type="library" name="Maven: io.github.Indyuce:bounty-hunters-v1_17_R1:2.4.2" level="project" />
+    <orderEntry type="library" name="Maven: io.github.Indyuce:bounty-hunters-v1_18_R1:2.4.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven.plugins:maven-clean-plugin:3.1.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven:maven-plugin-api:3.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven:maven-model:3.0" level="project" />

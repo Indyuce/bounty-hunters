@@ -184,13 +184,13 @@
             <systemPath>${basedir}/lib/Kingdoms-1.12.3.jar</systemPath>
         </dependency>
 
-        <!--<dependency>
+        <dependency>
            <groupId>com.gmail.nossr50</groupId>
            <artifactId>mcMMO</artifactId>
            <version>2.1.209</version>
            <scope>system</scope>
            <systemPath>${basedir}/lib/mcMMO-2.1.209.jar</systemPath>
-       </dependency>-->
+       </dependency>
 
         <dependency>
             <groupId>no.idea</groupId>

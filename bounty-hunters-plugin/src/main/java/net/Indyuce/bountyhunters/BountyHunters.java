@@ -197,6 +197,11 @@ public class BountyHunters extends JavaPlugin {
             getLogger().log(Level.INFO, "Hooked onto SimpleClans");
         }
 
+        if (getServer().getPluginManager().getPlugin("mcMMO") != null && getConfig().getBoolean("claim-restrictions.mcmmo")) {
+            bountyManager.registerClaimRestriction(new mcMMOSupport());
+            getLogger().log(Level.INFO, "Hooked onto mcMMO");
+        }
+
         if (getServer().getPluginManager().getPlugin("Parties") != null) {
             bountyManager.registerClaimRestriction(new PartiesSupport());
             getLogger().log(Level.INFO, "Hooked onto Parties");

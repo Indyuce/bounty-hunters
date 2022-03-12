@@ -156,6 +156,15 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
+      <library name="Maven: com.gmail.nossr50:mcMMO:2.1.209">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/mcMMO-2.1.209.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
       <library name="Maven: no.idea:Parties:3.1.14">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/Parties-3.1.14.jar!/" />

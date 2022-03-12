@@ -12,60 +12,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="bounty-hunters-plugin" scope="PROVIDED" />
-    <orderEntry type="module-library">
-      <library name="Maven: no.idea:DungeonsXL:0.18">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/DungeonsXL-0.18-PRE-02.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: no.idea:Kingdoms:1.12.3">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Kingdoms-1.12.3.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: no.idea:Parties:3.1.14">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Parties-3.1.14.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: com.github.simonsator:BungeecordPartyAndFriends:1.4.6">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Party-and-Friends-MySQL-Edition-Spigot-API-1.4.6.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: com.github.Zrips:Residence:4.9.0.5">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Residence-4.9.0.5.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: com.github.simonsator:SimpleClans:1.4.6">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/SimpleClans.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.spigotmc.spigot-src:src-1.9.2:1.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven.plugins:maven-clean-plugin:3.1.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven:maven-plugin-api:3.0" level="project" />
