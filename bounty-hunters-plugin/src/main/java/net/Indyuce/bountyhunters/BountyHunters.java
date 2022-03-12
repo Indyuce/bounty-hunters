@@ -192,6 +192,11 @@ public class BountyHunters extends JavaPlugin {
             getLogger().log(Level.INFO, "Hooked onto Lands");
         }
 
+        if (getServer().getPluginManager().getPlugin("SimpleClans") != null && getConfig().getBoolean("claim-restrictions.simple-clans")) {
+            bountyManager.registerClaimRestriction(new SimpleClansSupport());
+            getLogger().log(Level.INFO, "Hooked onto SimpleClans");
+        }
+
         if (getServer().getPluginManager().getPlugin("Parties") != null) {
             bountyManager.registerClaimRestriction(new PartiesSupport());
             getLogger().log(Level.INFO, "Hooked onto Parties");

@@ -12,6 +12,7 @@
         <module name="bounty-hunters-v1_17_R1" />
         <module name="bounty-hunters-v1_11_R1" />
         <module name="bounty-hunters-v1_16_R1" />
+        <module name="bounty-hunters-v1_18_R2" />
         <module name="bounty-hunters-v1_16_R2" />
         <module name="bounty-hunters-v1_13_R2" />
         <module name="bounty-hunters-v1_10_R1" />
@@ -40,6 +41,7 @@
       <module name="bounty-hunters-v1_16_R3" target="16" />
       <module name="bounty-hunters-v1_17_R1" target="16" />
       <module name="bounty-hunters-v1_18_R1" target="16" />
+      <module name="bounty-hunters-v1_18_R2" target="16" />
       <module name="bounty-hunters-v1_9_R1" target="16" />
       <module name="bounty-hunters-v1_9_R2" target="16" />
     </bytecodeTargetLevel>

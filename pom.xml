@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
     <version>${revision}</version>
     <modules>
+        <module>bounty-hunters-dist</module>
         <module>bounty-hunters-plugin</module>
         <module>bounty-hunters-v1_9_R1</module>
         <module>bounty-hunters-v1_9_R2</module>
@@ -24,13 +25,13 @@
         <module>bounty-hunters-v1_16_R3</module>
         <module>bounty-hunters-v1_17_R1</module>
         <module>bounty-hunters-v1_18_R1</module>
-        <module>bounty-hunters-dist</module>
+        <module>bounty-hunters-v1_18_R2</module>
     </modules>
 
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
-        <revision>2.4.1</revision>
+        <revision>2.4.2</revision>
     </properties>
 
     <build>

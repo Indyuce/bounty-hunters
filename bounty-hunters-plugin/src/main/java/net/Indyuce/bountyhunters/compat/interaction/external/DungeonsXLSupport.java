@@ -2,7 +2,6 @@ package net.Indyuce.bountyhunters.compat.interaction.external;
 
 import de.erethon.dungeonsxl.DungeonsXL;
 import de.erethon.dungeonsxl.api.player.PlayerGroup;
-import de.simonsator.partyandfriends.spigot.api.pafplayers.PAFPlayerManager;
 import net.Indyuce.bountyhunters.compat.interaction.InteractionRestriction;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -10,7 +9,6 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 public class DungeonsXLSupport implements InteractionRestriction {
-    private final PAFPlayerManager manager = PAFPlayerManager.getInstance();
 
     @Override
     public boolean canInteractWith(InteractionType interaction, Player claimer, OfflinePlayer target) {

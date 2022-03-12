@@ -13,9 +13,27 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="bounty-hunters-plugin" scope="PROVIDED" />
     <orderEntry type="module-library">
-      <library name="Maven: com.github.Zrips:Residence:4.9.0.5">
+      <library name="Maven: no.idea:DungeonsXL:0.18">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Residence-4.9.0.5.jar!/" />
+          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/DungeonsXL-0.18-PRE-02.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: no.idea:Kingdoms:1.12.3">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Kingdoms-1.12.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: no.idea:Parties:3.1.14">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Parties-3.1.14.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -31,9 +49,9 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: com.github.simonsator:Kingdoms:1.4.6">
+      <library name="Maven: com.github.Zrips:Residence:4.9.0.5">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Kingdoms-1.11.16.jar!/" />
+          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Residence-4.9.0.5.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -49,5 +67,17 @@
       </library>
     </orderEntry>
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.spigotmc.spigot-src:src-1.15.2:1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.plugins:maven-clean-plugin:3.1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven:maven-plugin-api:3.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven:maven-model:3.0" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.plexus:plexus-utils:2.0.4" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven:maven-artifact:3.0" level="project" />
+    <orderEntry type="library" name="Maven: org.sonatype.sisu:sisu-inject-plexus:1.4.2" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.plexus:plexus-component-annotations:1.5.4" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.plexus:plexus-classworlds:2.2.3" level="project" />
+    <orderEntry type="library" name="Maven: org.sonatype.sisu:sisu-inject-bean:1.4.2" level="project" />
+    <orderEntry type="library" name="Maven: org.sonatype.sisu:sisu-guice:noaop:2.1.7" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.shared:maven-shared-utils:3.2.1" level="project" />
+    <orderEntry type="library" name="Maven: commons-io:commons-io:2.5" level="project" />
   </component>
 </module>

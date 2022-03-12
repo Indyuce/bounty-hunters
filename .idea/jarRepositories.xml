@@ -27,6 +27,11 @@
       <option name="url" value="https://mvn.lumine.io/repository/maven-snapshots/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="glaremasters repo" />
+      <option name="name" value="glaremasters repo" />
+      <option name="url" value="https://repo.glaremasters.me/repository/towny/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="central" />
       <option name="name" value="Maven Central repository" />
       <option name="url" value="https://repo1.maven.org/maven2" />

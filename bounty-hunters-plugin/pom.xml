@@ -57,7 +57,7 @@
             <id>bungeecord-repo</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
-             
+
         <repository>
             <id>glaremasters repo</id>
             <url>https://repo.glaremasters.me/repository/towny/</url>
@@ -144,13 +144,13 @@
 
         <!-- Local libs -->
 
-        <dependency>
+        <!--<dependency>
             <groupId>no.idea</groupId>
             <artifactId>Dungeons</artifactId>
             <version>1.0</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/Dungeons-1.0.jar</systemPath>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>no.idea</groupId>
@@ -160,21 +160,21 @@
             <systemPath>${basedir}/lib/DungeonsXL-0.18-PRE-02.jar</systemPath>
         </dependency>
 
-        <dependency>
-            <groupId>no.idea</groupId>
-            <artifactId>Factions</artifactId>
-            <version>1.6.9.5</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Factions-1.6.9.5-2.9.8-RC.jar</systemPath>
-        </dependency>
+        <!--<dependency>
+           <groupId>no.idea</groupId>
+           <artifactId>Factions</artifactId>
+           <version>1.6.9.5</version>
+           <scope>system</scope>
+           <systemPath>${basedir}/lib/Factions-1.6.9.5-2.9.8-RC.jar</systemPath>
+       </dependency>
 
-        <dependency>
-            <groupId>no.idea</groupId>
-            <artifactId>Guilds</artifactId>
-            <version>3.5.6.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Guilds-3.5.6.0.jar</systemPath>
-        </dependency>
+       <dependency>
+           <groupId>no.idea</groupId>
+           <artifactId>Guilds</artifactId>
+           <version>3.5.6.0</version>
+           <scope>system</scope>
+           <systemPath>${basedir}/lib/Guilds-3.5.6.0.jar</systemPath>
+       </dependency>-->
 
         <dependency>
             <groupId>no.idea</groupId>
@@ -184,13 +184,13 @@
             <systemPath>${basedir}/lib/Kingdoms-1.12.3.jar</systemPath>
         </dependency>
 
-        <dependency>
-            <groupId>com.gmail.nossr50</groupId>
-            <artifactId>mcMMO</artifactId>
-            <version>2.1.209</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/mcMMO-2.1.209.jar</systemPath>
-        </dependency>
+        <!--<dependency>
+           <groupId>com.gmail.nossr50</groupId>
+           <artifactId>mcMMO</artifactId>
+           <version>2.1.209</version>
+           <scope>system</scope>
+           <systemPath>${basedir}/lib/mcMMO-2.1.209.jar</systemPath>
+       </dependency>-->
 
         <dependency>
             <groupId>no.idea</groupId>
@@ -224,13 +224,13 @@
             <systemPath>${basedir}/lib/SimpleClans.jar</systemPath>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>com.github.simonsator</groupId>
             <artifactId>UltimateClans</artifactId>
             <version>4.6.3</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/UltimateClans-4.6.3.jar</systemPath>
-        </dependency>
+        </dependency>-->
 
     </dependencies>
 </project>
