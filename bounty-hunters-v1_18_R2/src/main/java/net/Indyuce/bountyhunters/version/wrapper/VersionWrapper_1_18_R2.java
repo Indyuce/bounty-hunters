@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundChatPacket;
+import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;

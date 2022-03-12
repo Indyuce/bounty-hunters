@@ -63,6 +63,12 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+
+        <repository>
+            <id>minecraft-libraries</id>
+            <name>Minecraft Libraries</name>
+            <url>https://libraries.minecraft.net</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -81,10 +87,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.18.2-R0.1-SNAPSHOT</version>
-            <classifier>shaded</classifier>
+            <groupId>io.github.Indyuce</groupId>
+            <artifactId>bounty-hunters-plugin</artifactId>
+            <version>${revision}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -92,6 +97,13 @@
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.18.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mojang</groupId>
+            <artifactId>brigadier</artifactId>
+            <version>1.0.18</version>
             <scope>provided</scope>
         </dependency>
 

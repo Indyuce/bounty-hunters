@@ -12,6 +12,78 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="bounty-hunters-plugin" scope="PROVIDED" />
+    <orderEntry type="module-library">
+      <library name="Maven: no.idea:DungeonsXL:0.18">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/DungeonsXL-0.18-PRE-02.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: no.idea:Kingdoms:1.12.3">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Kingdoms-1.12.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.gmail.nossr50:mcMMO:2.1.209">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/mcMMO-2.1.209.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: no.idea:Parties:3.1.14">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Parties-3.1.14.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.github.simonsator:BungeecordPartyAndFriends:1.4.6">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Party-and-Friends-MySQL-Edition-Spigot-API-1.4.6.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.github.Zrips:Residence:4.9.0.5">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/Residence-4.9.0.5.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.github.simonsator:SimpleClans:1.4.6">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/SimpleClans.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.github.simonsator:UltimateClans:4.6.3">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../bounty-hunters-plugin/lib/UltimateClans-4.6.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.spigotmc:spigot:remapped-mojang:1.18-R0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: jline:jline:2.12.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.logging.log4j:log4j-iostreams:2.14.1" level="project" />

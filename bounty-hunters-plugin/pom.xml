@@ -224,13 +224,13 @@
             <systemPath>${basedir}/lib/SimpleClans.jar</systemPath>
         </dependency>
 
-        <!--<dependency>
+       <dependency>
             <groupId>com.github.simonsator</groupId>
             <artifactId>UltimateClans</artifactId>
             <version>4.6.3</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/UltimateClans-4.6.3.jar</systemPath>
-        </dependency>-->
+        </dependency>
 
     </dependencies>
 </project>

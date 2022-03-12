@@ -200,6 +200,15 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.github.simonsator:UltimateClans:4.6.3">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/UltimateClans-4.6.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="library" name="Maven: org.apache.maven.plugins:maven-clean-plugin:3.1.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven:maven-plugin-api:3.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven:maven-artifact:3.0" level="project" />
