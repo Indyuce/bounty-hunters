@@ -70,7 +70,10 @@ public class BountyExpireEvent extends BountyEvent {
 
     public void sendAllert() {
         if (isExpiring())
-            Message.BOUNTY_EXPIRED.format("target", getBounty().getTarget().getName()).send(Bukkit.getOnlinePlayers());
+            Message.BOUNTY_EXPIRED.format(
+                    "target", getBounty().getTarget().getName(),
+                    "bounty", new NumberFormat().format(amount))
+                    .send(Bukkit.getOnlinePlayers());
         else {
             double reward = getBounty().getReward();
             Message.BOUNTY_DECREASED.format(
