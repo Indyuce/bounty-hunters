@@ -12,8 +12,6 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -152,7 +150,6 @@ public abstract class BountyManager {
      * @param target Bounty target
      * @return The player bounty
      */
-    @NotNull
     public Optional<Bounty> getBounty(OfflinePlayer target) {
         for (Bounty bounty : bounties.values())
             if (bounty.hasTarget(target))
@@ -167,7 +164,6 @@ public abstract class BountyManager {
      * @param creator Bounty creator
      * @return Corresponding player bounty if it does exist
      */
-    @NotNull
     public Optional<Bounty> getBounty(OfflinePlayer target, Player creator) {
         for (Bounty bounty : bounties.values())
             if (bounty.hasTarget(target) && bounty.hasCreator(creator))
@@ -181,7 +177,6 @@ public abstract class BountyManager {
      * @param bountyId The bounty unique identifier
      * @return The corresponding bounty
      */
-    @Nullable
     public Bounty getBounty(UUID bountyId) {
         return bounties.get(bountyId);
     }
@@ -192,7 +187,6 @@ public abstract class BountyManager {
      * @param name The target player name
      * @return Bounty found or none
      */
-    @NotNull
     public Optional<Bounty> findFirstByName(String name) {
         for (Bounty bounty : bounties.values())
             if (bounty.getTarget().getName().equalsIgnoreCase(name))
