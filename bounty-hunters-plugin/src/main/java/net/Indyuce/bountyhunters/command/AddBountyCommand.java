@@ -80,7 +80,7 @@ public class AddBountyCommand implements CommandExecutor {
         }
 
         // Reward
-        double reward = 0;
+        double reward;
         try {
             reward = Double.parseDouble(args[1]);
         } catch (NumberFormatException exception) {
@@ -129,7 +129,9 @@ public class AddBountyCommand implements CommandExecutor {
         double taxed = Utils.truncate(reward * tax, 1);
 
         // Add to existing bounty
-        Optional<Bounty> currentBounty = BountyHunters.getInstance().getBountyManager().getBounty(target);
+        Optional<Bounty> currentBounty = BountyHunters.getInstance().getConfig().getBoolean("bounty-stacking") && sender instanceof Player ?
+                BountyHunters.getInstance().getBountyManager().getBounty(target, (Player) sender) :
+                BountyHunters.getInstance().getBountyManager().getBounty(target);
 
         // Maximum amount of contributions per player
         int maxAmount = BountyHunters.getInstance().getConfig().getInt("bounty-amount-restriction");
@@ -139,7 +141,7 @@ public class AddBountyCommand implements CommandExecutor {
             return true;
         }
 
-        if (currentBounty.isPresent() && BountyHunters.getInstance().getConfig().getBoolean("bounty-stacking")) {
+        if (currentBounty.isPresent()) {
 
             // API
             Bounty bounty = currentBounty.get();

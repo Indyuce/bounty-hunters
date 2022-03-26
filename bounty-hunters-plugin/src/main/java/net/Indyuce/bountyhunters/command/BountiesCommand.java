@@ -27,7 +27,7 @@ public class BountiesCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-		// open bounties menu
+		// Open bounties menu
 		if (args.length < 1) {
 			if (!(sender instanceof Player)) {
 				sender.sendMessage(ChatColor.RED + "This command is for players only.");
@@ -43,7 +43,7 @@ public class BountiesCommand implements CommandExecutor {
 			return true;
 		}
 
-		// help
+		// Help
 		if (args[0].equalsIgnoreCase("help")) {
 			if (!sender.hasPermission("bountyhunters.admin")) {
 				Message.NOT_ENOUGH_PERMS.format().send(sender);
@@ -130,7 +130,7 @@ public class BountiesCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "Unregistered a total of " + removed + " bounties on " + args[1] + ".");
         }
 
-		// choose title
+		// Choose title
 		if (args[0].equalsIgnoreCase("title") && args.length > 1) {
 			if (!(sender instanceof Player)) {
 				sender.sendMessage(ChatColor.RED + "This command is for players only.");
@@ -159,7 +159,7 @@ public class BountiesCommand implements CommandExecutor {
 			Message.SUCCESSFULLY_SELECTED.format("item", playerData.getTitle().format()).send(sender);
 		}
 
-		// choose quote
+		// Choose quote
 		if (args[0].equalsIgnoreCase("animation") && args.length > 1) {
 			if (!(sender instanceof Player)) {
 				sender.sendMessage(ChatColor.RED + "This command is for players only.");
@@ -188,7 +188,7 @@ public class BountiesCommand implements CommandExecutor {
 			Message.SUCCESSFULLY_SELECTED.format("item", playerData.getAnimation().format()).send(sender);
 		}
 
-		// choose title
+		// Choose title
 		if (args[0].equalsIgnoreCase("titles")) {
 			if (!(sender instanceof Player)) {
 				sender.sendMessage(ChatColor.RED + "This command is for players only.");
@@ -209,7 +209,7 @@ public class BountiesCommand implements CommandExecutor {
 					BountyHunters.getInstance().getVersionWrapper().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + title.format() + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties title " + title.getId() + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Language.CLICK_SELECT.format() + "\",\"color\":\"white\"}]}}}");
 		}
 
-		// animations list
+		// Animations list
 		if (args[0].equalsIgnoreCase("animations")) {
 			if (!(sender instanceof Player)) {
 				sender.sendMessage(ChatColor.RED + "This command is for players only.");
@@ -230,7 +230,7 @@ public class BountiesCommand implements CommandExecutor {
 					BountyHunters.getInstance().getVersionWrapper().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + anim.format() + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/bounties animation " + anim.getId() + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + Language.CLICK_SELECT.format() + "\",\"color\":\"white\"}]}}}");
 		}
 
-		// reload plugin
+		// Reload plugin
 		if (args[0].equalsIgnoreCase("reload")) {
 			if (!sender.hasPermission("bountyhunters.admin")) {
 				Message.NOT_ENOUGH_PERMS.format().send(sender);

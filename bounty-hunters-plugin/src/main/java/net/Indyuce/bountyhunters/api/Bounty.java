@@ -84,6 +84,7 @@ public class Bounty {
 		return extra;
 	}
 
+	@Deprecated
 	public OfflinePlayer getCreator() {
 		for (OfflinePlayer player : amount.keySet())
 			return player;
@@ -110,8 +111,13 @@ public class Bounty {
 		return amount.size() > 0;
 	}
 
+	@Deprecated
 	public boolean hasCreator(OfflinePlayer player) {
-		return hasCreator() && getCreator().getUniqueId().equals(player.getUniqueId());
+		try {
+			return getCreator().getUniqueId().equals(player.getUniqueId());
+		} catch (NullPointerException noCreator) {
+			return false;
+		}
 	}
 
 	public boolean hasTarget(OfflinePlayer player) {
@@ -133,7 +139,10 @@ public class Bounty {
 	}
 
 	public void setContribution(OfflinePlayer player, double value) {
-		amount.put(player, value);
+		if (value <= 0)
+			amount.remove(player);
+		else
+			amount.put(player, value);
 
 		setLastModified(System.currentTimeMillis());
 	}

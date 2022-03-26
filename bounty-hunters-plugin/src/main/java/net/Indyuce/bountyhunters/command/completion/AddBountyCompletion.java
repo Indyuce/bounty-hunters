@@ -23,9 +23,7 @@ public class AddBountyCompletion implements TabCompleter {
 				: list.stream().filter(string -> string.toLowerCase().startsWith(args[args.length - 1].toLowerCase())).collect(Collectors.toList());
 	}
 
-	/*
-	 * SuperVanish support
-	 */
+	// Support for vanish plugins
 	private boolean isVanished(Player player) {
 		for (MetadataValue meta : player.getMetadata("vanished"))
 			if (meta.asBoolean())

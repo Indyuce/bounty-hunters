@@ -12,6 +12,8 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -127,7 +129,7 @@ public abstract class BountyManager {
      * @param player The bounty target
      * @return If the given player has a bounty on their head
      * @deprecated Use getBounty() to retrieve the bounty and check for its
-     * existence at the same time
+     *         existence at the same time
      */
     @Deprecated
     public boolean hasBounty(OfflinePlayer player) {
@@ -150,9 +152,25 @@ public abstract class BountyManager {
      * @param target Bounty target
      * @return The player bounty
      */
+    @NotNull
     public Optional<Bounty> getBounty(OfflinePlayer target) {
         for (Bounty bounty : bounties.values())
             if (bounty.hasTarget(target))
+                return Optional.of(bounty);
+        return Optional.empty();
+    }
+
+    /**
+     * Find a player's bounty if it has the correct creator
+     *
+     * @param target  Bounty target
+     * @param creator Bounty creator
+     * @return Corresponding player bounty if it does exist
+     */
+    @NotNull
+    public Optional<Bounty> getBounty(OfflinePlayer target, Player creator) {
+        for (Bounty bounty : bounties.values())
+            if (bounty.hasTarget(target) && bounty.hasCreator(creator))
                 return Optional.of(bounty);
         return Optional.empty();
     }
@@ -163,6 +181,7 @@ public abstract class BountyManager {
      * @param bountyId The bounty unique identifier
      * @return The corresponding bounty
      */
+    @Nullable
     public Bounty getBounty(UUID bountyId) {
         return bounties.get(bountyId);
     }
@@ -173,6 +192,7 @@ public abstract class BountyManager {
      * @param name The target player name
      * @return Bounty found or none
      */
+    @NotNull
     public Optional<Bounty> findFirstByName(String name) {
         for (Bounty bounty : bounties.values())
             if (bounty.getTarget().getName().equalsIgnoreCase(name))
