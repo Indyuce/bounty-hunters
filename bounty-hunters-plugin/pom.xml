@@ -23,6 +23,7 @@
                 <filtering>true</filtering>
                 <directory>${basedir}/src/main/resources</directory>
                 <includes>
+                    <include>default/levels.yml</include>
                     <include>plugin.yml</include>
                     <include>config.yml</include>
                     <include>readme.txt</include>
