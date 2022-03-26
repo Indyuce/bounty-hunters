@@ -14,28 +14,28 @@ import org.bukkit.event.Listener;
 
 public class RestrictionListener implements Listener {
 
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-	public void a(BountyClaimEvent event) {
-		if (!check(InteractionType.CLAIM, event.getClaimer(), event.getTarget()))
-			event.setCancelled(true);
-	}
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void a(BountyClaimEvent event) {
+        if (!check(InteractionType.CLAIM, event.getClaimer(), event.getTarget()))
+            event.setCancelled(true);
+    }
 
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-	public void b(BountyCreateEvent event) {
-		if (event.hasCreator() && !check(InteractionType.CREATE, event.getCreator(), event.getBounty().getTarget()))
-			event.setCancelled(true);
-	}
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void b(BountyCreateEvent event) {
+        if (event.hasCreator() && !check(InteractionType.CREATE, event.getCreator(), event.getBounty().getTarget()))
+            event.setCancelled(true);
+    }
 
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-	public void c(BountyIncreaseEvent event) {
-		if (event.hasPlayer() && !check(InteractionType.INCREASE, event.getPlayer(), event.getBounty().getTarget()))
-			event.setCancelled(true);
-	}
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void c(BountyIncreaseEvent event) {
+        if (event.hasPlayer() && !check(InteractionType.INCREASE, event.getPlayer(), event.getBounty().getTarget()))
+            event.setCancelled(true);
+    }
 
-	private boolean check(InteractionType interaction, Player player, OfflinePlayer target) {
-		for (InteractionRestriction restriction : BountyHunters.getInstance().getBountyManager().getClaimRestrictions())
-			if (!restriction.canInteractWith(interaction, player, target))
-				return false;
-		return true;
-	}
+    private boolean check(InteractionType interaction, Player player, OfflinePlayer target) {
+        for (InteractionRestriction restriction : BountyHunters.getInstance().getBountyManager().getClaimRestrictions())
+            if (!restriction.canInteractWith(interaction, player, target))
+                return false;
+        return true;
+    }
 }

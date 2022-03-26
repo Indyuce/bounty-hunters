@@ -25,8 +25,8 @@ public class MySQLProvider implements DataProvider {
 		Validate.notNull(password = config.getString("password"), "Could not load password");
 		args = config.getString("extra-args");
 		port = config.getInt("port");
-		playerDataTable = config.getString("table-name.player-data");
-		bountyDataTable = config.getString("table-name.bounty-data");
+		playerDataTable = config.getString("table-name.player-data", "playerData");
+		bountyDataTable = config.getString("table-name.bounty-data", "bounties");
 
 		connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database + args, username, password);
 	}

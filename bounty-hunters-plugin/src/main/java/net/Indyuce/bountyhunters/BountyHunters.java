@@ -202,9 +202,9 @@ public class BountyHunters extends JavaPlugin {
             getLogger().log(Level.INFO, "Hooked onto mcMMO");
         }
 
-        if (getServer().getPluginManager().getPlugin("Factions") != null && getConfig().getBoolean("claim-restrictions.factions")) {
-            bountyManager.registerClaimRestriction(new FactionsSupport());
-            getLogger().log(Level.INFO, "Hooked onto Factions");
+        if (getServer().getPluginManager().getPlugin("FactionsBridge") != null && getConfig().getBoolean("claim-restrictions.factions")) {
+            bountyManager.registerClaimRestriction(new FactionsBridgeSupport());
+            getLogger().log(Level.INFO, "Hooked onto FactionsBridge");
         }
 
         if (getServer().getPluginManager().getPlugin("Guilds") != null && getConfig().getBoolean("claim-restrictions.guilds")) {

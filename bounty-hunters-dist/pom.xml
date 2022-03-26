@@ -160,6 +160,11 @@
             <artifactId>bounty-hunters-v1_18_R1</artifactId>
             <version>${revision}</version>
         </dependency>
+        <dependency>
+            <groupId>io.github.Indyuce</groupId>
+            <artifactId>bounty-hunters-v1_18_R2</artifactId>
+            <version>${revision}</version>
+        </dependency>
 
     </dependencies>
 

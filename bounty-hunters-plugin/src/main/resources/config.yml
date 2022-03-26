@@ -12,7 +12,7 @@ my-sql:
   port: 3306
   database: database_name
   table-name:
-    player-data:
+    player-data: playerData
     bounty-data: bounties
   extra-args: ''
   username: username
