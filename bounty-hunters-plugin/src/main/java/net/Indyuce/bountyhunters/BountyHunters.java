@@ -212,6 +212,11 @@ public class BountyHunters extends JavaPlugin {
             getLogger().log(Level.INFO, "Hooked onto Guilds");
         }
 
+        if (getServer().getPluginManager().getPlugin("Kingdoms") != null && getConfig().getBoolean("claim-restrictions.kingdoms")) {
+            bountyManager.registerClaimRestriction(new KingdomsSupport());
+            getLogger().log(Level.INFO, "Hooked onto Kingdoms");
+        }
+
         if (getServer().getPluginManager().getPlugin("UltimateClans") != null && getConfig().getBoolean("claim-restrictions.ultimate-clans")) {
             bountyManager.registerClaimRestriction(new UltimateClansSupport());
             getLogger().log(Level.INFO, "Hooked onto UltimateClans");

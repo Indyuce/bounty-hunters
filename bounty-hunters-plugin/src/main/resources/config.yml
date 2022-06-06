@@ -117,6 +117,9 @@ claim-restrictions:
   # Compatibility with Guilds
   guilds: true
 
+  # Compatibility with KingdomsX
+  kingdoms: true
+
 # Commands sent by the console when a player claims a bounty.
 # {target} returns the target's name and {player} the claimer's
 # name. Commands support PlaceholderAPI placeholders.
