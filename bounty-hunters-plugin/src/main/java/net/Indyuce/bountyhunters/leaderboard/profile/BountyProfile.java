@@ -29,9 +29,7 @@ public class BountyProfile extends LeaderboardProfile {
     }
 
     @Override
-    public void save(FileConfiguration config) {
-        super.save(config);
-
-        config.set(getUniqueId().toString() + ".bounty", currentBounty);
+    public void whenSaved(ConfigurationSection config) {
+        config.set("bounty", currentBounty);
     }
 }

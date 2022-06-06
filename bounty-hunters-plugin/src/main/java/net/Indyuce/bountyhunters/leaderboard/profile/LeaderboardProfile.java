@@ -40,6 +40,10 @@ public abstract class LeaderboardProfile {
     }
 
     public void save(FileConfiguration config) {
-        config.set(getUniqueId().toString() + ".name", name);
+        String key = getUniqueId().toString();
+        config.set(key + ".name", name);
+        whenSaved(config.getConfigurationSection(key));
     }
+
+    public abstract void whenSaved(ConfigurationSection config);
 }

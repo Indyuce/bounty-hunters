@@ -3,10 +3,9 @@ package net.Indyuce.bountyhunters.leaderboard.profile;
 import net.Indyuce.bountyhunters.api.language.Language;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 public class HunterProfile extends LeaderboardProfile {
-    private final int successfulBounties, claimedBounties,level;
+    private final int successfulBounties, claimedBounties, level;
     private final String title;
 
     public HunterProfile(PlayerData player) {
@@ -44,12 +43,10 @@ public class HunterProfile extends LeaderboardProfile {
     }
 
     @Override
-    public void save(FileConfiguration config) {
-        super.save(config);
-
-        config.set(getUniqueId().toString() + ".successful-bounties", successfulBounties);
-        config.set(getUniqueId().toString() + ".claimed-bounties", claimedBounties);
-        config.set(getUniqueId().toString() + ".title", title);
-        config.set(getUniqueId().toString() + ".level", level);
+    public void whenSaved(ConfigurationSection config) {
+        config.set("successful-bounties", successfulBounties);
+        config.set("claimed-bounties", claimedBounties);
+        config.set("title", title);
+        config.set("level", level);
     }
 }
