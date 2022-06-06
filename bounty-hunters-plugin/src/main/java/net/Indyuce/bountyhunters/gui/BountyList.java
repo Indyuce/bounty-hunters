@@ -41,7 +41,7 @@ public class BountyList extends PluginInventory {
         List<Bounty> bounties = new ArrayList<>(BountyHunters.getInstance().getBountyManager().getBounties());
         int maxPage = getMaxPage();
 
-        Inventory inv = Bukkit.createInventory(this, 54, Language.GUI_NAME.format("page", page, "max_page", maxPage));
+        Inventory inv = Bukkit.createInventory(this, 54, BountyHunters.getInstance().getPlaceholderParser().parse(getPlayer(), Language.GUI_NAME.format("page", page, "max_page", maxPage)));
         int min = (page - 1) * 21;
         int max = page * 21;
 
@@ -87,7 +87,9 @@ public class BountyList extends PluginInventory {
             inv.setItem(51, compass);
         }
 
-        inv.setItem(26, CustomItem.NEXT_PAGE.toItemStack());
+        if (page < maxPage)
+            inv.setItem(26, CustomItem.NEXT_PAGE.toItemStack());
+        if (page > 1)
         inv.setItem(18, CustomItem.PREVIOUS_PAGE.toItemStack());
 
         ItemStack profile = data.getProfileItem();
