@@ -3,11 +3,9 @@ package net.Indyuce.bountyhunters.version.wrapper;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.version.wrapper.api.ItemTag;
 import net.Indyuce.bountyhunters.version.wrapper.api.NBTItem;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.ChatType;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundChatPacket;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -16,7 +14,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public class VersionWrapper_Reflection implements VersionWrapper {
 
@@ -32,13 +29,7 @@ public class VersionWrapper_Reflection implements VersionWrapper {
 
     @Override
     public void sendJson(Player player, String message) {
-        try {
-            Object handle = player.getClass().getMethod("getHandle").invoke(player);
-            ServerGamePacketListenerImpl connection = (ServerGamePacketListenerImpl) handle.getClass().getField("connection").get(handle);
-            connection.send(new ClientboundChatPacket(Component.Serializer.fromJson(message), ChatType.GAME_INFO, UUID.randomUUID()));
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | NoSuchFieldException exception) {
-            throw new RuntimeException("Reflection issue: " + exception.getMessage());
-        }
+        player.spigot().sendMessage(ChatMessageType.CHAT, TextComponent.fromLegacyText(message));
     }
 
     /**
