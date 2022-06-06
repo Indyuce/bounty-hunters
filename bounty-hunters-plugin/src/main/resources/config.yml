@@ -111,7 +111,7 @@ claim-restrictions:
   # Compatibility with UltimateClans
   ultimate-clans: true
 
-  # Compatibility with FactionsUUID
+  # Compatibility with FactionsUUID/SaberFactions etc.
   factions: true
 
   # Compatibility with Guilds
