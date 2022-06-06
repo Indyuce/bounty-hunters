@@ -26,7 +26,7 @@ public class VersionWrapper_1_18_R1 implements VersionWrapper {
 
     @Override
     public void sendJson(Player player, String message) {
-        ((CraftPlayer) player).getHandle().connection.send(new ClientboundChatPacket(Component.Serializer.fromJson(message), ChatType.GAME_INFO, UUID.randomUUID()));
+        ((CraftPlayer) player).getHandle().connection.send(new ClientboundChatPacket(Component.Serializer.fromJson(message), ChatType.CHAT, UUID.randomUUID()));
     }
 
     @Override
