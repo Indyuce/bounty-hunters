@@ -93,8 +93,10 @@ public class PlayerData implements OfflinePlayerData {
         return advancement;
     }
 
-    /*
-     * has no texture, handled via async when the inventory is opened.
+    /**
+     * @return Item with no texture, the skull owner is set using
+     *         an async task when the inventory is opened otherwise
+     *         texture requests can freeze the main server thread.
      */
     public ItemStack getProfileItem() {
         ItemStack profile = CustomItem.PROFILE.toItemStack().clone();

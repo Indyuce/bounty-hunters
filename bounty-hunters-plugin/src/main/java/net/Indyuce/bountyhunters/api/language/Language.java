@@ -4,9 +4,7 @@ import org.bukkit.ChatColor;
 
 public enum Language {
 
-	/*
-	 * menu
-	 */
+	// Menu
 	CLICK_BUY_COMPASS("&eClick to buy the compass for ${price}."),
 	NO_TITLE("&cNo Title"),
 	NO_PLAYER("&c- No Player -"),
@@ -15,15 +13,11 @@ public enum Language {
 	REDEEMABLE_HEADS("Redeem your player heads"),
 	CLICK_SELECT("&eClick to select."),
 
-	/*
-	 * misc
-	 */
+	// Miscellaneous
 	COMPASS_FORMAT("&7&l[ &6&l{blocks} blocks &7&l]"),
 	CONSOLE("console"),
 
-	/*
-	 * level up
-	 */
+	// Level up
 	LEVEL_UP_REWARDS("&eHover this message to see your rewards!"),
 	LEVEL_UP_REWARD("&e- &f{reward}"),
 	LEVEL_UP_REWARD_MONEY("&e- &f${amount}"),
