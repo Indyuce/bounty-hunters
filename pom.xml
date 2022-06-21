@@ -32,7 +32,7 @@
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
-        <revision>2.4.3</revision>
+        <revision>2.4.4</revision>
     </properties>
 
     <build>
