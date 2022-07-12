@@ -23,7 +23,7 @@ public class VersionWrapper_1_19_R1 implements VersionWrapper {
 
     @Override
     public void sendJson(Player player, String message) {
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+        player.spigot().sendMessage(ChatMessageType.CHAT, TextComponent.fromLegacyText(message));
     }
 
     @Override
