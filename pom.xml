@@ -29,7 +29,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <finalName>BountyHunters-${project.version}</finalName>
+                    <finalName>${project.name}-${project.version}</finalName>
                 </configuration>
             </plugin>
 
@@ -90,19 +90,19 @@
 
     <dependencies>
 
+        <!-- Built on recent Spigot version -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.19.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-clean-plugin -->
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-clean-plugin</artifactId>
             <version>3.1.0</version>
-        </dependency>
-
-
-        <!-- Built on recent Spigot version -->
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-source</artifactId>
-            <version>1.17.1</version>
             <scope>provided</scope>
         </dependency>
 
@@ -118,7 +118,6 @@
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
             <version>1.16-R0.5-SNAPSHOT</version>
-            <type>jar</type>
             <scope>provided</scope>
         </dependency>
 
@@ -150,12 +149,6 @@
             <version>7.0.2-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-
-        <!--<dependency>
-            <groupId>com.github.simonsator</groupId>
-            <artifactId>BungeecordPartyAndFriends</artifactId>
-            <version>e9ff8a3</version>
-        </dependency>-->
 
         <dependency>
             <groupId>com.palmergames.bukkit.towny</groupId>
