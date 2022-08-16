@@ -3,24 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/bounty-hunters.iml" filepath="$PROJECT_DIR$/bounty-hunters.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bounty-hunters-dist/bounty-hunters-dist.iml" filepath="$PROJECT_DIR$/bounty-hunters-dist/bounty-hunters-dist.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bounty-hunters-plugin/bounty-hunters-plugin.iml" filepath="$PROJECT_DIR$/bounty-hunters-plugin/bounty-hunters-plugin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bounty-hunters-v1_10_R1/bounty-hunters-v1_10_R1.iml" filepath="$PROJECT_DIR$/bounty-hunters-v1_10_R1/bounty-hunters-v1_10_R1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bounty-hunters-v1_11_R1/bounty-hunters-v1_11_R1.iml" filepath="$PROJECT_DIR$/bounty-hunters-v1_11_R1/bounty-hunters-v1_11_R1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bounty-hunters-v1_12_R1/bounty-hunters-v1_12_R1.iml" filepath="$PROJECT_DIR$/bounty-hunters-v1_12_R1/bounty-hunters-v1_12_R1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bounty-hunters-v1_13_R1/bounty-hunters-v1_13_R1.iml" filepath="$PROJECT_DIR$/bounty-hunters-v1_13_R1/bounty-hunters-v1_13_R1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bounty-hunters-v1_13_R2/bounty-hunters-v1_13_R2.iml" filepath="$PROJECT_DIR$/bounty-hunters-v1_13_R2/bounty-hunters-v1_13_R2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bounty-hunters-v1_14_R1/bounty-hunters-v1_14_R1.iml" filepath="$PROJECT_DIR$/bounty-hunters-v1_14_R1/bounty-hunters-v1_14_R1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bounty-hunters-v1_15_R1/bounty-hunters-v1_15_R1.iml" filepath="$PROJECT_DIR$/bounty-hunters-v1_15_R1/bounty-hunters-v1_15_R1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bounty-hunters-v1_16_R1/bounty-hunters-v1_16_R1.iml" filepath="$PROJECT_DIR$/bounty-hunters-v1_16_R1/bounty-hunters-v1_16_R1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bounty-hunters-v1_16_R2/bounty-hunters-v1_16_R2.iml" filepath="$PROJECT_DIR$/bounty-hunters-v1_16_R2/bounty-hunters-v1_16_R2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bounty-hunters-v1_16_R3/bounty-hunters-v1_16_R3.iml" filepath="$PROJECT_DIR$/bounty-hunters-v1_16_R3/bounty-hunters-v1_16_R3.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bounty-hunters-v1_17_R1/bounty-hunters-v1_17_R1.iml" filepath="$PROJECT_DIR$/bounty-hunters-v1_17_R1/bounty-hunters-v1_17_R1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bounty-hunters-v1_18_R1/bounty-hunters-v1_18_R1.iml" filepath="$PROJECT_DIR$/bounty-hunters-v1_18_R1/bounty-hunters-v1_18_R1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bounty-hunters-v1_18_R2/bounty-hunters-v1_18_R2.iml" filepath="$PROJECT_DIR$/bounty-hunters-v1_18_R2/bounty-hunters-v1_18_R2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bounty-hunters-v1_19_R1/bounty-hunters-v1_19_R1.iml" filepath="$PROJECT_DIR$/bounty-hunters-v1_19_R1/bounty-hunters-v1_19_R1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bounty-hunters-v1_9_R1/bounty-hunters-v1_9_R1.iml" filepath="$PROJECT_DIR$/bounty-hunters-v1_9_R1/bounty-hunters-v1_9_R1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bounty-hunters-v1_9_R2/bounty-hunters-v1_9_R2.iml" filepath="$PROJECT_DIR$/bounty-hunters-v1_9_R2/bounty-hunters-v1_9_R2.iml" />
     </modules>
   </component>
 </project>

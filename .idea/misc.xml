@@ -6,6 +6,17 @@
         <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/bounty-hunters-v1_10_R1/pom.xml" />
+        <option value="$PROJECT_DIR$/bounty-hunters-v1_11_R1/pom.xml" />
+        <option value="$PROJECT_DIR$/bounty-hunters-v1_12_R1/pom.xml" />
+        <option value="$PROJECT_DIR$/bounty-hunters-v1_13_R1/pom.xml" />
+        <option value="$PROJECT_DIR$/bounty-hunters-v1_13_R2/pom.xml" />
+        <option value="$PROJECT_DIR$/bounty-hunters-v1_9_R1/pom.xml" />
+        <option value="$PROJECT_DIR$/bounty-hunters-v1_9_R2/pom.xml" />
+      </set>
+    </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_16" default="true" project-jdk-name="16" project-jdk-type="JavaSDK" />
 </project>

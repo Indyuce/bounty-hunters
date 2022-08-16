@@ -6,37 +6,32 @@
 
     <groupId>io.github.Indyuce</groupId>
     <artifactId>bounty-hunters</artifactId>
-    <packaging>pom</packaging>
-    <version>${revision}</version>
-    <modules>
-        <module>bounty-hunters-dist</module>
-        <module>bounty-hunters-plugin</module>
-        <module>bounty-hunters-v1_9_R1</module>
-        <module>bounty-hunters-v1_9_R2</module>
-        <module>bounty-hunters-v1_10_R1</module>
-        <module>bounty-hunters-v1_11_R1</module>
-        <module>bounty-hunters-v1_12_R1</module>
-        <module>bounty-hunters-v1_13_R1</module>
-        <module>bounty-hunters-v1_13_R2</module>
-        <module>bounty-hunters-v1_14_R1</module>
-        <module>bounty-hunters-v1_15_R1</module>
-        <module>bounty-hunters-v1_16_R1</module>
-        <module>bounty-hunters-v1_16_R2</module>
-        <module>bounty-hunters-v1_16_R3</module>
-        <module>bounty-hunters-v1_17_R1</module>
-        <module>bounty-hunters-v1_18_R1</module>
-        <module>bounty-hunters-v1_18_R2</module>
-        <module>bounty-hunters-v1_19_R1</module>
-    </modules>
+    <packaging>jar</packaging>
+    <version>2.4.4</version>
 
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
-        <revision>2.4.4</revision>
     </properties>
 
     <build>
+        <resources>
+            <resource>
+                <targetPath>.</targetPath>
+                <directory>${basedir}/src/main/resources</directory>
+            </resource>
+        </resources>
+
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <finalName>BountyHunters-${project.version}</finalName>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>3.1.0</version>
@@ -50,8 +45,47 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+            </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>phoenix</id>
+            <url>https://nexus.phoenixdvpt.fr/repository/maven-public/</url>
+        </repository>
+
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+
+        <repository>
+            <id>placeholderapi</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
+
+        <repository>
+            <id>sk89q-repo</id>
+            <url>https://maven.enginehub.org/repo/</url>
+        </repository>
+
+        <repository>
+            <id>bungeecord-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+
+    </repositories>
 
     <dependencies>
 
@@ -60,6 +94,152 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-clean-plugin</artifactId>
             <version>3.1.0</version>
+        </dependency>
+
+
+        <!-- Built on recent Spigot version -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-source</artifactId>
+            <version>1.17.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.17.1-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- BungeeCord API -->
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-api</artifactId>
+            <version>1.16-R0.5-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Public repos -->
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.9.2</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.angeschossen</groupId>
+            <artifactId>LandsAPI</artifactId>
+            <version>5.13.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.MilkBowl</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.7</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sk89q.worldguard</groupId>
+            <artifactId>worldguard-bukkit</artifactId>
+            <version>7.0.2-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--<dependency>
+            <groupId>com.github.simonsator</groupId>
+            <artifactId>BungeecordPartyAndFriends</artifactId>
+            <version>e9ff8a3</version>
+        </dependency>-->
+
+        <dependency>
+            <groupId>com.palmergames.bukkit.towny</groupId>
+            <artifactId>Towny</artifactId>
+            <version>0.98.3.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.SimplyRin</groupId>
+            <artifactId>BungeeFriends</artifactId>
+            <version>bc22a63</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Local libs -->
+
+        <dependency>
+            <groupId>de.erethon</groupId>
+            <artifactId>DungeonsXL</artifactId>
+            <version>0.18-PRE-02</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.kingdoms.main</groupId>
+            <artifactId>Kingdoms</artifactId>
+            <version>1.11.15.0.0.0.1.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>cc.javajobs</groupId>
+            <artifactId>FactionsBridge</artifactId>
+            <version>1.3.6</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>me.glaremasters</groupId>
+            <artifactId>Guilds</artifactId>
+            <version>3.5.6.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.gmail.nossr50</groupId>
+            <artifactId>mcMMO</artifactId>
+            <version>2.1.209</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alessiodp</groupId>
+            <artifactId>Parties</artifactId>
+            <version>3.1.14</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>de.simonsator</groupId>
+            <artifactId>PartyAndFriends</artifactId>
+            <version>1.0.68</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bekvon.bukkit.residence</groupId>
+            <artifactId>Residence</artifactId>
+            <version>5.0.1.7</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sacredlabyrinth.phaed</groupId>
+            <artifactId>SimpleClans</artifactId>
+            <version>2.16.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>me.ulrich</groupId>
+            <artifactId>UltimateClans</artifactId>
+            <version>4.2.0</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>

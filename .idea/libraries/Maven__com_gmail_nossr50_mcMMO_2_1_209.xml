@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.gmail.nossr50:mcMMO:2.1.209">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/gmail/nossr50/mcMMO/2.1.209/mcMMO-2.1.209.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/gmail/nossr50/mcMMO/2.1.209/mcMMO-2.1.209-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/gmail/nossr50/mcMMO/2.1.209/mcMMO-2.1.209-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

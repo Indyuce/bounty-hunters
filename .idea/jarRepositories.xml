@@ -27,6 +27,11 @@
       <option name="url" value="https://mvn.lumine.io/repository/maven-test/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="phoenix" />
+      <option name="name" value="phoenix" />
+      <option name="url" value="https://nexus.phoenixdvpt.fr/repository/maven-public/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="sk89q-repo" />
       <option name="name" value="sk89q-repo" />
       <option name="url" value="https://maven.enginehub.org/repo/" />
@@ -54,6 +59,11 @@
     <remote-repository>
       <option name="id" value="glaremasters repo" />
       <option name="name" value="glaremasters repo" />
+      <option name="url" value="https://repo.glaremasters.me/repository/towny/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="glaremasters-repo" />
+      <option name="name" value="glaremasters-repo" />
       <option name="url" value="https://repo.glaremasters.me/repository/towny/" />
     </remote-repository>
     <remote-repository>
