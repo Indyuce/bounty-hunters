@@ -114,7 +114,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Public repos -->
+        <!-- Soft depends -->
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
@@ -141,6 +141,12 @@
             <artifactId>worldguard-bukkit</artifactId>
             <version>7.0.2-SNAPSHOT</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bstats</groupId>
+                    <artifactId>bstats-bukkit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -156,8 +162,6 @@
             <version>bc22a63</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- Local libs -->
 
         <dependency>
             <groupId>de.erethon</groupId>
