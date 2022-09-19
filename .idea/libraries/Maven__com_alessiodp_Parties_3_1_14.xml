@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: com.alessiodp:Parties:3.1.14">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/alessiodp/Parties/3.1.14/Parties-3.1.14.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../repository/com/alessiodp/Parties/3.1.14/Parties-3.1.14.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/com/alessiodp/Parties/3.1.14/Parties-3.1.14-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../repository/com/alessiodp/Parties/3.1.14/Parties-3.1.14-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/alessiodp/Parties/3.1.14/Parties-3.1.14-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../repository/com/alessiodp/Parties/3.1.14/Parties-3.1.14-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
