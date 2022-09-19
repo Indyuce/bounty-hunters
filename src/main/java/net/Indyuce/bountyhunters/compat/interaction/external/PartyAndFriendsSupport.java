@@ -1,6 +1,6 @@
 package net.Indyuce.bountyhunters.compat.interaction.external;
 
-import de.simonsator.partyandfriends.spigot.api.pafplayers.PAFPlayerManager;
+import de.simonsator.partyandfriends.api.pafplayers.PAFPlayerManager;
 import net.Indyuce.bountyhunters.compat.interaction.InteractionRestriction;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;

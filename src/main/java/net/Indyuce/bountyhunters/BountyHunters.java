@@ -59,8 +59,8 @@ import java.util.logging.Level;
 
 public class BountyHunters extends JavaPlugin {
     private static BountyHunters plugin;
+    private final PluginVersion version = new PluginVersion();
     public boolean formattedNumbers;
-    private PluginVersion version;
     private PlaceholderParser placeholderParser;
     private DataProvider dataProvider;
     private WorldGuardFlags wgFlags;
@@ -79,7 +79,6 @@ public class BountyHunters extends JavaPlugin {
 
     public void onLoad() {
         plugin = this;
-
         try {
             if (getServer().getPluginManager().getPlugin("WorldGuard") != null && version.isStrictlyHigher(1, 12)) {
                 wgFlags = new WorldGuardFlags();
@@ -96,7 +95,7 @@ public class BountyHunters extends JavaPlugin {
     }
 
     public void onEnable() {
-        getLogger().log(Level.INFO, "Detected Server Version: " + version.toString());
+        getLogger().log(Level.INFO, "Detected Server Version: " + version);
 
         // vault compatibility
         RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);

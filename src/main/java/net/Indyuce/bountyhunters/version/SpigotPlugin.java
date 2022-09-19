@@ -42,8 +42,12 @@ public class SpigotPlugin {
                 return;
             }
 
-            if (version.equals(plugin.getDescription().getVersion()))
+            if (version.equals(plugin.getDescription().getVersion())) {
                 return;
+            }
+            if (plugin.getDescription().getVersion().contains("SNAPSHOT")) {
+                return;
+            }
 
             plugin.getLogger().log(Level.INFO, "A new build is available: " + version + " (you are running " + plugin.getDescription().getVersion() + ")");
             plugin.getLogger().log(Level.INFO, "Download it here: " + getResourceUrl());

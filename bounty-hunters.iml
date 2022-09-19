@@ -115,8 +115,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: me.glaremasters:Guilds:3.5.6.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.gmail.nossr50:mcMMO:2.1.209" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.alessiodp:Parties:3.1.14" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: de.simonsator:Party-and-Friends-MySQL-Edition-Spigot-API:1.5.4-RELEASE" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: de.simonsator:spigot-party-api-for-party-and-friends:1.0.4-RELEASE" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: de.simonsator:DevelopmentPAFSpigot:1.0.67" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.bekvon.bukkit.residence:Residence:5.0.1.7" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.sacredlabyrinth.phaed:SimpleClans:2.16.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: me.ulrich:UltimateClans:4.2.0" level="project" />

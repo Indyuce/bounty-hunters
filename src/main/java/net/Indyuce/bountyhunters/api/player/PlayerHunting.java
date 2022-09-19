@@ -41,8 +41,8 @@ public class PlayerHunting {
         this.player = player;
 
         (compassRunnable = new BukkitRunnable() {
-            int ti = 0;
             final boolean circle = BountyHunters.getInstance().getConfig().getBoolean("player-tracking.target-particles");
+            int ti = 0;
 
             public void run() {
 

@@ -1,11 +1,13 @@
 package net.Indyuce.bountyhunters.version;
 
+import org.bukkit.Bukkit;
+
 public class PluginVersion {
     public final String version;
     public final int[] integers;
 
-    public PluginVersion(Class<?> clazz) {
-        this.version = clazz.getPackage().getName().replace(".", ",").split(",")[3];
+    public PluginVersion() {
+        this.version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
         String[] split = version.substring(1).split("_");
         this.integers = new int[]{Integer.parseInt(split[0]), Integer.parseInt(split[1])};
     }
