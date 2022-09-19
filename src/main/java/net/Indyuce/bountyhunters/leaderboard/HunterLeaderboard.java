@@ -3,6 +3,8 @@ package net.Indyuce.bountyhunters.leaderboard;
 import net.Indyuce.bountyhunters.leaderboard.profile.HunterProfile;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.Comparator;
+
 public class HunterLeaderboard extends Leaderboard<HunterProfile> {
 
     /**
@@ -11,7 +13,7 @@ public class HunterLeaderboard extends Leaderboard<HunterProfile> {
      * support pre-2.4 data files.
      */
     public HunterLeaderboard() {
-        super("leaderboard", (p1, p2) -> Integer.compare(p1.getClaimedBounties(), p2.getClaimedBounties()));
+        super("leaderboard", Comparator.comparingInt(HunterProfile::getClaimedBounties));
     }
 
     @Override

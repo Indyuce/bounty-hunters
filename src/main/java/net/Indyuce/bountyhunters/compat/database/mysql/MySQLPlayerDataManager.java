@@ -1,12 +1,12 @@
 package net.Indyuce.bountyhunters.compat.database.mysql;
 
+import com.google.gson.JsonParser;
 import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.player.OfflinePlayerData;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.compat.database.MySQLProvider;
 import net.Indyuce.bountyhunters.manager.LevelManager;
 import net.Indyuce.bountyhunters.manager.PlayerDataManager;
-import com.google.gson.JsonParser;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -66,7 +66,7 @@ public class MySQLPlayerDataManager extends PlayerDataManager {
 
         } catch (SQLException exception) {
             BountyHunters.getInstance().getLogger().log(Level.SEVERE, "Could not save player data of " + data.getOfflinePlayer().getName() + ": " + exception.getMessage());
-            BountyHunters.getInstance().getLogger().log(Level.SEVERE, "Parsed player data: " + data.toString());
+            BountyHunters.getInstance().getLogger().log(Level.SEVERE, "Parsed player data: " + data);
         }
     }
 
@@ -147,7 +147,7 @@ public class MySQLPlayerDataManager extends PlayerDataManager {
         @Override
         public void givePlayerHead(OfflinePlayer owner) {
             try {
-                provider.prepareStatement("UPDATE " + provider.getPlayerDataTable() + " set redeem_heads = JSON_ARRAY_APPEND(redeem_heads, '$', '" + owner.getUniqueId().toString() + "') WHERE uuid = '" + uuid.toString() + "'").execute();
+                provider.prepareStatement("UPDATE " + provider.getPlayerDataTable() + " set redeem_heads = JSON_ARRAY_APPEND(redeem_heads, '$', '" + owner.getUniqueId() + "') WHERE uuid = '" + uuid.toString() + "'").execute();
             } catch (SQLException exception) {
                 BountyHunters.getInstance().getLogger().log(Level.WARNING, "Could not update database player data (redeem_heads): " + exception.getMessage());
             }

@@ -8,20 +8,20 @@ import org.bukkit.OfflinePlayer;
 import java.util.UUID;
 
 public class PlayerBankAccount implements BankAccount {
-	private final OfflinePlayer player;
+    private final OfflinePlayer player;
 
-	public PlayerBankAccount(String input) {
-		Validate.notNull(input, "Could not read UUID");
+    public PlayerBankAccount(String input) {
+        Validate.notNull(input, "Could not read UUID");
 
-		UUID uuid = UUID.fromString(input);
-		Validate.notNull(uuid, "Could not read UUID from '" + uuid + "'");
+        UUID uuid = UUID.fromString(input);
+        Validate.notNull(uuid, "Could not read UUID from '" + uuid + "'");
 
-		player = Bukkit.getOfflinePlayer(uuid);
-		Validate.notNull(player, "Could not find player with UUID '" + uuid.toString() + "'");
-	}
+        player = Bukkit.getOfflinePlayer(uuid);
+        Validate.notNull(player, "Could not find player with UUID '" + uuid + "'");
+    }
 
-	@Override
-	public void deposit(double amount) {
-		BountyHunters.getInstance().getEconomy().depositPlayer(player, amount);
-	}
+    @Override
+    public void deposit(double amount) {
+        BountyHunters.getInstance().getEconomy().depositPlayer(player, amount);
+    }
 }

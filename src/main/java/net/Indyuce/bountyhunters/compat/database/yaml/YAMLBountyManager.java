@@ -80,6 +80,6 @@ public class YAMLBountyManager extends BountyManager {
 
         config.createSection(key + ".up");
         for (OfflinePlayer increase : bounty.getContributors())
-            config.set(key + ".up." + increase.getUniqueId().toString(), bounty.getContribution(increase));
+            config.set(key + ".up." + increase.getUniqueId(), bounty.getContribution(increase));
     }
 }

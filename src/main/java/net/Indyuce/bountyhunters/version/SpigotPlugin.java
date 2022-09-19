@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class SpigotPlugin {
-    private JavaPlugin plugin;
-    private int id;
+    private final JavaPlugin plugin;
+    private final int id;
     private String version;
 
     public SpigotPlugin(int id, JavaPlugin plugin) {

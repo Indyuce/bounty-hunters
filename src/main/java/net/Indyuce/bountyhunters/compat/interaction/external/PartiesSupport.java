@@ -1,9 +1,9 @@
 package net.Indyuce.bountyhunters.compat.interaction.external;
 
-import net.Indyuce.bountyhunters.compat.interaction.InteractionRestriction;
 import com.alessiodp.parties.api.Parties;
 import com.alessiodp.parties.api.interfaces.PartiesAPI;
 import com.alessiodp.parties.api.interfaces.Party;
+import net.Indyuce.bountyhunters.compat.interaction.InteractionRestriction;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 

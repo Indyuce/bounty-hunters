@@ -1,11 +1,7 @@
 package net.Indyuce.bountyhunters.manager;
 
-import net.Indyuce.bountyhunters.BountyHunters;
 import net.Indyuce.bountyhunters.api.Bounty;
-import net.Indyuce.bountyhunters.api.BountyInactivityRemoval;
 import net.Indyuce.bountyhunters.api.player.PlayerData;
-import net.Indyuce.bountyhunters.compat.database.mysql.MySQLBountyManager;
-import net.Indyuce.bountyhunters.compat.interaction.BedSpawnPoint;
 import net.Indyuce.bountyhunters.compat.interaction.InteractionRestriction;
 import net.Indyuce.bountyhunters.gui.BountyEditor;
 import org.apache.commons.lang.Validate;
@@ -61,7 +57,7 @@ public abstract class BountyManager {
          * editor for that specific bounty and close GUIs
          */
         for (Player online : Bukkit.getOnlinePlayers())
-            if (online.getOpenInventory() != null && online.getOpenInventory().getTopInventory().getHolder() instanceof BountyEditor)
+            if (online != null && online.getOpenInventory().getTopInventory().getHolder() instanceof BountyEditor)
                 if (((BountyEditor) online.getOpenInventory().getTopInventory().getHolder()).getBounty().equals(bounty))
                     online.closeInventory();
     }
@@ -115,7 +111,7 @@ public abstract class BountyManager {
      * @param player The bounty target
      * @return If the given player has a bounty on their head
      * @deprecated Use getBounty() to retrieve the bounty and check for its
-     *         existence at the same time
+     * existence at the same time
      */
     @Deprecated
     public boolean hasBounty(OfflinePlayer player) {

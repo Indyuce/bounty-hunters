@@ -14,6 +14,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.text.DecimalFormat;
@@ -22,13 +23,11 @@ import java.util.List;
 import java.util.UUID;
 
 public class BountyEditor extends PluginInventory {
-    private final Bounty bounty;
-
-    private int offset;
-
     private static final DecimalFormat digit = new DecimalFormat("0.#");
     private static final int[] slots = {20, 21, 22, 23, 24};
     private static final NamespacedKey CONTRIBUTOR_TAG_PATH = new NamespacedKey(BountyHunters.getInstance(), "ContributorId");
+    private final Bounty bounty;
+    private int offset;
 
     public BountyEditor(Player player, Bounty bounty) {
         super(player);
@@ -37,7 +36,7 @@ public class BountyEditor extends PluginInventory {
     }
 
     @Override
-    public Inventory getInventory() {
+    public @NotNull Inventory getInventory() {
         Inventory inv = Bukkit.createInventory(this, 54, "Bounty Editor: " + bounty.getTarget().getName());
         double reward = bounty.getReward();
 

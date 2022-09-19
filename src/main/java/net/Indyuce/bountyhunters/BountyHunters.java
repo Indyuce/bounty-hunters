@@ -59,26 +59,24 @@ import java.util.logging.Level;
 
 public class BountyHunters extends JavaPlugin {
     private static BountyHunters plugin;
-
+    public boolean formattedNumbers;
     private PluginVersion version;
     private PlaceholderParser placeholderParser;
     private DataProvider dataProvider;
     private WorldGuardFlags wgFlags;
-
     private Economy economy;
-
     private BountyManager bountyManager;
     private LevelManager levelManager;
     private PlayerDataManager playerDataManager;
-
     private HunterLeaderboard hunterLeaderboard;
     private BountyLeaderboard bountyLeaderboard;
     private BankAccount taxBankAccount;
-    public boolean formattedNumbers;
-
     private boolean hasSuccessfullyEnabled;
 
-    @SuppressWarnings("deprecation")
+    public static BountyHunters getInstance() {
+        return plugin;
+    }
+
     public void onLoad() {
         plugin = this;
 
@@ -166,9 +164,8 @@ public class BountyHunters extends JavaPlugin {
                 public void a(PlayerJoinEvent event) {
                     Player player = event.getPlayer();
                     Optional<Bounty> bounty = bountyManager.getBounty(player);
-                    if (bounty.isPresent())
-                        event.setJoinMessage(message.replace("{player}", player.getName()).replace("{bounty}",
-                                new NumberFormat().format(bounty.get().getReward())));
+                    bounty.ifPresent(value -> event.setJoinMessage(message.replace("{player}", player.getName()).replace("{bounty}",
+                            new NumberFormat().format(value.getReward()))));
                 }
             }, this);
 
@@ -335,12 +332,8 @@ public class BountyHunters extends JavaPlugin {
         bountyLeaderboard.save();
 
         for (Player online : Bukkit.getOnlinePlayers())
-            if (online.getOpenInventory() != null && online.getOpenInventory().getTopInventory().getHolder() instanceof PluginInventory)
+            if (online != null && online.getOpenInventory().getTopInventory().getHolder() instanceof PluginInventory)
                 online.closeInventory();
-    }
-
-    public static BountyHunters getInstance() {
-        return plugin;
     }
 
     public Economy getEconomy() {

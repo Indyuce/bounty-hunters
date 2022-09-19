@@ -14,5 +14,5 @@ public interface ParticleEffect {
     /**
      * Plays particle effect at target location
      */
-    public void playParticleEffect(Location loc, Player killed);
+    void playParticleEffect(Location loc, Player killed);
 }

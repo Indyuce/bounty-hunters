@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public abstract class PlayerDataManager {
-    private static Map<UUID, PlayerData> dataMap = new HashMap<>();
+    private static final Map<UUID, PlayerData> dataMap = new HashMap<>();
 
     public boolean isLoaded(OfflinePlayer player) {
         return isLoaded(player.getUniqueId());

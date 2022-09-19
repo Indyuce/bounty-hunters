@@ -18,6 +18,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.Optional;
@@ -26,7 +27,7 @@ public class AddBountyCommand implements CommandExecutor {
     private static final DecimalFormat digit1 = new DecimalFormat("0.#");
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
 
         // Open bounties menu
         if (args.length < 1) {
@@ -60,7 +61,7 @@ public class AddBountyCommand implements CommandExecutor {
         if (args.length < 2) {
 
             Optional<Bounty> bounty = BountyHunters.getInstance().getBountyManager().getBounty(target);
-            if (!bounty.isPresent()) {
+            if (bounty.isEmpty()) {
                 Message.NO_BOUNTY_INDICATION.format("player", target.getName()).send(sender);
                 return true;
             }
@@ -106,9 +107,8 @@ public class AddBountyCommand implements CommandExecutor {
         }
 
         // Set restriction
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            long restriction = BountyHunters.getInstance().getConfig().getInt("bounty-set-restriction") * 1000;
+        if (sender instanceof Player player) {
+            long restriction = BountyHunters.getInstance().getConfig().getInt("bounty-set-restriction") * 1000L;
             long left = PlayerData.get(player).getLastBounty() + restriction - System.currentTimeMillis();
 
             if (left > 0) {
@@ -136,7 +136,7 @@ public class AddBountyCommand implements CommandExecutor {
 
         // Maximum amount of contributions per player
         int maxAmount = BountyHunters.getInstance().getConfig().getInt("bounty-amount-restriction");
-        if (maxAmount > 0 && sender instanceof Player && (!currentBounty.isPresent() || !currentBounty.get().hasContributed((Player) sender))
+        if (maxAmount > 0 && sender instanceof Player && (currentBounty.isEmpty() || !currentBounty.get().hasContributed((Player) sender))
                 && BountyHunters.getInstance().getBountyManager().getContributions((Player) sender).size() >= maxAmount) {
             Message.TOO_MANY_BOUNTIES.format().send(sender);
             return true;
@@ -194,7 +194,7 @@ public class AddBountyCommand implements CommandExecutor {
         return true;
     }
 
-    public class CommandArguments {
+    public static class CommandArguments {
         private final boolean bypassMinMax, noTax;
 
         public CommandArguments(String[] args) {

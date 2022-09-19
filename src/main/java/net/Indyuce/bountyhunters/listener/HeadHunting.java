@@ -54,7 +54,7 @@ public class HeadHunting implements Listener {
         // Check for item in hand
         Player player = event.getPlayer();
         ItemStack item = event.getHand() == EquipmentSlot.HAND ? player.getInventory().getItemInMainHand() : player.getInventory().getItemInOffHand();
-        if (item == null || item.getType() != Material.PLAYER_HEAD || !item.hasItemMeta())
+        if (item.getType() == Material.AIR || item.getType() != Material.PLAYER_HEAD || !item.hasItemMeta())
             return;
 
         final @Nullable String tag = item.getItemMeta().getPersistentDataContainer().get(BOUNTY_TAG_PATH, PersistentDataType.STRING);

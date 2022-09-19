@@ -6,9 +6,11 @@ import net.Indyuce.bountyhunters.leaderboard.profile.BountyProfile;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.Comparator;
+
 public class BountyLeaderboard extends Leaderboard<BountyProfile> {
     public BountyLeaderboard() {
-        super("bounty-leaderboard", (p1, p2) -> Double.compare(p1.getCurrentBounty(), p2.getCurrentBounty()));
+        super("bounty-leaderboard", Comparator.comparingDouble(BountyProfile::getCurrentBounty));
     }
 
     @Override

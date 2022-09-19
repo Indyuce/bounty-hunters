@@ -7,10 +7,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public class BungeeFriendsSupport implements InteractionRestriction {
-	private final Main plugin = (Main) Bukkit.getPluginManager().getPlugin("BungeeFriends");
+    private final Main plugin = (Main) Bukkit.getPluginManager().getPlugin("BungeeFriends");
 
-	@Override
-	public boolean canInteractWith(InteractionType interaction, Player claimer, OfflinePlayer target) {
-		return !plugin.getFriendManager().getPlayer(claimer.getUniqueId()).isFriend(target.getUniqueId());
-	}
+    @Override
+    public boolean canInteractWith(InteractionType interaction, Player claimer, OfflinePlayer target) {
+        return !plugin.getFriendManager().getPlayer(claimer.getUniqueId()).isFriend(target.getUniqueId());
+    }
 }

@@ -13,11 +13,11 @@ public interface InteractionRestriction {
      * @param claimer     The player interacting with the bounty
      * @param target      The bounty target
      * @return If the player can claim, increase or
-     *         create a bounty with given target
+     * create a bounty with given target
      */
-     boolean canInteractWith(InteractionType interaction, Player claimer, OfflinePlayer target);
+    boolean canInteractWith(InteractionType interaction, Player claimer, OfflinePlayer target);
 
-     enum InteractionType {
+    enum InteractionType {
 
         /**
          * Bounty creation
@@ -32,6 +32,6 @@ public interface InteractionRestriction {
         /**
          * Bounty contribution
          */
-        INCREASE;
+        INCREASE
     }
 }

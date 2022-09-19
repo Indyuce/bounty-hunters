@@ -1,10 +1,10 @@
 package net.Indyuce.bountyhunters.compat.interaction.external;
 
-import net.Indyuce.bountyhunters.BountyHunters;
-import net.Indyuce.bountyhunters.compat.interaction.InteractionRestriction;
 import me.angeschossen.lands.api.integration.LandsIntegration;
 import me.angeschossen.lands.api.land.Land;
 import me.angeschossen.lands.api.player.LandPlayer;
+import net.Indyuce.bountyhunters.BountyHunters;
+import net.Indyuce.bountyhunters.compat.interaction.InteractionRestriction;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 

@@ -10,8 +10,8 @@ import java.util.logging.Level;
 
 public class LevelUpLog implements Listener {
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void a(HunterLevelUpEvent event) {
-		BountyHunters.getInstance().getLogger().log(Level.INFO, event.getPlayer() + " reached Lvl " + event.getNewLevel());
-	}
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void a(HunterLevelUpEvent event) {
+        BountyHunters.getInstance().getLogger().log(Level.INFO, event.getPlayer() + " reached Lvl " + event.getNewLevel());
+    }
 }

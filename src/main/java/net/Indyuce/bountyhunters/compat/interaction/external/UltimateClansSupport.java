@@ -1,8 +1,8 @@
 package net.Indyuce.bountyhunters.compat.interaction.external;
 
-import net.Indyuce.bountyhunters.compat.interaction.InteractionRestriction;
 import me.ulrich.clans.Clans;
 import me.ulrich.clans.data.ClanData;
+import net.Indyuce.bountyhunters.compat.interaction.InteractionRestriction;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;

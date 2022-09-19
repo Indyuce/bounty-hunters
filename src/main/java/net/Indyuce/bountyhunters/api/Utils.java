@@ -12,6 +12,8 @@ import java.util.Random;
 
 public class Utils {
     public static final Random random = new Random();
+    private final static char[] DELAY_CHARACTERS = {'m', 'h', 'd', 'm', 'y'};
+    private final static long[] DELAY_AMOUNTS = {60, 60 * 60, 60 * 60 * 24, 60 * 60 * 24 * 30, 60 * 60 * 24 * 30 * 365};
 
     /**
      * @param d Number to format
@@ -39,25 +41,22 @@ public class Utils {
         return item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName() && (!checkLore || item.getItemMeta().hasLore());
     }
 
-    private final static char[] DELAY_CHARACTERS = {'m', 'h', 'd', 'm', 'y'};
-    private final static long[] DELAY_AMOUNTS = {60, 60 * 60, 60 * 60 * 24, 60 * 60 * 24 * 30, 60 * 60 * 24 * 30 * 365};
-
     public static String formatDelay(long millis) {
 
         if (millis < 1000 * 60)
             return "1m";
 
-        String format = "";
+        StringBuilder format = new StringBuilder();
         for (int j = DELAY_CHARACTERS.length - 1; j >= 0; j--) {
             long divisor = DELAY_AMOUNTS[j] * 1000;
             if (millis < divisor)
                 continue;
 
-            format = (millis / divisor) + DELAY_CHARACTERS[j] + " " + format;
+            format.insert(0, (millis / divisor) + DELAY_CHARACTERS[j] + " ");
             millis = millis % divisor;
         }
 
-        return format;
+        return format.toString();
     }
 
     /**

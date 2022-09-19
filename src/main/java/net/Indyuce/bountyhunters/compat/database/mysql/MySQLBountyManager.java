@@ -31,7 +31,7 @@ public class MySQLBountyManager extends BountyManager {
             // Create table if non existent
             if (!provider.prepareStatement("SELECT * FROM information_schema.tables WHERE TABLE_NAME = '" + provider.getBountyDataTable() + "'").executeQuery().next())
                 provider.prepareStatement(
-                        "CREATE TABLE " + provider.getBountyDataTable() + "(id VARCHAR(36), target VARCHAR(36), extra DECIMAL, last_updated BIGINT, hunters TEXT, increased TEXT)")
+                                "CREATE TABLE " + provider.getBountyDataTable() + "(id VARCHAR(36), target VARCHAR(36), extra DECIMAL, last_updated BIGINT, hunters TEXT, increased TEXT)")
                         .execute();
 
             // Check if database has the 'last_updated' column added in 2.3.6

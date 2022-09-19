@@ -1,9 +1,9 @@
 package net.Indyuce.bountyhunters.compat.interaction.external;
 
-import net.Indyuce.bountyhunters.compat.interaction.InteractionRestriction;
 import com.gmail.nossr50.datatypes.party.Party;
 import com.gmail.nossr50.datatypes.player.McMMOPlayer;
 import com.gmail.nossr50.util.player.UserManager;
+import net.Indyuce.bountyhunters.compat.interaction.InteractionRestriction;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 

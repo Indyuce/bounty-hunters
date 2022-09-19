@@ -1,8 +1,8 @@
 package net.Indyuce.bountyhunters.compat.interaction.external;
 
-import net.Indyuce.bountyhunters.compat.interaction.InteractionRestriction;
 import me.glaremasters.guilds.Guilds;
 import me.glaremasters.guilds.guild.Guild;
+import net.Indyuce.bountyhunters.compat.interaction.InteractionRestriction;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 

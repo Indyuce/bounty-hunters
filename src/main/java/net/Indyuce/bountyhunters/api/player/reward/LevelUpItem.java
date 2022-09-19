@@ -42,6 +42,6 @@ public abstract class LevelUpItem {
 
     @Override
     public boolean equals(Object obj) {
-        return obj != null && obj instanceof LevelUpItem && ((LevelUpItem) obj).id.equals(id);
+        return obj instanceof LevelUpItem && ((LevelUpItem) obj).id.equals(id);
     }
 }

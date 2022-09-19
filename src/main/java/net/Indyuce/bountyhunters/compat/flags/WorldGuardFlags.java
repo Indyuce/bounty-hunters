@@ -1,13 +1,13 @@
 package net.Indyuce.bountyhunters.compat.flags;
 
-import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
-import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
+import net.Indyuce.bountyhunters.api.event.BountyClaimEvent;
+import net.Indyuce.bountyhunters.api.event.BountyCreateEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

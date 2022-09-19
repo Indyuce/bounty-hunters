@@ -14,7 +14,7 @@ public class BountyProfile extends LeaderboardProfile {
         super(player);
 
         Optional<Bounty> opt = BountyHunters.getInstance().getBountyManager().getBounty(player);
-        this.currentBounty = opt.isPresent() ? opt.get().getReward() : 0;
+        this.currentBounty = opt.map(Bounty::getReward).orElse(0.0);
     }
 
     public BountyProfile(ConfigurationSection config) {

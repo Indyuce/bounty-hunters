@@ -2,7 +2,6 @@ package net.Indyuce.bountyhunters.api.player;
 
 import net.Indyuce.bountyhunters.BountyHunters;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 /**
  * Used to update player data when a player is offline.
@@ -11,15 +10,15 @@ import org.bukkit.entity.Player;
  */
 public interface OfflinePlayerData {
 
-    public void addSuccessfulBounties(int value);
+    static OfflinePlayerData get(OfflinePlayer player) {
+        return BountyHunters.getInstance().getPlayerDataManager().getOfflineData(player);
+    }
+
+    void addSuccessfulBounties(int value);
 
     /**
      * Used to give a player head to an online player or
      * save it in the head GUI which they can open later.
      */
-    public void givePlayerHead(OfflinePlayer owner);
-
-    public static OfflinePlayerData get(OfflinePlayer player) {
-        return BountyHunters.getInstance().getPlayerDataManager().getOfflineData(player);
-    }
+    void givePlayerHead(OfflinePlayer owner);
 }

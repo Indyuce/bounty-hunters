@@ -64,11 +64,12 @@ public enum CustomItem {
             "distance your target is."),
     ;
 
-    private ItemStack item;
+    private static final NamespacedKey ITEM_ID_KEY = new NamespacedKey(BountyHunters.getInstance(), "BountyHuntersItemId");
+    private final ItemStack item;
     private String name;
     private List<String> lore;
 
-    private CustomItem(Material mat, String name, String... lore) {
+    CustomItem(Material mat, String name, String... lore) {
         this.item = new ItemStack(mat);
         this.name = name;
         this.lore = Arrays.asList(lore);
@@ -82,14 +83,11 @@ public enum CustomItem {
         return lore;
     }
 
-    private static final NamespacedKey ITEM_ID_KEY = new NamespacedKey(BountyHunters.getInstance(), "BountyHuntersItemId");
-
     public void update(ConfigurationSection config) {
         this.name = ChatColor.GREEN + ChatColor.translateAlternateColorCodes('&', config.getString("name"));
         this.lore = config.getStringList("lore");
 
-        for (int n = 0; n < lore.size(); n++)
-            lore.set(n, ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', lore.get(n)));
+        lore.replaceAll(textToTranslate -> ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', textToTranslate));
 
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
@@ -155,13 +153,12 @@ public enum CustomItem {
             String next;
             for (Iterator<String> iterator = lore.iterator(); iterator.hasNext(); )
                 if ((next = iterator.next()).startsWith(ChatColor.GRAY + "{")) {
-                    String condition = next.substring(3).split("\\}")[0];
+                    String condition = next.substring(3).split("}")[0];
                     if (conditions.containsKey(condition) && !conditions.get(condition))
                         iterator.remove();
                 }
 
-            for (int j = 0; j < lore.size(); j++)
-                lore.set(j, format(lore.get(j)));
+            lore.replaceAll(this::format);
             meta.setDisplayName(format(meta.getDisplayName()));
 
             meta.setLore(lore);

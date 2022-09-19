@@ -4,7 +4,7 @@ import net.Indyuce.bountyhunters.manager.BountyManager;
 import net.Indyuce.bountyhunters.manager.PlayerDataManager;
 
 public interface DataProvider {
-	PlayerDataManager providePlayerDatas();
+    PlayerDataManager providePlayerDatas();
 
-	BountyManager provideBounties();
+    BountyManager provideBounties();
 }

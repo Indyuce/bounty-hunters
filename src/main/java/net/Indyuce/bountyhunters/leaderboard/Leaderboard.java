@@ -10,13 +10,11 @@ import java.util.*;
 import java.util.logging.Level;
 
 public abstract class Leaderboard<T extends LeaderboardProfile> {
+    private static final int MAX_CAPACITY = 16;
     protected final Map<UUID, T> mapped = new LinkedHashMap<>();
     protected final List<UUID> sortedProfiles = new ArrayList<>();
     protected final Comparator<T> profileComparer;
-
     private final String fileName;
-
-    private static final int MAX_CAPACITY = 16;
 
     public Leaderboard(String fileName, Comparator<T> profileComparer) {
         this.profileComparer = profileComparer;
@@ -54,8 +52,8 @@ public abstract class Leaderboard<T extends LeaderboardProfile> {
 
     /**
      * @return The ordered list of UUIDs which corresponds to the leaderboard.
-     *         This list is updated everytime a player claims a bounty and makes
-     *         retrieving leaderboard positions easier
+     * This list is updated everytime a player claims a bounty and makes
+     * retrieving leaderboard positions easier
      */
     public List<UUID> getCached() {
         return sortedProfiles;
@@ -107,10 +105,10 @@ public abstract class Leaderboard<T extends LeaderboardProfile> {
         Map.Entry<UUID, T> minEntry = null;
 
         for (Map.Entry<UUID, T> entry : mapped.entrySet())
-            if (minEntry == null || profileComparer.compare(minEntry.getValue(), entry.getValue()) == 1)
+            if (minEntry == null || profileComparer.compare(minEntry.getValue(), entry.getValue()) > 0)
                 minEntry = entry;
 
-        if (profileComparer.compare(profile, minEntry.getValue()) == 1) {
+        if (profileComparer.compare(profile, minEntry.getValue()) > 0) {
             mapped.remove(minEntry.getKey());
             register(profile);
         }

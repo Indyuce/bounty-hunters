@@ -26,12 +26,10 @@ import java.util.List;
 import java.util.UUID;
 
 public class BountyList extends PluginInventory {
-    private final PlayerData data;
-
-    private int page = 1;
-
     private static final int[] slots = {10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34};
     private static final NamespacedKey BOUNTY_TAG_PATH = new NamespacedKey(BountyHunters.getInstance(), "BountyId");
+    private final PlayerData data;
+    private int page = 1;
 
     public BountyList(Player player) {
         super(player);

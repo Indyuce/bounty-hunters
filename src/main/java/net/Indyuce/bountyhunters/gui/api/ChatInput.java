@@ -10,45 +10,44 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class ChatInput implements Listener {
-	private final Predicate<String> action;
-	private final PluginInventory inv;
+    private final Predicate<String> action;
+    private final PluginInventory inv;
 
-	public ChatInput(PluginInventory inv, Predicate<String> action) {
-		this.action = action;
-		this.inv = inv;
+    public ChatInput(PluginInventory inv, Predicate<String> action) {
+        this.action = action;
+        this.inv = inv;
 
-		inv.getPlayer().closeInventory();
-		inv.getPlayer().sendMessage(ChatColor.GREEN + "> Type 'cancel' to cancel.");
+        inv.getPlayer().closeInventory();
+        inv.getPlayer().sendMessage(ChatColor.GREEN + "> Type 'cancel' to cancel.");
 
-		Bukkit.getPluginManager().registerEvents(this, BountyHunters.getInstance());
-	}
+        Bukkit.getPluginManager().registerEvents(this, BountyHunters.getInstance());
+    }
 
-	public void close() {
-		AsyncPlayerChatEvent.getHandlerList().unregister(this);
-		PlayerMoveEvent.getHandlerList().unregister(this);
-	}
+    public void close() {
+        AsyncPlayerChatEvent.getHandlerList().unregister(this);
+        PlayerMoveEvent.getHandlerList().unregister(this);
+    }
 
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void a(AsyncPlayerChatEvent event) {
-		if (!event.getPlayer().equals(inv.getPlayer()))
-			return;
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void a(AsyncPlayerChatEvent event) {
+        if (!event.getPlayer().equals(inv.getPlayer()))
+            return;
 
-		event.setCancelled(true);
-		if (event.getMessage().equalsIgnoreCase("cancel") || action.test(event.getMessage())) {
-			close();
-			Bukkit.getScheduler().runTask(BountyHunters.getInstance(), () -> inv.open());
-		}
-	}
+        event.setCancelled(true);
+        if (event.getMessage().equalsIgnoreCase("cancel") || action.test(event.getMessage())) {
+            close();
+            Bukkit.getScheduler().runTask(BountyHunters.getInstance(), inv::open);
+        }
+    }
 
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void b(PlayerMoveEvent event) {
-		if (event.getPlayer().equals(inv.getPlayer()) && (event.getFrom().getBlockX() != event.getTo().getBlockX() || event.getFrom().getBlockY() != event.getTo().getBlockY() || event.getFrom().getBlockZ() != event.getTo().getBlockZ())) {
-			inv.getPlayer().sendMessage(ChatColor.GREEN + "> Chat input cancelled.");
-			close();
-		}
-	}
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void b(PlayerMoveEvent event) {
+        if (event.getPlayer().equals(inv.getPlayer()) && (event.getFrom().getBlockX() != event.getTo().getBlockX() || event.getFrom().getBlockY() != event.getTo().getBlockY() || event.getFrom().getBlockZ() != event.getTo().getBlockZ())) {
+            inv.getPlayer().sendMessage(ChatColor.GREEN + "> Chat input cancelled.");
+            close();
+        }
+    }
 }

@@ -1,7 +1,7 @@
 package net.Indyuce.bountyhunters.api.event;
 
-import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.Bounty;
+import net.Indyuce.bountyhunters.api.NumberFormat;
 import net.Indyuce.bountyhunters.api.language.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -11,12 +11,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 public class BountyExpireEvent extends BountyEvent {
+    private static final HandlerList handlers = new HandlerList();
     private final BountyExpireCause cause;
     private final Player player;
     private final double amount;
     private final boolean expiring;
-
-    private static final HandlerList handlers = new HandlerList();
 
     /**
      * When a bounty expires due to an admin
@@ -46,6 +45,10 @@ public class BountyExpireEvent extends BountyEvent {
         expiring = getBounty().getReward() <= amount;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public BountyExpireCause getCause() {
         return cause;
     }
@@ -73,26 +76,22 @@ public class BountyExpireEvent extends BountyEvent {
     public void sendAllert() {
         if (isExpiring())
             Message.BOUNTY_EXPIRED.format(
-                    "target", getBounty().getTarget().getName(),
-                    "bounty", new NumberFormat().format(amount))
+                            "target", getBounty().getTarget().getName(),
+                            "bounty", new NumberFormat().format(amount))
                     .send(Bukkit.getOnlinePlayers());
         else {
             double reward = getBounty().getReward();
             Message.BOUNTY_DECREASED.format(
-                    "target", getBounty().getTarget().getName(),
-                    "old", new NumberFormat().format(reward + amount),
-                    "new", new NumberFormat().format(reward),
-                    "player", player.getName(),
-                    "amount", new NumberFormat().format(amount))
+                            "target", getBounty().getTarget().getName(),
+                            "old", new NumberFormat().format(reward + amount),
+                            "new", new NumberFormat().format(reward),
+                            "player", player.getName(),
+                            "amount", new NumberFormat().format(amount))
                     .send(Bukkit.getOnlinePlayers());
         }
     }
 
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
+    public @NotNull HandlerList getHandlers() {
         return handlers;
     }
 
@@ -113,6 +112,6 @@ public class BountyExpireEvent extends BountyEvent {
         /**
          * When a bounty is removed due to inactivity
          */
-        INACTIVITY;
+        INACTIVITY
     }
 }

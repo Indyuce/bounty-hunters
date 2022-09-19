@@ -8,23 +8,24 @@ import net.Indyuce.bountyhunters.api.player.PlayerData;
 import net.Indyuce.bountyhunters.leaderboard.profile.BountyProfile;
 import net.Indyuce.bountyhunters.leaderboard.profile.HunterProfile;
 import org.bukkit.OfflinePlayer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
 public class BountyHuntersPlaceholders extends PlaceholderExpansion {
 
     @Override
-    public String getAuthor() {
+    public @NotNull String getAuthor() {
         return "Indyuce";
     }
 
     @Override
-    public String getIdentifier() {
+    public @NotNull String getIdentifier() {
         return "bountyhunters";
     }
 
     @Override
-    public String getVersion() {
+    public @NotNull String getVersion() {
         return BountyHunters.getInstance().getDescription().getVersion();
     }
 
@@ -40,17 +41,17 @@ public class BountyHuntersPlaceholders extends PlaceholderExpansion {
         if (identifier.startsWith("top_bounties_")) {
             int index = Integer.parseInt(identifier.substring("top_bounties_".length()));
             Optional<HunterProfile> found = BountyHunters.getInstance().getHunterLeaderboard().getPosition(index);
-            return found.isPresent() ? String.valueOf(found.get().getClaimedBounties()) : "---";
+            return found.map(hunterProfile -> String.valueOf(hunterProfile.getClaimedBounties())).orElse("---");
         }
         if (identifier.startsWith("top_heads_")) {
             int index = Integer.parseInt(identifier.substring("top_heads_".length()));
             Optional<HunterProfile> found = BountyHunters.getInstance().getHunterLeaderboard().getPosition(index);
-            return found.isPresent() ? String.valueOf(found.get().getSuccessfulBounties()) : "---";
+            return found.map(hunterProfile -> String.valueOf(hunterProfile.getSuccessfulBounties())).orElse("---");
         }
         if (identifier.startsWith("top_level_")) {
             int index = Integer.parseInt(identifier.substring("top_level_".length()));
             Optional<HunterProfile> found = BountyHunters.getInstance().getHunterLeaderboard().getPosition(index);
-            return found.isPresent() ? String.valueOf(found.get().getLevel()) : "---";
+            return found.map(hunterProfile -> String.valueOf(hunterProfile.getLevel())).orElse("---");
         }
 
         // Highest bounties
@@ -62,7 +63,7 @@ public class BountyHuntersPlaceholders extends PlaceholderExpansion {
         if (identifier.startsWith("topb_bounty_")) {
             int index = Integer.parseInt(identifier.substring("topb_bounty_".length()));
             Optional<BountyProfile> found = BountyHunters.getInstance().getBountyLeaderboard().getPosition(index);
-            return found.isPresent() ? String.valueOf(found.get().getCurrentBounty()) : "---";
+            return found.map(bountyProfile -> String.valueOf(bountyProfile.getCurrentBounty())).orElse("---");
         }
 
         PlayerData playerData = PlayerData.get(player);

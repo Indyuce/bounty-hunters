@@ -55,8 +55,7 @@ public class OfflineProfile {
             return;
         }
 
-        if (obj instanceof ConfigurationSection) {
-            ConfigurationSection config = (ConfigurationSection) obj;
+        if (obj instanceof ConfigurationSection config) {
             uuid = UUID.fromString(config.getString("uuid"));
             name = config.getString("name");
             offline = Bukkit.getOfflinePlayer(uuid);
