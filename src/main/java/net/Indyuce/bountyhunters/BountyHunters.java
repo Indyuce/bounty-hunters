@@ -77,6 +77,15 @@ public class BountyHunters extends JavaPlugin {
         return plugin;
     }
 
+    private static boolean hasClass(String className) {
+        try {
+            Class.forName(className);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
     public void onLoad() {
         plugin = this;
         try {
@@ -221,10 +230,14 @@ public class BountyHunters extends JavaPlugin {
         }
 
         if (getConfig().getBoolean("claim-restrictions.friends")) {
-
             if (Bukkit.getPluginManager().getPlugin("PartyAndFriends") != null) {
-                bountyManager.registerClaimRestriction(new PartyAndFriendsSupport());
-                getLogger().log(Level.INFO, "Hooked onto PartyAndFriends");
+                if (hasClass("de.simonsator.partyandfriends.api.pafplayers.PAFPlayerManager")) {
+                    bountyManager.registerClaimRestriction(new PartyAndFriendsSupport());
+                    getLogger().log(Level.INFO, "Hooked onto PartyAndFriends (Spigot Version)");
+                } else if (hasClass("de.simonsator.partyandfriends.spigot.api.pafplayers.PAFPlayerManager")) {
+                    bountyManager.registerClaimRestriction(new PartyAndFriendsBungeeSupport());
+                    getLogger().log(Level.INFO, "Hooked onto PartyAndFriends (Bungeecord/Velocity Version)");
+                }
 
             } else if (Bukkit.getPluginManager().getPlugin("BungeeFriends") != null) {
                 bountyManager.registerClaimRestriction(new BungeeFriendsSupport());

@@ -209,6 +209,19 @@
         </dependency>
 
         <dependency>
+            <groupId>de.simonsator</groupId>
+            <artifactId>Party-and-Friends-MySQL-Edition-Spigot-API</artifactId>
+            <version>1.5.4-RELEASE</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.simonsator</groupId>
+            <artifactId>spigot-party-api-for-party-and-friends</artifactId>
+            <version>1.0.4-RELEASE</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.bekvon.bukkit.residence</groupId>
             <artifactId>Residence</artifactId>
             <version>5.0.1.7</version>
