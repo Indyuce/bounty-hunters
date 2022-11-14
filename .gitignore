@@ -1,1 +1,12 @@
-/bounty-hunters-plugin/lib/
+/.idea/
+/target/
+/.settings/
+/.idea/
+/.m2/
+/bin/
+
+bounty-hunters.iml
+bounty-hunters.eml
+
+.flattened-pom.xml
+dependency-reduced-pom.xml
