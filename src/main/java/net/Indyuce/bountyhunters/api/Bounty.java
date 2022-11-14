@@ -5,6 +5,7 @@ import net.Indyuce.bountyhunters.api.player.PlayerData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.OfflinePlayer;
 
+import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Set;
@@ -160,7 +161,8 @@ public class Bounty {
 	}
 
 	public double getContribution(OfflinePlayer player) {
-		return hasContributed(player) ? amount.get(player) : 0;
+		@Nullable Double found = amount.get(player);
+		return found == null ? 0 : found;
 	}
 
 	public void setExtra(double extra) {
