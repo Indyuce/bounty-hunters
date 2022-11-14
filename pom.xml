@@ -207,9 +207,8 @@
 
         <dependency>
             <groupId>de.simonsator</groupId>
-            <artifactId>PartyAndFriends</artifactId>
-            <version>1.0.68</version>
-            <scope>provided</scope>
+            <artifactId>DevelopmentPAFSpigot</artifactId>
+            <version>1.0.67</version>
         </dependency>
 
         <dependency>
