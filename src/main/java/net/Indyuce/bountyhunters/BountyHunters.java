@@ -81,6 +81,7 @@ public class BountyHunters extends JavaPlugin {
     @SuppressWarnings("deprecation")
     public void onLoad() {
         plugin = this;
+        version = new PluginVersion(Bukkit.getServer().getClass());
 
         try {
             if (getServer().getPluginManager().getPlugin("WorldGuard") != null && version.isStrictlyHigher(1, 12)) {
