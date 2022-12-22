@@ -67,6 +67,7 @@ public enum CustomItem {
     private ItemStack item;
     private String name;
     private List<String> lore;
+    private int customModelData;
 
     private CustomItem(Material mat, String name, String... lore) {
         this.item = new ItemStack(mat);
@@ -82,17 +83,23 @@ public enum CustomItem {
         return lore;
     }
 
+    public int getCustomModelData() {
+        return customModelData;
+    }
+
     private static final NamespacedKey ITEM_ID_KEY = new NamespacedKey(BountyHunters.getInstance(), "BountyHuntersItemId");
 
     public void update(ConfigurationSection config) {
         this.name = ChatColor.GREEN + ChatColor.translateAlternateColorCodes('&', config.getString("name"));
         this.lore = config.getStringList("lore");
+        this.customModelData = config.getInt("custom-model-data");
 
         for (int n = 0; n < lore.size(); n++)
             lore.set(n, ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', lore.get(n)));
 
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
+        meta.setCustomModelData(customModelData);
         meta.addItemFlags(ItemFlag.values());
         meta.getPersistentDataContainer().set(ITEM_ID_KEY, PersistentDataType.STRING, name());
         if (lore != null)

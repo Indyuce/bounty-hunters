@@ -292,6 +292,7 @@ public class BountyHunters extends JavaPlugin {
             if (!items.getConfig().contains(item.name())) {
                 items.getConfig().set(item.name() + ".name", item.getName());
                 items.getConfig().set(item.name() + ".lore", item.getLore());
+                items.getConfig().set(item.name() + ".custom-model-data", item.getCustomModelData());
             }
             item.update(items.getConfig().getConfigurationSection(item.name()));
         }
