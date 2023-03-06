@@ -16,7 +16,6 @@ import net.Indyuce.bountyhunters.leaderboard.profile.HunterProfile;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,11 +31,13 @@ public class BountyClaim implements Listener {
 
 	@EventHandler
 	public void a(PlayerDeathEvent event) {
-		Player target = event.getEntity();
+		final Player target = event.getEntity();
 		if (target.getKiller() == null || !(target.getKiller() instanceof Player) || target.equals(target.getKiller()))
 			return;
 
-		Player killer = target.getKiller();
+		final Player killer = target.getKiller();
+		if (killer.hasMetadata("NPC"))
+			return;
 
 		/*
 		 * Auto bounty: killing a player on whom there was no bounty makes the
@@ -84,7 +85,7 @@ public class BountyClaim implements Listener {
 		if (!killer.hasPermission("bountyhunters.claim"))
 			return;
 
-		Bounty bounty = hasBounty.get();
+		final Bounty bounty = hasBounty.get();
 		if (BountyHunters.getInstance().getConfig().getBoolean("claim-restrictions.targets-only") && !bounty.hasHunter(killer))
 			return;
 
@@ -96,7 +97,7 @@ public class BountyClaim implements Listener {
 			event.setDeathMessage(null);
 
 		// Bukkit event check
-		BountyClaimEvent bountyEvent = new BountyClaimEvent(bounty, killer);
+		final BountyClaimEvent bountyEvent = new BountyClaimEvent(bounty, killer);
 		Bukkit.getPluginManager().callEvent(bountyEvent);
 		if (bountyEvent.isCancelled())
 			return;
